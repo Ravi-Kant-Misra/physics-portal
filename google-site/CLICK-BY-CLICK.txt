@@ -1,0 +1,459 @@
+═══════════════════════════════════════════════════════════════════
+PHYSICS FOUNDATION — GOOGLE SITE
+Click-by-click build guide. Do exactly what each line says.
+═══════════════════════════════════════════════════════════════════
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PART 1 — CREATE THE SITE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OPEN: https://sites.google.com
+CLICK: the large + button (bottom right)
+CLICK: "Untitled Site" at the very top left of the screen
+TYPE:
+────────────────────────────────
+Physics Foundation
+────────────────────────────────
+PRESS: Enter
+
+CLICK: "Your page title" in the centre of the page
+TYPE:
+────────────────────────────────
+where Concepts Click
+────────────────────────────────
+
+CLICK: below the title where it says "Your page subtitle"
+TYPE:
+────────────────────────────────
+Think Deeper. Learn Better. — with Ravi M.
+────────────────────────────────
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PART 2 — HOME PAGE: WELCOME TEXT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CLICK: INSERT (right panel)
+CLICK: Text box
+PASTE:
+────────────────────────────────
+Welcome to Physics Foundation
+
+This is your home for IB Physics — a structured, step-by-step journey where every concept is built carefully before the next one begins.
+
+Physics is not about memorising formulas. It is about understanding why the universe behaves the way it does. When you understand the concept, the formula writes itself.
+────────────────────────────────
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PART 3 — HOME PAGE: THREE COLUMNS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CLICK: INSERT (right panel)
+CLICK: "3 columns" layout
+
+CLICK: inside the FIRST column
+TYPE:
+────────────────────────────────
+📖 Learn at Your Own Pace
+
+Work through lessons, classwork, and homework unit by unit. Each chapter unlocks only when the previous one is complete.
+────────────────────────────────
+
+CLICK: inside the SECOND column
+TYPE:
+────────────────────────────────
+✅ Parent-Reviewed Progress
+
+Every homework submission is reviewed by your parent against the answer key before your next chapter unlocks.
+────────────────────────────────
+
+CLICK: inside the THIRD column
+TYPE:
+────────────────────────────────
+🚀 Built on Strong Foundations
+
+We start with the mathematical tools you need — significant figures, vectors, graphs — before diving into physics.
+────────────────────────────────
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PART 4 — HOME PAGE: PORTAL BUTTON
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CLICK: INSERT (right panel)
+CLICK: Button
+
+WHERE IT SAYS "Button text" TYPE:
+────────────────────────────────
+Enter Student Portal →
+────────────────────────────────
+
+WHERE IT SAYS "Link" PASTE:
+────────────────────────────────
+https://script.google.com/macros/s/AKfycbwc0-62SrefMlpwxJtBXZN1ud4clOT0CC9wSgzndq4n6XC2z-5HrlE_idQ6OhSv1WxJsQ/exec
+────────────────────────────────
+
+CLICK: Insert (or Done)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PART 5 — HOME PAGE: STORIES TEASER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CLICK: INSERT → Text box
+PASTE:
+────────────────────────────────
+Physics is a Human Story
+
+Before equations, there were people — curious, stubborn, brilliant people who changed how we see the world. Explore their stories.
+────────────────────────────────
+
+CLICK: INSERT → Button
+WHERE IT SAYS "Button text" TYPE:
+────────────────────────────────
+Read the Stories →
+────────────────────────────────
+
+WHERE IT SAYS "Link" → CLICK: "Pages on this site" → SELECT: Stories of Science
+CLICK: Insert
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PART 6 — CREATE ALL PAGES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CLICK: PAGES (right panel, second tab)
+CLICK: + (Add page) — do this 5 times, naming each one:
+
+Page 1 name:
+────────────────────────────────
+Stories of Science
+────────────────────────────────
+
+Page 2 name:
+────────────────────────────────
+Rules of Engagement
+────────────────────────────────
+
+Page 3 name:
+────────────────────────────────
+My Vision
+────────────────────────────────
+
+Page 4 name:
+────────────────────────────────
+The Ideal Student
+────────────────────────────────
+
+Page 5 name:
+────────────────────────────────
+Schedule
+────────────────────────────────
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PART 7 — STORIES OF SCIENCE PAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CLICK: "Stories of Science" in the PAGES panel
+
+CLICK: the page title → TYPE:
+────────────────────────────────
+Stories of Science
+────────────────────────────────
+
+CLICK: INSERT → Text box
+PASTE:
+────────────────────────────────
+Behind every law of physics is a person — someone who looked at the world and refused to accept that it could not be understood. These are their stories.
+
+Read them not as history lessons but as examples of what it looks like to think carefully, question assumptions, and push through confusion until something becomes clear.
+────────────────────────────────
+
+Now add each story as a button. CLICK: INSERT → Button for each one:
+
+--- Story 1 ---
+Button text: ⚛️ Introduction — What is Physics?
+Link: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u00/lesson.html
+
+--- Story 2 ---
+Button text: 🕰️ Galileo & the Pendulum
+Link: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u01/lesson.html
+
+--- Story 3 ---
+Button text: 🍎 Newton & the Apple
+Link: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u02/lesson.html
+
+--- Story 4 ---
+Button text: 🧲 Faraday & the Field
+Link: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u03/lesson.html
+
+--- Story 5 ---
+Button text: 💡 Light — Wave or Particle?
+Link: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u04/lesson.html
+
+--- Story 6 ---
+Button text: ☢️ Marie & Pierre Curie
+Link: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u05/lesson.html
+
+--- Story 7 ---
+Button text: 🌌 Einstein & Relativity
+Link: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u06/lesson.html
+
+--- Story 8 ---
+Button text: 🚗 Einstein's Chauffeur
+Link: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u07/lesson.html
+
+--- Story 9 ---
+Button text: 🐱 Schrödinger's Cat
+Link: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u08/lesson.html
+
+--- Story 10 ---
+Button text: ⚡ Lise Meitner
+Link: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u09/lesson.html
+
+--- Story 11 ---
+Button text: 🌟 Satyendra Bose
+Link: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u10/lesson.html
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PART 8 — RULES OF ENGAGEMENT PAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CLICK: "Rules of Engagement" in the PAGES panel
+
+CLICK: the page title → TYPE:
+────────────────────────────────
+Rules of Engagement
+────────────────────────────────
+
+CLICK: INSERT → Text box
+PASTE:
+────────────────────────────────
+How we work together in Physics Foundation
+
+This class works because everyone in it commits to the same standard — not just getting the right answer, but understanding why it is right. These rules are not restrictions. They are the conditions that make real learning possible.
+────────────────────────────────
+
+CLICK: INSERT → Text box
+PASTE:
+────────────────────────────────
+1. Understand Before You Write
+
+Before picking up your pen, read the question. Think about the concept. Ask yourself: what is really being asked here? A wrong answer that shows clear thinking is worth more than a correct answer copied without understanding.
+
+2. Show Every Step
+
+Physics is a chain of reasoning. A final answer with no working is not physics — it is guessing. Show your units, your substitutions, your reasoning. If your answer is wrong, I can only help you if I can see your thinking.
+
+3. Ask When You Are Stuck — Not After
+
+The moment you feel lost is the moment to speak up — not at the end of the lesson, not the night before a test. There are no silly questions in this class. Confusion is the beginning of understanding.
+
+4. Complete Each Unit Before Moving On
+
+This course is sequential. Every concept builds on the one before it. Do not skip ahead. Do not rush. A shaky foundation makes every wall that follows unstable.
+
+5. Homework is Your Proof of Understanding
+
+Homework is not busywork. It is your chance to show — to yourself, your parent, and your teacher — that you have genuinely understood the lesson. It is reviewed by your parent before the next chapter unlocks.
+
+6. Consistent Effort Beats Last-Minute Cramming
+
+Physics rewards students who work a little every day. Show up. Do the work. Trust the process.
+
+7. Respect the Learning Environment
+
+When someone is explaining — teacher or student — everyone listens. Questions are welcome. Side conversations are not.
+────────────────────────────────
+
+CLICK: INSERT → Text box
+PASTE:
+────────────────────────────────
+These rules apply equally to everyone — including me. I commit to explaining clearly, giving you feedback that is useful, and never moving on until the concept is solid.
+
+Let's build something real together.
+
+— Ravi M.
+────────────────────────────────
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PART 9 — MY VISION PAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CLICK: "My Vision" in the PAGES panel
+
+CLICK: the page title → TYPE:
+────────────────────────────────
+My Vision
+────────────────────────────────
+
+CLICK: INSERT → Text box
+PASTE:
+────────────────────────────────
+What Physics Foundation is really about
+
+Physics Foundation exists for one reason: to give students the thinking tools to understand the physical world — not just pass a test.
+
+Most students arrive believing that physics is a collection of formulas to be memorised. They leave this class knowing it is something else entirely: a way of asking precise questions about reality, and a method for answering them systematically.
+
+What Success Looks Like
+
+Success in this class is not a grade. It is the moment a student looks at a problem they have never seen before and says — I know how to approach this.
+
+It is the student who, when asked why an object accelerates, does not recite Newton's Second Law but instead explains it in their own words, with a diagram, with an example from their own life.
+
+It is the student who is comfortable saying "I don't understand yet" — because they know that not understanding yet is the starting point of all real learning.
+
+Why We Go Step by Step
+
+Every unit in this course is a building block. Significant figures before measurements. Vectors before forces. Kinematics before dynamics. This is not arbitrary — it is the order in which the concepts depend on each other.
+
+Rushing this sequence produces students who can solve problems they have seen before but collapse when they see something new. We do not rush here.
+
+What I Believe About Every Student
+
+Every student in this class is capable of understanding physics at a deep level. Intelligence is not fixed. Ability in physics is not a gift you either have or don't have. It is the result of consistent effort, good questions, and a willingness to be confused for long enough to break through.
+
+My job is to structure the learning so that breakthrough is inevitable — if you do the work.
+
+The Standard We Hold
+
+We hold each other to a high standard — not because perfection is expected, but because settling for surface-level understanding wastes everyone's time, including yours.
+
+The standard is simple: understand it, show it, move forward.
+
+— Ravi M.
+────────────────────────────────
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PART 10 — THE IDEAL STUDENT PAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CLICK: "The Ideal Student" in the PAGES panel
+
+CLICK: the page title → TYPE:
+────────────────────────────────
+The Ideal Student
+────────────────────────────────
+
+CLICK: INSERT → Text box
+PASTE:
+────────────────────────────────
+The habits and mindset that produce real understanding
+
+There is no single type of student who succeeds in physics. But the students who make the most progress share three habits — consistently, not occasionally.
+
+Habit 1: They Think Before They Calculate
+
+The ideal student reads a problem and pauses. They ask: what is happening physically here? What do I know? What am I being asked to find? What concept connects them? Only then do they write anything down.
+
+In practice this looks like:
+— Sketching a diagram before writing equations
+— Writing down known and unknown quantities first
+— Asking "does this answer make physical sense?" after solving
+
+Habit 2: They Show Their Working
+
+The ideal student treats their written solution as a communication — to their teacher, to their parent, and to their future self. Every step is written. Units are carried through every line. Substitutions are shown explicitly.
+
+In practice this looks like:
+— Never skipping algebraic steps
+— Always writing units next to every number
+— Checking that the unit of the answer matches what was asked for
+
+Habit 3: They Show Up Consistently
+
+The ideal student does not disappear for a week and then panic. They do a little every day. Physics is cumulative. A gap in understanding at Unit 5 makes Unit 6 difficult and Unit 10 nearly impossible.
+
+In practice this looks like:
+— Completing each unit before moving to the next
+— Reviewing a lesson the same day it is taught
+— Resubmitting corrected homework promptly, not days later
+
+What the Ideal Student Is Not
+
+The ideal student is not the one who always has the right answer. They are the student who, when they do not understand something, says so — and then works until they do.
+
+A note to students: if you are reading this and thinking "that's not me" — that is fine. These are habits, not personality traits. Habits are built deliberately, one session at a time. Start with Habit 1. Next problem you face — pause before you write.
+
+— Ravi M.
+────────────────────────────────
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PART 11 — SCHEDULE PAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CLICK: "Schedule" in the PAGES panel
+
+CLICK: the page title → TYPE:
+────────────────────────────────
+Class Schedule
+────────────────────────────────
+
+CLICK: INSERT → Text box
+PASTE:
+────────────────────────────────
+When we meet, what to expect, and how to prepare
+────────────────────────────────
+
+CLICK: INSERT → Table → select 2 columns × 4 rows
+FILL IN the table like this:
+
+Row 1: Day | What happens
+Row 2: Lesson Day | New concept introduced. Lesson reviewed together. Questions welcomed.
+Row 3: Classwork Day | Classwork problems completed in class. Teacher available throughout.
+Row 4: Homework Due | Completed homework submitted via the portal before the next session.
+
+CLICK: INSERT → Text box
+PASTE:
+────────────────────────────────
+What to Bring Every Session
+— Your device (to access the portal)
+— A pen and paper for working — physics is always written by hand first
+— Your previous unit's homework if corrections were requested
+
+Pacing
+Each unit takes approximately:
+— 15–20 minutes to read the lesson
+— 20–30 minutes to complete classwork
+— 20–30 minutes to complete homework independently
+
+There is no race. The next unit unlocks when the current one is genuinely understood and approved — not before.
+
+Contact
+Questions outside of class:
+📧 misra.ravikant@gmail.com
+Response time: within 24 hours on school days.
+────────────────────────────────
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PART 12 — PUBLISH THE SITE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CLICK: Publish (top right blue button)
+
+WHERE IT SAYS "Web address" TYPE:
+────────────────────────────────
+physics-foundation
+────────────────────────────────
+(your URL will be: sites.google.com/view/physics-foundation)
+
+UNDER "Who can view this site" SELECT: Anyone
+CLICK: Publish
+
+DONE. Your site is live at:
+sites.google.com/view/physics-foundation
+
+Share this one URL with all students and parents.
+Everything else — portal, stories, lessons — is reachable from here.
+
+═══════════════════════════════════════════════════════════════════
+TOTAL: 12 parts, ~25 minutes
+═══════════════════════════════════════════════════════════════════
