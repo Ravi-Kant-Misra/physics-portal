@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class Schedule — Physics Foundations by Ravi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--blue:#1d4ed8;--dark:#0f172a;--bg:#f8faff;--muted:#64748b;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);}
+    nav{background:rgba(15,23,42,0.97);position:sticky;top:0;z-index:100;padding:0 32px;}
+    .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;height:56px;}
+    .nav-brand{font-size:.95rem;font-weight:900;color:white;text-decoration:none;margin-right:auto;}
+    .nav-links{display:flex;gap:4px;}
+    .nav-links a{color:rgba(255,255,255,.75);text-decoration:none;font-size:.82rem;font-weight:700;padding:6px 12px;border-radius:8px;}
+    .nav-links a:hover,.nav-links a.active{background:rgba(255,255,255,.1);color:white;}
+    .nav-cta{background:#1d4ed8;color:white;text-decoration:none;font-size:.82rem;font-weight:800;padding:8px 18px;border-radius:8px;margin-left:12px;}
+    .hero{background:linear-gradient(135deg,#0f172a,#1e3a5f,#1d4ed8);color:white;padding:56px 32px 48px;text-align:center;}
+    .hero-chip{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:5px 18px;font-size:.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;}
+    .hero h1{font-size:2.4rem;font-weight:900;letter-spacing:-1px;background:linear-gradient(90deg,#bfdbfe,#e0e7ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;}
+    .hero p{color:rgba(255,255,255,.7);font-size:.95rem;max-width:560px;margin:0 auto;}
+    .stats{max-width:900px;margin:32px auto 0;padding:0 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+    .stat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px 18px;text-align:center;}
+    .stat .num{font-size:1.8rem;font-weight:900;color:white;}
+    .stat .lbl{font-size:.75rem;color:rgba(255,255,255,.6);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+    main{max-width:900px;margin:40px auto;padding:0 24px 80px;}
+    .legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;}
+    .legend-dot{width:12px;height:12px;border-radius:3px;}
+    table{width:100%;border-collapse:collapse;background:white;border-radius:16px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.08);}
+    thead th{background:#0f172a;color:white;padding:12px 16px;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;text-align:left;}
+    .term-header td{background:#1e293b;color:#94a3b8;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;padding:8px 16px;}
+    tr{border-bottom:1px solid rgba(0,0,0,.04);transition:filter .1s;}
+    tr:hover:not(.term-header){filter:brightness(.97);}
+    td{padding:10px 16px;vertical-align:middle;}
+    .sess-num{font-family:'Space Mono',monospace;font-size:.78rem;font-weight:700;color:#94a3b8;white-space:nowrap;width:40px;}
+    .date-cell{font-size:.85rem;white-space:nowrap;width:130px;}
+    .date-cell .day{font-size:.72rem;color:#94a3b8;font-weight:600;}
+    .topic-cell{font-size:.88rem;font-weight:700;}
+    .units-cell{font-size:.78rem;color:#64748b;font-weight:600;width:130px;}
+    .status-cell{text-align:center;width:48px;}
+    .status-dot{font-size:1.1rem;color:#cbd5e1;cursor:pointer;}
+    .rev-badge{background:#1e293b;color:#e2e8f0;font-size:.7rem;font-weight:800;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;}
+    @media print{nav,.status-cell{display:none;}body{background:white;}}
+    @media(max-width:640px){.nav-links{display:none;}.stats{grid-template-columns:repeat(2,1fr);}.units-cell{display:none;}}
+  </style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand">Physics Foundations by Ravi ⚛️</a>
+    <div class="nav-links">
+      <a href="stories.html">Stories</a>
+      <a href="rules.html">Rules</a>
+      <a href="vision.html">Vision</a>
+      <a href="ideal-student.html">Ideal Student</a>
+      <a href="schedule.html" class="active">Schedule</a>
+    </div>
+    <a href="portal.html" class="nav-cta" target="_blank">Student Portal →</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-chip">Class Schedule · 2026–2027</div>
+  <h1>Physics Foundations — Session Plan</h1>
+  <p>1.5 hours every Saturday · Jun 2026 → Nov 2027</p>
+  <div class="stats">
+    <div class="stat"><div class="num">75</div><div class="lbl">Sessions</div></div>
+    <div class="stat"><div class="num">145</div><div class="lbl">Units</div></div>
+    <div class="stat"><div class="num">17</div><div class="lbl">Months</div></div>
+    <div class="stat"><div class="num">1.5h</div><div class="lbl">Per Saturday</div></div>
+  </div>
+</div>
+
+<main>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#93c5fd;"></div>Appendix / Background</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#86efac;"></div>Topic 1 · Space &amp; Motion</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e9d5ff;"></div>Topic 2 · Particulate Matter</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#fed7aa;"></div>Topic 3 · Waves</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#bae6fd;"></div>Topic 4 · Fields</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#fde047;"></div>Topic 5 · Nuclear &amp; Quantum</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#cbd5e1;"></div>Review &amp; Test</div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Date</th>
+        <th>Topic</th>
+        <th>Coverage</th>
+        <th>✓</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+    <tr class="term-header">
+      <td colspan="5">Term 1 · Jun–Dec 2026</td>
+    </tr>
+    <tr style="background:#eff6ff;border-left:4px solid #bfdbfe;">
+      <td class="sess-num">#1</td>
+      <td class="date-cell"><strong>14 Jun 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#1d4ed8;">0.1 Background Math</td>
+      <td class="units-cell">Units 1–3 of 23</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#eff6ff;border-left:4px solid #bfdbfe;">
+      <td class="sess-num">#2</td>
+      <td class="date-cell"><strong>21 Jun 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#1d4ed8;">0.1 Background Math</td>
+      <td class="units-cell">Units 4–6 of 23</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#eff6ff;border-left:4px solid #bfdbfe;">
+      <td class="sess-num">#3</td>
+      <td class="date-cell"><strong>28 Jun 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#1d4ed8;">0.1 Background Math</td>
+      <td class="units-cell">Units 7–9 of 23</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#eff6ff;border-left:4px solid #bfdbfe;">
+      <td class="sess-num">#4</td>
+      <td class="date-cell"><strong>05 Jul 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#1d4ed8;">0.1 Background Math</td>
+      <td class="units-cell">Units 10–12 of 23</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#eff6ff;border-left:4px solid #bfdbfe;">
+      <td class="sess-num">#5</td>
+      <td class="date-cell"><strong>12 Jul 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#1d4ed8;">0.1 Background Math</td>
+      <td class="units-cell">Units 13–15 of 23</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#eff6ff;border-left:4px solid #bfdbfe;">
+      <td class="sess-num">#6</td>
+      <td class="date-cell"><strong>19 Jul 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#1d4ed8;">0.1 Background Math</td>
+      <td class="units-cell">Units 16–18 of 23</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#eff6ff;border-left:4px solid #bfdbfe;">
+      <td class="sess-num">#7</td>
+      <td class="date-cell"><strong>26 Jul 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#1d4ed8;">0.1 Background Math</td>
+      <td class="units-cell">Units 19–21 of 23</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#eff6ff;border-left:4px solid #bfdbfe;">
+      <td class="sess-num">#8</td>
+      <td class="date-cell"><strong>02 Aug 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#1d4ed8;">0.1 Background Math</td>
+      <td class="units-cell">Units 22–23 of 23</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#9</td>
+      <td class="date-cell"><strong>09 Aug 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.1 Kinematics</td>
+      <td class="units-cell">Units 1–2 of 15</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#10</td>
+      <td class="date-cell"><strong>16 Aug 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.1 Kinematics</td>
+      <td class="units-cell">Units 3–4 of 15</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#11</td>
+      <td class="date-cell"><strong>23 Aug 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.1 Kinematics</td>
+      <td class="units-cell">Units 5–6 of 15</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#12</td>
+      <td class="date-cell"><strong>30 Aug 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.1 Kinematics</td>
+      <td class="units-cell">Units 7–8 of 15</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#13</td>
+      <td class="date-cell"><strong>06 Sep 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.1 Kinematics</td>
+      <td class="units-cell">Units 9–10 of 15</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#14</td>
+      <td class="date-cell"><strong>13 Sep 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.1 Kinematics</td>
+      <td class="units-cell">Units 11–12 of 15</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#15</td>
+      <td class="date-cell"><strong>20 Sep 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.1 Kinematics</td>
+      <td class="units-cell">Units 13–14 of 15</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#16</td>
+      <td class="date-cell"><strong>27 Sep 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.1 Kinematics</td>
+      <td class="units-cell">Units 15–15 of 15</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#17</td>
+      <td class="date-cell"><strong>04 Oct 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.2 Forces & Momentum</td>
+      <td class="units-cell">Units 1–2 of 17</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#18</td>
+      <td class="date-cell"><strong>11 Oct 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.2 Forces & Momentum</td>
+      <td class="units-cell">Units 3–4 of 17</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#19</td>
+      <td class="date-cell"><strong>18 Oct 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.2 Forces & Momentum</td>
+      <td class="units-cell">Units 5–6 of 17</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#20</td>
+      <td class="date-cell"><strong>25 Oct 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.2 Forces & Momentum</td>
+      <td class="units-cell">Units 7–8 of 17</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#21</td>
+      <td class="date-cell"><strong>01 Nov 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.2 Forces & Momentum</td>
+      <td class="units-cell">Units 9–10 of 17</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#22</td>
+      <td class="date-cell"><strong>08 Nov 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.2 Forces & Momentum</td>
+      <td class="units-cell">Units 11–12 of 17</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#23</td>
+      <td class="date-cell"><strong>15 Nov 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.2 Forces & Momentum</td>
+      <td class="units-cell">Units 13–14 of 17</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#24</td>
+      <td class="date-cell"><strong>22 Nov 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.2 Forces & Momentum</td>
+      <td class="units-cell">Units 15–16 of 17</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#25</td>
+      <td class="date-cell"><strong>29 Nov 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.2 Forces & Momentum</td>
+      <td class="units-cell">Units 17–17 of 17</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#26</td>
+      <td class="date-cell"><strong>06 Dec 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.3 Work, Energy & Power</td>
+      <td class="units-cell">Units 1–2 of 12</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#27</td>
+      <td class="date-cell"><strong>13 Dec 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.3 Work, Energy & Power</td>
+      <td class="units-cell">Units 3–4 of 12</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#28</td>
+      <td class="date-cell"><strong>20 Dec 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.3 Work, Energy & Power</td>
+      <td class="units-cell">Units 5–6 of 12</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#29</td>
+      <td class="date-cell"><strong>27 Dec 2026</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.3 Work, Energy & Power</td>
+      <td class="units-cell">Units 7–8 of 12</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr class="term-header">
+      <td colspan="5">Term 2 · Jan–Jun 2027</td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#30</td>
+      <td class="date-cell"><strong>03 Jan 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.3 Work, Energy & Power</td>
+      <td class="units-cell">Units 9–10 of 12</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0fdf4;border-left:4px solid #86efac;">
+      <td class="sess-num">#31</td>
+      <td class="date-cell"><strong>10 Jan 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#15803d;">1.3 Work, Energy & Power</td>
+      <td class="units-cell">Units 11–12 of 12</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f1f5f9;border-left:4px solid #cbd5e1;">
+      <td class="sess-num">#32</td>
+      <td class="date-cell"><strong>17 Jan 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#334155;"><strong>Topic 1 Review & Test</strong></td>
+      <td class="units-cell"><span class="rev-badge">Review</span></td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fdf4ff;border-left:4px solid #e9d5ff;">
+      <td class="sess-num">#33</td>
+      <td class="date-cell"><strong>24 Jan 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#7e22ce;">2.1 Thermal Energy Transfers</td>
+      <td class="units-cell">Units 1–2 of 7</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fdf4ff;border-left:4px solid #e9d5ff;">
+      <td class="sess-num">#34</td>
+      <td class="date-cell"><strong>31 Jan 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#7e22ce;">2.1 Thermal Energy Transfers</td>
+      <td class="units-cell">Units 3–4 of 7</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fdf4ff;border-left:4px solid #e9d5ff;">
+      <td class="sess-num">#35</td>
+      <td class="date-cell"><strong>07 Feb 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#7e22ce;">2.1 Thermal Energy Transfers</td>
+      <td class="units-cell">Units 5–6 of 7</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fdf4ff;border-left:4px solid #e9d5ff;">
+      <td class="sess-num">#36</td>
+      <td class="date-cell"><strong>14 Feb 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#7e22ce;">2.1 Thermal Energy Transfers</td>
+      <td class="units-cell">Units 7–7 of 7</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fdf4ff;border-left:4px solid #e9d5ff;">
+      <td class="sess-num">#37</td>
+      <td class="date-cell"><strong>21 Feb 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#7e22ce;">2.2 Greenhouse Effect</td>
+      <td class="units-cell">Units 1–1 of 1</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fdf4ff;border-left:4px solid #e9d5ff;">
+      <td class="sess-num">#38</td>
+      <td class="date-cell"><strong>28 Feb 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#7e22ce;">2.3 Gas Laws</td>
+      <td class="units-cell">Units 1–2 of 4</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fdf4ff;border-left:4px solid #e9d5ff;">
+      <td class="sess-num">#39</td>
+      <td class="date-cell"><strong>07 Mar 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#7e22ce;">2.3 Gas Laws</td>
+      <td class="units-cell">Units 3–4 of 4</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fdf4ff;border-left:4px solid #e9d5ff;">
+      <td class="sess-num">#40</td>
+      <td class="date-cell"><strong>14 Mar 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#7e22ce;">2.4 Current & Circuits</td>
+      <td class="units-cell">Units 1–2 of 10</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fdf4ff;border-left:4px solid #e9d5ff;">
+      <td class="sess-num">#41</td>
+      <td class="date-cell"><strong>21 Mar 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#7e22ce;">2.4 Current & Circuits</td>
+      <td class="units-cell">Units 3–4 of 10</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fdf4ff;border-left:4px solid #e9d5ff;">
+      <td class="sess-num">#42</td>
+      <td class="date-cell"><strong>28 Mar 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#7e22ce;">2.4 Current & Circuits</td>
+      <td class="units-cell">Units 5–6 of 10</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fdf4ff;border-left:4px solid #e9d5ff;">
+      <td class="sess-num">#43</td>
+      <td class="date-cell"><strong>04 Apr 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#7e22ce;">2.4 Current & Circuits</td>
+      <td class="units-cell">Units 7–8 of 10</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fdf4ff;border-left:4px solid #e9d5ff;">
+      <td class="sess-num">#44</td>
+      <td class="date-cell"><strong>11 Apr 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#7e22ce;">2.4 Current & Circuits</td>
+      <td class="units-cell">Units 9–10 of 10</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f1f5f9;border-left:4px solid #cbd5e1;">
+      <td class="sess-num">#45</td>
+      <td class="date-cell"><strong>18 Apr 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#334155;"><strong>Topic 2 Review & Test</strong></td>
+      <td class="units-cell"><span class="rev-badge">Review</span></td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fff7ed;border-left:4px solid #fed7aa;">
+      <td class="sess-num">#46</td>
+      <td class="date-cell"><strong>25 Apr 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#c2410c;">3.1 Simple Harmonic Motion</td>
+      <td class="units-cell">Units 1–2 of 2</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fff7ed;border-left:4px solid #fed7aa;">
+      <td class="sess-num">#47</td>
+      <td class="date-cell"><strong>02 May 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#c2410c;">3.2 Wave Model</td>
+      <td class="units-cell">Units 1–2 of 4</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fff7ed;border-left:4px solid #fed7aa;">
+      <td class="sess-num">#48</td>
+      <td class="date-cell"><strong>09 May 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#c2410c;">3.2 Wave Model</td>
+      <td class="units-cell">Units 3–4 of 4</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fff7ed;border-left:4px solid #fed7aa;">
+      <td class="sess-num">#49</td>
+      <td class="date-cell"><strong>16 May 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#c2410c;">3.3 Wave Phenomena</td>
+      <td class="units-cell">Units 1–2 of 11</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fff7ed;border-left:4px solid #fed7aa;">
+      <td class="sess-num">#50</td>
+      <td class="date-cell"><strong>23 May 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#c2410c;">3.3 Wave Phenomena</td>
+      <td class="units-cell">Units 3–4 of 11</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fff7ed;border-left:4px solid #fed7aa;">
+      <td class="sess-num">#51</td>
+      <td class="date-cell"><strong>30 May 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#c2410c;">3.3 Wave Phenomena</td>
+      <td class="units-cell">Units 5–6 of 11</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fff7ed;border-left:4px solid #fed7aa;">
+      <td class="sess-num">#52</td>
+      <td class="date-cell"><strong>06 Jun 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#c2410c;">3.3 Wave Phenomena</td>
+      <td class="units-cell">Units 7–8 of 11</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fff7ed;border-left:4px solid #fed7aa;">
+      <td class="sess-num">#53</td>
+      <td class="date-cell"><strong>13 Jun 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#c2410c;">3.3 Wave Phenomena</td>
+      <td class="units-cell">Units 9–10 of 11</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fff7ed;border-left:4px solid #fed7aa;">
+      <td class="sess-num">#54</td>
+      <td class="date-cell"><strong>20 Jun 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#c2410c;">3.3 Wave Phenomena</td>
+      <td class="units-cell">Units 11–11 of 11</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fff7ed;border-left:4px solid #fed7aa;">
+      <td class="sess-num">#55</td>
+      <td class="date-cell"><strong>27 Jun 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#c2410c;">3.4 Standing Waves & Resonance</td>
+      <td class="units-cell">Units 1–2 of 3</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr class="term-header">
+      <td colspan="5">Term 3 · Jul–Nov 2027</td>
+    </tr>
+    <tr style="background:#fff7ed;border-left:4px solid #fed7aa;">
+      <td class="sess-num">#56</td>
+      <td class="date-cell"><strong>04 Jul 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#c2410c;">3.4 Standing Waves & Resonance</td>
+      <td class="units-cell">Units 3–3 of 3</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f1f5f9;border-left:4px solid #cbd5e1;">
+      <td class="sess-num">#57</td>
+      <td class="date-cell"><strong>11 Jul 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#334155;"><strong>Topic 3 Review & Test</strong></td>
+      <td class="units-cell"><span class="rev-badge">Review</span></td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0f9ff;border-left:4px solid #bae6fd;">
+      <td class="sess-num">#58</td>
+      <td class="date-cell"><strong>18 Jul 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#0369a1;">4.1 Gravitational Fields</td>
+      <td class="units-cell">Units 1–1 of 1</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0f9ff;border-left:4px solid #bae6fd;">
+      <td class="sess-num">#59</td>
+      <td class="date-cell"><strong>25 Jul 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#0369a1;">4.2 Electric & Magnetic Fields</td>
+      <td class="units-cell">Units 1–2 of 8</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0f9ff;border-left:4px solid #bae6fd;">
+      <td class="sess-num">#60</td>
+      <td class="date-cell"><strong>01 Aug 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#0369a1;">4.2 Electric & Magnetic Fields</td>
+      <td class="units-cell">Units 3–4 of 8</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0f9ff;border-left:4px solid #bae6fd;">
+      <td class="sess-num">#61</td>
+      <td class="date-cell"><strong>08 Aug 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#0369a1;">4.2 Electric & Magnetic Fields</td>
+      <td class="units-cell">Units 5–6 of 8</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f0f9ff;border-left:4px solid #bae6fd;">
+      <td class="sess-num">#62</td>
+      <td class="date-cell"><strong>15 Aug 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#0369a1;">4.2 Electric & Magnetic Fields</td>
+      <td class="units-cell">Units 7–8 of 8</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#f1f5f9;border-left:4px solid #cbd5e1;">
+      <td class="sess-num">#63</td>
+      <td class="date-cell"><strong>22 Aug 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#334155;"><strong>Topic 4 Review & Test</strong></td>
+      <td class="units-cell"><span class="rev-badge">Review</span></td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fef9c3;border-left:4px solid #fde047;">
+      <td class="sess-num">#64</td>
+      <td class="date-cell"><strong>29 Aug 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#854d0e;">5.1 Structure of the Atom</td>
+      <td class="units-cell">Units 1–2 of 6</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fef9c3;border-left:4px solid #fde047;">
+      <td class="sess-num">#65</td>
+      <td class="date-cell"><strong>05 Sep 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#854d0e;">5.1 Structure of the Atom</td>
+      <td class="units-cell">Units 3–4 of 6</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fef9c3;border-left:4px solid #fde047;">
+      <td class="sess-num">#66</td>
+      <td class="date-cell"><strong>12 Sep 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#854d0e;">5.1 Structure of the Atom</td>
+      <td class="units-cell">Units 5–6 of 6</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fef9c3;border-left:4px solid #fde047;">
+      <td class="sess-num">#67</td>
+      <td class="date-cell"><strong>19 Sep 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#854d0e;">5.2 Radioactive Decay</td>
+      <td class="units-cell">Units 1–2 of 6</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fef9c3;border-left:4px solid #fde047;">
+      <td class="sess-num">#68</td>
+      <td class="date-cell"><strong>26 Sep 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#854d0e;">5.2 Radioactive Decay</td>
+      <td class="units-cell">Units 3–4 of 6</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fef9c3;border-left:4px solid #fde047;">
+      <td class="sess-num">#69</td>
+      <td class="date-cell"><strong>03 Oct 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#854d0e;">5.2 Radioactive Decay</td>
+      <td class="units-cell">Units 5–6 of 6</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fef9c3;border-left:4px solid #fde047;">
+      <td class="sess-num">#70</td>
+      <td class="date-cell"><strong>10 Oct 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#854d0e;">5.3 Fission</td>
+      <td class="units-cell">Units 1–1 of 1</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fef9c3;border-left:4px solid #fde047;">
+      <td class="sess-num">#71</td>
+      <td class="date-cell"><strong>17 Oct 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#854d0e;">5.4 Fusion & Stars</td>
+      <td class="units-cell">Units 1–2 of 4</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#fef9c3;border-left:4px solid #fde047;">
+      <td class="sess-num">#72</td>
+      <td class="date-cell"><strong>24 Oct 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#854d0e;">5.4 Fusion & Stars</td>
+      <td class="units-cell">Units 3–4 of 4</td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#0f172a;border-left:4px solid #334155;">
+      <td class="sess-num">#73</td>
+      <td class="date-cell"><strong>31 Oct 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#e2e8f0;"><strong>Final Review & Exam Prep</strong></td>
+      <td class="units-cell"><span class="rev-badge">Review</span></td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#0f172a;border-left:4px solid #334155;">
+      <td class="sess-num">#74</td>
+      <td class="date-cell"><strong>07 Nov 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#e2e8f0;"><strong>Final Review & Exam Prep</strong></td>
+      <td class="units-cell"><span class="rev-badge">Review</span></td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    <tr style="background:#0f172a;border-left:4px solid #334155;">
+      <td class="sess-num">#75</td>
+      <td class="date-cell"><strong>14 Nov 2027</strong><br><span class="day">Sunday</span></td>
+      <td class="topic-cell" style="color:#e2e8f0;"><strong>Final Review & Exam Prep</strong></td>
+      <td class="units-cell"><span class="rev-badge">Review</span></td>
+      <td class="status-cell"><span class="status-dot">○</span></td>
+    </tr>
+    </tbody>
+  </table>
+  <p style="text-align:center;margin-top:20px;font-size:.8rem;color:#94a3b8;">Stories (Topic 0.2) are assigned as independent reading — not scheduled as class sessions. Break weeks excluded.</p>
+</main>
+
+<footer style="background:#0f172a;color:rgba(255,255,255,.4);text-align:center;padding:24px 32px;font-size:.82rem;">
+  Physics Foundations by Ravi &nbsp;·&nbsp; <a href="mailto:misra.ravikant@gmail.com" style="color:rgba(255,255,255,.6);text-decoration:none;">misra.ravikant@gmail.com</a>
+</footer>
+</body>
+</html>
