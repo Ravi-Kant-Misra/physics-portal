@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Unit 9 – Acceleration-Time Graphs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --blue:#3b82f6;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+    --dark:#0f172a;--bg:#f8faff;
+    --card:#ffffff;--border:#e2e8f0;--text:#1e293b;--muted:#64748b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
+    background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);
+    background-size:28px 28px;min-height:100vh;
+  }
+
+  /* ── PASSWORD GATE ── */
+  #gate{
+    position:fixed;inset:0;z-index:9999;
+    background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 60%,#1e40af 100%);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .gate-box{
+    background:rgba(255,255,255,.08);backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,.2);border-radius:20px;
+    padding:48px 40px;text-align:center;width:min(380px,90vw);
+  }
+  .gate-box .lock{font-size:3rem;margin-bottom:12px;}
+  .gate-box h2{color:#fff;font-size:1.6rem;font-weight:800;margin-bottom:6px;}
+  .gate-box p{color:#bfdbfe;margin-bottom:24px;font-size:.95rem;}
+  .gate-box input{
+    width:100%;padding:12px 16px;border-radius:10px;
+    border:2px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);
+    color:#fff;font-family:'Space Mono',monospace;font-size:1rem;
+    outline:none;text-align:center;letter-spacing:3px;margin-bottom:14px;
+  }
+  .gate-box input::placeholder{color:rgba(255,255,255,.45);letter-spacing:1px;}
+  .gate-box input:focus{border-color:#93c5fd;}
+  .gate-btn{
+    width:100%;padding:13px;border-radius:10px;border:none;cursor:pointer;
+    background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+    color:#fff;font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:700;
+    transition:opacity .2s;
+  }
+  .gate-btn:hover{opacity:.9;}
+  .gate-err{color:#fca5a5;font-size:.9rem;margin-top:10px;display:none;}
+
+  /* ── HEADER ── */
+  header{
+    background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 60%,#1e40af 100%);
+    padding:60px 24px 50px;text-align:center;position:relative;overflow:hidden;
+  }
+  .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 3s infinite;}
+  @keyframes twinkle{0%,100%{opacity:.15}50%{opacity:.9}}
+  .chip{
+    display:inline-block;background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.3);color:#e0f2fe;
+    padding:6px 16px;border-radius:999px;font-size:.8rem;font-weight:700;
+    letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px;
+  }
+  header h1{
+    font-size:clamp(2rem,5vw,3.2rem);font-weight:900;
+    background:linear-gradient(135deg,#ffffff 0%,#93c5fd 60%,#bfdbfe 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;line-height:1.15;
+  }
+  header p.sub{color:#bfdbfe;margin-top:12px;font-size:1.05rem;}
+
+  /* ── LAYOUT ── */
+  main{max-width:900px;margin:0 auto;padding:40px 20px 60px;}
+
+  /* ── SECTION CARDS ── */
+  .card{
+    background:var(--card);border:1px solid var(--border);border-radius:16px;
+    padding:28px 28px 24px;margin-bottom:28px;box-shadow:0 2px 12px rgba(0,0,0,.06);
+  }
+  .card-title{
+    font-size:1.15rem;font-weight:800;margin-bottom:16px;display:flex;
+    align-items:center;gap:10px;
+  }
+  .badge{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:30px;height:30px;border-radius:8px;font-size:.85rem;font-weight:800;
+    color:#fff;flex-shrink:0;
+  }
+  .badge-blue{background:var(--blue);}
+  .badge-green{background:var(--green);}
+  .badge-amber{background:var(--amber);}
+  .badge-red{background:var(--red);}
+
+  /* ── KEY POINTS BOX ── */
+  .key-box{
+    background:#eff6ff;border-left:4px solid var(--blue);border-radius:0 10px 10px 0;
+    padding:16px 18px;margin-bottom:20px;
+  }
+  .key-box .kh{font-weight:700;color:#1d4ed8;margin-bottom:8px;font-size:.95rem;}
+  .key-box ul{padding-left:18px;}
+  .key-box ul li{margin-bottom:6px;font-size:.93rem;line-height:1.55;}
+
+  /* ── FORMULA BOX ── */
+  .formula-box{
+    display:inline-block;background:#1e3a5f;color:#e0f2fe;
+    font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:700;
+    padding:12px 28px;border-radius:10px;margin:10px 0;letter-spacing:.04em;
+  }
+
+  /* ── SVG GRAPHS ── */
+  .graph-wrap{
+    background:#f8faff;border:1px solid var(--border);border-radius:12px;
+    padding:16px;margin:16px 0;overflow-x:auto;
+  }
+  svg text{font-family:'Nunito',sans-serif;}
+
+  /* ── WORKED EXAMPLE ── */
+  .example-box{
+    background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;
+    padding:20px 22px;margin:16px 0;
+  }
+  .example-box .ex-title{
+    font-weight:800;color:#15803d;margin-bottom:12px;font-size:.95rem;
+    text-transform:uppercase;letter-spacing:.06em;
+  }
+  .step-row{
+    display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;
+  }
+  .step-num{
+    background:#22c55e;color:#fff;border-radius:6px;font-size:.78rem;
+    font-weight:700;padding:2px 7px;flex-shrink:0;margin-top:2px;
+  }
+  .step-text{font-size:.93rem;line-height:1.55;}
+
+  /* ── DELTA-V TABLE ── */
+  table.dv{width:100%;border-collapse:collapse;margin:12px 0;}
+  table.dv th{background:#1e3a5f;color:#e0f2fe;padding:8px 10px;font-size:.85rem;text-align:left;}
+  table.dv td{padding:8px 10px;border-bottom:1px solid #e2e8f0;font-size:.88rem;font-family:'Space Mono',monospace;}
+  table.dv tr:nth-child(even) td{background:#f1f5f9;}
+  table.dv tr.total td{background:#dbeafe;font-weight:700;}
+
+  /* ── QUIZ ── */
+  .quiz-card{
+    background:linear-gradient(135deg,#eff6ff 0%,#f0f9ff 100%);
+    border:1px solid #bfdbfe;border-radius:14px;padding:24px;margin-bottom:20px;
+  }
+  .q-text{font-weight:700;font-size:1rem;margin-bottom:16px;line-height:1.55;}
+  .q-num{
+    display:inline-block;background:var(--blue);color:#fff;border-radius:6px;
+    padding:2px 8px;font-size:.8rem;font-weight:700;margin-right:6px;
+  }
+  .options{display:flex;flex-direction:column;gap:8px;}
+  .opt{
+    padding:10px 14px;border-radius:8px;border:2px solid #bfdbfe;
+    background:#fff;cursor:pointer;font-size:.93rem;transition:all .18s;
+    font-family:'Nunito',sans-serif;text-align:left;
+  }
+  .opt:hover{border-color:var(--blue);background:#eff6ff;}
+  .opt.correct{border-color:var(--green);background:#f0fdf4;color:#15803d;font-weight:700;}
+  .opt.wrong{border-color:var(--red);background:#fff1f2;color:#b91c1c;}
+  .feedback{margin-top:10px;font-size:.9rem;font-weight:700;min-height:20px;}
+  .feedback.ok{color:#15803d;}
+  .feedback.no{color:#b91c1c;}
+
+  /* ── SCORE BAR ── */
+  #score-banner{
+    background:linear-gradient(135deg,#1e3a5f,#1d4ed8);color:#fff;
+    border-radius:14px;padding:20px 24px;text-align:center;margin-top:8px;display:none;
+  }
+  #score-banner h3{font-size:1.3rem;margin-bottom:4px;}
+  #score-banner p{color:#bfdbfe;font-size:.95rem;}
+
+  .divider{border:none;border-top:2px dashed #e2e8f0;margin:30px 0;}
+
+  /* ── CONVERT DIAGRAM ── */
+  .convert-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;}
+  @media(max-width:600px){.convert-grid{grid-template-columns:1fr;}}
+  .convert-panel{
+    background:#f8faff;border:1px solid var(--border);border-radius:10px;
+    padding:14px;text-align:center;
+  }
+  .convert-panel .cp-label{
+    font-size:.82rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="lock">🔒</div>
+    <h2>Physics Portal</h2>
+    <p>Enter the class password to continue</p>
+    <input type="password" id="pw-input" placeholder="password" onkeydown="if(event.key==='Enter')checkPw()"/>
+    <button class="gate-btn" onclick="checkPw()">Unlock</button>
+    <div class="gate-err" id="pw-err">Incorrect password — try again.</div>
+  </div>
+</div>
+
+<!-- STARS -->
+<header>
+  <!-- twinkling stars -->
+  <div class="star" style="width:3px;height:3px;top:12%;left:8%;animation-delay:.2s;animation-duration:2.5s;"></div>
+  <div class="star" style="width:2px;height:2px;top:25%;left:18%;animation-delay:.8s;animation-duration:3.2s;"></div>
+  <div class="star" style="width:4px;height:4px;top:18%;left:35%;animation-delay:1.2s;animation-duration:2.8s;"></div>
+  <div class="star" style="width:2px;height:2px;top:40%;left:50%;animation-delay:.5s;animation-duration:3.5s;"></div>
+  <div class="star" style="width:3px;height:3px;top:10%;left:65%;animation-delay:1.5s;animation-duration:2.2s;"></div>
+  <div class="star" style="width:2px;height:2px;top:30%;left:78%;animation-delay:.3s;animation-duration:3s;"></div>
+  <div class="star" style="width:4px;height:4px;top:20%;left:90%;animation-delay:.9s;animation-duration:2.7s;"></div>
+  <div class="star" style="width:2px;height:2px;top:55%;left:5%;animation-delay:1.8s;animation-duration:3.1s;"></div>
+  <div class="star" style="width:3px;height:3px;top:60%;left:92%;animation-delay:.6s;animation-duration:2.6s;"></div>
+
+  <div class="chip">Kinematics · Unit 9</div>
+  <h1>Acceleration-Time Graphs</h1>
+  <p class="sub">Reading, interpreting and converting A-T graphs</p>
+</header>
+
+<main>
+
+  <!-- SLIDE 2 — What is an A-T Graph -->
+  <div class="card">
+    <div class="card-title">
+      <span class="badge badge-blue">1</span>
+      What is an Acceleration-Time Graph?
+    </div>
+    <div class="key-box">
+      <div class="kh">Key Facts</div>
+      <ul>
+        <li>An A-T graph plots <strong>acceleration</strong> on the y-axis (units: ms⁻²) against <strong>time</strong> on the x-axis (units: s).</li>
+        <li>It turns complicated motion into a simple picture that is easy to read at a glance.</li>
+        <li>For <strong>constant acceleration</strong>, the graph is always a <em>horizontal line</em> — because the acceleration does not change with time.</li>
+        <li>A positive y-value means the object is speeding up (in the positive direction); a negative y-value means it is slowing down or accelerating backwards.</li>
+      </ul>
+    </div>
+    <div class="graph-wrap">
+      <svg width="480" height="220" viewBox="0 0 480 220">
+        <!-- axes -->
+        <line x1="60" y1="20" x2="60" y2="190" stroke="#334155" stroke-width="2"/>
+        <line x1="55" y1="105" x2="460" y2="105" stroke="#334155" stroke-width="2"/>
+        <!-- y ticks + labels -->
+        <text x="52" y="109" text-anchor="end" font-size="11" fill="#64748b">0</text>
+        <line x1="57" y1="65" x2="63" y2="65" stroke="#334155" stroke-width="1.5"/>
+        <text x="52" y="69" text-anchor="end" font-size="11" fill="#64748b">2</text>
+        <line x1="57" y1="25" x2="63" y2="25" stroke="#334155" stroke-width="1.5"/>
+        <text x="52" y="29" text-anchor="end" font-size="11" fill="#64748b">4</text>
+        <line x1="57" y1="145" x2="63" y2="145" stroke="#334155" stroke-width="1.5"/>
+        <text x="52" y="149" text-anchor="end" font-size="11" fill="#64748b">−2</text>
+        <line x1="57" y1="185" x2="63" y2="185" stroke="#334155" stroke-width="1.5"/>
+        <text x="52" y="189" text-anchor="end" font-size="11" fill="#64748b">−4</text>
+        <!-- x ticks -->
+        <line x1="160" y1="102" x2="160" y2="108" stroke="#334155" stroke-width="1.5"/>
+        <text x="160" y="120" text-anchor="middle" font-size="11" fill="#64748b">3</text>
+        <line x1="260" y1="102" x2="260" y2="108" stroke="#334155" stroke-width="1.5"/>
+        <text x="260" y="120" text-anchor="middle" font-size="11" fill="#64748b">6</text>
+        <line x1="360" y1="102" x2="360" y2="108" stroke="#334155" stroke-width="1.5"/>
+        <text x="360" y="120" text-anchor="middle" font-size="11" fill="#64748b">9</text>
+        <line x1="430" y1="102" x2="430" y2="108" stroke="#334155" stroke-width="1.5"/>
+        <text x="430" y="120" text-anchor="middle" font-size="11" fill="#64748b">11</text>
+        <!-- axis labels -->
+        <text x="460" y="120" font-size="11" fill="#334155" font-weight="700">t / s</text>
+        <text x="10" y="60" font-size="11" fill="#334155" font-weight="700" transform="rotate(-90,10,90)">a / ms⁻²</text>
+        <!-- Section 1: a=+3, t=0-3 (y = 105 - 3*20 = 45) -->
+        <rect x="60" y="45" width="100" height="60" fill="#3b82f620" stroke="none"/>
+        <line x1="60" y1="45" x2="160" y2="45" stroke="#3b82f6" stroke-width="3"/>
+        <text x="85" y="38" font-size="11" fill="#3b82f6" font-weight="700">a = +3</text>
+        <!-- vertical at t=3 -->
+        <line x1="160" y1="45" x2="160" y2="105" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <!-- Section 2: a=-2, t=3-5 (y=105+2*20=145) -->
+        <rect x="160" y="105" width="67" height="40" fill="#ef444420" stroke="none"/>
+        <line x1="160" y1="145" x2="227" y2="145" stroke="#ef4444" stroke-width="3"/>
+        <text x="172" y="162" font-size="11" fill="#ef4444" font-weight="700">a = −2</text>
+        <!-- vertical at t=5 -->
+        <line x1="227" y1="105" x2="227" y2="145" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <!-- Section 3: a=+1, t=5-8 (y=105-1*20=85) -->
+        <rect x="227" y="85" width="100" height="20" fill="#22c55e20" stroke="none"/>
+        <line x1="227" y1="85" x2="327" y2="85" stroke="#22c55e" stroke-width="3"/>
+        <text x="255" y="75" font-size="11" fill="#22c55e" font-weight="700">a = +1</text>
+        <!-- vertical at t=8 -->
+        <line x1="327" y1="85" x2="327" y2="105" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <!-- Section 4: a=-1, t=10-12 (y=105+1*20=125) -->
+        <rect x="393" y="105" width="67" height="20" fill="#f59e0b20" stroke="none"/>
+        <line x1="393" y1="125" x2="460" y2="125" stroke="#f59e0b" stroke-width="3"/>
+        <text x="400" y="142" font-size="11" fill="#f59e0b" font-weight="700">a = −1</text>
+      </svg>
+    </div>
+    <p style="font-size:.88rem;color:var(--muted);margin-top:4px;">Notice: every section is a <strong>horizontal line</strong> because acceleration is constant in each segment. The line height tells you the value of acceleration; positive lines sit above the x-axis, negative lines below it.</p>
+  </div>
+
+  <!-- SLIDE 4 — Area under A-T curve -->
+  <div class="card">
+    <div class="card-title">
+      <span class="badge badge-green">2</span>
+      Area Under an A-T Graph = Change in Velocity
+    </div>
+    <div class="key-box">
+      <div class="kh">The Golden Rule</div>
+      <ul>
+        <li>The "area under the curve" is the rectangular area between the graph line and the x-axis.</li>
+        <li><strong>Area = a × t = ΔV</strong> — this gives the <em>change in velocity</em> during that time interval.</li>
+        <li>Area <strong>above</strong> the x-axis → positive ΔV (object gains speed in the positive direction).</li>
+        <li>Area <strong>below</strong> the x-axis → negative ΔV (object loses speed or gains speed in the negative direction).</li>
+        <li>Add all ΔV values to find the <em>total change in velocity</em> over the whole journey.</li>
+      </ul>
+    </div>
+    <div style="text-align:center;">
+      <div class="formula-box">Area = a × t = ΔV</div>
+    </div>
+
+    <!-- worked example slide 4 -->
+    <div class="example-box" style="margin-top:18px;">
+      <div class="ex-title">Worked Example — Slide 4</div>
+      <p style="font-size:.92rem;margin-bottom:14px;">The A-T graph below has four sections. Find the total change in velocity.</p>
+      <!-- SVG for slide 4 graph -->
+      <div class="graph-wrap">
+        <svg width="480" height="200" viewBox="0 0 480 200">
+          <!-- axes -->
+          <line x1="60" y1="15" x2="60" y2="180" stroke="#334155" stroke-width="2"/>
+          <line x1="55" y1="100" x2="460" y2="100" stroke="#334155" stroke-width="2"/>
+          <!-- y labels: 0 at 100, 1 unit = 20px -->
+          <text x="52" y="104" text-anchor="end" font-size="11" fill="#64748b">0</text>
+          <line x1="57" y1="40" x2="63" y2="40" stroke="#334155" stroke-width="1"/>
+          <text x="52" y="44" text-anchor="end" font-size="11" fill="#64748b">3</text>
+          <line x1="57" y1="140" x2="63" y2="140" stroke="#334155" stroke-width="1"/>
+          <text x="52" y="144" text-anchor="end" font-size="11" fill="#64748b">−3</text>
+          <line x1="57" y1="180" x2="63" y2="180" stroke="#334155" stroke-width="1"/>
+          <text x="52" y="184" text-anchor="end" font-size="11" fill="#64748b">−4</text>
+          <!-- x ticks: 1unit=33px; 0→60, 5→225, 8→324, 10→390, 11→423 -->
+          <line x1="225" y1="97" x2="225" y2="103" stroke="#334155" stroke-width="1"/>
+          <text x="225" y="115" text-anchor="middle" font-size="11" fill="#64748b">5</text>
+          <line x1="324" y1="97" x2="324" y2="103" stroke="#334155" stroke-width="1"/>
+          <text x="324" y="115" text-anchor="middle" font-size="11" fill="#64748b">8</text>
+          <line x1="390" y1="97" x2="390" y2="103" stroke="#334155" stroke-width="1"/>
+          <text x="390" y="115" text-anchor="middle" font-size="11" fill="#64748b">10</text>
+          <line x1="423" y1="97" x2="423" y2="103" stroke="#334155" stroke-width="1"/>
+          <text x="423" y="115" text-anchor="middle" font-size="11" fill="#64748b">11</text>
+          <text x="455" y="115" font-size="11" fill="#334155" font-weight="700">t / s</text>
+          <!-- Section 1: a=3, t=0-5, y=100-3*20=40 -->
+          <rect x="60" y="40" width="165" height="60" fill="#3b82f625"/>
+          <line x1="60" y1="40" x2="225" y2="40" stroke="#3b82f6" stroke-width="3"/>
+          <line x1="225" y1="40" x2="225" y2="100" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <text x="105" y="72" text-anchor="middle" font-size="12" fill="#1d4ed8" font-weight="700">+15 ms⁻¹</text>
+          <!-- Section 2: a=1, t=5-8, y=100-1*20=80 -->
+          <rect x="225" y="80" width="99" height="20" fill="#22c55e25"/>
+          <line x1="225" y1="80" x2="324" y2="80" stroke="#22c55e" stroke-width="3"/>
+          <line x1="324" y1="80" x2="324" y2="100" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <text x="274" y="73" text-anchor="middle" font-size="12" fill="#15803d" font-weight="700">+3 ms⁻¹</text>
+          <!-- Section 3: a=0, t=8-10 (on x-axis) -->
+          <line x1="324" y1="100" x2="390" y2="100" stroke="#64748b" stroke-width="3"/>
+          <text x="357" y="90" text-anchor="middle" font-size="11" fill="#64748b">0 ms⁻¹</text>
+          <!-- Section 4: a=-4, t=10-11, y=100+4*20=180 -->
+          <rect x="390" y="100" width="33" height="80" fill="#ef444425"/>
+          <line x1="390" y1="180" x2="423" y2="180" stroke="#ef4444" stroke-width="3"/>
+          <line x1="390" y1="100" x2="390" y2="180" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line x1="423" y1="100" x2="423" y2="180" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <text x="406" y="158" text-anchor="middle" font-size="11" fill="#b91c1c" font-weight="700">−4 ms⁻¹</text>
+        </svg>
+      </div>
+      <table class="dv">
+        <tr><th>Section</th><th>a (ms⁻²)</th><th>t (s)</th><th>ΔV = a × t</th></tr>
+        <tr><td>t = 0 → 5 s</td><td>+3</td><td>5</td><td>+15 ms⁻¹</td></tr>
+        <tr><td>t = 5 → 8 s</td><td>+1</td><td>3</td><td>+3 ms⁻¹</td></tr>
+        <tr><td>t = 8 → 10 s</td><td>0</td><td>2</td><td>0 ms⁻¹</td></tr>
+        <tr><td>t = 10 → 11 s</td><td>−4</td><td>1</td><td>−4 ms⁻¹</td></tr>
+        <tr class="total"><td colspan="3">Total ΔV</td><td>+14 ms⁻¹</td></tr>
+      </table>
+      <div class="step-row" style="margin-top:8px;">
+        <span class="step-num">Note</span>
+        <span class="step-text">Total = 15 + 3 + 0 − 4 = <strong>+14 ms⁻¹</strong>. The object's velocity increased by 14 ms⁻¹ over the 11 seconds.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5 — Another worked example with speedometer -->
+  <div class="card">
+    <div class="card-title">
+      <span class="badge badge-amber">3</span>
+      Worked Example — Finding Total ΔV with Speedometer
+    </div>
+    <p style="font-size:.93rem;margin-bottom:14px;">An object starts at rest (v = 0 ms⁻¹). Use the A-T graph below to find the velocity after 12 seconds.</p>
+    <div class="graph-wrap">
+      <svg width="480" height="200" viewBox="0 0 480 200">
+        <!-- axes -->
+        <line x1="60" y1="15" x2="60" y2="180" stroke="#334155" stroke-width="2"/>
+        <line x1="55" y1="105" x2="460" y2="105" stroke="#334155" stroke-width="2"/>
+        <text x="52" y="109" text-anchor="end" font-size="11" fill="#64748b">0</text>
+        <!-- y: 1 unit = 25px -->
+        <line x1="57" y1="30" x2="63" y2="30" stroke="#334155" stroke-width="1"/>
+        <text x="52" y="34" text-anchor="end" font-size="11" fill="#64748b">3</text>
+        <line x1="57" y1="80" x2="63" y2="80" stroke="#334155" stroke-width="1"/>
+        <text x="52" y="84" text-anchor="end" font-size="11" fill="#64748b">1</text>
+        <line x1="57" y1="130" x2="63" y2="130" stroke="#334155" stroke-width="1"/>
+        <text x="52" y="134" text-anchor="end" font-size="11" fill="#64748b">−1</text>
+        <!-- x: 1s = 33px; t=3→159, t=7→291, t=10→390, t=12→456 -->
+        <line x1="159" y1="102" x2="159" y2="108" stroke="#334155" stroke-width="1"/>
+        <text x="159" y="120" text-anchor="middle" font-size="11" fill="#64748b">3</text>
+        <line x1="291" y1="102" x2="291" y2="108" stroke="#334155" stroke-width="1"/>
+        <text x="291" y="120" text-anchor="middle" font-size="11" fill="#64748b">7</text>
+        <line x1="390" y1="102" x2="390" y2="108" stroke="#334155" stroke-width="1"/>
+        <text x="390" y="120" text-anchor="middle" font-size="11" fill="#64748b">10</text>
+        <line x1="456" y1="102" x2="456" y2="108" stroke="#334155" stroke-width="1"/>
+        <text x="456" y="120" text-anchor="middle" font-size="11" fill="#64748b">12</text>
+        <text x="465" y="115" font-size="11" fill="#334155" font-weight="700">t</text>
+        <!-- Sec1: a=+3, t=0-3 → y=105-3*25=30 -->
+        <rect x="60" y="30" width="99" height="75" fill="#3b82f620"/>
+        <line x1="60" y1="30" x2="159" y2="30" stroke="#3b82f6" stroke-width="3"/>
+        <line x1="159" y1="30" x2="159" y2="105" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="110" y="70" text-anchor="middle" font-size="12" fill="#1d4ed8" font-weight="700">+9 ms⁻¹</text>
+        <!-- Sec2: a=-1, t=3-7 → y=105+25=130 -->
+        <rect x="159" y="105" width="132" height="25" fill="#ef444420"/>
+        <line x1="159" y1="130" x2="291" y2="130" stroke="#ef4444" stroke-width="3"/>
+        <line x1="291" y1="105" x2="291" y2="130" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="225" y="148" text-anchor="middle" font-size="12" fill="#b91c1c" font-weight="700">−4 ms⁻¹</text>
+        <!-- Sec3: a=+1, t=7-10 → y=105-25=80 -->
+        <rect x="291" y="80" width="99" height="25" fill="#22c55e20"/>
+        <line x1="291" y1="80" x2="390" y2="80" stroke="#22c55e" stroke-width="3"/>
+        <line x1="390" y1="80" x2="390" y2="105" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="340" y="70" text-anchor="middle" font-size="12" fill="#15803d" font-weight="700">+3 ms⁻¹</text>
+        <!-- Sec4: a=-1, t=10-12 → y=130 -->
+        <rect x="390" y="105" width="66" height="25" fill="#f59e0b20"/>
+        <line x1="390" y1="130" x2="456" y2="130" stroke="#f59e0b" stroke-width="3"/>
+        <line x1="456" y1="105" x2="456" y2="130" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="423" y="148" text-anchor="middle" font-size="12" fill="#b45309" font-weight="700">−2 ms⁻¹</text>
+      </svg>
+    </div>
+    <table class="dv">
+      <tr><th>Section</th><th>a (ms⁻²)</th><th>Δt (s)</th><th>ΔV = a × t</th><th>Running v (ms⁻¹)</th></tr>
+      <tr><td>Start</td><td>—</td><td>—</td><td>—</td><td>0</td></tr>
+      <tr><td>t = 0 → 3 s</td><td>+3</td><td>3</td><td>+9</td><td>9</td></tr>
+      <tr><td>t = 3 → 7 s</td><td>−1</td><td>4</td><td>−4</td><td>5</td></tr>
+      <tr><td>t = 7 → 10 s</td><td>+1</td><td>3</td><td>+3</td><td>8</td></tr>
+      <tr><td>t = 10 → 12 s</td><td>−1</td><td>2</td><td>−2</td><td>6</td></tr>
+      <tr class="total"><td colspan="3">Final velocity at t = 12 s</td><td>Net ΔV = +6</td><td>v = 6 ms⁻¹</td></tr>
+    </table>
+  </div>
+
+  <!-- SLIDE 6 — VT → AT conversion -->
+  <div class="card">
+    <div class="card-title">
+      <span class="badge badge-blue">4</span>
+      Converting Velocity-Time Graphs to Acceleration-Time Graphs
+    </div>
+    <div class="key-box">
+      <div class="kh">The Rule</div>
+      <ul>
+        <li>The <strong>slope (gradient)</strong> of a V-T graph equals the acceleration at that moment.</li>
+        <li>Find the slope of each straight section: slope = rise ÷ run = Δv ÷ Δt.</li>
+        <li>Each slope becomes a <em>horizontal line</em> on the corresponding A-T graph at that acceleration value.</li>
+      </ul>
+    </div>
+    <div class="convert-grid">
+      <div class="convert-panel">
+        <div class="cp-label">V-T Graph (input)</div>
+        <svg width="200" height="160" viewBox="0 0 200 160">
+          <line x1="30" y1="10" x2="30" y2="145" stroke="#334155" stroke-width="1.5"/>
+          <line x1="25" y1="80" x2="195" y2="80" stroke="#334155" stroke-width="1.5"/>
+          <text x="192" y="90" font-size="9" fill="#334155">t</text>
+          <text x="5" y="14" font-size="9" fill="#334155">v</text>
+          <!-- Sec1: slope=+1, t=0-3 (0→90px), v: 0→3 (y:80→50) -->
+          <line x1="30" y1="80" x2="90" y2="50" stroke="#3b82f6" stroke-width="2.5"/>
+          <text x="55" y="58" font-size="9" fill="#3b82f6">slope=+1</text>
+          <!-- Sec2: slope=0, t=3-6 (90→150px), v stays 3 (y=50) -->
+          <line x1="90" y1="50" x2="150" y2="50" stroke="#22c55e" stroke-width="2.5"/>
+          <text x="108" y="42" font-size="9" fill="#22c55e">slope=0</text>
+          <!-- Sec3: slope=-1, t=6-9 (150→195px), v: 3→0 (y:50→80) -->
+          <line x1="150" y1="50" x2="195" y2="80" stroke="#ef4444" stroke-width="2.5"/>
+          <text x="155" y="55" font-size="9" fill="#ef4444">slope=−1</text>
+          <!-- x ticks -->
+          <line x1="90" y1="78" x2="90" y2="82" stroke="#334155" stroke-width="1"/>
+          <text x="90" y="93" text-anchor="middle" font-size="9" fill="#64748b">3</text>
+          <line x1="150" y1="78" x2="150" y2="82" stroke="#334155" stroke-width="1"/>
+          <text x="150" y="93" text-anchor="middle" font-size="9" fill="#64748b">6</text>
+          <line x1="195" y1="78" x2="195" y2="82" stroke="#334155" stroke-width="1"/>
+          <text x="195" y="93" text-anchor="middle" font-size="9" fill="#64748b">9</text>
+        </svg>
+      </div>
+      <div class="convert-panel">
+        <div class="cp-label">A-T Graph (result)</div>
+        <svg width="200" height="160" viewBox="0 0 200 160">
+          <line x1="30" y1="10" x2="30" y2="145" stroke="#334155" stroke-width="1.5"/>
+          <line x1="25" y1="80" x2="195" y2="80" stroke="#334155" stroke-width="1.5"/>
+          <text x="192" y="90" font-size="9" fill="#334155">t</text>
+          <text x="5" y="14" font-size="9" fill="#334155">a</text>
+          <!-- Sec1: a=+1 → y=80-20=60 -->
+          <line x1="30" y1="60" x2="90" y2="60" stroke="#3b82f6" stroke-width="2.5"/>
+          <line x1="90" y1="60" x2="90" y2="80" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <text x="56" y="52" font-size="9" fill="#3b82f6">a = +1</text>
+          <!-- Sec2: a=0 → on x-axis y=80 -->
+          <line x1="90" y1="80" x2="150" y2="80" stroke="#22c55e" stroke-width="2.5"/>
+          <text x="115" y="72" font-size="9" fill="#22c55e">a = 0</text>
+          <!-- Sec3: a=-1 → y=100 -->
+          <line x1="150" y1="100" x2="195" y2="100" stroke="#ef4444" stroke-width="2.5"/>
+          <line x1="150" y1="80" x2="150" y2="100" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <text x="162" y="115" font-size="9" fill="#ef4444">a = −1</text>
+          <!-- x ticks -->
+          <line x1="90" y1="78" x2="90" y2="82" stroke="#334155" stroke-width="1"/>
+          <text x="90" y="93" text-anchor="middle" font-size="9" fill="#64748b">3</text>
+          <line x1="150" y1="78" x2="150" y2="82" stroke="#334155" stroke-width="1"/>
+          <text x="150" y="93" text-anchor="middle" font-size="9" fill="#64748b">6</text>
+          <line x1="195" y1="78" x2="195" y2="82" stroke="#334155" stroke-width="1"/>
+          <text x="195" y="93" text-anchor="middle" font-size="9" fill="#64748b">9</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7 — AT → VT conversion -->
+  <div class="card">
+    <div class="card-title">
+      <span class="badge badge-red">5</span>
+      Converting Acceleration-Time Graphs to Velocity-Time Graphs
+    </div>
+    <div class="key-box">
+      <div class="kh">Two Methods</div>
+      <ul>
+        <li><strong>Method 1 (Slope):</strong> Acceleration = slope of V-T graph. Draw V-T line segments with gradients equal to the acceleration values shown on the A-T graph.</li>
+        <li><strong>Method 2 (Area):</strong> Area under A-T curve = ΔV. Starting from the initial velocity, add each ΔV to find the velocity at the end of each section, then connect with straight lines.</li>
+      </ul>
+    </div>
+    <div class="example-box">
+      <div class="ex-title">Worked Example — Slide 7 (starting velocity = 0 ms⁻¹)</div>
+      <p style="font-size:.92rem;margin-bottom:12px;">AT sections: a = +2 ms⁻² (0–3 s), a = −5/4 ms⁻² (3–7 s), a = 0 (7–9 s), a = +2 ms⁻² (9–12 s)</p>
+      <table class="dv">
+        <tr><th>Section</th><th>a</th><th>Δt</th><th>ΔV</th><th>v at end of section</th></tr>
+        <tr><td>0 → 3 s</td><td>+2</td><td>3</td><td>+6</td><td>6 ms⁻¹</td></tr>
+        <tr><td>3 → 7 s</td><td>−5/4</td><td>4</td><td>−5</td><td>1 ms⁻¹</td></tr>
+        <tr><td>7 → 9 s</td><td>0</td><td>2</td><td>0</td><td>1 ms⁻¹</td></tr>
+        <tr><td>9 → 12 s</td><td>+2</td><td>3</td><td>+6</td><td>7 ms⁻¹</td></tr>
+      </table>
+      <p style="font-size:.88rem;margin-top:8px;color:var(--muted);">Plot these end-of-section velocities and connect with straight lines to get the V-T graph.</p>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- QUIZ SECTION -->
+  <div class="card">
+    <div class="card-title">
+      <span class="badge badge-blue">Q</span>
+      Quick Check Quiz
+    </div>
+    <p style="font-size:.93rem;margin-bottom:20px;color:var(--muted);">Test your understanding before moving on. Select the best answer for each question.</p>
+
+    <!-- Q1 -->
+    <div class="quiz-card">
+      <div class="q-text"><span class="q-num">1</span> On an acceleration-time graph, what does the y-axis represent?</div>
+      <div class="options">
+        <button class="opt" onclick="checkAns(this,'wrong')">Velocity (ms⁻¹)</button>
+        <button class="opt" onclick="checkAns(this,'correct')">Acceleration (ms⁻²)</button>
+        <button class="opt" onclick="checkAns(this,'wrong')">Displacement (m)</button>
+        <button class="opt" onclick="checkAns(this,'wrong')">Time (s)</button>
+      </div>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-card">
+      <div class="q-text"><span class="q-num">2</span> An object accelerates at 4 ms⁻² for 6 seconds. What is the change in velocity?</div>
+      <div class="options">
+        <button class="opt" onclick="checkAns(this,'wrong')">10 ms⁻¹</button>
+        <button class="opt" onclick="checkAns(this,'wrong')">2 ms⁻¹</button>
+        <button class="opt" onclick="checkAns(this,'correct')">24 ms⁻¹</button>
+        <button class="opt" onclick="checkAns(this,'wrong')">20 ms⁻¹</button>
+      </div>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-card">
+      <div class="q-text"><span class="q-num">3</span> An A-T graph shows a = +5 ms⁻² for 3 s, then a = −2 ms⁻² for 4 s. Starting from rest, what is the final velocity?</div>
+      <div class="options">
+        <button class="opt" onclick="checkAns(this,'wrong')">23 ms⁻¹</button>
+        <button class="opt" onclick="checkAns(this,'correct')">7 ms⁻¹</button>
+        <button class="opt" onclick="checkAns(this,'wrong')">−8 ms⁻¹</button>
+        <button class="opt" onclick="checkAns(this,'wrong')">15 ms⁻¹</button>
+      </div>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="quiz-card">
+      <div class="q-text"><span class="q-num">4</span> A V-T graph shows velocity increasing from 0 to 12 ms⁻¹ in 4 seconds. What value does the corresponding A-T graph show?</div>
+      <div class="options">
+        <button class="opt" onclick="checkAns(this,'wrong')">12 ms⁻²</button>
+        <button class="opt" onclick="checkAns(this,'wrong')">48 ms⁻²</button>
+        <button class="opt" onclick="checkAns(this,'correct')">3 ms⁻²</button>
+        <button class="opt" onclick="checkAns(this,'wrong')">0.33 ms⁻²</button>
+      </div>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div id="score-banner">
+      <h3 id="score-text"></h3>
+      <p id="score-sub"></p>
+    </div>
+  </div>
+
+</main>
+
+<script>
+/* ── PASSWORD GATE ── */
+(function(){
+  const KEY='pg_ok', PWD=btoa('physics2024');
+  if(localStorage.getItem(KEY)===PWD){document.getElementById('gate').style.display='none';}
+})();
+function checkPw(){
+  const v=document.getElementById('pw-input').value.trim();
+  const KEY='pg_ok', PWD=btoa('physics2024');
+  if(btoa(v)===PWD){
+    localStorage.setItem(KEY,PWD);
+    document.getElementById('gate').style.display='none';
+  } else {
+    document.getElementById('pw-err').style.display='block';
+  }
+}
+
+/* ── QUIZ ── */
+let answered=0;let correct=0;const total=4;
+function checkAns(btn,result){
+  const card=btn.closest('.quiz-card');
+  if(card.dataset.answered) return;
+  card.dataset.answered='1';
+  answered++;
+  const fb=card.querySelector('.feedback');
+  if(result==='correct'){
+    btn.classList.add('correct');
+    fb.textContent='Correct! Well done.';
+    fb.className='feedback ok';
+    correct++;
+  } else {
+    btn.classList.add('wrong');
+    fb.textContent='Not quite — check the worked examples above.';
+    fb.className='feedback no';
+    // highlight correct
+    const opts=card.querySelectorAll('.opt');
+    opts.forEach(o=>{if(o.onclick.toString().includes("'correct'"))o.classList.add('correct');});
+  }
+  card.querySelectorAll('.opt').forEach(o=>o.disabled=true);
+  if(answered===total){
+    const banner=document.getElementById('score-banner');
+    banner.style.display='block';
+    document.getElementById('score-text').textContent=`You scored ${correct} / ${total}`;
+    const msg=correct===total?'Perfect score! You\'ve mastered A-T graphs!':
+               correct>=3?'Great work — almost there!':
+               correct>=2?'Good effort — review the examples and try again.':
+               'Keep practising — revisit the lesson notes!';
+    document.getElementById('score-sub').textContent=msg;
+  }
+}
+</script>
+</body>
+</html>

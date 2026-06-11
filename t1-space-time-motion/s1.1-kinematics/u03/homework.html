@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Homework — Acceleration · Kinematics Unit 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;
+    --red:#ef4444;--dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+  body::before{
+    content:'';position:fixed;inset:0;
+    background-image:radial-gradient(circle,#cbd5e1 1px,transparent 1px);
+    background-size:28px 28px;pointer-events:none;z-index:0;opacity:.55;
+  }
+  /* PASSWORD GATE */
+  #gate{
+    position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#1e40af,#2563eb);
+  }
+  #gate-box{
+    background:#fff;border-radius:20px;padding:2.5rem 2rem;width:320px;text-align:center;
+    box-shadow:0 25px 60px rgba(0,0,0,.35);
+  }
+  #gate-box h2{font-size:1.4rem;font-weight:800;color:var(--dark);margin-bottom:.4rem;}
+  #gate-box p{font-size:.85rem;color:var(--muted);margin-bottom:1.4rem;}
+  #gate-input{
+    width:100%;padding:.7rem 1rem;border:2px solid #e2e8f0;border-radius:10px;
+    font-family:'Nunito',sans-serif;font-size:1rem;outline:none;transition:border .2s;
+  }
+  #gate-input:focus{border-color:var(--blue);}
+  #gate-btn{
+    margin-top:.9rem;width:100%;padding:.75rem;background:linear-gradient(90deg,var(--blue),var(--indigo));
+    color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;
+    font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s;
+  }
+  #gate-btn:hover{opacity:.88;}
+  #gate-err{color:var(--red);font-size:.83rem;margin-top:.55rem;min-height:1.1rem;}
+  /* MAIN */
+  #main{display:none;position:relative;z-index:1;}
+  /* HEADER */
+  header{
+    background:linear-gradient(135deg,#1e40af 0%,#2563eb 100%);
+    padding:3rem 2rem 2.5rem;text-align:center;position:relative;overflow:hidden;
+  }
+  .stars{position:absolute;inset:0;pointer-events:none;}
+  .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--dur,3s) ease-in-out infinite;opacity:0;}
+  @keyframes twinkle{0%,100%{opacity:0;transform:scale(.6);}50%{opacity:.9;transform:scale(1.2);}}
+  .chip{
+    display:inline-block;background:rgba(255,255,255,.15);backdrop-filter:blur(6px);
+    border:1px solid rgba(255,255,255,.3);color:#e0e7ff;
+    font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    padding:.35rem .9rem;border-radius:999px;margin-bottom:1rem;
+  }
+  header h1{
+    font-size:clamp(1.8rem,4.5vw,2.9rem);font-weight:900;
+    background:linear-gradient(90deg,#ffffff,#bfdbfe,#a5b4fc);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    margin-bottom:.5rem;
+  }
+  header p.sub{color:#bfdbfe;font-size:.98rem;font-weight:600;}
+  /* CONTENT */
+  .content{max-width:860px;margin:0 auto;padding:2.5rem 1.25rem 4rem;}
+  /* CARDS */
+  .card{
+    background:#fff;border-radius:18px;padding:1.8rem 2rem;margin-bottom:1.8rem;
+    box-shadow:0 4px 20px rgba(59,130,246,.08);border:1px solid #e8edf5;
+  }
+  /* REFERENCE BOX */
+  .ref-box{
+    background:linear-gradient(135deg,#eff6ff,#eef2ff);border:2px solid #c7d2fe;
+    border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:1.8rem;
+  }
+  .ref-box h3{font-size:.98rem;font-weight:800;color:var(--indigo);margin-bottom:.8rem;}
+  .ref-grid{display:flex;flex-wrap:wrap;gap:.6rem;}
+  .ref-item{
+    background:#fff;border:1.5px solid #c7d2fe;border-radius:9px;
+    padding:.4rem .8rem;font-family:'Space Mono',monospace;font-size:.84rem;font-weight:700;color:var(--dark);
+  }
+  .ref-tip{
+    margin-top:.9rem;background:linear-gradient(135deg,#fefce8,#fef3c7);border-left:3px solid var(--amber);
+    border-radius:0 8px 8px 0;padding:.6rem 1rem;font-size:.84rem;color:#92400e;font-weight:700;
+  }
+  /* PART HEADINGS */
+  .part-heading{
+    font-size:1.1rem;font-weight:900;color:#fff;
+    background:linear-gradient(90deg,var(--blue),var(--indigo));
+    border-radius:10px;padding:.55rem 1.1rem;margin-bottom:1.2rem;display:inline-block;
+  }
+  /* PROBLEM CARDS */
+  .prob-card{
+    background:#f8faff;border:2px solid #e8edf5;border-radius:14px;padding:1.2rem 1.4rem;
+    margin-bottom:1.2rem;transition:border-color .2s;
+  }
+  .prob-card:hover{border-color:var(--blue);}
+  .prob-num{
+    display:inline-block;font-size:.78rem;font-weight:800;color:#fff;
+    background:var(--blue);border-radius:6px;padding:.15rem .55rem;margin-bottom:.6rem;
+  }
+  .prob-text{font-size:.91rem;line-height:1.65;margin-bottom:.7rem;}
+  /* GESE structured inputs */
+  .gese-fields{display:grid;grid-template-columns:auto 1fr;gap:.4rem .8rem;align-items:center;margin-bottom:.8rem;}
+  .gese-lbl{
+    font-size:.82rem;font-weight:800;color:#fff;padding:.2rem .55rem;border-radius:6px;text-align:center;
+  }
+  .lbl-g{background:var(--blue);}
+  .lbl-u{background:var(--indigo);}
+  .lbl-e{background:var(--amber);}
+  .lbl-s{background:var(--green);}
+  .gese-input{
+    border:2px solid #e2e8f0;border-radius:8px;padding:.35rem .7rem;
+    font-family:'Space Mono',monospace;font-size:.85rem;outline:none;transition:border .2s;width:100%;
+  }
+  .gese-input:focus{border-color:var(--blue);}
+  .ans-box{display:flex;align-items:center;gap:.6rem;margin-top:.5rem;}
+  .ans-label{font-size:.78rem;font-weight:700;color:var(--muted);}
+  .ans-input{
+    flex:1;border:2px solid #e2e8f0;border-radius:8px;padding:.35rem .7rem;
+    font-family:'Space Mono',monospace;font-size:.9rem;outline:none;transition:border .2s;
+  }
+  .ans-input:focus{border-color:var(--green);}
+  /* TF PROBLEMS */
+  .tf-card{
+    background:#f8faff;border:2px solid #e8edf5;border-radius:14px;
+    padding:1.2rem 1.4rem;margin-bottom:1.1rem;transition:border-color .2s;
+  }
+  .tf-card:hover{border-color:var(--amber);}
+  .tf-num{
+    display:inline-block;font-size:.78rem;font-weight:800;color:#fff;
+    background:var(--amber);border-radius:6px;padding:.15rem .55rem;margin-bottom:.6rem;
+  }
+  .tf-row{display:flex;gap:.7rem;margin-top:.5rem;}
+  .tf-btn{
+    padding:.35rem .9rem;border:2px solid #e2e8f0;border-radius:8px;
+    font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;
+    transition:background .15s,border-color .15s;background:#fff;
+  }
+  .tf-btn:hover{border-color:var(--blue);background:#eff6ff;}
+  .tf-btn.selected-true{background:#d1fae5;border-color:var(--green);color:#065f46;}
+  .tf-btn.selected-false{background:#fee2e2;border-color:var(--red);color:#991b1b;}
+  .correction-line{
+    width:100%;border:none;border-bottom:1.5px dashed #e2e8f0;
+    background:transparent;outline:none;padding:.3rem 0;
+    font-family:'Nunito',sans-serif;font-size:.88rem;color:var(--dark);display:block;margin-top:.6rem;
+  }
+  /* CHALLENGE */
+  .challenge-card{
+    background:linear-gradient(135deg,#faf5ff,#f5f3ff);border:2px solid #c4b5fd;
+    border-radius:14px;padding:1.3rem 1.5rem;margin-bottom:1.2rem;
+  }
+  .chal-num{
+    display:inline-block;font-size:.78rem;font-weight:800;color:#fff;
+    background:var(--indigo);border-radius:6px;padding:.15rem .55rem;margin-bottom:.6rem;
+  }
+  .work-field{
+    width:100%;border:none;border-bottom:1.5px dashed #c4b5fd;
+    background:transparent;outline:none;padding:.3rem 0;
+    font-family:'Nunito',sans-serif;font-size:.88rem;color:var(--dark);display:block;margin-bottom:.35rem;
+  }
+  /* ANSWER KEY */
+  #toggle-key-btn{
+    display:block;margin:1.5rem auto 0;padding:.7rem 2rem;
+    background:linear-gradient(90deg,var(--red),#dc2626);
+    color:#fff;border:none;border-radius:10px;
+    font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;
+    transition:opacity .2s;
+  }
+  #toggle-key-btn:hover{opacity:.88;}
+  #answer-key{display:none;margin-top:1.5rem;}
+  .key-card{
+    background:#fff;border:2px solid var(--green);border-radius:16px;
+    padding:1.5rem;margin-bottom:1.2rem;
+    box-shadow:0 4px 16px rgba(34,197,94,.1);
+  }
+  .key-card h3{font-size:1rem;font-weight:800;color:var(--green);margin-bottom:1rem;}
+  .key-item{border-bottom:1px solid #e8edf5;padding:.65rem 0;font-size:.88rem;line-height:1.7;}
+  .key-item:last-child{border-bottom:none;}
+  .key-item strong{color:var(--dark);font-weight:800;}
+  .key-ans{font-family:'Space Mono',monospace;font-weight:700;color:var(--green);}
+  .key-work{display:block;font-family:'Space Mono',monospace;font-size:.82rem;color:#64748b;margin-top:.25rem;line-height:1.6;}
+  @media(max-width:600px){.content{padding:1.5rem .8rem 3rem;}.card{padding:1.2rem;}.gese-fields{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div id="gate-box">
+    <h2>Physics Portal</h2>
+    <p>Enter the class password to continue.</p>
+    <input id="gate-input" type="password" placeholder="Password" autocomplete="current-password"/>
+    <button id="gate-btn">Unlock</button>
+    <div id="gate-err"></div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main">
+  <header>
+    <div class="stars" id="stars-container"></div>
+    <div class="chip">Kinematics &middot; Unit 3</div>
+    <h1>Homework — Acceleration</h1>
+    <p class="sub">Complete all 12 problems. Show full working for Part A using the GESE method.</p>
+  </header>
+
+  <div class="content">
+
+    <!-- REFERENCE BOX -->
+    <div class="ref-box">
+      <h3>Reference Formulae</h3>
+      <div class="ref-grid">
+        <div class="ref-item">a = ΔV / t</div>
+        <div class="ref-item">a = (V − U) / t</div>
+        <div class="ref-item">V = U + at</div>
+        <div class="ref-item">t = (V − U) / a</div>
+        <div class="ref-item">Units: a → ms⁻² | v → ms⁻¹ | t → s</div>
+      </div>
+      <div class="ref-tip">
+        Tip: Always identify the signs of both acceleration and velocity before deciding if an object speeds up or slows down. Same sign = faster; opposite sign = slower.
+      </div>
+    </div>
+
+    <!-- PART A — 6 CALCULATION PROBLEMS -->
+    <div class="card">
+      <div class="part-heading">Part A — Calculation Problems (GESE Method)</div>
+      <p style="font-size:.88rem;color:var(--muted);margin-bottom:1.4rem;">Show all steps: Given, Unknown, Equation, Solution.</p>
+
+      <!-- A1 -->
+      <div class="prob-card">
+        <div class="prob-num">A1</div>
+        <div class="prob-text">A motorcycle accelerates from rest and reaches 24 ms⁻¹ in 8 seconds. Calculate the acceleration.</div>
+        <div class="gese-fields">
+          <span class="gese-lbl lbl-g">G</span><input class="gese-input" type="text" placeholder="List known values: U, V, t …"/>
+          <span class="gese-lbl lbl-u">U</span><input class="gese-input" type="text" placeholder="Unknown: a = ?"/>
+          <span class="gese-lbl lbl-e">E</span><input class="gese-input" type="text" placeholder="Equation: a = (V − U) / t"/>
+          <span class="gese-lbl lbl-s">S</span><input class="gese-input" type="text" placeholder="Substitute and solve …"/>
+        </div>
+        <div class="ans-box"><span class="ans-label">Answer:</span><input type="text" class="ans-input" placeholder="a = ? ms⁻²"/></div>
+      </div>
+
+      <!-- A2 -->
+      <div class="prob-card">
+        <div class="prob-num">A2</div>
+        <div class="prob-text">A bus has an initial velocity of 12 ms⁻¹ and accelerates at 2 ms⁻² for 5 seconds. What is its final velocity?</div>
+        <div class="gese-fields">
+          <span class="gese-lbl lbl-g">G</span><input class="gese-input" type="text" placeholder="U=12ms⁻¹, a=2ms⁻², t=5s"/>
+          <span class="gese-lbl lbl-u">U</span><input class="gese-input" type="text" placeholder="Unknown: V = ?"/>
+          <span class="gese-lbl lbl-e">E</span><input class="gese-input" type="text" placeholder="Equation: V = U + at"/>
+          <span class="gese-lbl lbl-s">S</span><input class="gese-input" type="text" placeholder="Substitute and solve …"/>
+        </div>
+        <div class="ans-box"><span class="ans-label">Answer:</span><input type="text" class="ans-input" placeholder="V = ? ms⁻¹"/></div>
+      </div>
+
+      <!-- A3 -->
+      <div class="prob-card">
+        <div class="prob-num">A3</div>
+        <div class="prob-text">A rocket decelerates from 500 ms⁻¹ to 100 ms⁻¹ over 20 seconds. What is its acceleration?</div>
+        <div class="gese-fields">
+          <span class="gese-lbl lbl-g">G</span><input class="gese-input" type="text" placeholder="U=500ms⁻¹, V=100ms⁻¹, t=20s"/>
+          <span class="gese-lbl lbl-u">U</span><input class="gese-input" type="text" placeholder="Unknown: a = ?"/>
+          <span class="gese-lbl lbl-e">E</span><input class="gese-input" type="text" placeholder="Equation: a = (V − U) / t"/>
+          <span class="gese-lbl lbl-s">S</span><input class="gese-input" type="text" placeholder="Substitute and solve …"/>
+        </div>
+        <div class="ans-box"><span class="ans-label">Answer:</span><input type="text" class="ans-input" placeholder="a = ? ms⁻²"/></div>
+      </div>
+
+      <!-- A4 -->
+      <div class="prob-card">
+        <div class="prob-num">A4</div>
+        <div class="prob-text">An object starts at rest and accelerates at 5 ms⁻². How long does it take to reach 35 ms⁻¹?</div>
+        <div class="gese-fields">
+          <span class="gese-lbl lbl-g">G</span><input class="gese-input" type="text" placeholder="U=0, V=35ms⁻¹, a=5ms⁻²"/>
+          <span class="gese-lbl lbl-u">U</span><input class="gese-input" type="text" placeholder="Unknown: t = ?"/>
+          <span class="gese-lbl lbl-e">E</span><input class="gese-input" type="text" placeholder="Equation: t = (V − U) / a"/>
+          <span class="gese-lbl lbl-s">S</span><input class="gese-input" type="text" placeholder="Substitute and solve …"/>
+        </div>
+        <div class="ans-box"><span class="ans-label">Answer:</span><input type="text" class="ans-input" placeholder="t = ? s"/></div>
+      </div>
+
+      <!-- A5 -->
+      <div class="prob-card">
+        <div class="prob-num">A5</div>
+        <div class="prob-text">A particle moves at V₀ = −8 ms⁻¹ and has an acceleration of a = −2 ms⁻². Find its velocity after 3 seconds.</div>
+        <div class="gese-fields">
+          <span class="gese-lbl lbl-g">G</span><input class="gese-input" type="text" placeholder="U=−8ms⁻¹, a=−2ms⁻², t=3s"/>
+          <span class="gese-lbl lbl-u">U</span><input class="gese-input" type="text" placeholder="Unknown: V = ?"/>
+          <span class="gese-lbl lbl-e">E</span><input class="gese-input" type="text" placeholder="Equation: V = U + at"/>
+          <span class="gese-lbl lbl-s">S</span><input class="gese-input" type="text" placeholder="V = −8 + (−2)(3) = …"/>
+        </div>
+        <div class="ans-box"><span class="ans-label">Answer:</span><input type="text" class="ans-input" placeholder="V = ? ms⁻¹"/></div>
+      </div>
+
+      <!-- A6 -->
+      <div class="prob-card">
+        <div class="prob-num">A6</div>
+        <div class="prob-text">A sprinter has U = 3 ms⁻¹ and reaches V = 9 ms⁻¹ with an acceleration of 1.5 ms⁻². How long did this take?</div>
+        <div class="gese-fields">
+          <span class="gese-lbl lbl-g">G</span><input class="gese-input" type="text" placeholder="U=3ms⁻¹, V=9ms⁻¹, a=1.5ms⁻²"/>
+          <span class="gese-lbl lbl-u">U</span><input class="gese-input" type="text" placeholder="Unknown: t = ?"/>
+          <span class="gese-lbl lbl-e">E</span><input class="gese-input" type="text" placeholder="Equation: t = (V − U) / a"/>
+          <span class="gese-lbl lbl-s">S</span><input class="gese-input" type="text" placeholder="t = (9 − 3) / 1.5 = …"/>
+        </div>
+        <div class="ans-box"><span class="ans-label">Answer:</span><input type="text" class="ans-input" placeholder="t = ? s"/></div>
+      </div>
+    </div>
+
+    <!-- PART B — TRUE / FALSE -->
+    <div class="card">
+      <div class="part-heading" style="background:linear-gradient(90deg,var(--amber),#d97706);">Part B — True or False</div>
+      <p style="font-size:.88rem;color:var(--muted);margin-bottom:1.4rem;">Select True or False for each statement. If False, write the correct statement on the line below.</p>
+
+      <!-- B1 -->
+      <div class="tf-card">
+        <div class="tf-num">B1</div>
+        <div class="prob-text">"An object with a negative acceleration is always slowing down."</div>
+        <div class="tf-row">
+          <button class="tf-btn" onclick="selectTF(this,'true','B1')">True</button>
+          <button class="tf-btn" onclick="selectTF(this,'false','B1')">False</button>
+        </div>
+        <input type="text" class="correction-line" placeholder="If False, write the correct statement here …"/>
+      </div>
+
+      <!-- B2 -->
+      <div class="tf-card">
+        <div class="tf-num">B2</div>
+        <div class="prob-text">"Acceleration is a vector quantity, measured in ms⁻²."</div>
+        <div class="tf-row">
+          <button class="tf-btn" onclick="selectTF(this,'true','B2')">True</button>
+          <button class="tf-btn" onclick="selectTF(this,'false','B2')">False</button>
+        </div>
+        <input type="text" class="correction-line" placeholder="If False, write the correct statement here …"/>
+      </div>
+
+      <!-- B3 -->
+      <div class="tf-card">
+        <div class="tf-num">B3</div>
+        <div class="prob-text">"A car moving at constant speed in a straight line is accelerating."</div>
+        <div class="tf-row">
+          <button class="tf-btn" onclick="selectTF(this,'true','B3')">True</button>
+          <button class="tf-btn" onclick="selectTF(this,'false','B3')">False</button>
+        </div>
+        <input type="text" class="correction-line" placeholder="If False, write the correct statement here …"/>
+      </div>
+
+      <!-- B4 -->
+      <div class="tf-card">
+        <div class="tf-num">B4</div>
+        <div class="prob-text">"If an object's acceleration and velocity have the same sign, the object is getting faster."</div>
+        <div class="tf-row">
+          <button class="tf-btn" onclick="selectTF(this,'true','B4')">True</button>
+          <button class="tf-btn" onclick="selectTF(this,'false','B4')">False</button>
+        </div>
+        <input type="text" class="correction-line" placeholder="If False, write the correct statement here …"/>
+      </div>
+    </div>
+
+    <!-- PART C — CHALLENGE -->
+    <div class="card">
+      <div class="part-heading" style="background:linear-gradient(90deg,var(--indigo),#4338ca);">Part C — Challenge Problems</div>
+      <p style="font-size:.88rem;color:var(--muted);margin-bottom:1.4rem;">These problems require multi-step reasoning. Show full working.</p>
+
+      <!-- C1 -->
+      <div class="challenge-card">
+        <div class="chal-num">C1</div>
+        <div class="prob-text" style="margin-bottom:.9rem;">
+          <strong>Two-phase motion:</strong> A car starts from rest and accelerates at 4 ms⁻² for 5 seconds. It then decelerates at 2 ms⁻² until it stops.
+          <br/><br/>
+          (a) What is the car's velocity after the first 5 seconds?<br/>
+          (b) How long does the deceleration phase take?<br/>
+          (c) What is the total time from start to stop?
+        </div>
+        <input type="text" class="work-field" placeholder="Part (a): V = U + at = 0 + (4)(5) = ?"/>
+        <input type="text" class="work-field" placeholder="Part (b): t = (V − U) / a — use V from (a), final V = 0 …"/>
+        <input type="text" class="work-field" placeholder="Part (c): Total time = phase 1 + phase 2 = ?"/>
+        <div class="ans-box" style="flex-direction:column;align-items:flex-start;gap:.4rem;">
+          <div style="display:flex;gap:.6rem;align-items:center;width:100%;">
+            <span class="ans-label">(a)</span><input type="text" class="ans-input" placeholder="V = ? ms⁻¹"/>
+          </div>
+          <div style="display:flex;gap:.6rem;align-items:center;width:100%;">
+            <span class="ans-label">(b)</span><input type="text" class="ans-input" placeholder="t = ? s"/>
+          </div>
+          <div style="display:flex;gap:.6rem;align-items:center;width:100%;">
+            <span class="ans-label">(c)</span><input type="text" class="ans-input" placeholder="Total = ? s"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- C2 -->
+      <div class="challenge-card">
+        <div class="chal-num">C2</div>
+        <div class="prob-text" style="margin-bottom:.9rem;">
+          <strong>Sign analysis challenge:</strong> An object has a = −3 ms⁻² and starts with V₀ = −9 ms⁻¹.
+          <br/><br/>
+          (a) Find the velocity at t = 1 s, t = 2 s, t = 3 s, and t = 4 s.<br/>
+          (b) At each time step, state whether the object is speeding up or slowing down and explain why using the sign rule.<br/>
+          (c) Identify the pattern — how is this related to the bottom-right quadrant of the 4-quadrant table?
+        </div>
+        <input type="text" class="work-field" placeholder="t=1s: V = −9 + (−3)(1) = ?"/>
+        <input type="text" class="work-field" placeholder="t=2s: V = −9 + (−3)(2) = ?"/>
+        <input type="text" class="work-field" placeholder="t=3s: V = −9 + (−3)(3) = ?"/>
+        <input type="text" class="work-field" placeholder="t=4s: V = −9 + (−3)(4) = ?"/>
+        <input type="text" class="work-field" placeholder="(b) Sign analysis: a is negative, V is negative at all steps → …"/>
+        <input type="text" class="work-field" placeholder="(c) Connection to 4-quadrant table: …"/>
+        <div class="ans-box" style="flex-direction:column;align-items:flex-start;gap:.4rem;">
+          <div style="display:flex;gap:.6rem;align-items:center;width:100%;">
+            <span class="ans-label">Velocities:</span><input type="text" class="ans-input" placeholder="−12, −15, −18, −21 ms⁻¹"/>
+          </div>
+          <div style="display:flex;gap:.6rem;align-items:center;width:100%;">
+            <span class="ans-label">Behaviour:</span><input type="text" class="ans-input" placeholder="Speeding up / slowing down?"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANSWER KEY TOGGLE -->
+    <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+
+    <div id="answer-key">
+
+      <div class="key-card">
+        <h3>Part A — Answer Key</h3>
+        <div class="key-item">
+          <strong>A1:</strong> <span class="key-ans">a = 3 ms⁻²</span>
+          <span class="key-work">G: U=0 ms⁻¹, V=24 ms⁻¹, t=8 s<br/>E: a = (V−U)/t<br/>S: a = (24−0)/8 = 24/8 = 3 ms⁻²</span>
+        </div>
+        <div class="key-item">
+          <strong>A2:</strong> <span class="key-ans">V = 22 ms⁻¹</span>
+          <span class="key-work">G: U=12 ms⁻¹, a=2 ms⁻², t=5 s<br/>E: V = U + at<br/>S: V = 12 + (2)(5) = 12 + 10 = 22 ms⁻¹</span>
+        </div>
+        <div class="key-item">
+          <strong>A3:</strong> <span class="key-ans">a = −20 ms⁻²</span>
+          <span class="key-work">G: U=500 ms⁻¹, V=100 ms⁻¹, t=20 s<br/>E: a = (V−U)/t<br/>S: a = (100−500)/20 = −400/20 = −20 ms⁻²</span>
+        </div>
+        <div class="key-item">
+          <strong>A4:</strong> <span class="key-ans">t = 7 s</span>
+          <span class="key-work">G: U=0 ms⁻¹, V=35 ms⁻¹, a=5 ms⁻²<br/>E: t = (V−U)/a<br/>S: t = (35−0)/5 = 35/5 = 7 s</span>
+        </div>
+        <div class="key-item">
+          <strong>A5:</strong> <span class="key-ans">V = −14 ms⁻¹</span>
+          <span class="key-work">G: U=−8 ms⁻¹, a=−2 ms⁻², t=3 s<br/>E: V = U + at<br/>S: V = −8 + (−2)(3) = −8 + (−6) = −14 ms⁻¹<br/>Note: a and v are both negative (same sign) → object is speeding up in the negative direction.</span>
+        </div>
+        <div class="key-item">
+          <strong>A6:</strong> <span class="key-ans">t = 4 s</span>
+          <span class="key-work">G: U=3 ms⁻¹, V=9 ms⁻¹, a=1.5 ms⁻²<br/>E: t = (V−U)/a<br/>S: t = (9−3)/1.5 = 6/1.5 = 4 s</span>
+        </div>
+      </div>
+
+      <div class="key-card">
+        <h3>Part B — True / False Answer Key</h3>
+        <div class="key-item">
+          <strong>B1: <span class="key-ans">FALSE</span></strong><br/>
+          Correction: An object with negative acceleration is getting slower only if its velocity is positive (opposite signs). If velocity is also negative, the object is actually getting faster. The sign of acceleration alone does not determine whether the object speeds up or slows down.
+        </div>
+        <div class="key-item">
+          <strong>B2: <span class="key-ans">TRUE</span></strong><br/>
+          Acceleration is a vector quantity (it has both magnitude and direction), and its unit is ms⁻².
+        </div>
+        <div class="key-item">
+          <strong>B3: <span class="key-ans">FALSE</span></strong><br/>
+          Correction: A car moving at constant speed in a straight line has zero acceleration — its velocity (speed + direction) is not changing. Acceleration is only zero if none of the three conditions apply (no speeding up, slowing down, or change in direction).
+        </div>
+        <div class="key-item">
+          <strong>B4: <span class="key-ans">TRUE</span></strong><br/>
+          This is the core sign rule from the lesson. When acceleration and velocity have the same sign, the object's speed (magnitude of velocity) is increasing.
+        </div>
+      </div>
+
+      <div class="key-card">
+        <h3>Part C — Challenge Answer Key</h3>
+        <div class="key-item">
+          <strong>C1(a):</strong> <span class="key-ans">V = 20 ms⁻¹</span>
+          <span class="key-work">V = U + at = 0 + (4)(5) = 20 ms⁻¹ after the first phase.</span>
+        </div>
+        <div class="key-item">
+          <strong>C1(b):</strong> <span class="key-ans">t = 10 s</span>
+          <span class="key-work">Deceleration phase: U=20 ms⁻¹, V=0 ms⁻¹, a=−2 ms⁻²<br/>t = (V−U)/a = (0−20)/(−2) = −20/−2 = 10 s</span>
+        </div>
+        <div class="key-item">
+          <strong>C1(c):</strong> <span class="key-ans">Total = 15 s</span>
+          <span class="key-work">Total time = 5 s (acceleration) + 10 s (deceleration) = 15 s</span>
+        </div>
+        <div class="key-item">
+          <strong>C2(a) — Velocities:</strong>
+          <span class="key-work">
+            t=1 s: V = −9 + (−3)(1) = −9 − 3 = <span class="key-ans">−12 ms⁻¹</span><br/>
+            t=2 s: V = −9 + (−3)(2) = −9 − 6 = <span class="key-ans">−15 ms⁻¹</span><br/>
+            t=3 s: V = −9 + (−3)(3) = −9 − 9 = <span class="key-ans">−18 ms⁻¹</span><br/>
+            t=4 s: V = −9 + (−3)(4) = −9 − 12 = <span class="key-ans">−21 ms⁻¹</span>
+          </span>
+        </div>
+        <div class="key-item">
+          <strong>C2(b) — Sign analysis:</strong>
+          <span class="key-work">
+            At every time step: a = −3 (negative) and V is negative and growing in magnitude.<br/>
+            Same sign (both negative) → <span class="key-ans">Object is getting FASTER</span> at all time steps.<br/>
+            The speed is increasing: |−12| &gt; |−9|, |−15| &gt; |−12|, etc.
+          </span>
+        </div>
+        <div class="key-item">
+          <strong>C2(c) — 4-Quadrant connection:</strong>
+          <span class="key-work">
+            This matches the <span class="key-ans">bottom-right quadrant</span> of the 4-quadrant table: negative acceleration with negative starting velocity. Both signs match, so the object gets faster. The velocity sequence (−9, −12, −15, −18, −21) mirrors the pattern shown in the lesson (V₀=−4, V₁=−5, V₂=−6, etc.) — the magnitude increases even though both values are negative.
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+// PASSWORD
+(function(){
+  const KEY='phys_auth';
+  const CORRECT=btoa('physics2024');
+  if(localStorage.getItem(KEY)===CORRECT){unlock();}
+  document.getElementById('gate-btn').addEventListener('click',check);
+  document.getElementById('gate-input').addEventListener('keydown',function(e){if(e.key==='Enter')check();});
+  function check(){
+    const v=document.getElementById('gate-input').value;
+    if(btoa(v)===CORRECT){localStorage.setItem(KEY,CORRECT);unlock();}
+    else{document.getElementById('gate-err').textContent='Incorrect password. Please try again.';}
+  }
+  function unlock(){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('main').style.display='block';
+  }
+})();
+
+// STARS
+(function(){
+  const c=document.getElementById('stars-container');
+  for(let i=0;i<45;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=Math.random()*3+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${2+Math.random()*4}s;animation-delay:${Math.random()*5}s;`;
+    c.appendChild(s);
+  }
+})();
+
+// TRUE/FALSE
+function selectTF(btn,val,id){
+  const parent=btn.closest('.tf-row');
+  parent.querySelectorAll('.tf-btn').forEach(function(b){b.className='tf-btn';});
+  btn.classList.add('selected-'+val);
+}
+
+// ANSWER KEY TOGGLE
+var keyVisible=false;
+function toggleKey(){
+  keyVisible=!keyVisible;
+  document.getElementById('answer-key').style.display=keyVisible?'block':'none';
+  document.getElementById('toggle-key-btn').textContent=keyVisible?'Hide Answer Key':'Show Answer Key';
+  document.getElementById('toggle-key-btn').style.background=keyVisible?'linear-gradient(90deg,#64748b,#475569)':'linear-gradient(90deg,var(--red),#dc2626)';
+}
+</script>
+</body>
+</html>

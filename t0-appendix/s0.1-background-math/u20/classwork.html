@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finding the Angle of a Vector — Classwork</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root{
+      --purple:#7c3aed;--violet:#6d28d9;--deep:#4c1d95;
+      --green:#22c55e;--amber:#f59e0b;--red:#ef4444;--blue:#3b82f6;
+      --dark:#0f172a;--bg:#f5f3ff;--muted:#94a3b8;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:17px;line-height:1.75;background-image:radial-gradient(circle,#ddd6fe 1px,transparent 1px);background-size:28px 28px;}
+
+    /* LOCK */
+    #lock-screen{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#4c1d95 0%,#6d28d9 50%,#7c3aed 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
+    #lock-screen .lock-icon{font-size:3.5rem;animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
+    #lock-screen h2{color:white;font-size:1.8rem;font-weight:900;}
+    #lock-screen p{color:rgba(255,255,255,0.75);font-size:1rem;}
+    #lock-screen .pw-box{display:flex;gap:10px;align-items:center;margin-top:8px;}
+    #pw-input{padding:12px 20px;border-radius:12px;border:2px solid rgba(255,255,255,0.4);background:rgba(255,255,255,0.15);color:white;font-size:1.1rem;font-family:'Nunito',sans-serif;font-weight:700;width:220px;outline:none;}
+    #pw-input::placeholder{color:rgba(255,255,255,0.5);}
+    #pw-input:focus{border-color:white;}
+    #pw-btn{padding:12px 24px;border-radius:12px;border:none;background:white;color:var(--deep);font-family:'Nunito',sans-serif;font-weight:900;font-size:1rem;cursor:pointer;transition:transform 0.15s;}
+    #pw-btn:hover{transform:scale(1.05);}
+    #pw-error{color:#fca5a5;font-size:0.9rem;font-weight:700;min-height:20px;}
+
+    /* HEADER */
+    header{background:linear-gradient(135deg,#4c1d95 0%,#6d28d9 50%,#7c3aed 100%);color:white;padding:44px 60px 40px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(167,139,250,0.35) 0%,transparent 60%),radial-gradient(ellipse at 80% 30%,rgba(196,181,253,0.25) 0%,transparent 55%);pointer-events:none;}
+    header .chip{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;position:relative;}
+    header h1{font-size:2.6rem;font-weight:900;letter-spacing:-0.5px;position:relative;margin-bottom:8px;background:linear-gradient(90deg,#c4b5fd,#e9d5ff,#f5d0fe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1rem;color:rgba(255,255,255,0.75);position:relative;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;}to{opacity:0.9;}}
+
+    /* LAYOUT */
+    main{max-width:900px;margin:40px auto;padding:0 24px 80px;}
+
+    /* INSTRUCTION BANNER */
+    .instruct-banner{background:linear-gradient(135deg,#4c1d95,#7c3aed);border-radius:16px;padding:18px 24px;color:white;margin-bottom:32px;display:flex;gap:16px;align-items:center;}
+    .ib-icon{font-size:2rem;flex-shrink:0;}
+    .ib-body p{font-size:0.92rem;color:rgba(255,255,255,0.9);}
+
+    /* PROBLEM CARDS */
+    .problem-card{background:white;border-radius:18px;margin-bottom:20px;box-shadow:0 4px 20px rgba(109,40,217,0.09);overflow:hidden;border-left:5px solid var(--purple);}
+    .pc-header{display:flex;align-items:center;gap:14px;padding:14px 22px;background:#faf5ff;border-bottom:2px solid #ede9fe;}
+    .pc-num{background:var(--deep);color:white;font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:4px 14px;border-radius:20px;}
+    .pc-type{font-size:0.8rem;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:0.5px;}
+    .pc-body{padding:20px 24px;}
+    .pc-body .scenario{font-size:0.97rem;color:#1e293b;margin-bottom:14px;font-weight:600;}
+    .given-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;}
+    .g-chip{background:#f1f5f9;border-radius:8px;padding:4px 12px;font-size:0.85rem;font-weight:700;color:#334155;}
+    .g-chip.vertical{background:#fee2e2;color:#7f1d1d;}
+    .g-chip.horizontal{background:#dbeafe;color:#1e3a8a;}
+    .g-chip.hyp{background:#f3e8ff;color:#5b21b6;}
+    .work-area{background:#f8f7ff;border:2px dashed #c4b5fd;border-radius:12px;min-height:80px;padding:14px 16px;margin-top:4px;font-size:0.85rem;color:#94a3b8;position:relative;}
+    .work-area::before{content:'Work space...';position:absolute;top:14px;left:16px;font-style:italic;}
+    .answer-row{display:flex;align-items:center;gap:14px;margin-top:14px;flex-wrap:wrap;}
+    .answer-label{font-weight:800;font-size:0.9rem;color:#374151;}
+    .answer-input{border:2px solid #c4b5fd;border-radius:10px;padding:8px 14px;font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;width:120px;outline:none;transition:border-color 0.2s;}
+    .answer-input:focus{border-color:var(--purple);}
+    .check-btn{padding:8px 18px;border-radius:10px;border:none;background:linear-gradient(135deg,#4c1d95,#7c3aed);color:white;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.88rem;cursor:pointer;transition:transform 0.15s;}
+    .check-btn:hover{transform:scale(1.04);}
+    .ans-feedback{font-size:0.85rem;font-weight:700;padding:6px 12px;border-radius:8px;display:none;}
+    .af-correct{display:block;background:#f0fdf4;color:#15803d;border:1px solid #4ade80;}
+    .af-wrong{display:block;background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;}
+    .af-show{display:block;}
+
+    /* SVG MINI DIAGRAM */
+    .diagram-row{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;}
+    .diagram-row .pc-info{flex:1;min-width:200px;}
+    .svg-mini{background:#faf5ff;border-radius:12px;padding:10px;flex-shrink:0;}
+
+    /* SHOW ANSWER BUTTON */
+    .show-ans-btn{background:none;border:2px solid #c4b5fd;color:var(--purple);font-family:'Nunito',sans-serif;font-weight:800;font-size:0.82rem;border-radius:8px;padding:5px 12px;cursor:pointer;transition:all 0.15s;}
+    .show-ans-btn:hover{background:#ede9fe;}
+    .answer-reveal{display:none;background:linear-gradient(135deg,#ede9fe,#faf5ff);border-radius:10px;padding:12px 16px;margin-top:10px;font-size:0.9rem;}
+    .answer-reveal.visible{display:block;}
+    .ar-formula{font-family:'Space Mono',monospace;font-weight:700;color:#5b21b6;font-size:1rem;}
+    .ar-result{font-size:1.1rem;font-weight:900;color:#4c1d95;margin-top:4px;}
+
+    /* SCENARIO PROBLEMS */
+    .scenario-card{background:white;border-radius:18px;margin-bottom:20px;box-shadow:0 4px 20px rgba(109,40,217,0.09);overflow:hidden;border-left:5px solid #0ea5e9;}
+    .sc-header{display:flex;align-items:center;gap:14px;padding:14px 22px;background:#f0f9ff;border-bottom:2px solid #bae6fd;}
+    .sc-num{background:#0c4a6e;color:white;font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:4px 14px;border-radius:20px;}
+    .sc-type{font-size:0.8rem;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:0.5px;}
+    .sc-body{padding:20px 24px;}
+
+    /* SECTION LABEL */
+    .section-label{display:flex;align-items:center;gap:12px;margin-bottom:18px;margin-top:40px;}
+    .section-icon{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+    .section-label h2{font-size:1.35rem;font-weight:900;}
+
+    /* FORMULA REF */
+    .formula-ref{background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:14px;padding:16px 22px;color:white;margin-bottom:24px;display:flex;gap:24px;flex-wrap:wrap;justify-content:center;}
+    .fr-item{text-align:center;}
+    .fr-item .fr-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:4px;}
+    .fr-item .fr-formula{font-family:'Space Mono',monospace;font-size:0.95rem;font-weight:700;color:#c4b5fd;}
+
+    .answer-key-section{background:white;border-radius:18px;padding:24px 28px;box-shadow:0 4px 20px rgba(0,0,0,0.07);border:3px solid #fbbf24;}
+    .ak-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+    .ak-header .ak-badge{background:linear-gradient(135deg,#f59e0b,#d97706);color:white;padding:6px 18px;border-radius:20px;font-weight:900;font-size:0.85rem;}
+    .ak-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+    @media(max-width:560px){.ak-grid{grid-template-columns:1fr;}}
+    .ak-item{background:#fffbeb;border-radius:10px;padding:12px 16px;border-left:3px solid #f59e0b;}
+    .ak-item .ak-q{font-size:0.78rem;color:#92400e;font-weight:700;margin-bottom:4px;}
+    .ak-item .ak-ans{font-family:'Space Mono',monospace;font-weight:700;font-size:1rem;color:#78350f;}
+    .ak-item .ak-work{font-size:0.78rem;color:#64748b;margin-top:2px;}
+  </style>
+</head>
+<body>
+
+<!-- LOCK -->
+<div id="lock-screen">
+  <div class="lock-icon">&#128274;</div>
+  <h2>IB Physics — Unit 20</h2>
+  <p>Enter the password to access this classwork</p>
+  <div class="pw-box">
+    <input id="pw-input" type="password" placeholder="Password..." autocomplete="off">
+    <button id="pw-btn" onclick="checkPw()">Unlock</button>
+  </div>
+  <div id="pw-error"></div>
+</div>
+
+<div id="content" style="display:none;">
+
+<header>
+  <span class="star" style="width:3px;height:3px;top:15%;left:10%;animation-delay:0s;"></span>
+  <span class="star" style="width:4px;height:4px;top:30%;left:85%;animation-delay:0.8s;"></span>
+  <span class="star" style="width:3px;height:3px;top:65%;left:92%;animation-delay:1.4s;"></span>
+  <div class="chip">Classwork &nbsp;&#183;&nbsp; Unit 20 &nbsp;&#183;&nbsp; Vectors</div>
+  <h1>Finding the Angle — Classwork</h1>
+  <p class="subtitle">Practice applying inverse trig to find resultant directions</p>
+</header>
+
+<main>
+
+  <!-- FORMULA REFERENCE -->
+  <div class="formula-ref">
+    <div class="fr-item"><div class="fr-label">Inverse Sine</div><div class="fr-formula">sin&#8315;&#185;(opp/hyp) = &#952;</div></div>
+    <div class="fr-item"><div class="fr-label">Inverse Cosine</div><div class="fr-formula">cos&#8315;&#185;(adj/hyp) = &#952;</div></div>
+    <div class="fr-item"><div class="fr-label">Inverse Tangent</div><div class="fr-formula">tan&#8315;&#185;(opp/adj) = &#952;</div></div>
+    <div class="fr-item"><div class="fr-label">Key Rule</div><div class="fr-formula">opp = vertical, adj = horiz</div></div>
+  </div>
+
+  <div class="instruct-banner">
+    <div class="ib-icon">&#128221;</div>
+    <div class="ib-body">
+      <p><strong>Instructions:</strong> For each problem, identify the given sides, choose the correct inverse trig formula, show your calculation, and state the angle. Always specify the direction (e.g. North of East, South of West). Round to 1 decimal place.</p>
+    </div>
+  </div>
+
+  <!-- PART A: FIND THE ANGLE -->
+  <div class="section-label">
+    <div class="section-icon" style="background:#ede9fe;">A</div>
+    <h2>Part A — Find the Angle</h2>
+  </div>
+
+  <!-- Problem 1 -->
+  <div class="problem-card">
+    <div class="pc-header">
+      <span class="pc-num">Problem 1</span>
+      <span class="pc-type">tan&#8315;&#185; — Both legs given</span>
+    </div>
+    <div class="pc-body">
+      <p class="scenario">A displacement vector has a horizontal component of <strong>10 m (East)</strong> and a vertical component of <strong>5 m (North)</strong>. Find the angle of the resultant from horizontal.</p>
+      <div class="given-row">
+        <span class="g-chip horizontal">Horizontal (adj) = 10 m</span>
+        <span class="g-chip vertical">Vertical (opp) = 5 m</span>
+      </div>
+      <div class="work-area" style="min-height:70px;position:relative;padding-top:14px;">
+        <p style="color:#94a3b8;font-style:italic;font-size:0.85rem;">Work space...</p>
+      </div>
+      <div class="answer-row">
+        <span class="answer-label">&#952; =</span>
+        <input class="answer-input" id="a1-inp" type="text" placeholder="e.g. 26.6°">
+        <button class="check-btn" onclick="checkAns('a1','26.6','tan⁻¹(5/10) = 26.6° North of East')">Check</button>
+        <button class="show-ans-btn" onclick="toggleAns('a1-reveal')">Show Answer</button>
+      </div>
+      <div class="ans-feedback" id="a1-fb"></div>
+      <div class="answer-reveal" id="a1-reveal">
+        <div class="ar-formula">&#952; = tan&#8315;&#185;(5/10) = tan&#8315;&#185;(0.5)</div>
+        <div class="ar-result">&#952; = 26.6&#176; North of East</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Problem 2 -->
+  <div class="problem-card">
+    <div class="pc-header">
+      <span class="pc-num">Problem 2</span>
+      <span class="pc-type">tan&#8315;&#185; — Steep angle</span>
+    </div>
+    <div class="pc-body">
+      <p class="scenario">A force vector has a horizontal component of <strong>4 N (West)</strong> and a vertical component of <strong>6 N (South)</strong>. Find the angle of the resultant from horizontal.</p>
+      <div class="given-row">
+        <span class="g-chip horizontal">Horizontal (adj) = 4 N</span>
+        <span class="g-chip vertical">Vertical (opp) = 6 N</span>
+      </div>
+      <div class="work-area" style="min-height:70px;position:relative;padding-top:14px;">
+        <p style="color:#94a3b8;font-style:italic;font-size:0.85rem;">Work space...</p>
+      </div>
+      <div class="answer-row">
+        <span class="answer-label">&#952; =</span>
+        <input class="answer-input" id="a2-inp" type="text" placeholder="e.g. 56.3°">
+        <button class="check-btn" onclick="checkAns('a2','56.3','tan⁻¹(6/4) = 56.3° South of West')">Check</button>
+        <button class="show-ans-btn" onclick="toggleAns('a2-reveal')">Show Answer</button>
+      </div>
+      <div class="ans-feedback" id="a2-fb"></div>
+      <div class="answer-reveal" id="a2-reveal">
+        <div class="ar-formula">&#952; = tan&#8315;&#185;(6/4) = tan&#8315;&#185;(1.5)</div>
+        <div class="ar-result">&#952; = 56.3&#176; South of West</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Problem 3 -->
+  <div class="problem-card">
+    <div class="pc-header">
+      <span class="pc-num">Problem 3</span>
+      <span class="pc-type">sin&#8315;&#185; — Hypotenuse known</span>
+    </div>
+    <div class="pc-body">
+      <p class="scenario">A velocity vector has a magnitude (hypotenuse) of <strong>13 m/s</strong> and a vertical component of <strong>5 m/s (North)</strong>. Find the angle from horizontal.</p>
+      <div class="given-row">
+        <span class="g-chip hyp">Hypotenuse = 13 m/s</span>
+        <span class="g-chip vertical">Vertical (opp) = 5 m/s</span>
+      </div>
+      <div class="work-area" style="min-height:70px;position:relative;padding-top:14px;">
+        <p style="color:#94a3b8;font-style:italic;font-size:0.85rem;">Work space...</p>
+      </div>
+      <div class="answer-row">
+        <span class="answer-label">&#952; =</span>
+        <input class="answer-input" id="a3-inp" type="text" placeholder="e.g. 22.6°">
+        <button class="check-btn" onclick="checkAns('a3','22.6','sin⁻¹(5/13) = 22.6° North of East')">Check</button>
+        <button class="show-ans-btn" onclick="toggleAns('a3-reveal')">Show Answer</button>
+      </div>
+      <div class="ans-feedback" id="a3-fb"></div>
+      <div class="answer-reveal" id="a3-reveal">
+        <div class="ar-formula">&#952; = sin&#8315;&#185;(5/13) = sin&#8315;&#185;(0.385)</div>
+        <div class="ar-result">&#952; = 22.6&#176; North of East</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Problem 4 -->
+  <div class="problem-card">
+    <div class="pc-header">
+      <span class="pc-num">Problem 4</span>
+      <span class="pc-type">cos&#8315;&#185; — Adjacent and hypotenuse</span>
+    </div>
+    <div class="pc-body">
+      <p class="scenario">A resultant vector has magnitude <strong>3.5 m</strong> and a horizontal component of <strong>3 m (East)</strong>. Find the angle from horizontal.</p>
+      <div class="given-row">
+        <span class="g-chip hyp">Hypotenuse = 3.5 m</span>
+        <span class="g-chip horizontal">Horizontal (adj) = 3 m</span>
+      </div>
+      <div class="work-area" style="min-height:70px;position:relative;padding-top:14px;">
+        <p style="color:#94a3b8;font-style:italic;font-size:0.85rem;">Work space...</p>
+      </div>
+      <div class="answer-row">
+        <span class="answer-label">&#952; =</span>
+        <input class="answer-input" id="a4-inp" type="text" placeholder="e.g. 31.0°">
+        <button class="check-btn" onclick="checkAns('a4','31.0','cos⁻¹(3/3.5) = 31.0°')">Check</button>
+        <button class="show-ans-btn" onclick="toggleAns('a4-reveal')">Show Answer</button>
+      </div>
+      <div class="ans-feedback" id="a4-fb"></div>
+      <div class="answer-reveal" id="a4-reveal">
+        <div class="ar-formula">&#952; = cos&#8315;&#185;(3/3.5) = cos&#8315;&#185;(0.857)</div>
+        <div class="ar-result">&#952; = 31.0&#176;</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Problem 5 -->
+  <div class="problem-card">
+    <div class="pc-header">
+      <span class="pc-num">Problem 5</span>
+      <span class="pc-type">tan&#8315;&#185; — Large horizontal component</span>
+    </div>
+    <div class="pc-body">
+      <p class="scenario">An aircraft's velocity has a horizontal component of <strong>300 m/s (East)</strong> and a vertical component of <strong>80 m/s (up)</strong>. Find the angle of ascent from horizontal.</p>
+      <div class="given-row">
+        <span class="g-chip horizontal">Horizontal (adj) = 300 m/s</span>
+        <span class="g-chip vertical">Vertical (opp) = 80 m/s</span>
+      </div>
+      <div class="work-area" style="min-height:70px;position:relative;padding-top:14px;">
+        <p style="color:#94a3b8;font-style:italic;font-size:0.85rem;">Work space...</p>
+      </div>
+      <div class="answer-row">
+        <span class="answer-label">&#952; =</span>
+        <input class="answer-input" id="a5-inp" type="text" placeholder="e.g. 14.9°">
+        <button class="check-btn" onclick="checkAns('a5','14.9','tan⁻¹(80/300) = 14.9° above horizontal')">Check</button>
+        <button class="show-ans-btn" onclick="toggleAns('a5-reveal')">Show Answer</button>
+      </div>
+      <div class="ans-feedback" id="a5-fb"></div>
+      <div class="answer-reveal" id="a5-reveal">
+        <div class="ar-formula">&#952; = tan&#8315;&#185;(80/300) = tan&#8315;&#185;(0.267)</div>
+        <div class="ar-result">&#952; = 14.9&#176; above horizontal</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART B: REAL-WORLD SCENARIOS -->
+  <div class="section-label">
+    <div class="section-icon" style="background:#e0f2fe;">B</div>
+    <h2>Part B — Real-World Scenarios</h2>
+  </div>
+
+  <!-- Scenario 1 -->
+  <div class="scenario-card">
+    <div class="sc-header">
+      <span class="sc-num">Scenario 1</span>
+      <span class="sc-type">Navigation — Wind + Plane</span>
+    </div>
+    <div class="sc-body">
+      <p class="scenario" style="margin-bottom:12px;">A small plane flies <strong>North at 120 km/h</strong>. A wind blows <strong>East at 35 km/h</strong>. Find:</p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;">
+        <div style="background:#f0f9ff;border-radius:10px;padding:10px 14px;font-size:0.9rem;">
+          <strong>(a)</strong> The resultant speed of the plane: &#8730;(120&#178; + 35&#178;) = &#8730;(14400 + 1225) = &#8730;15625 = <strong>125 km/h</strong>
+        </div>
+        <div style="background:#f0f9ff;border-radius:10px;padding:10px 14px;font-size:0.9rem;">
+          <strong>(b)</strong> The angle of the resultant from horizontal (North = vertical, East = horizontal): &#952; = tan&#8315;&#185;(35 / 120)
+        </div>
+      </div>
+      <div class="answer-row">
+        <span class="answer-label">&#952; =</span>
+        <input class="answer-input" id="b1-inp" type="text" placeholder="e.g. 16.3°">
+        <button class="check-btn" onclick="checkAns('b1','16.3','tan⁻¹(35/120) = 16.3° East of North')">Check</button>
+        <button class="show-ans-btn" onclick="toggleAns('b1-reveal')">Show Answer</button>
+      </div>
+      <div class="ans-feedback" id="b1-fb"></div>
+      <div class="answer-reveal" id="b1-reveal">
+        <div class="ar-formula">&#952; = tan&#8315;&#185;(35/120) = tan&#8315;&#185;(0.292)</div>
+        <div class="ar-result">&#952; = 16.3&#176; East of North</div>
+        <p style="font-size:0.82rem;color:#64748b;margin-top:4px;">The plane travels at 125 km/h, 16.3&#176; East of North</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scenario 2 -->
+  <div class="scenario-card">
+    <div class="sc-header">
+      <span class="sc-num">Scenario 2</span>
+      <span class="sc-type">Ramp Force</span>
+    </div>
+    <div class="sc-body">
+      <p class="scenario" style="margin-bottom:12px;">A box is pushed with a force that has a horizontal component of <strong>18 N (East)</strong> and a vertical component of <strong>24 N (North)</strong>. Find the magnitude and angle of the resultant force from horizontal.</p>
+      <div style="background:#f0f9ff;border-radius:10px;padding:10px 14px;font-size:0.9rem;margin-bottom:12px;">
+        <strong>Magnitude:</strong> R = &#8730;(18&#178; + 24&#178;) = &#8730;(324 + 576) = &#8730;900 = <strong>30 N</strong>
+      </div>
+      <div class="answer-row">
+        <span class="answer-label">&#952; =</span>
+        <input class="answer-input" id="b2-inp" type="text" placeholder="e.g. 53.1°">
+        <button class="check-btn" onclick="checkAns('b2','53.1','tan⁻¹(24/18) = 53.1° North of East')">Check</button>
+        <button class="show-ans-btn" onclick="toggleAns('b2-reveal')">Show Answer</button>
+      </div>
+      <div class="ans-feedback" id="b2-fb"></div>
+      <div class="answer-reveal" id="b2-reveal">
+        <div class="ar-formula">&#952; = tan&#8315;&#185;(24/18) = tan&#8315;&#185;(1.333)</div>
+        <div class="ar-result">&#952; = 53.1&#176; North of East</div>
+        <p style="font-size:0.82rem;color:#64748b;margin-top:4px;">Resultant: 30 N at 53.1&#176; North of East</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scenario 3 -->
+  <div class="scenario-card">
+    <div class="sc-header">
+      <span class="sc-num">Scenario 3</span>
+      <span class="sc-type">Full Problem — Magnitude and Angle</span>
+    </div>
+    <div class="sc-body">
+      <p class="scenario" style="margin-bottom:12px;">Two forces act on an object: <strong>F&#8321; = 9 N West</strong> and <strong>F&#8322; = 12 N South</strong>. Find the resultant's magnitude and angle from horizontal.</p>
+      <div class="answer-row" style="flex-direction:column;align-items:flex-start;gap:10px;">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <span class="answer-label">Magnitude R =</span>
+          <input class="answer-input" id="b3m-inp" type="text" placeholder="e.g. 15 N">
+          <button class="check-btn" onclick="checkAns('b3m','15','√(81+144)=√225=15 N')">Check</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <span class="answer-label">&#952; =</span>
+          <input class="answer-input" id="b3a-inp" type="text" placeholder="e.g. 53.1°">
+          <button class="check-btn" onclick="checkAns('b3a','53.1','tan⁻¹(12/9) = 53.1° South of West')">Check</button>
+        </div>
+        <button class="show-ans-btn" onclick="toggleAns('b3-reveal')">Show Full Answer</button>
+      </div>
+      <div class="ans-feedback" id="b3m-fb"></div>
+      <div class="ans-feedback" id="b3a-fb"></div>
+      <div class="answer-reveal" id="b3-reveal">
+        <div class="ar-formula">R = &#8730;(9&#178; + 12&#178;) = &#8730;(81+144) = &#8730;225 = 15 N</div>
+        <div class="ar-formula" style="margin-top:6px;">&#952; = tan&#8315;&#185;(12/9) = tan&#8315;&#185;(1.333)</div>
+        <div class="ar-result">&#952; = 53.1&#176; South of West</div>
+        <p style="font-size:0.82rem;color:#64748b;margin-top:4px;">Resultant: 15 N at 53.1&#176; South of West</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANSWER KEY -->
+  <div class="section-label" style="margin-top:48px;">
+    <div class="section-icon" style="background:#fef3c7;">&#128273;</div>
+    <h2>Answer Key</h2>
+  </div>
+  <div class="answer-key-section">
+    <div class="ak-header">
+      <span class="ak-badge">Teacher / Self-Check</span>
+      <span style="font-size:0.85rem;color:#64748b;">Complete all problems before checking!</span>
+    </div>
+    <div class="ak-grid">
+      <div class="ak-item"><div class="ak-q">Problem 1</div><div class="ak-ans">26.6&#176; N of E</div><div class="ak-work">tan&#8315;&#185;(5/10) = 26.6&#176;</div></div>
+      <div class="ak-item"><div class="ak-q">Problem 2</div><div class="ak-ans">56.3&#176; S of W</div><div class="ak-work">tan&#8315;&#185;(6/4) = 56.3&#176;</div></div>
+      <div class="ak-item"><div class="ak-q">Problem 3</div><div class="ak-ans">22.6&#176; N of E</div><div class="ak-work">sin&#8315;&#185;(5/13) = 22.6&#176;</div></div>
+      <div class="ak-item"><div class="ak-q">Problem 4</div><div class="ak-ans">31.0&#176;</div><div class="ak-work">cos&#8315;&#185;(3/3.5) = 31.0&#176;</div></div>
+      <div class="ak-item"><div class="ak-q">Problem 5</div><div class="ak-ans">14.9&#176; above horiz.</div><div class="ak-work">tan&#8315;&#185;(80/300) = 14.9&#176;</div></div>
+      <div class="ak-item"><div class="ak-q">Scenario 1</div><div class="ak-ans">125 km/h, 16.3&#176; E of N</div><div class="ak-work">tan&#8315;&#185;(35/120) = 16.3&#176;</div></div>
+      <div class="ak-item"><div class="ak-q">Scenario 2</div><div class="ak-ans">30 N, 53.1&#176; N of E</div><div class="ak-work">tan&#8315;&#185;(24/18) = 53.1&#176;</div></div>
+      <div class="ak-item"><div class="ak-q">Scenario 3</div><div class="ak-ans">15 N, 53.1&#176; S of W</div><div class="ak-work">tan&#8315;&#185;(12/9) = 53.1&#176;</div></div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<script>
+  function checkPw(){
+    const val=document.getElementById('pw-input').value;
+    if(val==='physics2024'){
+      document.getElementById('lock-screen').style.display='none';
+      document.getElementById('content').style.display='block';
+    } else {
+      document.getElementById('pw-error').textContent='Incorrect password. Please try again.';
+      document.getElementById('pw-input').value='';
+    }
+  }
+  document.getElementById('pw-input').addEventListener('keydown',function(e){if(e.key==='Enter')checkPw();});
+
+  function checkAns(id, correct, explanation){
+    const inp=document.getElementById(id+'-inp');
+    const fb=document.getElementById(id+'-fb');
+    const val=inp.value.trim().replace('°','').replace(',','.');
+    const num=parseFloat(val);
+    const correctNum=parseFloat(correct);
+    if(Math.abs(num-correctNum)<0.2){
+      fb.innerHTML='&#10003; Correct! '+explanation;
+      fb.className='ans-feedback af-correct af-show';
+      inp.style.borderColor='#4ade80';
+    } else {
+      fb.innerHTML='&#10007; Not quite. Try again or click "Show Answer".';
+      fb.className='ans-feedback af-wrong af-show';
+      inp.style.borderColor='#fca5a5';
+    }
+  }
+
+  function toggleAns(id){
+    const el=document.getElementById(id);
+    if(el.classList.contains('visible')){
+      el.classList.remove('visible');
+    } else {
+      el.classList.add('visible');
+    }
+  }
+</script>
+</body>
+</html>

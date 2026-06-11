@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Significant Figures — Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#4c1d95 0%,#7c3aed 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:820px;margin:36px auto;padding:0 24px 60px;}
+    .rules-box{background:white;border:2px solid #ede9fe;border-radius:10px;padding:18px 22px;margin-bottom:36px;}
+    .rules-box h3{color:#4c1d95;font-size:1rem;margin-bottom:10px;}
+    .rules-box ol{padding-left:22px;}.rules-box li{margin-bottom:4px;font-size:0.92rem;color:#374151;}
+    .rules-box .tip{margin-top:10px;padding:10px 14px;background:#faf5ff;border-left:4px solid #7c3aed;border-radius:4px;font-size:0.88rem;color:#4c1d95;}
+    section{margin-bottom:44px;}
+    h2{font-size:1.25rem;font-weight:700;color:#4c1d95;border-left:5px solid #7c3aed;padding-left:12px;margin-bottom:18px;}
+    .instructions{color:#4b5563;font-size:0.92rem;margin-bottom:18px;font-style:italic;}
+    .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    @media(max-width:600px){.problem-grid{grid-template-columns:1fr;}}
+    .problem-card{background:white;border-radius:8px;padding:16px 20px;box-shadow:0 1px 5px rgba(0,0,0,0.07);}
+    .problem-num{font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:4px;}
+    .number-display{font-family:'Space Mono',monospace;font-size:1.8rem;font-weight:700;color:#1a1a2e;margin-bottom:8px;}
+    .answer-line{border-bottom:2px solid #d1d5db;min-height:28px;width:120px;display:inline-block;}
+    .answer-label{font-size:0.82rem;color:#6b7280;margin-right:8px;}
+    .problem-card-wide{background:white;border-radius:8px;padding:16px 20px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .b-row{display:flex;align-items:center;gap:14px;}
+    .b-target{font-family:'Space Mono',monospace;font-size:1.5rem;font-weight:700;background:#f3f4f6;padding:4px 14px;border-radius:6px;}
+    .b-fields{display:flex;flex-direction:column;gap:8px;}
+    .b-field{display:flex;align-items:center;gap:8px;font-size:0.88rem;}
+    .b-line{border-bottom:2px solid #d1d5db;min-height:24px;width:180px;display:inline-block;}
+    .short-answer{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .short-answer .q{font-weight:600;margin-bottom:10px;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#4c1d95;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #toggle-key-btn:hover{background:#5b21b6;}
+    #answer-key{display:none;background:#faf5ff;border:2px solid #c4b5fd;border-radius:12px;padding:28px 32px;}
+    #answer-key h2{color:#4c1d95;border-left-color:#7c3aed;margin-bottom:22px;}
+    .key-section{margin-bottom:28px;}
+    .key-section h3{font-size:1rem;font-weight:700;color:#4c1d95;margin-bottom:12px;}
+    .key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    .key-item{background:white;border-radius:6px;padding:10px 14px;font-size:0.92rem;}
+    .key-item .knum{font-family:'Space Mono',monospace;font-weight:700;font-size:1rem;}
+    .key-item .kans{color:#4c1d95;font-weight:700;}
+    .key-item .kexpl{color:#4b5563;font-size:0.82rem;margin-top:2px;}
+    .short-ans-key{background:white;border-radius:6px;padding:12px 16px;margin-bottom:10px;font-size:0.92rem;}
+    .short-ans-key strong{color:#4c1d95;}
+  </style>
+</head>
+<body>
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">Physics · High School · Homework Assignment</div>
+  <h1>Significant Figures — Homework</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+<main>
+  <div class="rules-box">
+    <h3>Rules Reminder</h3>
+    <ol>
+      <li>The farthest-left non-zero digit is the <strong>most significant figure</strong>.</li>
+      <li>No decimal point → farthest-right non-zero digit is the <strong>least significant figure</strong>.</li>
+      <li>Decimal point present → farthest-right digit is least significant — <strong>even if it is zero</strong>.</li>
+      <li>All digits between most and least significant are <strong>significant</strong>.</li>
+    </ol>
+    <div class="tip"><strong>Scientific notation tip:</strong> Only count digits in the <em>coefficient</em>. The power of 10 does not affect significant figures.</div>
+  </div>
+
+  <section>
+    <h2>Part A — Count the Significant Figures</h2>
+    <p class="instructions">Write the number of significant figures. Show your reasoning on the back of this page.</p>
+    <div class="problem-grid">
+      <div class="problem-card"><div class="problem-num">Problem 1</div><div class="number-display">0.00450</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 2</div><div class="number-display">123400</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 3</div><div class="number-display">123400.</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 4</div><div class="number-display">6.022 &times; 10²³</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 5</div><div class="number-display">0.1010</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 6</div><div class="number-display">3050.0</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 7</div><div class="number-display">2700</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 8</div><div class="number-display">8.00</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 9</div><div class="number-display">0.070</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 10</div><div class="number-display">900.</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Part B — Round to Required Significant Figures</h2>
+    <p class="instructions">Round each number to the sig figs specified.</p>
+    <div class="problem-card-wide"><div class="problem-num">Problem 11</div><div class="b-row"><div class="b-target">48,263</div><div class="b-fields"><div class="b-field">Round to <strong>3 sig figs</strong>: <span class="b-line"></span></div></div></div></div>
+    <div class="problem-card-wide"><div class="problem-num">Problem 12</div><div class="b-row"><div class="b-target">0.007842</div><div class="b-fields"><div class="b-field">Round to <strong>2 sig figs</strong>: <span class="b-line"></span></div></div></div></div>
+    <div class="problem-card-wide"><div class="problem-num">Problem 13</div><div class="b-row"><div class="b-target">9,560,000</div><div class="b-fields"><div class="b-field">Round to <strong>2 sig figs</strong> (sci notation): <span class="b-line"></span></div></div></div></div>
+    <div class="problem-card-wide"><div class="problem-num">Problem 14</div><div class="b-row"><div class="b-target">1.63842</div><div class="b-fields"><div class="b-field">Round to <strong>4 sig figs</strong>: <span class="b-line"></span></div></div></div></div>
+    <div class="problem-card-wide"><div class="problem-num">Problem 15</div><div class="b-row"><div class="b-target">302.55</div><div class="b-fields"><div class="b-field">Round to <strong>3 sig figs</strong>: <span class="b-line"></span></div></div></div></div>
+  </section>
+
+  <section>
+    <h2>Part C — Real-World Connection</h2>
+    <p class="instructions">Answer in 2–4 complete sentences.</p>
+    <div class="short-answer">
+      <div class="q">Question 16. A weather station reports rainfall as <strong>1200 mm</strong>. A scientist is unsure whether this is precise or a rough estimate. Explain why, and describe how to write it unambiguously.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+    <div class="short-answer">
+      <div class="q">Question 17. A student calculates speed as 12.347 m/s using a stopwatch accurate to 0.1 s. Is writing 12.347 m/s correct? Explain in terms of significant figures.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>🌟 Bonus Challenge</h2>
+    <div class="short-answer">
+      <div class="q">The speed of light is 299,792,458 m/s. A textbook rounds this to 3.00 × 10⁸ m/s. How many sig figs does the textbook version have? What is "lost" by rounding, and when does the full precision matter?</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <div class="key-btn-wrap"><button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key (Teacher Use)</button></div>
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+    <div class="key-section">
+      <h3>Part A</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="knum">1. 0.00450</div><div class="kans">3 sig figs</div><div class="kexpl">Leading zeros not significant; 4, 5, 0 count (decimal)</div></div>
+        <div class="key-item"><div class="knum">2. 123400</div><div class="kans">4 sig figs</div><div class="kexpl">No decimal; rightmost non-zero is 4; 1,2,3,4 count</div></div>
+        <div class="key-item"><div class="knum">3. 123400.</div><div class="kans">6 sig figs</div><div class="kexpl">Decimal; all 6 digits count</div></div>
+        <div class="key-item"><div class="knum">4. 6.022 × 10²³</div><div class="kans">4 sig figs</div><div class="kexpl">Coefficient only: 6,0,2,2</div></div>
+        <div class="key-item"><div class="knum">5. 0.1010</div><div class="kans">4 sig figs</div><div class="kexpl">Leading 0 not significant; 1,0,1,0 count (decimal)</div></div>
+        <div class="key-item"><div class="knum">6. 3050.0</div><div class="kans">5 sig figs</div><div class="kexpl">Decimal; 3,0,5,0,0 all count</div></div>
+        <div class="key-item"><div class="knum">7. 2700</div><div class="kans">2 sig figs</div><div class="kexpl">No decimal; rightmost non-zero is 7; 2,7 count</div></div>
+        <div class="key-item"><div class="knum">8. 8.00</div><div class="kans">3 sig figs</div><div class="kexpl">Decimal; 8,0,0 all count</div></div>
+        <div class="key-item"><div class="knum">9. 0.070</div><div class="kans">2 sig figs</div><div class="kexpl">Leading zeros not significant; 7,0 count (decimal)</div></div>
+        <div class="key-item"><div class="knum">10. 900.</div><div class="kans">3 sig figs</div><div class="kexpl">Decimal; 9,0,0 all count</div></div>
+      </div>
+    </div>
+    <div class="key-section">
+      <h3>Part B</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="knum">11. 48,263 → 3 sf</div><div class="kans">48,300</div><div class="kexpl">Keep 4,8; next digit 6 rounds 2 up → 48,300</div></div>
+        <div class="key-item"><div class="knum">12. 0.007842 → 2 sf</div><div class="kans">0.0078</div><div class="kexpl">Keep 7,8; next digit 4 → round down</div></div>
+        <div class="key-item"><div class="knum">13. 9,560,000 → 2 sf</div><div class="kans">9.6 × 10⁶</div><div class="kexpl">Keep 9,5; next digit 6 rounds 5 up → 9.6</div></div>
+        <div class="key-item"><div class="knum">14. 1.63842 → 4 sf</div><div class="kans">1.638</div><div class="kexpl">Keep 1,6,3,8; next digit 4 → round down</div></div>
+        <div class="key-item"><div class="knum">15. 302.55 → 3 sf</div><div class="kans">303</div><div class="kexpl">Keep 3,0,2; next digit 5 → round up</div></div>
+      </div>
+    </div>
+    <div class="key-section">
+      <h3>Part C</h3>
+      <div class="short-ans-key"><strong>Q16.</strong> 1200 mm is ambiguous because there is no decimal point. It could be 2 sig figs (±50 mm) or 4 sig figs (±0.5 mm). To remove ambiguity use scientific notation: 1.2 × 10³ mm (2 sf), 1.20 × 10³ mm (3 sf), or 1.200 × 10³ mm (4 sf).</div>
+      <br>
+      <div class="short-ans-key"><strong>Q17.</strong> No. A stopwatch measuring to 0.1 s limits the precision of the speed result. Writing 12.347 m/s falsely claims 5 sig figs. The answer should be rounded to reflect the instrument's precision — likely <strong>12.3 m/s</strong> (3 sig figs).</div>
+    </div>
+    <div class="key-section">
+      <h3>Bonus</h3>
+      <div class="short-ans-key"><strong>Bonus.</strong> 3.00 × 10⁸ m/s has <strong>3 sig figs</strong>. Rounding from 299,792,458 m/s drops six places of precision (~207,542 m/s lost). For everyday physics 3 sf is enough. For GPS synchronisation, interferometry, or testing physical constants, the full 9-digit precision is essential.</div>
+    </div>
+  </div>
+</main>
+<script>function toggleKey(){var k=document.getElementById('answer-key');var b=document.getElementById('toggle-key-btn');if(k.style.display==='none'||k.style.display===''){k.style.display='block';b.textContent='Hide Answer Key';}else{k.style.display='none';b.textContent='Show Answer Key (Teacher Use)';}}</script>
+</body>
+</html>

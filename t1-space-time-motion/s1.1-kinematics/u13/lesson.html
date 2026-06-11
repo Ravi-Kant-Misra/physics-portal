@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Free Fall — Kinematics Unit 13</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;
+  --red:#ef4444;--dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+
+/* dot background */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:radial-gradient(circle,#cbd5e1 1px,transparent 1px);
+  background-size:28px 28px;opacity:.45;pointer-events:none;z-index:0;
+}
+
+/* password gate */
+#gate{
+  position:fixed;inset:0;z-index:999;
+  background:linear-gradient(135deg,#1e3a5f,#1d4ed8);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.2rem;
+}
+#gate h2{color:#fff;font-size:1.8rem;font-weight:800;}
+#gate p{color:#bfdbfe;font-size:.95rem;}
+#gate input{
+  padding:.75rem 1.2rem;border-radius:12px;border:2px solid #3b82f6;
+  font-size:1rem;font-family:'Nunito',sans-serif;outline:none;width:260px;
+  background:#0f172a;color:#fff;
+}
+#gate button{
+  padding:.75rem 2rem;border-radius:12px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;
+  font-size:1rem;font-weight:700;font-family:'Nunito',sans-serif;
+  transition:opacity .2s;
+}
+#gate button:hover{opacity:.85;}
+#gate-err{color:#fca5a5;font-size:.9rem;min-height:1.2rem;}
+
+/* main wrapper */
+#main{display:none;position:relative;z-index:1;}
+
+/* HEADER */
+header{
+  background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 60%,#1e40af 100%);
+  padding:3.5rem 2rem 3rem;text-align:center;position:relative;overflow:hidden;
+}
+.stars{position:absolute;inset:0;pointer-events:none;}
+.star{
+  position:absolute;background:#fff;border-radius:50%;
+  animation:twinkle 2.5s infinite ease-in-out alternate;
+}
+@keyframes twinkle{0%{opacity:.2;transform:scale(.8);}100%{opacity:1;transform:scale(1.2);}}
+.chip{
+  display:inline-block;background:rgba(255,255,255,.15);
+  color:#e0f2fe;font-size:.78rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;padding:.3rem .9rem;border-radius:99px;
+  border:1px solid rgba(255,255,255,.25);margin-bottom:1rem;
+  font-family:'Space Mono',monospace;
+}
+header h1{
+  font-size:clamp(2.2rem,5vw,3.4rem);font-weight:900;
+  background:linear-gradient(135deg,#ffffff 0%,#bfdbfe 50%,#818cf8 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;line-height:1.15;margin-bottom:.6rem;
+}
+header p.subtitle{color:#bfdbfe;font-size:1.05rem;font-weight:600;}
+
+/* layout */
+.container{max-width:900px;margin:0 auto;padding:2.5rem 1.5rem 4rem;}
+
+/* section heading */
+.section-title{
+  font-size:1.35rem;font-weight:800;color:var(--dark);
+  margin:2.8rem 0 1.2rem;display:flex;align-items:center;gap:.6rem;
+}
+.section-title::before{
+  content:'';display:block;width:4px;height:1.4rem;border-radius:2px;
+  background:linear-gradient(180deg,var(--blue),var(--indigo));
+}
+
+/* cards */
+.card{
+  background:#fff;border-radius:18px;padding:1.6rem 1.8rem;
+  box-shadow:0 2px 12px rgba(59,130,246,.09);margin-bottom:1.4rem;
+  border:1px solid #e2e8f0;
+}
+.card h3{font-size:1.05rem;font-weight:800;color:var(--dark);margin-bottom:.8rem;}
+
+/* definition highlight */
+.def-box{
+  background:linear-gradient(135deg,#eff6ff,#eef2ff);
+  border-left:4px solid var(--blue);border-radius:0 12px 12px 0;
+  padding:1rem 1.4rem;margin-bottom:1rem;
+}
+.def-box strong{color:var(--blue);}
+
+/* key insight */
+.insight{
+  background:linear-gradient(135deg,#f0fdf4,#dcfce7);
+  border:1.5px solid #86efac;border-radius:14px;
+  padding:1rem 1.4rem;margin:1rem 0;display:flex;gap:.8rem;align-items:flex-start;
+}
+.insight-icon{font-size:1.4rem;line-height:1;}
+.insight p{font-size:.96rem;color:#166534;font-weight:600;}
+
+/* tip box */
+.tip{
+  background:linear-gradient(135deg,#fffbeb,#fef3c7);
+  border:1.5px solid #fcd34d;border-radius:14px;
+  padding:1rem 1.4rem;margin:1rem 0;display:flex;gap:.8rem;align-items:flex-start;
+}
+.tip-icon{font-size:1.4rem;line-height:1;}
+.tip p{font-size:.93rem;color:#92400e;font-weight:600;}
+
+/* formula table */
+.formula-table{width:100%;border-collapse:collapse;margin-top:.8rem;}
+.formula-table th{
+  background:linear-gradient(135deg,#1e3a5f,#1d4ed8);color:#fff;
+  padding:.6rem .9rem;font-family:'Space Mono',monospace;font-size:.8rem;
+  text-align:left;
+}
+.formula-table th:first-child{border-radius:10px 0 0 0;}
+.formula-table th:last-child{border-radius:0 10px 0 0;}
+.formula-table td{
+  padding:.55rem .9rem;font-family:'Space Mono',monospace;font-size:.85rem;
+  border-bottom:1px solid #e2e8f0;
+}
+.formula-table tr:last-child td{border-bottom:none;}
+.formula-table tr:nth-child(even) td{background:#f8faff;}
+
+/* worked example */
+.example-box{
+  background:linear-gradient(135deg,#1e3a5f,#1d4ed8);
+  border-radius:16px;padding:1.6rem 1.8rem;margin-bottom:1.4rem;color:#fff;
+}
+.example-box h3{
+  font-size:1rem;font-weight:800;color:#bfdbfe;
+  text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem;
+  font-family:'Space Mono',monospace;
+}
+.example-box .question{
+  font-size:1.05rem;font-weight:700;color:#fff;
+  background:rgba(255,255,255,.1);border-radius:10px;
+  padding:.75rem 1rem;margin-bottom:1rem;
+}
+.given-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:.5rem;margin-bottom:1rem;
+}
+.given-item{
+  background:rgba(255,255,255,.12);border-radius:10px;
+  padding:.5rem .8rem;font-family:'Space Mono',monospace;font-size:.82rem;color:#e0f2fe;
+}
+.given-item strong{color:#fff;}
+.working{
+  background:rgba(0,0,0,.25);border-radius:10px;
+  padding:.9rem 1.1rem;font-family:'Space Mono',monospace;font-size:.87rem;
+  color:#bfdbfe;line-height:1.8;margin-bottom:.8rem;
+}
+.answer-badge{
+  display:inline-block;
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:#fff;font-weight:800;font-size:1rem;
+  padding:.45rem 1.2rem;border-radius:99px;
+}
+
+/* SVG diagrams */
+.diagram-wrap{
+  background:#f8faff;border:1.5px solid #e2e8f0;border-radius:14px;
+  padding:1.2rem;margin:1rem 0;text-align:center;
+}
+.diagram-wrap figcaption{
+  font-size:.82rem;color:var(--muted);margin-top:.5rem;font-style:italic;
+}
+
+/* rules list */
+.rules-list{list-style:none;padding:0;margin:.5rem 0;}
+.rules-list li{
+  display:flex;gap:.8rem;align-items:flex-start;
+  padding:.65rem .8rem;border-radius:10px;margin-bottom:.4rem;
+  background:#f8faff;border:1px solid #e2e8f0;
+  font-size:.95rem;
+}
+.rule-num{
+  background:linear-gradient(135deg,var(--blue),var(--indigo));
+  color:#fff;font-weight:800;border-radius:50%;
+  min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+  font-size:.82rem;flex-shrink:0;
+}
+
+/* sign convention badge */
+.sign-badge{
+  display:inline-block;background:linear-gradient(135deg,#6366f1,#4f46e5);
+  color:#fff;font-size:.78rem;font-weight:700;padding:.25rem .8rem;
+  border-radius:99px;font-family:'Space Mono',monospace;margin-bottom:.6rem;
+}
+
+/* quiz */
+.quiz-section{
+  background:linear-gradient(135deg,#f0f9ff,#e0f2fe);
+  border:2px solid #7dd3fc;border-radius:20px;
+  padding:2rem 1.8rem;margin-top:2.5rem;
+}
+.quiz-section h2{
+  font-size:1.3rem;font-weight:800;color:#0c4a6e;margin-bottom:1.4rem;
+  display:flex;align-items:center;gap:.6rem;
+}
+.q-block{margin-bottom:1.6rem;}
+.q-text{font-weight:700;font-size:.98rem;color:var(--dark);margin-bottom:.7rem;}
+.q-options{display:flex;flex-direction:column;gap:.4rem;}
+.q-opt{
+  display:flex;align-items:center;gap:.6rem;
+  background:#fff;border:1.5px solid #bae6fd;border-radius:10px;
+  padding:.5rem .9rem;cursor:pointer;font-size:.93rem;
+  transition:all .18s;user-select:none;
+}
+.q-opt:hover{border-color:var(--blue);background:#eff6ff;}
+.q-opt.correct{background:#dcfce7;border-color:#86efac;color:#166534;}
+.q-opt.wrong{background:#fee2e2;border-color:#fca5a5;color:#991b1b;}
+.q-opt input{accent-color:var(--blue);}
+.q-feedback{font-size:.88rem;font-weight:700;margin-top:.4rem;min-height:1.2rem;}
+.q-feedback.ok{color:#16a34a;}
+.q-feedback.no{color:#dc2626;}
+
+/* quiz submit */
+.quiz-btn{
+  padding:.7rem 2rem;border-radius:12px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;
+  font-size:1rem;font-weight:700;font-family:'Nunito',sans-serif;
+  transition:opacity .2s;margin-top:.5rem;
+}
+.quiz-btn:hover{opacity:.85;}
+#quiz-result{
+  font-size:1.05rem;font-weight:800;color:#0c4a6e;
+  margin-top:1rem;min-height:1.4rem;
+}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <h2>Physics Portal</h2>
+  <p>Enter the password to access this lesson.</p>
+  <input type="password" id="pwd-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPwd()"/>
+  <button onclick="checkPwd()">Unlock</button>
+  <div id="gate-err"></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main">
+
+<header>
+  <!-- twinkling stars -->
+  <div class="stars" id="stars-container"></div>
+  <div class="chip">Kinematics &middot; Unit 13</div>
+  <h1>Free Fall</h1>
+  <p class="subtitle">Gravity, acceleration, and motion under a single force</p>
+</header>
+
+<div class="container">
+
+  <!-- DEFINITION -->
+  <div class="section-title">What is Free Fall?</div>
+  <div class="card">
+    <div class="def-box">
+      <strong>Free Fall</strong>: If the <em>only</em> force acting on an object is the <strong>force of gravity</strong>, the object is in <strong>free fall</strong>.
+    </div>
+    <p style="font-size:.95rem;color:#475569;margin-bottom:.8rem;">
+      A book sitting on a table is <em>not</em> in free fall — the table pushes back with a contact (normal) force. A thrown ball after leaving the hand <em>is</em> in free fall — only gravity acts on it (ignoring air resistance).
+    </p>
+
+    <!-- SVG: apple in hand vs apple thrown -->
+    <div class="diagram-wrap">
+      <svg width="460" height="140" viewBox="0 0 460 140" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+        <!-- LEFT: apple on hand (not free fall) -->
+        <rect x="10" y="10" width="200" height="120" rx="12" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+        <text x="110" y="32" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" fill="#92400e" font-weight="700">NOT in free fall</text>
+        <!-- hand -->
+        <ellipse cx="110" cy="105" rx="38" ry="10" fill="#fcd34d"/>
+        <!-- apple -->
+        <circle cx="110" cy="78" r="18" fill="#ef4444"/>
+        <path d="M110 60 Q115 52 120 56" stroke="#166534" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- force arrows -->
+        <line x1="110" y1="60" x2="110" y2="38" stroke="#22c55e" stroke-width="2" marker-end="url(#arrowG)"/>
+        <text x="115" y="48" font-family="Nunito,sans-serif" font-size="10" fill="#166534">Normal</text>
+        <line x1="110" y1="96" x2="110" y2="118" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowR)"/>
+        <text x="115" y="113" font-family="Nunito,sans-serif" font-size="10" fill="#991b1b">Gravity</text>
+
+        <!-- RIGHT: apple parabola (free fall) -->
+        <rect x="240" y="10" width="210" height="120" rx="12" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+        <text x="345" y="32" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" fill="#1e3a5f" font-weight="700">Free Fall (gravity only)</text>
+        <!-- parabola path -->
+        <path d="M270 105 Q345 15 420 105" stroke="#94a3b8" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/>
+        <!-- Going up: apple + arrows -->
+        <circle cx="295" cy="80" r="10" fill="#ef4444"/>
+        <line x1="295" y1="70" x2="295" y2="50" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowB)"/>
+        <line x1="295" y1="90" x2="295" y2="110" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowA)"/>
+        <text x="260" y="47" font-family="Space Mono,monospace" font-size="9" fill="#1d4ed8">v=up</text>
+        <text x="258" y="113" font-family="Space Mono,monospace" font-size="9" fill="#b45309">a=down</text>
+        <!-- Peak -->
+        <circle cx="345" cy="30" r="10" fill="#ef4444"/>
+        <text x="338" y="22" font-family="Space Mono,monospace" font-size="9" fill="#1d4ed8">v=0</text>
+        <line x1="345" y1="40" x2="345" y2="57" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowA)"/>
+        <text x="350" y="54" font-family="Space Mono,monospace" font-size="9" fill="#b45309">a=down</text>
+        <!-- Going down -->
+        <circle cx="400" cy="80" r="10" fill="#ef4444"/>
+        <line x1="400" y1="90" x2="400" y2="112" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowB)"/>
+        <line x1="400" y1="70" x2="400" y2="52" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowA)"/>
+        <text x="405" y="115" font-family="Space Mono,monospace" font-size="9" fill="#1d4ed8">v=down</text>
+        <text x="405" y="48" font-family="Space Mono,monospace" font-size="9" fill="#b45309">a=down</text>
+
+        <!-- arrow markers -->
+        <defs>
+          <marker id="arrowG" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#22c55e"/>
+          </marker>
+          <marker id="arrowR" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#ef4444"/>
+          </marker>
+          <marker id="arrowB" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#3b82f6"/>
+          </marker>
+          <marker id="arrowA" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#f59e0b"/>
+          </marker>
+        </defs>
+      </svg>
+      <figcaption>Left: An apple resting on a hand — NOT in free fall (contact force present). Right: An apple in free fall — acceleration is always 9.81 m/s² downward, even when moving upward.</figcaption>
+    </div>
+  </div>
+
+  <!-- ACCELERATION OF GRAVITY -->
+  <div class="section-title">The Acceleration of Gravity</div>
+  <div class="card">
+    <div class="given-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));">
+      <div style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:12px;padding:.8rem 1rem;">
+        <div style="font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem;">Symbol</div>
+        <div style="font-size:1.5rem;font-weight:800;color:var(--blue);font-family:'Space Mono',monospace;">g</div>
+      </div>
+      <div style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:12px;padding:.8rem 1rem;">
+        <div style="font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem;">Value on Earth</div>
+        <div style="font-size:1.5rem;font-weight:800;color:var(--blue);font-family:'Space Mono',monospace;">9.81 m/s²</div>
+      </div>
+      <div style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:12px;padding:.8rem 1rem;">
+        <div style="font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem;">Direction</div>
+        <div style="font-size:1.1rem;font-weight:800;color:var(--indigo);font-family:'Space Mono',monospace;">Always DOWN</div>
+      </div>
+    </div>
+    <div class="insight" style="margin-top:1rem;">
+      <span class="insight-icon">&#9888;</span>
+      <p>The acceleration due to gravity is <strong>constant</strong> throughout free fall — even when the object is moving upward, decelerating, or momentarily at rest at its peak.</p>
+    </div>
+  </div>
+
+  <!-- THREE RULES -->
+  <div class="section-title">Three Free Fall Rules</div>
+  <div class="card">
+    <p style="font-size:.95rem;color:#475569;margin-bottom:1rem;">Knowing that an object is in free fall gives you information you can plug straight into the kinematic equations:</p>
+    <ul class="rules-list">
+      <li>
+        <span class="rule-num">1</span>
+        <span>The acceleration is <strong>always g = 9.81 m/s²</strong>, and always points <strong>downward</strong>.</span>
+      </li>
+      <li>
+        <span class="rule-num">2</span>
+        <span>If the object is <strong>dropped</strong> (released from rest), its <strong>initial velocity u = 0 m/s</strong>.</span>
+      </li>
+      <li>
+        <span class="rule-num">3</span>
+        <span>If the object is <strong>thrown upward</strong>, its velocity at the <strong>highest point is v = 0 m/s</strong> (instantaneously at rest before falling back down).</span>
+      </li>
+    </ul>
+
+    <!-- velocity arrows diagram -->
+    <div class="diagram-wrap">
+      <svg width="340" height="220" viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+        <defs>
+          <marker id="up-arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#3b82f6"/>
+          </marker>
+          <marker id="dn-arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#ef4444"/>
+          </marker>
+        </defs>
+        <!-- divider -->
+        <line x1="170" y1="10" x2="170" y2="210" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <!-- peak -->
+        <text x="170" y="32" text-anchor="middle" font-family="Space Mono,monospace" font-size="11" fill="#0f172a" font-weight="700">v = 0 at peak</text>
+        <circle cx="170" cy="50" r="9" fill="#f59e0b"/>
+
+        <!-- LEFT column: going up -->
+        <text x="85" y="15" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" fill="#1d4ed8" font-weight="800">Thrown Upward</text>
+        <!-- larger arrow (lower, faster) -->
+        <line x1="85" y1="195" x2="85" y2="145" stroke="#3b82f6" stroke-width="3" marker-end="url(#up-arr)"/>
+        <text x="95" y="190" font-family="Space Mono,monospace" font-size="9" fill="#1d4ed8">v larger</text>
+        <!-- smaller arrow (higher, slower) -->
+        <line x1="85" y1="135" x2="85" y2="105" stroke="#3b82f6" stroke-width="3" marker-end="url(#up-arr)"/>
+        <text x="95" y="132" font-family="Space Mono,monospace" font-size="9" fill="#1d4ed8">v smaller</text>
+        <!-- dot at peak -->
+        <circle cx="85" cy="58" r="5" fill="#3b82f6"/>
+        <text x="55" y="56" font-family="Space Mono,monospace" font-size="9" fill="#3b82f6">v=0</text>
+
+        <!-- RIGHT column: falling down -->
+        <text x="255" y="15" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" fill="#dc2626" font-weight="800">Falling Down</text>
+        <!-- smaller arrow (near top, just started falling) -->
+        <line x1="255" y1="65" x2="255" y2="100" stroke="#ef4444" stroke-width="3" marker-end="url(#dn-arr)"/>
+        <text x="262" y="98" font-family="Space Mono,monospace" font-size="9" fill="#dc2626">v smaller</text>
+        <!-- larger arrow (lower, faster) -->
+        <line x1="255" y1="120" x2="255" y2="175" stroke="#ef4444" stroke-width="3" marker-end="url(#dn-arr)"/>
+        <text x="262" y="173" font-family="Space Mono,monospace" font-size="9" fill="#dc2626">v larger</text>
+
+        <!-- gravity arrow always down label -->
+        <text x="170" y="205" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#f59e0b" font-weight="700">a = 9.81 m/s² downward throughout</text>
+      </svg>
+      <figcaption>Velocity changes direction but acceleration (gravity) always points down.</figcaption>
+    </div>
+  </div>
+
+  <!-- SIGN CONVENTIONS -->
+  <div class="section-title">Sign Conventions</div>
+  <div class="card">
+    <p style="font-size:.95rem;color:#475569;margin-bottom:1rem;">You can choose either direction as positive, but you must be <strong>consistent</strong> within a problem.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:.9rem 1rem;">
+        <div class="sign-badge" style="background:linear-gradient(135deg,#22c55e,#16a34a);">Down = +</div>
+        <p style="font-size:.88rem;color:#166534;margin-top:.5rem;">Use when object is <strong>dropped</strong> or motion is primarily downward. Then a = +9.81 m/s².</p>
+      </div>
+      <div style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:12px;padding:.9rem 1rem;">
+        <div class="sign-badge">Up = +</div>
+        <p style="font-size:.88rem;color:#1e40af;margin-top:.5rem;">Use when object is <strong>thrown upward</strong>. Then a = −9.81 m/s² (acceleration opposes motion).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORMULAS -->
+  <div class="section-title">Kinematic Formulas Used</div>
+  <div class="card">
+    <table class="formula-table">
+      <thead>
+        <tr><th>Formula</th><th>Variables</th><th>Use when you need to find</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>v² = u² + 2as</td>
+          <td>v, u, a, s</td>
+          <td>Final velocity or displacement (no time)</td>
+        </tr>
+        <tr>
+          <td>v = u + at</td>
+          <td>v, u, a, t</td>
+          <td>Final velocity or time</td>
+        </tr>
+        <tr>
+          <td>s = ut + ½at²</td>
+          <td>s, u, a, t</td>
+          <td>Displacement when time is known</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- WORKED EXAMPLE 1 -->
+  <div class="section-title">Worked Example 1 — Dropped Ball</div>
+  <div class="example-box">
+    <h3>Example 1</h3>
+    <div class="question">A ball is dropped from a height of 10 m. What will its velocity be right before it hits the ground?</div>
+    <div style="margin-bottom:.6rem;"><span class="sign-badge" style="background:rgba(255,255,255,.2);color:#e0f2fe;border:1px solid rgba(255,255,255,.3);">Sign convention: Down = +</span></div>
+    <div class="given-grid">
+      <div class="given-item"><strong>a</strong> = 9.81 m/s²</div>
+      <div class="given-item"><strong>s</strong> = 10 m</div>
+      <div class="given-item"><strong>u</strong> = 0 m/s (dropped)</div>
+      <div class="given-item"><strong>v</strong> = ?</div>
+    </div>
+    <p style="color:#bfdbfe;font-size:.9rem;margin-bottom:.4rem;font-weight:600;">Formula: v² = u² + 2as</p>
+    <div class="working">
+v² = 0² + 2(9.81)(10)
+v² = 196.2
+v = √196.2
+v = 14 m/s
+    </div>
+    <span class="answer-badge">v = 14 m/s downward</span>
+  </div>
+
+  <!-- WORKED EXAMPLE 2 -->
+  <div class="section-title">Worked Example 2 — Maximum Height</div>
+  <div class="example-box" style="background:linear-gradient(135deg,#312e81,#4338ca);">
+    <h3>Example 2</h3>
+    <div class="question">A ball is thrown up at 10 m/s. What is the maximum height it will reach?</div>
+    <div style="margin-bottom:.6rem;"><span class="sign-badge" style="background:rgba(255,255,255,.2);color:#e0e7ff;border:1px solid rgba(255,255,255,.3);">Sign convention: Up = +</span></div>
+    <div class="given-grid">
+      <div class="given-item"><strong>u</strong> = +10 m/s</div>
+      <div class="given-item"><strong>a</strong> = −9.81 m/s²</div>
+      <div class="given-item"><strong>v</strong> = 0 m/s (at peak)</div>
+      <div class="given-item"><strong>s</strong> = ?</div>
+    </div>
+    <p style="color:#c7d2fe;font-size:.9rem;margin-bottom:.4rem;font-weight:600;">Formula: v² = u² + 2as</p>
+    <div class="working">
+0² = 10² + 2(−9.81)s
+0 = 100 − 19.62s
+19.62s = 100
+s = 100 / 19.62
+s = 5.1 m
+    </div>
+    <span class="answer-badge">Maximum height = 5.1 m</span>
+  </div>
+
+  <!-- WORKED EXAMPLE 3 -->
+  <div class="section-title">Worked Example 3 — Time to Maximum Height</div>
+  <div class="example-box" style="background:linear-gradient(135deg,#064e3b,#047857);">
+    <h3>Example 3</h3>
+    <div class="question">A ball is thrown up at 10 m/s. How much time will it take to reach its maximum height?</div>
+    <div style="margin-bottom:.6rem;"><span class="sign-badge" style="background:rgba(255,255,255,.2);color:#d1fae5;border:1px solid rgba(255,255,255,.3);">Sign convention: Up = +</span></div>
+    <div class="given-grid">
+      <div class="given-item"><strong>u</strong> = +10 m/s</div>
+      <div class="given-item"><strong>a</strong> = −9.8 m/s²</div>
+      <div class="given-item"><strong>v</strong> = 0 m/s</div>
+      <div class="given-item"><strong>t</strong> = ?</div>
+    </div>
+    <p style="color:#a7f3d0;font-size:.9rem;margin-bottom:.4rem;font-weight:600;">Formula: v = u + at</p>
+    <div class="working">
+0 = 10 + (−9.8)t
+9.8t = 10
+t = 10 / 9.8
+t = 1.02 s
+    </div>
+    <span class="answer-badge">t = 1.02 seconds</span>
+  </div>
+
+  <!-- WORKED EXAMPLE 4 (MULTI-PART) -->
+  <div class="section-title">Worked Example 4 — Ball Thrown Off a Cliff (Multi-Part)</div>
+
+  <!-- diagram -->
+  <div class="diagram-wrap">
+    <svg width="400" height="280" viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+      <defs>
+        <marker id="v-up" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#3b82f6"/>
+        </marker>
+        <marker id="v-dn" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#ef4444"/>
+        </marker>
+      </defs>
+      <!-- sky/ground -->
+      <rect x="0" y="0" width="400" height="280" fill="#f0f9ff" rx="10"/>
+      <!-- ground -->
+      <rect x="0" y="250" width="400" height="30" fill="#d1fae5" rx="0"/>
+      <text x="200" y="268" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" fill="#166534">GROUND</text>
+      <!-- cliff face -->
+      <rect x="40" y="130" width="120" height="120" fill="#cbd5e1" rx="4"/>
+      <rect x="40" y="100" width="130" height="35" fill="#94a3b8" rx="4"/>
+      <!-- cliff top -->
+      <line x1="40" y1="100" x2="175" y2="100" stroke="#475569" stroke-width="2"/>
+      <!-- person stick figure on cliff -->
+      <circle cx="155" cy="82" r="8" fill="#1e3a5f"/>
+      <line x1="155" y1="90" x2="155" y2="115" stroke="#1e3a5f" stroke-width="2"/>
+      <line x1="155" y1="98" x2="140" y2="108" stroke="#1e3a5f" stroke-width="2"/>
+      <line x1="155" y1="98" x2="170" y2="95" stroke="#1e3a5f" stroke-width="2"/>
+      <line x1="155" y1="115" x2="148" y2="130" stroke="#1e3a5f" stroke-width="2"/>
+      <line x1="155" y1="115" x2="162" y2="130" stroke="#1e3a5f" stroke-width="2"/>
+      <!-- trajectory curve -->
+      <path d="M165 95 Q230 10 295 95 Q310 120 280 250" stroke="#94a3b8" stroke-width="1.5" fill="none" stroke-dasharray="5,4"/>
+      <!-- peak marker -->
+      <circle cx="230" cy="14" r="7" fill="#f59e0b"/>
+      <text x="240" y="12" font-family="Space Mono,monospace" font-size="9" fill="#b45309">v=0 (peak)</text>
+      <!-- height annotations -->
+      <!-- cliff height brace -->
+      <line x1="30" y1="100" x2="30" y2="250" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <line x1="25" y1="100" x2="35" y2="100" stroke="#ef4444" stroke-width="1.5"/>
+      <line x1="25" y1="250" x2="35" y2="250" stroke="#ef4444" stroke-width="1.5"/>
+      <text x="12" y="180" font-family="Space Mono,monospace" font-size="9" fill="#dc2626" font-weight="700">50 m</text>
+      <!-- peak height above cliff brace -->
+      <line x1="215" y1="14" x2="215" y2="100" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <line x1="210" y1="14" x2="220" y2="14" stroke="#3b82f6" stroke-width="1.5"/>
+      <line x1="210" y1="100" x2="220" y2="100" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="222" y="60" font-family="Space Mono,monospace" font-size="9" fill="#1d4ed8" font-weight="700">20.4 m</text>
+      <!-- initial velocity arrow -->
+      <line x1="165" y1="95" x2="165" y2="55" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#v-up)"/>
+      <text x="170" y="65" font-family="Space Mono,monospace" font-size="9" fill="#1d4ed8">u=20 m/s</text>
+      <!-- labels -->
+      <text x="280" y="148" font-family="Nunito,sans-serif" font-size="10" fill="#1e3a5f" font-weight="700">Part 1: up to peak</text>
+      <text x="280" y="163" font-family="Nunito,sans-serif" font-size="10" fill="#dc2626" font-weight="700">Part 2: peak to ground</text>
+      <!-- total height -->
+      <text x="310" y="185" font-family="Space Mono,monospace" font-size="9" fill="#166534">Total fall:</text>
+      <text x="310" y="198" font-family="Space Mono,monospace" font-size="9" fill="#166534">70.4 m</text>
+    </svg>
+    <figcaption>Strategy: split the problem at the peak (v = 0), solve each segment separately, then add the times.</figcaption>
+  </div>
+
+  <div class="example-box" style="background:linear-gradient(135deg,#7c2d12,#c2410c);">
+    <h3>Example 4 — Cliff Problem</h3>
+    <div class="question">A ball is thrown upward off a cliff at 20 m/s. The cliff is 50 m high. How much time does it take the ball to reach the ground at the bottom of the cliff?</div>
+    <div style="margin-bottom:.6rem;"><span class="sign-badge" style="background:rgba(255,255,255,.2);color:#fed7aa;border:1px solid rgba(255,255,255,.3);">Sign convention: Up = +</span></div>
+
+    <p style="color:#fed7aa;font-weight:700;font-size:.95rem;margin-bottom:.5rem;">--- Part 1: Time to reach maximum height ---</p>
+    <div class="given-grid">
+      <div class="given-item"><strong>u</strong> = +20 m/s</div>
+      <div class="given-item"><strong>a</strong> = −9.81 m/s²</div>
+      <div class="given-item"><strong>v</strong> = 0 m/s</div>
+      <div class="given-item"><strong>t</strong> = ?</div>
+    </div>
+    <p style="color:#fed7aa;font-size:.9rem;margin-bottom:.4rem;font-weight:600;">Formula: v = u + at</p>
+    <div class="working">
+0 = 20 + (−9.81)t
+9.81t = 20
+t = 20 / 9.81
+t₁ = 2.04 s
+    </div>
+
+    <p style="color:#fed7aa;font-weight:700;font-size:.95rem;margin-bottom:.5rem;margin-top:.8rem;">--- Part 2: Time to fall from peak to ground ---</p>
+    <p style="color:#fed7aa;font-size:.88rem;margin-bottom:.5rem;">First find the height reached above the cliff (using v² = u² + 2as with Part 1 data):<br/>
+    0² = 20² + 2(−9.81)s → s = 400/19.62 = <strong>20.4 m</strong> above cliff top</p>
+    <p style="color:#fed7aa;font-size:.88rem;margin-bottom:.5rem;">Total displacement from peak to ground = −(20.4 + 50) = <strong>−70.4 m</strong></p>
+    <div class="given-grid">
+      <div class="given-item"><strong>u</strong> = 0 m/s (starts from rest at peak)</div>
+      <div class="given-item"><strong>a</strong> = −9.81 m/s²</div>
+      <div class="given-item"><strong>s</strong> = −70.4 m</div>
+      <div class="given-item"><strong>t</strong> = ?</div>
+    </div>
+    <p style="color:#fed7aa;font-size:.9rem;margin-bottom:.4rem;font-weight:600;">Formula: s = ut + ½at²</p>
+    <div class="working">
+−70.4 = 0·t + ½(−9.81)t²
+−70.4 = −4.905t²
+t² = 70.4 / 4.905
+t² = 14.35
+t₂ = 3.78 s
+    </div>
+
+    <p style="color:#fed7aa;font-weight:700;font-size:.95rem;margin-bottom:.5rem;margin-top:.8rem;">--- Total Time ---</p>
+    <div class="working">
+Total time = t₁ + t₂ = 2.04 + 3.78 = 5.82 s
+    </div>
+    <span class="answer-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);">Total time = 5.82 seconds</span>
+  </div>
+
+  <!-- KEY INSIGHTS SUMMARY -->
+  <div class="section-title">Key Conceptual Rules — Summary</div>
+  <div class="card">
+    <div class="insight">
+      <span class="insight-icon">&#10003;</span>
+      <p>Free fall requires <strong>only gravity</strong> acting. Any contact force (hand, surface, air resistance) means the object is NOT in free fall.</p>
+    </div>
+    <div class="insight">
+      <span class="insight-icon">&#10003;</span>
+      <p>The acceleration <strong>g = 9.81 m/s² downward</strong> is constant throughout free fall — including during upward motion.</p>
+    </div>
+    <div class="insight">
+      <span class="insight-icon">&#10003;</span>
+      <p>At the <strong>highest point</strong> of any free-fall trajectory, the instantaneous velocity is <strong>0 m/s</strong>, but the acceleration is still 9.81 m/s² downward.</p>
+    </div>
+    <div class="tip">
+      <span class="tip-icon">&#128161;</span>
+      <p>For multi-part problems (e.g., ball thrown from a cliff): <strong>split at the highest point</strong> where v = 0, solve each segment separately, then <strong>add the times</strong>.</p>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE QUIZ -->
+  <div class="quiz-section">
+    <h2>&#127981; Check Your Understanding</h2>
+
+    <div class="q-block" id="q1">
+      <p class="q-text">1. A ball is in free fall only if:</p>
+      <div class="q-options">
+        <label class="q-opt"><input type="radio" name="q1" value="a"> It is moving downward</label>
+        <label class="q-opt"><input type="radio" name="q1" value="b"> Only the force of gravity acts on it</label>
+        <label class="q-opt"><input type="radio" name="q1" value="c"> It has an initial velocity of zero</label>
+        <label class="q-opt"><input type="radio" name="q1" value="d"> Its acceleration is zero</label>
+      </div>
+      <div class="q-feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block" id="q2">
+      <p class="q-text">2. A ball is thrown straight up. At the very top of its path, what is true?</p>
+      <div class="q-options">
+        <label class="q-opt"><input type="radio" name="q2" value="a"> Velocity = 0, Acceleration = 0</label>
+        <label class="q-opt"><input type="radio" name="q2" value="b"> Velocity = 0, Acceleration = 9.81 m/s² downward</label>
+        <label class="q-opt"><input type="radio" name="q2" value="c"> Velocity = 9.81 m/s upward, Acceleration = 9.81 m/s² downward</label>
+        <label class="q-opt"><input type="radio" name="q2" value="d"> Velocity = 9.81 m/s downward, Acceleration = 0</label>
+      </div>
+      <div class="q-feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block" id="q3">
+      <p class="q-text">3. A ball is dropped from rest (u = 0) and falls 20 m. What is its velocity just before hitting the ground? (Use g = 9.81 m/s², Down = +)</p>
+      <div class="q-options">
+        <label class="q-opt"><input type="radio" name="q3" value="a"> 9.81 m/s</label>
+        <label class="q-opt"><input type="radio" name="q3" value="b"> 14 m/s</label>
+        <label class="q-opt"><input type="radio" name="q3" value="c"> 19.8 m/s</label>
+        <label class="q-opt"><input type="radio" name="q3" value="d"> 196.2 m/s</label>
+      </div>
+      <div class="q-feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block" id="q4">
+      <p class="q-text">4. A ball is thrown upward at 15 m/s. Using v = u + at (up = +, a = −9.81 m/s²), how long does it take to reach the highest point?</p>
+      <div class="q-options">
+        <label class="q-opt"><input type="radio" name="q4" value="a"> 0.65 s</label>
+        <label class="q-opt"><input type="radio" name="q4" value="b"> 1.53 s</label>
+        <label class="q-opt"><input type="radio" name="q4" value="c"> 2.04 s</label>
+        <label class="q-opt"><input type="radio" name="q4" value="d"> 3.06 s</label>
+      </div>
+      <div class="q-feedback" id="fb4"></div>
+    </div>
+
+    <button class="quiz-btn" onclick="checkQuiz()">Submit Answers</button>
+    <div id="quiz-result"></div>
+  </div>
+
+</div><!-- /container -->
+</div><!-- /main -->
+
+<script>
+// ---- PASSWORD GATE ----
+(function(){
+  const KEY = 'phys_auth';
+  const CORRECT = btoa('physics2024');
+  if(localStorage.getItem(KEY) === CORRECT){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('main').style.display='block';
+  }
+})();
+function checkPwd(){
+  const v = document.getElementById('pwd-input').value;
+  const CORRECT = btoa('physics2024');
+  if(btoa(v) === CORRECT){
+    localStorage.setItem('phys_auth', CORRECT);
+    document.getElementById('gate').style.display='none';
+    document.getElementById('main').style.display='block';
+  } else {
+    document.getElementById('gate-err').textContent='Incorrect password. Please try again.';
+  }
+}
+
+// ---- TWINKLING STARS ----
+(function(){
+  const c = document.getElementById('stars-container');
+  for(let i=0;i<55;i++){
+    const s = document.createElement('div');
+    s.className='star';
+    const sz = Math.random()*2.5+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;
+      animation-delay:${Math.random()*3}s;animation-duration:${1.5+Math.random()*2.5}s;`;
+    c.appendChild(s);
+  }
+})();
+
+// ---- QUIZ ----
+const ANSWERS = {q1:'b', q2:'b', q3:'c', q4:'b'};
+const EXPLANATIONS = {
+  q1:'Only gravity acting on the object is the definition of free fall. Moving downward, having zero initial velocity, or zero acceleration are not required.',
+  q2:'At the peak, instantaneous velocity = 0, but gravity still acts — so acceleration = 9.81 m/s² downward. It never becomes zero during free fall.',
+  q3:'v² = u² + 2as = 0 + 2(9.81)(20) = 392.4, so v = √392.4 ≈ 19.8 m/s.',
+  q4:'v = u + at → 0 = 15 + (−9.81)t → t = 15/9.81 ≈ 1.53 s.'
+};
+function checkQuiz(){
+  let score=0;
+  for(let i=1;i<=4;i++){
+    const sel = document.querySelector(`input[name="q${i}"]:checked`);
+    const fb = document.getElementById(`fb${i}`);
+    const opts = document.querySelectorAll(`#q${i} .q-opt`);
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(!sel){fb.textContent='Please select an answer.';fb.className='q-feedback no';continue;}
+    const chosen = sel.value;
+    const correct = ANSWERS[`q${i}`];
+    sel.closest('.q-opt').classList.add(chosen===correct?'correct':'wrong');
+    if(chosen===correct){
+      score++;
+      fb.textContent='Correct! '+EXPLANATIONS[`q${i}`];
+      fb.className='q-feedback ok';
+      // highlight correct
+    } else {
+      fb.textContent='Not quite. '+EXPLANATIONS[`q${i}`];
+      fb.className='q-feedback no';
+      // highlight the correct one
+      opts.forEach(o=>{
+        if(o.querySelector('input').value===correct) o.classList.add('correct');
+      });
+    }
+  }
+  const r=document.getElementById('quiz-result');
+  r.textContent=`You scored ${score} out of 4. ${score===4?'Excellent — full marks!':score>=3?'Great work!':score>=2?'Good effort — review the explanations above.':'Keep practising!'}`;
+}
+</script>
+</body>
+</html>

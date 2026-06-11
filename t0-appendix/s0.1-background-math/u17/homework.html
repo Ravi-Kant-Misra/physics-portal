@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vectors vs. Scalars — Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#bfdbfe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#1e3a8a 0%,#1d4ed8 50%,#3b82f6 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:820px;margin:36px auto;padding:0 24px 60px;}
+
+    .notice{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:2px solid #93c5fd;border-radius:10px;padding:14px 20px;margin-bottom:32px;font-size:0.9rem;color:#1e3a8a;}
+    .notice strong{font-weight:800;}
+
+    section{margin-bottom:44px;}
+    h2{font-size:1.2rem;font-weight:800;color:#1e3a8a;border-left:5px solid #3b82f6;padding-left:12px;margin-bottom:16px;}
+    .instructions{color:#4b5563;font-size:0.92rem;margin-bottom:18px;font-style:italic;}
+
+    /* Part A — harder classification */
+    .classify-table{width:100%;border-collapse:collapse;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.07);}
+    .classify-table thead{background:linear-gradient(135deg,#1e3a8a,#1d4ed8);}
+    .classify-table thead th{color:white;font-weight:800;font-size:0.88rem;padding:12px 16px;text-align:left;}
+    .classify-table tbody tr:nth-child(odd){background:#f8faff;}
+    .classify-table tbody tr:nth-child(even){background:white;}
+    .classify-table td{padding:11px 16px;font-size:0.92rem;border-bottom:1px solid #e2e8f0;}
+    .classify-table td:nth-child(2){font-family:'Space Mono',monospace;font-weight:700;font-size:0.95rem;color:#1e3a8a;}
+    .classify-table td:nth-child(3) span{display:inline-flex;align-items:center;gap:6px;margin-right:12px;font-size:0.88rem;}
+    .cbox-sq{width:16px;height:16px;border:2px solid #94a3b8;border-radius:3px;display:inline-block;}
+
+    /* Part B — true or false */
+    .tf-card{background:white;border-radius:10px;padding:16px 20px;box-shadow:0 1px 6px rgba(0,0,0,0.07);margin-bottom:12px;display:flex;gap:14px;align-items:flex-start;}
+    .tf-num{font-family:'Space Mono',monospace;font-weight:700;font-size:1rem;color:#1d4ed8;flex-shrink:0;min-width:24px;}
+    .tf-text{flex:1;font-size:0.93rem;color:#1e293b;}
+    .tf-boxes{display:flex;gap:14px;flex-shrink:0;font-size:0.88rem;font-weight:700;align-items:center;}
+    .tf-box{display:flex;align-items:center;gap:5px;}
+
+    /* Part C — real-world scenarios */
+    .scenario-card{background:white;border-radius:12px;padding:20px 24px;box-shadow:0 2px 10px rgba(0,0,0,0.07);margin-bottom:16px;border-left:5px solid #3b82f6;}
+    .scenario-card .sc-num{font-size:0.78rem;font-weight:800;text-transform:uppercase;color:#6b7280;margin-bottom:6px;}
+    .scenario-card .sc-context{background:#eff6ff;border-radius:8px;padding:12px 16px;font-size:0.92rem;color:#1e3a8a;margin-bottom:12px;font-style:italic;}
+    .scenario-card .sc-q{font-weight:700;font-size:0.93rem;margin-bottom:8px;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:26px;width:100%;}
+
+    /* Part D — extended response */
+    .extended-card{background:white;border-radius:12px;padding:22px 26px;box-shadow:0 2px 10px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .extended-card .q{font-weight:700;font-size:0.95rem;margin-bottom:10px;}
+    .extended-card .hint{font-size:0.82rem;color:#64748b;margin-bottom:12px;font-style:italic;}
+    .extended-lines{display:flex;flex-direction:column;gap:14px;}
+    .ext-line{border-bottom:2px solid #d1d5db;min-height:26px;width:100%;}
+
+    /* Part E — diagram analysis */
+    .diagram-q{background:white;border-radius:12px;padding:22px 26px;box-shadow:0 2px 10px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .diagram-q .q{font-weight:700;margin-bottom:14px;}
+
+    /* answer key */
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#1e3a8a;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #toggle-key-btn:hover{background:#1d4ed8;}
+    #answer-key{display:none;background:#eff6ff;border:2px solid #93c5fd;border-radius:12px;padding:28px 32px;margin-top:10px;}
+    #answer-key h2{color:#1e3a8a;border-left-color:#1d4ed8;margin-bottom:22px;}
+    .key-section{margin-bottom:28px;}
+    .key-section h3{font-size:1rem;font-weight:800;color:#1e3a8a;margin-bottom:12px;}
+    .key-table{width:100%;border-collapse:collapse;font-size:0.9rem;}
+    .key-table th{background:#1e3a8a;color:white;padding:9px 14px;text-align:left;font-size:0.85rem;}
+    .key-table td{padding:9px 14px;border-bottom:1px solid #e2e8f0;background:white;}
+    .key-table tr:nth-child(even) td{background:#f0f7ff;}
+    .kv{color:#1d4ed8;font-weight:800;}.ks{color:#15803d;font-weight:800;}
+    .tf-ans{display:inline-block;padding:2px 10px;border-radius:10px;font-weight:700;font-size:0.85rem;}
+    .tf-t{background:#dcfce7;color:#15803d;}.tf-f{background:#fee2e2;color:#dc2626;}
+    .short-ans-key{background:white;border-radius:8px;padding:14px 18px;font-size:0.92rem;margin-bottom:10px;}
+    .short-ans-key strong{color:#1e3a8a;}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#1e3a8a,#1d4ed8,#3b82f6);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:rgba(255,255,255,0.18);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;border:2px solid rgba(255,255,255,0.3);">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">Physics · IB High School · Homework</div>
+  <h1>Vectors vs. Scalars — Homework</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+
+  <div class="notice">
+    <strong>Instructions:</strong> Complete all five parts. Show your reasoning where asked. Answer key is hidden — click the button at the bottom after you have finished.
+  </div>
+
+  <!-- PART A -->
+  <section>
+    <h2>Part A — Classification with Justification</h2>
+    <p class="instructions">For each quantity, tick Vector or Scalar AND write one-word justification in the "Why?" column.</p>
+    <table class="classify-table">
+      <thead>
+        <tr><th>#</th><th>Quantity</th><th>Vector / Scalar</th><th>Why? (one word/phrase)</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td><td>Weight</td>
+          <td><span><span class="cbox-sq"></span> Vector</span> <span><span class="cbox-sq"></span> Scalar</span></td>
+          <td style="border-bottom:2px solid #d1d5db;min-width:160px;"></td>
+        </tr>
+        <tr>
+          <td>2</td><td>Electric current</td>
+          <td><span><span class="cbox-sq"></span> Vector</span> <span><span class="cbox-sq"></span> Scalar</span></td>
+          <td style="border-bottom:2px solid #d1d5db;"></td>
+        </tr>
+        <tr>
+          <td>3</td><td>Gravitational field strength</td>
+          <td><span><span class="cbox-sq"></span> Vector</span> <span><span class="cbox-sq"></span> Scalar</span></td>
+          <td style="border-bottom:2px solid #d1d5db;"></td>
+        </tr>
+        <tr>
+          <td>4</td><td>Pressure</td>
+          <td><span><span class="cbox-sq"></span> Vector</span> <span><span class="cbox-sq"></span> Scalar</span></td>
+          <td style="border-bottom:2px solid #d1d5db;"></td>
+        </tr>
+        <tr>
+          <td>5</td><td>Torque</td>
+          <td><span><span class="cbox-sq"></span> Vector</span> <span><span class="cbox-sq"></span> Scalar</span></td>
+          <td style="border-bottom:2px solid #d1d5db;"></td>
+        </tr>
+        <tr>
+          <td>6</td><td>Power</td>
+          <td><span><span class="cbox-sq"></span> Vector</span> <span><span class="cbox-sq"></span> Scalar</span></td>
+          <td style="border-bottom:2px solid #d1d5db;"></td>
+        </tr>
+        <tr>
+          <td>7</td><td>Magnetic field</td>
+          <td><span><span class="cbox-sq"></span> Vector</span> <span><span class="cbox-sq"></span> Scalar</span></td>
+          <td style="border-bottom:2px solid #d1d5db;"></td>
+        </tr>
+        <tr>
+          <td>8</td><td>Volume</td>
+          <td><span><span class="cbox-sq"></span> Vector</span> <span><span class="cbox-sq"></span> Scalar</span></td>
+          <td style="border-bottom:2px solid #d1d5db;"></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- PART B -->
+  <section>
+    <h2>Part B — True or False</h2>
+    <p class="instructions">Write T (True) or F (False) on the line provided. If false, correct the statement in the space below it.</p>
+
+    <div class="tf-card">
+      <div class="tf-num">1.</div>
+      <div class="tf-text">
+        "Distance" and "displacement" are both scalars because they both measure how far something has moved.
+        <div class="write-lines" style="margin-top:8px;"><div class="write-line"></div></div>
+      </div>
+      <div class="tf-boxes"><div class="tf-box"><div class="cbox-sq"></div> T</div><div class="tf-box"><div class="cbox-sq"></div> F</div></div>
+    </div>
+
+    <div class="tf-card">
+      <div class="tf-num">2.</div>
+      <div class="tf-text">
+        The arrowhead of a vector diagram indicates the magnitude of the vector.
+        <div class="write-lines" style="margin-top:8px;"><div class="write-line"></div></div>
+      </div>
+      <div class="tf-boxes"><div class="tf-box"><div class="cbox-sq"></div> T</div><div class="tf-box"><div class="cbox-sq"></div> F</div></div>
+    </div>
+
+    <div class="tf-card">
+      <div class="tf-num">3.</div>
+      <div class="tf-text">
+        A force of 10 N east and a force of 10 N west are identical vectors because they have the same magnitude.
+        <div class="write-lines" style="margin-top:8px;"><div class="write-line"></div></div>
+      </div>
+      <div class="tf-boxes"><div class="tf-box"><div class="cbox-sq"></div> T</div><div class="tf-box"><div class="cbox-sq"></div> F</div></div>
+    </div>
+
+    <div class="tf-card">
+      <div class="tf-num">4.</div>
+      <div class="tf-text">
+        If you halve the magnitude of a vector and keep its direction, the arrow representing it becomes half as long.
+        <div class="write-lines" style="margin-top:8px;"><div class="write-line"></div></div>
+      </div>
+      <div class="tf-boxes"><div class="tf-box"><div class="cbox-sq"></div> T</div><div class="tf-box"><div class="cbox-sq"></div> F</div></div>
+    </div>
+
+    <div class="tf-card">
+      <div class="tf-num">5.</div>
+      <div class="tf-text">
+        Energy is a vector quantity because a large amount of energy can push objects in a specific direction.
+        <div class="write-lines" style="margin-top:8px;"><div class="write-line"></div></div>
+      </div>
+      <div class="tf-boxes"><div class="tf-box"><div class="cbox-sq"></div> T</div><div class="tf-box"><div class="cbox-sq"></div> F</div></div>
+    </div>
+  </section>
+
+  <!-- PART C -->
+  <section>
+    <h2>Part C — Real-World Scenarios</h2>
+    <p class="instructions">Read each scenario carefully and answer the questions using complete sentences.</p>
+
+    <div class="scenario-card">
+      <div class="sc-num">Scenario 1 — Navigation</div>
+      <div class="sc-context">"A ship sails 200 km" vs. "A ship sails 200 km north-east."</div>
+      <div class="sc-q">a) Which statement describes a vector and which describes a scalar? Explain why.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div></div>
+      <div class="sc-q" style="margin-top:14px;">b) A navigator needs to know where the ship will actually end up. Which statement is more useful? Why?</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="sc-num">Scenario 2 — Sport</div>
+      <div class="sc-context">A football is kicked with a force of 80 N. Another player pushes back with 80 N from the opposite side.</div>
+      <div class="sc-q">a) Are these forces the same vector? Explain using the definition of a vector.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div></div>
+      <div class="sc-q" style="margin-top:14px;">b) Draw a simple arrow diagram below showing both forces acting on the ball. Label each arrow with its magnitude and direction.</div>
+      <div style="border:2px dashed #93c5fd;border-radius:8px;height:80px;background:#f0f9ff;margin-top:8px;display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 400 70" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:70px;">
+          <defs><pattern id="gh" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20,0 L0,0 L0,20" fill="none" stroke="#e0e7ff" stroke-width="0.7"/></pattern></defs>
+          <rect width="400" height="70" fill="url(#gh)"/>
+          <circle cx="200" cy="35" r="4" fill="#94a3b8"/>
+          <text x="200" y="20" font-family="Nunito,sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle" font-style="italic">draw here</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="sc-num">Scenario 3 — Weather</div>
+      <div class="sc-context">A meteorologist reports: "Wind speed: 40 km/h" and "Wind velocity: 40 km/h north-west."</div>
+      <div class="sc-q">Explain why a meteorologist tracking a storm would prefer to use wind velocity rather than wind speed. Include the words vector and scalar in your answer.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <!-- PART D -->
+  <section>
+    <h2>Part D — Extended Response</h2>
+    <p class="instructions">Answer in full sentences. Aim for 3–5 sentences per question.</p>
+
+    <div class="extended-card">
+      <div class="q">1. A student claims: "Gravity just pulls things down — it is just a number like 9.8, so it is a scalar." Is this correct? Use what you know about vectors and scalars to either support or refute this claim.</div>
+      <div class="hint">Hint: Consider what "9.8 m/s² downward" tells you that "9.8" alone does not.</div>
+      <div class="extended-lines"><div class="ext-line"></div><div class="ext-line"></div><div class="ext-line"></div><div class="ext-line"></div></div>
+    </div>
+
+    <div class="extended-card">
+      <div class="q">2. A box sits on a table. Three forces act on it: gravity (10 N down), normal force (10 N up), and a push (5 N right). Explain why each force is a vector, and describe qualitatively what the motion of the box would be as a result of these three forces.</div>
+      <div class="hint">Hint: Think about what "cancels" and what does not.</div>
+      <div class="extended-lines"><div class="ext-line"></div><div class="ext-line"></div><div class="ext-line"></div><div class="ext-line"></div></div>
+    </div>
+  </section>
+
+  <!-- PART E -->
+  <section>
+    <h2>Part E — Diagram Analysis</h2>
+
+    <div class="diagram-q">
+      <div class="q">The diagram below shows four arrows (A, B, C, D). Use them to answer the questions.</div>
+      <svg viewBox="0 0 460 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;display:block;margin:14px 0 18px;">
+        <defs>
+          <marker id="arrA" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1d4ed8"/></marker>
+          <marker id="arrB" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#7c3aed"/></marker>
+          <marker id="arrC" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#dc2626"/></marker>
+          <marker id="arrD" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#15803d"/></marker>
+        </defs>
+        <!-- Arrow A: medium, right -->
+        <text x="20" y="36" font-family="Nunito,sans-serif" font-size="12" font-weight="800" fill="#1d4ed8">A</text>
+        <line x1="40" y1="30" x2="130" y2="30" stroke="#1d4ed8" stroke-width="4" marker-end="url(#arrA)"/>
+        <!-- Arrow B: double A, right -->
+        <text x="20" y="76" font-family="Nunito,sans-serif" font-size="12" font-weight="800" fill="#7c3aed">B</text>
+        <line x1="40" y1="70" x2="220" y2="70" stroke="#7c3aed" stroke-width="4" marker-end="url(#arrB)"/>
+        <!-- Arrow C: same length as A, left -->
+        <text x="170" y="116" font-family="Nunito,sans-serif" font-size="12" font-weight="800" fill="#dc2626">C</text>
+        <line x1="160" y1="110" x2="70" y2="110" stroke="#dc2626" stroke-width="4" marker-end="url(#arrC)"/>
+        <!-- Arrow D: short, upward -->
+        <text x="310" y="154" font-family="Nunito,sans-serif" font-size="12" font-weight="800" fill="#15803d">D</text>
+        <line x1="320" y1="148" x2="320" y2="50" stroke="#15803d" stroke-width="4" marker-end="url(#arrD)"/>
+        <!-- scale note -->
+        <text x="380" y="155" font-family="Nunito,sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">Scale: 1 cm = 10 N</text>
+      </svg>
+
+      <div style="font-size:0.92rem;font-weight:700;margin-bottom:12px;color:#1e293b;">Answer the following (write on the lines):</div>
+
+      <div style="margin-bottom:12px;">
+        <div style="font-size:0.92rem;margin-bottom:6px;">a) Which two arrows have the same <em>magnitude</em> but different directions?</div>
+        <div class="write-line"></div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <div style="font-size:0.92rem;margin-bottom:6px;">b) Which arrow has <em>twice</em> the magnitude of arrow A?</div>
+        <div class="write-line"></div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <div style="font-size:0.92rem;margin-bottom:6px;">c) Are arrows A and C the same vector? Explain your answer.</div>
+        <div class="write-lines"><div class="write-line"></div><div class="write-line"></div></div>
+      </div>
+      <div>
+        <div style="font-size:0.92rem;margin-bottom:6px;">d) Arrow D points in a different dimension than A, B, and C. If arrow D represents a force, what information must you state to fully describe it?</div>
+        <div class="write-lines"><div class="write-line"></div><div class="write-line"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Answer Key -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+  </div>
+
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A — Classification</h3>
+      <table class="key-table">
+        <thead><tr><th>Quantity</th><th>Type</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Weight</td><td><span class="kv">Vector</span></td><td>Gravitational force — acts downward; direction matters</td></tr>
+          <tr><td>Electric current</td><td><span class="ks">Scalar</span></td><td>Magnitude of charge flow — no spatial direction (IB treats as scalar)</td></tr>
+          <tr><td>Gravitational field strength</td><td><span class="kv">Vector</span></td><td>Force per unit mass — has direction (toward center of mass)</td></tr>
+          <tr><td>Pressure</td><td><span class="ks">Scalar</span></td><td>Force per unit area distributed equally — no direction</td></tr>
+          <tr><td>Torque</td><td><span class="kv">Vector</span></td><td>Rotational force — axis and sense of rotation define direction</td></tr>
+          <tr><td>Power</td><td><span class="ks">Scalar</span></td><td>Rate of energy transfer — no direction</td></tr>
+          <tr><td>Magnetic field</td><td><span class="kv">Vector</span></td><td>Has both magnitude and direction (field lines)</td></tr>
+          <tr><td>Volume</td><td><span class="ks">Scalar</span></td><td>Amount of space — no direction</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B — True or False</h3>
+      <div style="font-size:0.92rem;color:#374151;">
+        <div class="short-ans-key"><strong>1. FALSE</strong> — Distance is a scalar (magnitude only). Displacement is a vector because it also includes direction (e.g. 5 m north).</div>
+        <div class="short-ans-key"><strong>2. FALSE</strong> — The arrowhead shows the <em>direction</em> of the vector. The arrow's <em>length</em> represents the magnitude.</div>
+        <div class="short-ans-key"><strong>3. FALSE</strong> — They have the same magnitude but opposite directions, so they are different (and opposite) vectors. Equal magnitudes alone are not enough — direction must match for vectors to be identical.</div>
+        <div class="short-ans-key"><strong>4. TRUE</strong> — Arrow length is proportional to magnitude. Halving the magnitude halves the arrow length.</div>
+        <div class="short-ans-key"><strong>5. FALSE</strong> — Energy is a scalar. It has no direction. The ability to exert forces does not make energy itself directional.</div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C — Scenarios</h3>
+      <div class="short-ans-key"><strong>Scenario 1a.</strong> "200 km" is a scalar (distance) — only magnitude, no direction. "200 km north-east" is a vector (displacement) — it has both magnitude (200 km) and direction (north-east).</div>
+      <div class="short-ans-key"><strong>Scenario 1b.</strong> The second statement (vector) is more useful. Knowing only the distance covered tells you nothing about the ship's final position. Including direction allows precise navigation and tracking of the ship's location.</div>
+      <div class="short-ans-key"><strong>Scenario 2a.</strong> No — they are not the same vector. Vectors require both magnitude and direction. Both forces have magnitude 80 N, but they point in opposite directions (one east, one west), making them different vectors with opposite senses.</div>
+      <div class="short-ans-key"><strong>Scenario 3.</strong> Wind velocity is a vector; wind speed is a scalar. A meteorologist tracking a storm needs to know not just how fast the wind is moving (speed/scalar) but also where it is heading (direction). Using velocity — a vector — provides both pieces of information, allowing accurate prediction of the storm's path.</div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part D — Extended Responses</h3>
+      <div class="short-ans-key"><strong>1.</strong> The student's claim is incorrect. Acceleration due to gravity is <strong>9.8 m/s² downward</strong> — a vector, not just the number 9.8. The direction "downward" is essential: it explains why objects fall toward Earth and not sideways. If gravity were a scalar, you could not explain why a ball thrown horizontally still curves downward. The direction component is what distinguishes gravitational acceleration (a vector) from, say, the scalar quantity of gravitational potential energy. Removing direction removes critical physical meaning.</div>
+      <div class="short-ans-key"><strong>2.</strong> All three forces are vectors because each has both a magnitude and a direction — gravity acts 10 N downward, normal force acts 10 N upward, and the push acts 5 N to the right. The vertical forces (10 N down and 10 N up) are equal in magnitude but opposite in direction, so they cancel — resulting in zero net vertical force. The only unbalanced force is the 5 N push to the right. Therefore, according to Newton's second law, the box accelerates to the right. Without knowing directions, we could not determine this outcome.</div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part E — Diagram Analysis</h3>
+      <div style="font-size:0.92rem;color:#374151;line-height:2;">
+        <p><strong>a)</strong> Arrows <strong>A and C</strong> have the same length (same magnitude) but point in opposite directions (A = right, C = left).</p>
+        <p><strong>b)</strong> Arrow <strong>B</strong> — its length is twice that of A, representing double the magnitude.</p>
+        <p><strong>c)</strong> No — A and C are <em>not</em> the same vector. Although they have the same magnitude, they point in opposite directions. For two vectors to be identical, both magnitude AND direction must match. A points right; C points left — they are opposite vectors.</p>
+        <p><strong>d)</strong> To fully describe arrow D (a force), you must state: (1) the <strong>magnitude</strong> (e.g. 30 N, read from the scale) and (2) the <strong>direction</strong> (upward / vertically upward). Both pieces of information are required because force is a vector quantity.</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>Physics · IB High School &nbsp;·&nbsp; Unit 17: Vectors vs. Scalars — Homework &nbsp;·&nbsp; Vector = magnitude + direction | Scalar = magnitude only</footer>
+
+<script>
+function toggleKey(){
+  var k=document.getElementById('answer-key');
+  var b=document.getElementById('toggle-key-btn');
+  if(k.style.display==='none'||k.style.display===''){
+    k.style.display='block';b.textContent='Hide Answer Key';
+  }else{
+    k.style.display='none';b.textContent='Show Answer Key';
+  }
+}
+</script>
+</body>
+</html>

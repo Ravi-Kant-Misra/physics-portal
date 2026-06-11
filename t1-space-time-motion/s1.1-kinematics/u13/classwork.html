@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Free Fall — Classwork · Kinematics Unit 13</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;
+  --red:#ef4444;--dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:radial-gradient(circle,#cbd5e1 1px,transparent 1px);
+  background-size:28px 28px;opacity:.45;pointer-events:none;z-index:0;
+}
+#gate{
+  position:fixed;inset:0;z-index:999;
+  background:linear-gradient(135deg,#1e3a5f,#1d4ed8);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.2rem;
+}
+#gate h2{color:#fff;font-size:1.8rem;font-weight:800;}
+#gate p{color:#bfdbfe;font-size:.95rem;}
+#gate input{
+  padding:.75rem 1.2rem;border-radius:12px;border:2px solid #3b82f6;
+  font-size:1rem;font-family:'Nunito',sans-serif;outline:none;width:260px;
+  background:#0f172a;color:#fff;
+}
+#gate button{
+  padding:.75rem 2rem;border-radius:12px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;
+  font-size:1rem;font-weight:700;font-family:'Nunito',sans-serif;transition:opacity .2s;
+}
+#gate button:hover{opacity:.85;}
+#gate-err{color:#fca5a5;font-size:.9rem;min-height:1.2rem;}
+#main{display:none;position:relative;z-index:1;}
+
+/* HEADER */
+header{
+  background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 100%);
+  padding:3rem 2rem 2.5rem;text-align:center;position:relative;overflow:hidden;
+}
+.stars{position:absolute;inset:0;pointer-events:none;}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 2.5s infinite ease-in-out alternate;}
+@keyframes twinkle{0%{opacity:.2;transform:scale(.8);}100%{opacity:1;transform:scale(1.2);}}
+.chip{
+  display:inline-block;background:rgba(255,255,255,.15);color:#e0f2fe;
+  font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:.3rem .9rem;border-radius:99px;border:1px solid rgba(255,255,255,.25);
+  margin-bottom:1rem;font-family:'Space Mono',monospace;
+}
+header h1{
+  font-size:clamp(2rem,4.5vw,3rem);font-weight:900;
+  background:linear-gradient(135deg,#ffffff 0%,#bfdbfe 50%,#818cf8 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1.15;margin-bottom:.5rem;
+}
+header p.subtitle{color:#bfdbfe;font-size:1rem;font-weight:600;}
+
+/* layout */
+.container{max-width:920px;margin:0 auto;padding:2.5rem 1.5rem 5rem;}
+.section-title{
+  font-size:1.2rem;font-weight:800;color:var(--dark);
+  margin:2.5rem 0 1rem;display:flex;align-items:center;gap:.6rem;
+}
+.section-title::before{
+  content:'';display:block;width:4px;height:1.3rem;border-radius:2px;
+  background:linear-gradient(180deg,var(--blue),var(--indigo));
+}
+
+/* reference box */
+.ref-box{
+  background:linear-gradient(135deg,#1e3a5f,#1d4ed8);
+  border-radius:16px;padding:1.4rem 1.8rem;margin-bottom:2rem;color:#fff;
+}
+.ref-box h3{font-size:.85rem;font-weight:700;color:#bfdbfe;text-transform:uppercase;
+  letter-spacing:.08em;margin-bottom:.9rem;font-family:'Space Mono',monospace;}
+.ref-grid{display:flex;flex-wrap:wrap;gap:.6rem;}
+.ref-item{
+  background:rgba(255,255,255,.12);border-radius:10px;
+  padding:.4rem .9rem;font-family:'Space Mono',monospace;font-size:.83rem;color:#e0f2fe;
+}
+
+/* 2-col problem grid */
+.prob-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+@media(max-width:620px){.prob-grid{grid-template-columns:1fr;}}
+
+/* problem card */
+.prob-card{
+  background:#fff;border:1.5px solid #e2e8f0;border-radius:16px;
+  padding:1.3rem 1.4rem;
+}
+.prob-card .prob-num{
+  font-size:.75rem;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.08em;margin-bottom:.35rem;
+  font-family:'Space Mono',monospace;
+}
+.prob-card .prob-q{font-size:.95rem;font-weight:600;color:var(--dark);line-height:1.55;}
+.work-lines{margin-top:.9rem;}
+.work-lines .work-label{font-size:.75rem;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem;}
+.line{height:28px;border-bottom:1.5px solid #e2e8f0;margin-bottom:.2rem;}
+
+/* Part B graph problems */
+.graph-card{
+  background:#fff;border:1.5px solid #e2e8f0;border-radius:16px;
+  padding:1.3rem 1.4rem;margin-bottom:1.2rem;
+}
+.graph-card .prob-num{
+  font-size:.75rem;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.08em;margin-bottom:.35rem;
+  font-family:'Space Mono',monospace;
+}
+.graph-card .prob-q{font-size:.95rem;font-weight:600;color:var(--dark);margin-bottom:.8rem;line-height:1.55;}
+.answer-line{
+  display:flex;align-items:center;gap:.5rem;margin-top:.6rem;font-size:.9rem;
+}
+.answer-line span{font-weight:700;color:var(--muted);white-space:nowrap;}
+.answer-line .ans-box{
+  flex:1;height:32px;border-bottom:2px solid #bfdbfe;border-top:none;
+  border-left:none;border-right:none;background:transparent;
+}
+
+/* Part C short answer */
+.short-card{
+  background:#fff;border:1.5px solid #e2e8f0;border-radius:16px;
+  padding:1.3rem 1.4rem;margin-bottom:1rem;
+}
+.short-card .prob-num{
+  font-size:.75rem;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.08em;margin-bottom:.35rem;
+  font-family:'Space Mono',monospace;
+}
+.short-card .prob-q{font-size:.95rem;font-weight:600;color:var(--dark);line-height:1.55;margin-bottom:.7rem;}
+.short-lines .line{height:28px;border-bottom:1.5px solid #e2e8f0;margin-bottom:.25rem;}
+
+/* answer key */
+#answer-key{display:none;margin-top:2rem;}
+.key-box{
+  background:linear-gradient(135deg,#0f172a,#1e3a5f);
+  border-radius:18px;padding:2rem 2rem;color:#fff;
+}
+.key-box h3{
+  font-size:1.1rem;font-weight:800;color:#bfdbfe;
+  margin-bottom:1.4rem;display:flex;align-items:center;gap:.5rem;
+}
+.key-item{
+  background:rgba(255,255,255,.07);border-radius:12px;
+  padding:.9rem 1.1rem;margin-bottom:.8rem;border-left:3px solid var(--green);
+}
+.key-item .k-num{
+  font-family:'Space Mono',monospace;font-size:.78rem;color:var(--green);
+  font-weight:700;margin-bottom:.3rem;
+}
+.key-item .k-ans{font-weight:800;color:#fff;font-size:1rem;margin-bottom:.25rem;}
+.key-item .k-work{font-family:'Space Mono',monospace;font-size:.8rem;color:#94a3b8;line-height:1.7;}
+#toggle-key-btn{
+  padding:.75rem 1.8rem;border-radius:12px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#0f172a,#1e3a5f);color:#fff;
+  font-size:.95rem;font-weight:700;font-family:'Nunito',sans-serif;
+  transition:opacity .2s;margin-top:2rem;display:block;
+}
+#toggle-key-btn:hover{opacity:.85;}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <h2>Physics Portal</h2>
+  <p>Enter the password to access this worksheet.</p>
+  <input type="password" id="pwd-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPwd()"/>
+  <button onclick="checkPwd()">Unlock</button>
+  <div id="gate-err"></div>
+</div>
+
+<div id="main">
+<header>
+  <div class="stars" id="stars-container"></div>
+  <div class="chip">Kinematics &middot; Unit 13</div>
+  <h1>Free Fall — Classwork</h1>
+  <p class="subtitle">In-class practice on free fall and vertical motion under gravity</p>
+</header>
+
+<div class="container">
+
+  <!-- REFERENCE BOX -->
+  <div class="ref-box">
+    <h3>Reference Sheet</h3>
+    <div class="ref-grid">
+      <div class="ref-item">g = 9.81 m/s² (down)</div>
+      <div class="ref-item">v² = u² + 2as</div>
+      <div class="ref-item">v = u + at</div>
+      <div class="ref-item">s = ut + ½at²</div>
+      <div class="ref-item">Dropped: u = 0</div>
+      <div class="ref-item">At peak: v = 0</div>
+      <div class="ref-item">Up = + → a = −9.81</div>
+      <div class="ref-item">Down = + → a = +9.81</div>
+    </div>
+  </div>
+
+  <!-- PART A -->
+  <div class="section-title">Part A — Calculation Problems</div>
+  <div class="prob-grid">
+
+    <!-- Q1 -->
+    <div class="prob-card">
+      <div class="prob-num">Question 1</div>
+      <div class="prob-q">A stone is dropped from a bridge 45 m above the water. What is its velocity just before it hits the water? (Down = +)</div>
+      <div class="work-lines">
+        <div class="work-label">Working:</div>
+        <div class="line"></div><div class="line"></div><div class="line"></div>
+        <div class="work-label" style="margin-top:.4rem;">Answer:</div>
+        <div class="line"></div>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="prob-card">
+      <div class="prob-num">Question 2</div>
+      <div class="prob-q">A ball is dropped from rest and reaches a velocity of 25 m/s just before hitting the floor. How far did it fall? (Down = +)</div>
+      <div class="work-lines">
+        <div class="work-label">Working:</div>
+        <div class="line"></div><div class="line"></div><div class="line"></div>
+        <div class="work-label" style="margin-top:.4rem;">Answer:</div>
+        <div class="line"></div>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="prob-card">
+      <div class="prob-num">Question 3</div>
+      <div class="prob-q">A ball is thrown straight up at 18 m/s. What is the maximum height it reaches above the throwing point? (Up = +)</div>
+      <div class="work-lines">
+        <div class="work-label">Working:</div>
+        <div class="line"></div><div class="line"></div><div class="line"></div>
+        <div class="work-label" style="margin-top:.4rem;">Answer:</div>
+        <div class="line"></div>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="prob-card">
+      <div class="prob-num">Question 4</div>
+      <div class="prob-q">A ball is thrown straight up at 12 m/s. How long does it take to reach its highest point? (Up = +, use a = −9.81 m/s²)</div>
+      <div class="work-lines">
+        <div class="work-label">Working:</div>
+        <div class="line"></div><div class="line"></div><div class="line"></div>
+        <div class="work-label" style="margin-top:.4rem;">Answer:</div>
+        <div class="line"></div>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="prob-card">
+      <div class="prob-num">Question 5</div>
+      <div class="prob-q">A coin is dropped from rest. It takes 3.5 s to reach the ground. How high was the drop point above the ground? (Down = +)</div>
+      <div class="work-lines">
+        <div class="work-label">Working:</div>
+        <div class="line"></div><div class="line"></div><div class="line"></div>
+        <div class="work-label" style="margin-top:.4rem;">Answer:</div>
+        <div class="line"></div>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="prob-card">
+      <div class="prob-num">Question 6</div>
+      <div class="prob-q">A ball is thrown upward at 8 m/s from the top of a 30 m cliff. It falls all the way to the ground below. What is the total time to reach the ground? (Up = +)</div>
+      <div class="work-lines">
+        <div class="work-label">Working:</div>
+        <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+        <div class="work-label" style="margin-top:.4rem;">Answer:</div>
+        <div class="line"></div>
+      </div>
+    </div>
+
+  </div><!-- /prob-grid -->
+
+  <!-- PART B -->
+  <div class="section-title">Part B — Diagram and Analysis Problems</div>
+
+  <!-- B1 -->
+  <div class="graph-card">
+    <div class="prob-num">Question 7</div>
+    <div class="prob-q">The velocity-time (VT) graph below represents a ball thrown upward and then caught on the way down. Study the graph and answer the questions.</div>
+    <!-- VT graph SVG -->
+    <div style="background:#f8faff;border:1.5px solid #e2e8f0;border-radius:12px;padding:1rem;margin-bottom:.8rem;">
+      <svg width="380" height="180" viewBox="0 0 380 180" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+        <defs>
+          <marker id="ax" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#475569"/>
+          </marker>
+        </defs>
+        <!-- axes -->
+        <line x1="50" y1="160" x2="350" y2="160" stroke="#475569" stroke-width="1.5" marker-end="url(#ax)"/>
+        <line x1="50" y1="10" x2="50" y2="165" stroke="#475569" stroke-width="1.5"/>
+        <!-- axis labels -->
+        <text x="360" y="163" font-family="Nunito,sans-serif" font-size="11" fill="#475569" font-weight="700">t (s)</text>
+        <text x="35" y="10" font-family="Nunito,sans-serif" font-size="11" fill="#475569" font-weight="700" transform="rotate(-90,35,88)" text-anchor="middle">v (m/s)</text>
+        <!-- zero line -->
+        <line x1="50" y1="90" x2="350" y2="90" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="36" y="93" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">0</text>
+        <!-- VT line: starts at v=+20 at t=0, crosses zero at t~2.04, reaches v=-20 at t~4.08 -->
+        <!-- mapped: t: 50→50+200=250 for 4.08s range. v: +20→y=30, 0→y=90, -20→y=150 -->
+        <line x1="50" y1="30" x2="250" y2="150" stroke="#3b82f6" stroke-width="2.5"/>
+        <!-- labels -->
+        <text x="44" y="33" font-family="Space Mono,monospace" font-size="9" fill="#1d4ed8">+20</text>
+        <text x="44" y="153" font-family="Space Mono,monospace" font-size="9" fill="#dc2626">−20</text>
+        <!-- t axis ticks -->
+        <line x1="150" y1="157" x2="150" y2="163" stroke="#475569" stroke-width="1.5"/>
+        <text x="147" y="173" font-family="Space Mono,monospace" font-size="9" fill="#475569">2</text>
+        <line x1="250" y1="157" x2="250" y2="163" stroke="#475569" stroke-width="1.5"/>
+        <text x="247" y="173" font-family="Space Mono,monospace" font-size="9" fill="#475569">4</text>
+        <!-- slope label -->
+        <text x="255" y="85" font-family="Nunito,sans-serif" font-size="10" fill="#6366f1" font-weight="700">slope = ?</text>
+        <!-- dots -->
+        <circle cx="50" cy="30" r="4" fill="#3b82f6"/>
+        <circle cx="250" cy="150" r="4" fill="#ef4444"/>
+      </svg>
+    </div>
+    <div class="answer-line"><span>(a) What does the slope of the VT graph represent?</span></div>
+    <div class="line" style="height:28px;border-bottom:1.5px solid #e2e8f0;margin:4px 0 8px;"></div>
+    <div class="answer-line"><span>(b) Calculate the slope. What is its value?</span></div>
+    <div class="line" style="height:28px;border-bottom:1.5px solid #e2e8f0;margin:4px 0 8px;"></div>
+    <div class="answer-line"><span>(c) At what time does the ball reach its highest point?</span></div>
+    <div class="line" style="height:28px;border-bottom:1.5px solid #e2e8f0;margin:4px 0 8px;"></div>
+  </div>
+
+  <!-- B2: number line displacement diagram -->
+  <div class="graph-card">
+    <div class="prob-num">Question 8</div>
+    <div class="prob-q">A ball is dropped from rest. The diagram shows its position at t = 0, 1, 2, and 3 seconds. Label the missing distances A, B, C between consecutive positions.</div>
+    <div style="background:#f8faff;border:1.5px solid #e2e8f0;border-radius:12px;padding:1rem;margin-bottom:.8rem;">
+      <svg width="340" height="180" viewBox="0 0 340 180" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+        <!-- vertical number line -->
+        <line x1="80" y1="15" x2="80" y2="165" stroke="#475569" stroke-width="2"/>
+        <!-- t=0 position: top -->
+        <circle cx="80" cy="20" r="7" fill="#3b82f6"/>
+        <text x="95" y="24" font-family="Space Mono,monospace" font-size="10" fill="#1d4ed8" font-weight="700">t=0  s=0 m</text>
+        <!-- t=1: s=4.9m -->
+        <circle cx="80" cy="55" r="7" fill="#6366f1"/>
+        <text x="95" y="59" font-family="Space Mono,monospace" font-size="10" fill="#4338ca" font-weight="700">t=1s  s=4.9 m</text>
+        <!-- t=2: s=19.6m -->
+        <circle cx="80" cy="100" r="7" fill="#f59e0b"/>
+        <text x="95" y="104" font-family="Space Mono,monospace" font-size="10" fill="#b45309" font-weight="700">t=2s  s=19.6 m</text>
+        <!-- t=3: s=44.1m -->
+        <circle cx="80" cy="155" r="7" fill="#ef4444"/>
+        <text x="95" y="159" font-family="Space Mono,monospace" font-size="10" fill="#dc2626" font-weight="700">t=3s  s=44.1 m</text>
+        <!-- gap labels -->
+        <text x="42" y="42" font-family="Nunito,sans-serif" font-size="11" fill="#166534" font-weight="700">A=?</text>
+        <text x="42" y="82" font-family="Nunito,sans-serif" font-size="11" fill="#166534" font-weight="700">B=?</text>
+        <text x="42" y="132" font-family="Nunito,sans-serif" font-size="11" fill="#166534" font-weight="700">C=?</text>
+        <!-- brace lines -->
+        <line x1="68" y1="20" x2="55" y2="35" stroke="#22c55e" stroke-width="1.5"/>
+        <line x1="68" y1="55" x2="55" y2="35" stroke="#22c55e" stroke-width="1.5"/>
+        <line x1="68" y1="55" x2="55" y2="80" stroke="#22c55e" stroke-width="1.5"/>
+        <line x1="68" y1="100" x2="55" y2="80" stroke="#22c55e" stroke-width="1.5"/>
+        <line x1="68" y1="100" x2="55" y2="130" stroke="#22c55e" stroke-width="1.5"/>
+        <line x1="68" y1="155" x2="55" y2="130" stroke="#22c55e" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <div class="answer-line"><span>A (0→1 s):</span> <div class="ans-box"></div></div>
+    <div class="answer-line" style="margin-top:.5rem;"><span>B (1→2 s):</span> <div class="ans-box"></div></div>
+    <div class="answer-line" style="margin-top:.5rem;"><span>C (2→3 s):</span> <div class="ans-box"></div></div>
+  </div>
+
+  <!-- B3: AT graph -->
+  <div class="graph-card">
+    <div class="prob-num">Question 9</div>
+    <div class="prob-q">Sketch the acceleration-time (AT) graph for a ball thrown upward at 15 m/s and caught 3 seconds later. Label the axes and indicate the value of the acceleration throughout.</div>
+    <div style="background:#f8faff;border:1.5px solid #e2e8f0;border-radius:12px;padding:1rem;min-height:140px;margin-bottom:.8rem;display:flex;align-items:center;justify-content:center;">
+      <svg width="340" height="130" viewBox="0 0 340 130" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+        <defs>
+          <marker id="ax2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#475569"/>
+          </marker>
+        </defs>
+        <line x1="40" y1="110" x2="320" y2="110" stroke="#475569" stroke-width="1.5" marker-end="url(#ax2)"/>
+        <line x1="40" y1="15" x2="40" y2="115" stroke="#475569" stroke-width="1.5"/>
+        <text x="325" y="113" font-family="Nunito,sans-serif" font-size="11" fill="#475569" font-weight="700">t (s)</text>
+        <text x="5" y="65" font-family="Nunito,sans-serif" font-size="10" fill="#475569" font-weight="700">a (m/s²)</text>
+        <!-- zero line -->
+        <line x1="40" y1="65" x2="320" y2="65" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="20" y="68" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">0</text>
+        <!-- grid labels  -->
+        <text x="28" y="45" font-family="Space Mono,monospace" font-size="8" fill="#94a3b8">−9.81</text>
+        <!-- dashed line at −9.81 -->
+        <line x1="40" y1="42" x2="310" y2="42" stroke="#bfdbfe" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- answer area (students sketch here) -->
+        <text x="170" y="85" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" fill="#94a3b8" font-style="italic">Sketch your AT graph here</text>
+        <!-- t ticks -->
+        <line x1="140" y1="107" x2="140" y2="113" stroke="#475569" stroke-width="1.5"/>
+        <text x="137" y="123" font-family="Space Mono,monospace" font-size="9" fill="#475569">1</text>
+        <line x1="220" y1="107" x2="220" y2="113" stroke="#475569" stroke-width="1.5"/>
+        <text x="217" y="123" font-family="Space Mono,monospace" font-size="9" fill="#475569">2</text>
+        <line x1="300" y1="107" x2="300" y2="113" stroke="#475569" stroke-width="1.5"/>
+        <text x="297" y="123" font-family="Space Mono,monospace" font-size="9" fill="#475569">3</text>
+      </svg>
+    </div>
+    <div class="answer-line"><span>What is the acceleration at every instant?</span></div>
+    <div class="line" style="height:28px;border-bottom:1.5px solid #e2e8f0;margin:4px 0;"></div>
+  </div>
+
+  <!-- B4: Cliff diagram analysis -->
+  <div class="graph-card">
+    <div class="prob-num">Question 10</div>
+    <div class="prob-q">A ball is thrown upward at 25 m/s from the top of a 60 m cliff. Label the following on the diagram: (a) the maximum height reached above the cliff top, (b) the total displacement from the throwing point to the ground, (c) the point where v = 0.</div>
+    <div style="background:#f8faff;border:1.5px solid #e2e8f0;border-radius:12px;padding:1rem;margin-bottom:.8rem;">
+      <svg width="340" height="200" viewBox="0 0 340 200" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+        <!-- ground -->
+        <rect x="0" y="178" width="340" height="22" fill="#d1fae5" rx="0"/>
+        <text x="170" y="193" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#166534">GROUND</text>
+        <!-- cliff -->
+        <rect x="30" y="90" width="100" height="88" fill="#cbd5e1" rx="4"/>
+        <!-- cliff top line -->
+        <line x1="30" y1="90" x2="140" y2="90" stroke="#475569" stroke-width="2"/>
+        <!-- person -->
+        <circle cx="122" cy="74" r="7" fill="#1e3a5f"/>
+        <line x1="122" y1="81" x2="122" y2="96" stroke="#1e3a5f" stroke-width="1.5"/>
+        <line x1="122" y1="96" x2="114" y2="110" stroke="#1e3a5f" stroke-width="1.5"/>
+        <line x1="122" y1="96" x2="130" y2="110" stroke="#1e3a5f" stroke-width="1.5"/>
+        <!-- trajectory -->
+        <path d="M125 88 Q200 15 260 88 Q275 110 255 178" stroke="#94a3b8" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/>
+        <!-- cliff height brace -->
+        <line x1="22" y1="90" x2="22" y2="178" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="5" y="138" font-family="Space Mono,monospace" font-size="9" fill="#dc2626" font-weight="700">60 m</text>
+        <!-- initial velocity arrow -->
+        <line x1="125" y1="88" x2="125" y2="58" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#v-up-b4)"/>
+        <text x="130" y="68" font-family="Space Mono,monospace" font-size="9" fill="#1d4ed8">u=25 m/s</text>
+        <defs>
+          <marker id="v-up-b4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#3b82f6"/>
+          </marker>
+        </defs>
+        <!-- label spots -->
+        <text x="215" y="22" font-family="Nunito,sans-serif" font-size="10" fill="#f59e0b" font-weight="700">(c) v = 0 here</text>
+        <text x="265" y="135" font-family="Nunito,sans-serif" font-size="10" fill="#6366f1" font-weight="700">(a) height = ?</text>
+        <text x="265" y="150" font-family="Nunito,sans-serif" font-size="10" fill="#22c55e" font-weight="700">(b) total s = ?</text>
+      </svg>
+    </div>
+    <div class="answer-line"><span>(a) Max height above cliff (v² = u² + 2as):</span></div>
+    <div class="line" style="height:28px;border-bottom:1.5px solid #e2e8f0;margin:4px 0 8px;"></div>
+    <div class="answer-line"><span>(b) Total displacement (throw point to ground):</span></div>
+    <div class="line" style="height:28px;border-bottom:1.5px solid #e2e8f0;margin:4px 0;"></div>
+  </div>
+
+  <!-- PART C -->
+  <div class="section-title">Part C — Short Answer / Conceptual</div>
+
+  <div class="short-card">
+    <div class="prob-num">Question 11</div>
+    <div class="prob-q">Explain in your own words why an object thrown upward is still in free fall while it is moving upward. Why does the velocity decrease even though the object is still moving up?</div>
+    <div class="short-lines">
+      <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+    </div>
+  </div>
+
+  <div class="short-card">
+    <div class="prob-num">Question 12</div>
+    <div class="prob-q">A student says: "At the top of its path, the ball has zero acceleration because it is momentarily stopped." Is this correct? Explain using the concept of free fall and the meaning of acceleration.</div>
+    <div class="short-lines">
+      <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+    </div>
+  </div>
+
+  <div class="short-card">
+    <div class="prob-num">Question 13</div>
+    <div class="prob-q">A ball is thrown upward from ground level and lands back at the same point. If air resistance is neglected, how does the time to go up compare to the time to come back down? How do the speeds at launch and landing compare? Explain your reasoning.</div>
+    <div class="short-lines">
+      <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+    </div>
+  </div>
+
+  <!-- ANSWER KEY TOGGLE -->
+  <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+
+  <div id="answer-key">
+    <div class="key-box">
+      <h3>Answer Key — Free Fall Classwork</h3>
+
+      <div class="key-item">
+        <div class="k-num">Q1 — Dropped stone, 45 m</div>
+        <div class="k-ans">v = 29.7 m/s downward</div>
+        <div class="k-work">v² = u² + 2as = 0 + 2(9.81)(45) = 882.9
+v = √882.9 = 29.7 m/s</div>
+      </div>
+
+      <div class="key-item">
+        <div class="k-num">Q2 — Ball reaches 25 m/s, find distance</div>
+        <div class="k-ans">s = 31.8 m</div>
+        <div class="k-work">v² = u² + 2as
+25² = 0 + 2(9.81)s
+625 = 19.62s
+s = 625 / 19.62 = 31.8 m</div>
+      </div>
+
+      <div class="key-item">
+        <div class="k-num">Q3 — Thrown up at 18 m/s, max height</div>
+        <div class="k-ans">s = 16.5 m</div>
+        <div class="k-work">v² = u² + 2as (up = +, v=0 at peak)
+0 = 18² + 2(−9.81)s
+0 = 324 − 19.62s
+19.62s = 324
+s = 324 / 19.62 = 16.5 m</div>
+      </div>
+
+      <div class="key-item">
+        <div class="k-num">Q4 — Thrown up at 12 m/s, time to peak</div>
+        <div class="k-ans">t = 1.22 s</div>
+        <div class="k-work">v = u + at
+0 = 12 + (−9.81)t
+9.81t = 12
+t = 12 / 9.81 = 1.22 s</div>
+      </div>
+
+      <div class="key-item">
+        <div class="k-num">Q5 — Dropped, t = 3.5 s, find height</div>
+        <div class="k-ans">s = 60.1 m</div>
+        <div class="k-work">s = ut + ½at²
+s = 0 + ½(9.81)(3.5²)
+s = 4.905 × 12.25 = 60.1 m</div>
+      </div>
+
+      <div class="key-item">
+        <div class="k-num">Q6 — Cliff problem: u=8 m/s up, cliff=30 m, total time</div>
+        <div class="k-ans">Total time = 3.06 s</div>
+        <div class="k-work">Part 1 (up to peak):
+0 = 8 + (−9.81)t₁ → t₁ = 8/9.81 = 0.816 s
+Height above cliff: 0²=8²+2(−9.81)s → s=64/19.62=3.26 m above cliff
+
+Part 2 (peak to ground):
+s = −(3.26+30) = −33.26 m, u=0
+−33.26 = ½(−9.81)t₂²
+t₂² = 33.26/4.905 = 6.78
+t₂ = 2.60 s (but using s=ut+½at²: t₂=√(2×33.26/9.81)=2.60 s)
+
+Total = 0.816 + 2.60 ≈ 3.42 s
+
+Note: Using s = ut+½at² directly for full trip (u=+8, a=−9.81, s=−30):
+−30 = 8t − 4.905t²
+4.905t² − 8t − 30 = 0
+t = [8 ± √(64 + 4×4.905×30)] / (2×4.905)
+t = [8 ± √(64+588.6)] / 9.81
+t = [8 ± √652.6] / 9.81
+t = [8 ± 25.55] / 9.81
+t = 33.55/9.81 = 3.42 s</div>
+      </div>
+
+      <div class="key-item">
+        <div class="k-num">Q7 — VT graph analysis</div>
+        <div class="k-ans">(a) The slope = acceleration. (b) Slope = Δv/Δt = (−20−20)/(4.08−0) = −9.81 m/s². (c) v=0 at t ≈ 2.04 s (where line crosses t-axis).</div>
+        <div class="k-work">slope = rise/run = (−20−20)/(4.08−0) = −40/4.08 = −9.8 m/s²
+This equals the acceleration due to gravity (negative because up=+).</div>
+      </div>
+
+      <div class="key-item">
+        <div class="k-num">Q8 — Position intervals for dropped ball</div>
+        <div class="k-ans">A = 4.9 m, B = 14.7 m, C = 24.5 m</div>
+        <div class="k-work">Distance in each second interval using s=ut+½at²:
+0→1 s: s=½(9.81)(1)²=4.905≈4.9 m
+1→2 s: s(0→2)=½(9.81)(4)=19.62m; interval = 19.62−4.905=14.7 m
+2→3 s: s(0→3)=½(9.81)(9)=44.1m; interval = 44.1−19.62=24.5 m
+The gaps increase (1:3:5 ratio) — characteristic of uniform acceleration.</div>
+      </div>
+
+      <div class="key-item">
+        <div class="k-num">Q9 — AT graph description</div>
+        <div class="k-ans">The AT graph is a horizontal line at a = −9.81 m/s² throughout (0 to 3 s). Constant downward acceleration throughout free fall.</div>
+        <div class="k-work">Free fall = constant acceleration. The AT graph is always a horizontal line at −9.81 m/s² (with up=+), regardless of whether the ball moves up or down.</div>
+      </div>
+
+      <div class="key-item">
+        <div class="k-num">Q10 — Cliff diagram (u=25 m/s, cliff=60 m)</div>
+        <div class="k-ans">(a) Max height above cliff = 31.9 m. (b) Total displacement from throw point to ground = 91.9 m downward.</div>
+        <div class="k-work">(a) v²=u²+2as → 0=625+2(−9.81)s → s=625/19.62=31.9 m
+(b) Total = 31.9 + 60 = 91.9 m below throwing point (total downward displacement to ground)</div>
+      </div>
+
+      <div class="key-item">
+        <div class="k-num">Q11 — Conceptual: upward throw still in free fall</div>
+        <div class="k-ans">While moving upward, only gravity acts — no thrust or contact force from the thrower remains after release. Gravity (9.81 m/s² downward) acts continuously, decelerating the upward-moving ball. Velocity decreases because the acceleration (downward) is opposite to the direction of motion (upward).</div>
+        <div class="k-work"></div>
+      </div>
+
+      <div class="key-item">
+        <div class="k-num">Q12 — Misconception: zero acceleration at top</div>
+        <div class="k-ans">The student is INCORRECT. Velocity = 0 at the top, but acceleration ≠ 0. Acceleration is the rate of change of velocity. Gravity continuously acts, so acceleration = 9.81 m/s² downward even when v = 0. The instant of zero velocity does not mean forces have stopped acting.</div>
+        <div class="k-work"></div>
+      </div>
+
+      <div class="key-item">
+        <div class="k-num">Q13 — Symmetry of free fall trajectory</div>
+        <div class="k-ans">Time up = time down (symmetric trajectory). Speed at launch = speed at landing (same magnitude). This is because with constant acceleration and no air resistance, the motion is perfectly reversible. The ball decelerates uniformly going up and accelerates uniformly coming down — the physics is the same in both directions.</div>
+        <div class="k-work">Proof: if thrown at u=v₀, time to peak t=v₀/g. Falling from rest through same height h=v₀²/2g gives v=√(2gh)=v₀. &#10003;</div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /container -->
+</div><!-- /main -->
+
+<script>
+(function(){
+  const KEY='phys_auth';const CORRECT=btoa('physics2024');
+  if(localStorage.getItem(KEY)===CORRECT){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('main').style.display='block';
+  }
+})();
+function checkPwd(){
+  const v=document.getElementById('pwd-input').value;
+  const CORRECT=btoa('physics2024');
+  if(btoa(v)===CORRECT){
+    localStorage.setItem('phys_auth',CORRECT);
+    document.getElementById('gate').style.display='none';
+    document.getElementById('main').style.display='block';
+  } else {
+    document.getElementById('gate-err').textContent='Incorrect password. Please try again.';
+  }
+}
+function toggleKey(){
+  const k=document.getElementById('answer-key');
+  const btn=document.getElementById('toggle-key-btn');
+  if(k.style.display==='none'||k.style.display===''){
+    k.style.display='block';btn.textContent='Hide Answer Key';
+  } else {
+    k.style.display='none';btn.textContent='Show Answer Key';
+  }
+}
+(function(){
+  const c=document.getElementById('stars-container');
+  for(let i=0;i<45;i++){
+    const s=document.createElement('div');s.className='star';
+    const sz=Math.random()*2.5+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;
+      animation-delay:${Math.random()*3}s;animation-duration:${1.5+Math.random()*2.5}s;`;
+    c.appendChild(s);
+  }
+})();
+</script>
+</body>
+</html>

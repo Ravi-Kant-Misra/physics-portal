@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Measurement Uncertainty — Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0fafa;background-image:radial-gradient(circle,#99f6e4 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.75;}
+    header{background:linear-gradient(135deg,#134e4a 0%,#0f766e 50%,#0d9488 100%);color:white;padding:36px 60px 30px;position:relative;overflow:hidden;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 40%,rgba(20,184,166,0.3) 0%,transparent 60%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.4);}}
+    header .label{font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:8px;position:relative;}
+    header h1{font-size:2.1rem;font-weight:900;margin-bottom:6px;position:relative;}
+    header .meta{opacity:0.85;font-size:0.9rem;position:relative;}
+    main{max-width:840px;margin:36px auto;padding:0 24px 60px;}
+    .reminder-box{background:white;border:2px solid #ccfbf1;border-radius:12px;padding:18px 24px;margin-bottom:36px;box-shadow:0 2px 10px rgba(13,148,136,0.08);}
+    .reminder-box h3{color:#0f766e;font-size:1rem;font-weight:800;margin-bottom:10px;}
+    .reminder-box .formula-row{font-family:'Space Mono',monospace;font-size:0.92rem;color:#0f766e;font-weight:700;background:#f0fdfa;border-radius:8px;padding:8px 14px;margin-bottom:6px;}
+    section{margin-bottom:50px;}
+    h2{font-size:1.2rem;font-weight:800;color:#0f766e;border-left:5px solid #0d9488;padding-left:12px;margin-bottom:18px;}
+    .instructions{color:#4b5563;font-size:0.9rem;margin-bottom:18px;font-style:italic;}
+    /* problem cards */
+    .prob-card{background:white;border-radius:12px;padding:22px 26px;box-shadow:0 2px 10px rgba(0,0,0,0.06);margin-bottom:16px;}
+    .prob-card.hard{border-left:4px solid #ef4444;}
+    .prob-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#64748b;margin-bottom:4px;}
+    .prob-text{font-size:0.94rem;color:#1e293b;font-weight:600;margin-bottom:14px;line-height:1.55;}
+    .prob-text .scenario{font-style:italic;color:#475569;font-weight:400;}
+    .work-area{background:#f8fafc;border-radius:8px;border:1px dashed #cbd5e1;padding:14px 16px;}
+    .work-area-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;}
+    .work-line{border-bottom:1.5px solid #e2e8f0;min-height:24px;width:100%;margin-bottom:8px;}
+    .ans-row{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:0.9rem;color:#334155;font-weight:600;}
+    .ans-blank{border-bottom:2px solid #0d9488;flex:1;min-height:24px;display:inline-block;}
+    /* T/F */
+    .tf-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    @media(max-width:600px){.tf-grid{grid-template-columns:1fr;}}
+    .tf-card{background:white;border-radius:12px;padding:18px 20px;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+    .tf-statement{font-size:0.9rem;color:#1e293b;margin-bottom:10px;line-height:1.5;}
+    .tf-row{display:flex;gap:14px;align-items:center;}
+    .tf-label{font-size:0.82rem;font-weight:700;color:#64748b;margin-right:4px;}
+    .tf-circle{width:32px;height:32px;border-radius:50%;border:2px solid #cbd5e1;display:inline-block;}
+    /* extended writing */
+    .essay-card{background:white;border-radius:12px;padding:22px 26px;box-shadow:0 2px 10px rgba(0,0,0,0.06);margin-bottom:16px;border-top:4px solid #f59e0b;}
+    .essay-prompt{font-size:0.94rem;color:#1e293b;font-weight:600;margin-bottom:14px;line-height:1.55;}
+    .essay-lines{display:flex;flex-direction:column;gap:16px;}
+    .essay-line{border-bottom:1.5px solid #d1d5db;min-height:26px;width:100%;}
+    /* answer key */
+    .key-btn-wrap{text-align:center;margin:48px 0 20px;}
+    #toggle-key-btn{background:linear-gradient(135deg,#134e4a,#0d9488);color:white;border:none;padding:13px 36px;font-size:1rem;font-weight:800;border-radius:10px;cursor:pointer;font-family:inherit;}
+    #toggle-key-btn:hover{opacity:0.9;}
+    #answer-key{display:none;background:#f0fdfa;border:2px solid #5eead4;border-radius:16px;padding:30px 36px;margin-top:4px;}
+    #answer-key h2{color:#0f766e;border-left-color:#0d9488;margin-bottom:24px;}
+    .key-section{margin-bottom:32px;}
+    .key-section h3{font-size:1rem;font-weight:800;color:#0f766e;margin-bottom:14px;}
+    .key-item{background:white;border-radius:8px;padding:14px 18px;font-size:0.9rem;margin-bottom:10px;border-left:3px solid #0d9488;}
+    .key-item .ki-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#64748b;margin-bottom:4px;}
+    .key-item .ki-ans{font-family:'Space Mono',monospace;font-weight:700;color:#0f766e;font-size:1rem;margin-bottom:4px;}
+    .key-item .ki-expl{color:#4b5563;font-size:0.85rem;line-height:1.5;}
+    .key-item.tf-key{border-left-color:#f59e0b;}
+    .key-item.tf-key .ki-ans{color:#92400e;}
+    .key-item.essay-key{border-left-color:#a855f7;}
+    .key-item.essay-key .ki-ans{color:#7e22ce;}
+    .difficulty-badge{display:inline-block;font-size:0.7rem;font-weight:700;padding:2px 10px;border-radius:12px;margin-left:8px;vertical-align:middle;}
+    .db-hard{background:#fee2e2;color:#991b1b;}
+    .db-med{background:#fef3c7;color:#92400e;}
+    .db-ext{background:#f3e8ff;color:#7e22ce;}
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#134e4a,#0f766e,#0d9488);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#0d9488,#0f766e);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="star" style="width:3px;height:3px;top:16%;left:7%;animation-delay:0s"></div>
+  <div class="star" style="width:2px;height:2px;top:55%;left:12%;animation-delay:0.6s"></div>
+  <div class="star" style="width:4px;height:4px;top:22%;left:82%;animation-delay:1s"></div>
+  <div class="star" style="width:3px;height:3px;top:68%;left:90%;animation-delay:0.3s"></div>
+  <div class="star" style="width:2px;height:2px;top:30%;left:50%;animation-delay:0.9s"></div>
+  <div class="label">Physics · High School · Homework Assignment</div>
+  <h1>Measurement Uncertainty — Homework</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+
+  <div class="reminder-box">
+    <h3>Key Formulas Reminder</h3>
+    <div class="formula-row">Analogue: Uncertainty = (½ × smallest increment) × number of measurements</div>
+    <div class="formula-row">Digital: Uncertainty = ± 1 digit of last significant figure</div>
+    <div style="margin-top:8px;font-size:0.85rem;color:#4b5563;">Always report the <strong style="color:#0f766e;">LARGER</strong> of: the instrument limit (above) vs. the experimenter's justified estimate</div>
+  </div>
+
+  <!-- PART A: Calculations — harder scenarios -->
+  <section>
+    <h2>Part A — Calculations <span class="difficulty-badge db-med">Medium</span></h2>
+    <p class="instructions">Show all working clearly. Write your final answer in value ± uncertainty format.</p>
+
+    <div class="prob-card">
+      <div class="prob-num">Problem 1</div>
+      <div class="prob-text">A graduated cylinder has markings every 2 mL. A student fills the cylinder and reads the volume at the bottom of the meniscus. <span class="scenario">She takes only one reading (a single position). What is the measurement uncertainty?</span></div>
+      <div class="work-area">
+        <div class="work-area-label">Working</div>
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+      </div>
+      <div class="ans-row">Volume reading = 46 mL &nbsp;&nbsp; Full measurement: <span class="ans-blank"></span></div>
+    </div>
+
+    <div class="prob-card">
+      <div class="prob-num">Problem 2</div>
+      <div class="prob-text">An analogue ammeter has its scale divided into 0.1 A increments. A student measures the current flowing through a circuit by reading the needle position before and after switching the circuit on (2 measurements). <span class="scenario">What is the measurement uncertainty?</span></div>
+      <div class="work-area">
+        <div class="work-area-label">Working</div>
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+      </div>
+      <div class="ans-row">Current reading = 1.4 A &nbsp;&nbsp; Full measurement: <span class="ans-blank"></span></div>
+    </div>
+
+    <div class="prob-card">
+      <div class="prob-num">Problem 3</div>
+      <div class="prob-text">A digital multimeter displays a voltage of <span style="font-family:'Space Mono',monospace;font-weight:700;">5.026 V</span>. <span class="scenario">What is the uncertainty?</span></div>
+      <div class="work-area">
+        <div class="work-area-label">Working</div>
+        <div class="work-line"></div>
+      </div>
+      <div class="ans-row">Full measurement: <span class="ans-blank"></span></div>
+    </div>
+
+    <div class="prob-card">
+      <div class="prob-num">Problem 4</div>
+      <div class="prob-text">A student uses a metre rule (smallest increment: 0.1 cm) to measure the wavelength of a standing wave on a string. The wavelength is the distance between two nodes, requiring 2 separate position readings on the ruler. <span class="scenario">State the uncertainty in the wavelength measurement.</span></div>
+      <div class="work-area">
+        <div class="work-area-label">Working</div>
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+      </div>
+      <div class="ans-row">Wavelength reading = 32.4 cm &nbsp;&nbsp; Full measurement: <span class="ans-blank"></span></div>
+    </div>
+
+    <div class="prob-card">
+      <div class="prob-num">Problem 5</div>
+      <div class="prob-text">A micrometer screw gauge reads <span style="font-family:'Space Mono',monospace;font-weight:700;">3.45 mm</span> for the diameter of a wire. <span class="scenario">What is the uncertainty? Write the full measurement.</span></div>
+      <div class="work-area">
+        <div class="work-area-label">Working</div>
+        <div class="work-line"></div>
+      </div>
+      <div class="ans-row">Full measurement: <span class="ans-blank"></span></div>
+    </div>
+  </section>
+
+  <!-- PART B: Real-world scenarios -->
+  <section>
+    <h2>Part B — Real-World Scenarios <span class="difficulty-badge db-hard">Hard</span></h2>
+    <p class="instructions">Each problem has two sources of uncertainty. Determine which is larger and justify your answer.</p>
+
+    <div class="prob-card hard">
+      <div class="prob-num">Problem 6</div>
+      <div class="prob-text">A student measures the time it takes for a pendulum to complete one swing using a digital stopwatch (reads to 0.01 s). The student's reaction time is estimated at ±0.2 s for each button press. The pendulum timing requires starting AND stopping the watch (2 reaction-time events).<br><br>a) What is the instrument uncertainty of the stopwatch?<br>b) What is the total reaction-time uncertainty?<br>c) Which should be reported, and why?</div>
+      <div class="work-area">
+        <div class="work-area-label">Working — a)</div>
+        <div class="work-line"></div>
+      </div>
+      <div style="height:10px;"></div>
+      <div class="work-area">
+        <div class="work-area-label">Working — b)</div>
+        <div class="work-line"></div>
+      </div>
+      <div style="height:10px;"></div>
+      <div class="work-area">
+        <div class="work-area-label">Answer — c)</div>
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+      </div>
+    </div>
+
+    <div class="prob-card hard">
+      <div class="prob-num">Problem 7</div>
+      <div class="prob-text">A doctor measures blood pressure using an analogue sphygmomanometer (blood pressure cuff). The gauge has a smallest increment of 2 mmHg, and the doctor reads the systolic (top) and diastolic (bottom) values — 2 measurements total.<br><br>The patient is slightly anxious and fidgeting, and the doctor estimates this causes an extra ±5 mmHg variability.<br><br>State the full blood pressure measurement if the reading is 120/80 mmHg. Use the appropriate uncertainty for both values.</div>
+      <div class="work-area">
+        <div class="work-area-label">Working</div>
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+      </div>
+      <div class="ans-row">Blood pressure = <span class="ans-blank"></span> mmHg</div>
+    </div>
+
+    <div class="prob-card hard">
+      <div class="prob-num">Problem 8</div>
+      <div class="prob-text">A physics student measures the rebound height of a bouncing ball. They drop the ball from a height measured with a ruler (0.1 cm increments, 2 measurements) and photograph the peak of the rebound, then measure the rebound height from the photograph using the same ruler (2 more measurements).<br><br>a) What is the uncertainty on the drop height?<br>b) What is the uncertainty on the rebound height?<br>c) The student estimates that reading heights from a photograph adds ±1.0 cm of uncertainty. What should the student report as the uncertainty on the rebound height?</div>
+      <div class="work-area">
+        <div class="work-area-label">Working</div>
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+      </div>
+      <div class="ans-row">Drop height uncertainty: <span class="ans-blank"></span> cm &nbsp;&nbsp; Rebound height uncertainty: <span class="ans-blank"></span> cm</div>
+    </div>
+  </section>
+
+  <!-- PART C: True / False -->
+  <section>
+    <h2>Part C — True or False <span class="difficulty-badge db-med">Medium</span></h2>
+    <p class="instructions">Circle T (True) or F (False) for each statement. If false, briefly write the correct statement on the line below.</p>
+    <div class="tf-grid">
+
+      <div class="tf-card">
+        <div class="tf-statement">1. A digital stopwatch showing 8.00 s has an uncertainty of ±0.01 s.</div>
+        <div class="tf-row"><span class="tf-label">T</span><div class="tf-circle"></div><span style="width:20px;"></span><span class="tf-label">F</span><div class="tf-circle"></div></div>
+        <div class="work-line" style="margin-top:8px;"></div>
+      </div>
+
+      <div class="tf-card">
+        <div class="tf-statement">2. For an analogue ruler with 0.5 cm increments, the instrument uncertainty per measurement is 0.5 cm.</div>
+        <div class="tf-row"><span class="tf-label">T</span><div class="tf-circle"></div><span style="width:20px;"></span><span class="tf-label">F</span><div class="tf-circle"></div></div>
+        <div class="work-line" style="margin-top:8px;"></div>
+      </div>
+
+      <div class="tf-card">
+        <div class="tf-statement">3. If your instrument uncertainty is ±0.3 cm and your experimental estimate is ±0.1 cm, you should report ±0.3 cm.</div>
+        <div class="tf-row"><span class="tf-label">T</span><div class="tf-circle"></div><span style="width:20px;"></span><span class="tf-label">F</span><div class="tf-circle"></div></div>
+        <div class="work-line" style="margin-top:8px;"></div>
+      </div>
+
+      <div class="tf-card">
+        <div class="tf-statement">4. Measurement uncertainty only exists for old or broken equipment.</div>
+        <div class="tf-row"><span class="tf-label">T</span><div class="tf-circle"></div><span style="width:20px;"></span><span class="tf-label">F</span><div class="tf-circle"></div></div>
+        <div class="work-line" style="margin-top:8px;"></div>
+      </div>
+
+      <div class="tf-card">
+        <div class="tf-statement">5. Measuring the length of a table by placing a ruler from end to end involves only 1 measurement for uncertainty purposes.</div>
+        <div class="tf-row"><span class="tf-label">T</span><div class="tf-circle"></div><span style="width:20px;"></span><span class="tf-label">F</span><div class="tf-circle"></div></div>
+        <div class="work-line" style="margin-top:8px;"></div>
+      </div>
+
+      <div class="tf-card">
+        <div class="tf-statement">6. A reading of 0.00 g on a digital balance that displays to 0.01 g should be reported as 0.00 ± 0.01 g.</div>
+        <div class="tf-row"><span class="tf-label">T</span><div class="tf-circle"></div><span style="width:20px;"></span><span class="tf-label">F</span><div class="tf-circle"></div></div>
+        <div class="work-line" style="margin-top:8px;"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PART D: Extended Writing -->
+  <section>
+    <h2>Part D — Extended Writing <span class="difficulty-badge db-ext">Extended</span></h2>
+    <p class="instructions">Answer in full sentences. Aim for 3–5 sentences per question.</p>
+
+    <div class="essay-card">
+      <div class="essay-prompt">Problem 9 &nbsp;|&nbsp; A student in a lab class says: "My digital balance is very accurate, so I don't need to write any uncertainty." Explain what this student is misunderstanding. In your answer, distinguish between the concept of <em>accuracy</em> and <em>measurement uncertainty</em>.</div>
+      <div class="essay-lines">
+        <div class="essay-line"></div>
+        <div class="essay-line"></div>
+        <div class="essay-line"></div>
+        <div class="essay-line"></div>
+        <div class="essay-line"></div>
+      </div>
+    </div>
+
+    <div class="essay-card">
+      <div class="essay-prompt">Problem 10 &nbsp;|&nbsp; In a lab investigation, you are measuring the extension of a spring as a function of mass added. Describe the measurement uncertainty you would report for the extension measurement, including: (a) how you would calculate the instrument uncertainty using a ruler (smallest increment 0.1 cm), (b) what experimental factors could increase the uncertainty beyond the instrument limit, and (c) which option you would report and why.</div>
+      <div class="essay-lines">
+        <div class="essay-line"></div>
+        <div class="essay-line"></div>
+        <div class="essay-line"></div>
+        <div class="essay-line"></div>
+        <div class="essay-line"></div>
+        <div class="essay-line"></div>
+      </div>
+    </div>
+
+    <div class="essay-card">
+      <div class="essay-prompt">Problem 11 &nbsp;|&nbsp; Two students measure the same object using the same digital scale (reads to 0.1 g). Student A is careful and steady; Student B is in a hurry and keeps moving the object mid-reading, causing the display to fluctuate by about ±0.5 g. Will both students report the same uncertainty? Justify your answer using the two-option rule for measurement uncertainty.</div>
+      <div class="essay-lines">
+        <div class="essay-line"></div>
+        <div class="essay-line"></div>
+        <div class="essay-line"></div>
+        <div class="essay-line"></div>
+        <div class="essay-line"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANSWER KEY TOGGLE -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+  </div>
+
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A — Calculations</h3>
+      <div class="key-item">
+        <div class="ki-num">Problem 1 — Graduated Cylinder (2 mL increments, 1 reading)</div>
+        <div class="ki-ans">Uncertainty = ½ × 2 mL × 1 = 1 mL &nbsp;→&nbsp; Volume = 46 ± 1 mL</div>
+        <div class="ki-expl">Instrument limit per reading = ½ × 2 = 1 mL. Only one reading (one meniscus position), so multiply by 1.</div>
+      </div>
+      <div class="key-item">
+        <div class="ki-num">Problem 2 — Analogue Ammeter (0.1 A increments, 2 measurements)</div>
+        <div class="ki-ans">Uncertainty = ½ × 0.1 A × 2 = 0.1 A &nbsp;→&nbsp; Current = 1.4 ± 0.1 A</div>
+        <div class="ki-expl">Instrument limit = ½ × 0.1 = 0.05 A per reading. Two readings → 0.05 × 2 = 0.1 A.</div>
+      </div>
+      <div class="key-item">
+        <div class="ki-num">Problem 3 — Digital Multimeter (5.026 V)</div>
+        <div class="ki-ans">Uncertainty = ±0.001 V &nbsp;→&nbsp; Voltage = 5.026 ± 0.001 V</div>
+        <div class="ki-expl">Last digit is in the thousandths place (0.001 V), so uncertainty = ±0.001 V.</div>
+      </div>
+      <div class="key-item">
+        <div class="ki-num">Problem 4 — Metre Rule (0.1 cm increments, 2 measurements)</div>
+        <div class="ki-ans">Uncertainty = ½ × 0.1 cm × 2 = 0.1 cm &nbsp;→&nbsp; Wavelength = 32.4 ± 0.1 cm</div>
+        <div class="ki-expl">Instrument limit = 0.05 cm per reading. Two node positions → 0.05 × 2 = 0.1 cm.</div>
+      </div>
+      <div class="key-item">
+        <div class="ki-num">Problem 5 — Micrometer (3.45 mm)</div>
+        <div class="ki-ans">Uncertainty = ±0.01 mm &nbsp;→&nbsp; Diameter = 3.45 ± 0.01 mm</div>
+        <div class="ki-expl">Digital-style readout: last digit in hundredths place (0.01 mm) → uncertainty = ±0.01 mm.</div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B — Real-World Scenarios</h3>
+      <div class="key-item">
+        <div class="ki-num">Problem 6 — Stopwatch (reaction time)</div>
+        <div class="ki-ans">a) ±0.01 s &nbsp;&nbsp; b) 2 × ±0.2 s = ±0.4 s &nbsp;&nbsp; c) Report ±0.4 s</div>
+        <div class="ki-expl">The instrument uncertainty (0.01 s) is much smaller than the human reaction-time uncertainty (0.4 s from two button presses). The larger value (±0.4 s) must be reported. This is a key real-world application: a high-precision digital instrument does not eliminate human error in the procedure.</div>
+      </div>
+      <div class="key-item">
+        <div class="ki-num">Problem 7 — Blood Pressure (2 mmHg increments, 2 readings)</div>
+        <div class="ki-ans">Instrument uncertainty = ½ × 2 × 2 = 2 mmHg. Patient fidgeting = ±5 mmHg → Report ±5 mmHg.</div>
+        <div class="ki-ans">Blood pressure = (120 ± 5) / (80 ± 5) mmHg</div>
+        <div class="ki-expl">The experimental estimate (±5 mmHg) dominates. Both the systolic and diastolic readings carry the same uncertainty of ±5 mmHg.</div>
+      </div>
+      <div class="key-item">
+        <div class="ki-num">Problem 8 — Rebound Ball Photography</div>
+        <div class="ki-ans">a) Drop height: ½ × 0.1 × 2 = 0.1 cm &nbsp;&nbsp; b) Ruler instrument only: 0.1 cm &nbsp;&nbsp; c) Photo reading adds ±1.0 cm → Report ±1.0 cm for rebound height</div>
+        <div class="ki-expl">The photograph introduces parallax and scaling errors that dominate over the ruler's instrument uncertainty. The drop height (measured directly) remains ±0.1 cm, but the rebound height (read from a photo) must use the larger experimental estimate of ±1.0 cm.</div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C — True or False</h3>
+      <div class="key-item tf-key">
+        <div class="ki-num">Statement 1</div>
+        <div class="ki-ans">TRUE</div>
+        <div class="ki-expl">8.00 s shows hundredths precision; ±0.01 s is correct for a digital instrument.</div>
+      </div>
+      <div class="key-item tf-key">
+        <div class="ki-num">Statement 2</div>
+        <div class="ki-ans">FALSE</div>
+        <div class="ki-expl">The instrument uncertainty per measurement is HALF the smallest increment: ½ × 0.5 cm = 0.25 cm. (The total after multiplying by number of measurements may equal 0.5 cm if two readings are taken, but per measurement it is 0.25 cm.)</div>
+      </div>
+      <div class="key-item tf-key">
+        <div class="ki-num">Statement 3</div>
+        <div class="ki-ans">TRUE</div>
+        <div class="ki-expl">Always report the larger value. ±0.3 cm > ±0.1 cm, so ±0.3 cm is correct.</div>
+      </div>
+      <div class="key-item tf-key">
+        <div class="ki-num">Statement 4</div>
+        <div class="ki-ans">FALSE</div>
+        <div class="ki-expl">All measuring devices — old or new, cheap or expensive — have some imprecision. Measurement uncertainty is a fundamental feature of measurement, not a fault of the equipment.</div>
+      </div>
+      <div class="key-item tf-key">
+        <div class="ki-num">Statement 5</div>
+        <div class="ki-ans">FALSE</div>
+        <div class="ki-expl">Measuring a table with a ruler involves 2 readings: where the ruler starts (0 end) and where the table ends. Both positions must be read on the scale → n = 2 measurements.</div>
+      </div>
+      <div class="key-item tf-key">
+        <div class="ki-num">Statement 6</div>
+        <div class="ki-ans">TRUE</div>
+        <div class="ki-expl">Even a zero reading carries uncertainty. The display resolves to 0.01 g, so ±0.01 g applies regardless of the value shown.</div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part D — Extended Writing (Model Answers)</h3>
+      <div class="key-item essay-key">
+        <div class="ki-num">Problem 9 — Accuracy vs. Measurement Uncertainty</div>
+        <div class="ki-expl">The student is confusing <em>accuracy</em> (how close a measurement is to the true value) with <em>measurement uncertainty</em> (the range of values within which the true measurement likely lies). Even a highly accurate digital balance has a finite resolution — its last digit represents a limit of ±1 digit that cannot be escaped regardless of the instrument's quality. Furthermore, measurement uncertainty also includes the experimental procedure: table vibrations, balance drift, or placing items off-centre all contribute additional uncertainty beyond the instrument. Every measurement must report an uncertainty; there is no such thing as a perfectly certain measurement in physics.</div>
+      </div>
+      <div class="key-item essay-key">
+        <div class="ki-num">Problem 10 — Spring Extension Lab</div>
+        <div class="ki-expl">(a) The instrument uncertainty = ½ × 0.1 cm × 2 = 0.1 cm (two readings: natural length and extended length). (b) Experimental factors that increase uncertainty: the spring oscillates slightly after adding mass, making it hard to read a stable position; parallax error when reading the ruler at an angle; the spring not hanging perfectly vertically. (c) If any of these factors justify an estimate larger than 0.1 cm (e.g., ±0.3 cm due to oscillation), then ±0.3 cm must be reported and justified because we always use the larger, more honest value.</div>
+      </div>
+      <div class="key-item essay-key">
+        <div class="ki-num">Problem 11 — Two Students, Same Scale</div>
+        <div class="ki-expl">No — the two students will report different uncertainties despite using the same instrument. Student A's procedure is stable: the instrument uncertainty of ±0.1 g dominates, and they report 0.1 g. Student B's moving object causes the display to fluctuate by ±0.5 g, which is a justified experimental estimate larger than the instrument limit. By the two-option rule, Student B must report ±0.5 g. This demonstrates that measurement uncertainty describes the experiment, not just the device — the same tool can yield different uncertainties depending on how well the measurement procedure is executed.</div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer style="text-align:center;padding:28px 20px;font-size:0.82rem;color:#94a3b8;">Physics · Measurement Uncertainty · Homework &nbsp;|&nbsp; Unit 13</footer>
+
+<script>
+function toggleKey() {
+  var k = document.getElementById('answer-key');
+  var b = document.getElementById('toggle-key-btn');
+  if (k.style.display === 'none' || k.style.display === '') {
+    k.style.display = 'block';
+    b.textContent = 'Hide Answer Key';
+  } else {
+    k.style.display = 'none';
+    b.textContent = 'Show Answer Key';
+  }
+}
+</script>
+
+</body>
+</html>

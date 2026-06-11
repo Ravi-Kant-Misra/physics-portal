@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Vectors — Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#334155 100%);color:white;padding:32px 60px 28px;position:relative;overflow:hidden;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 50%,rgba(99,102,241,0.25) 0%,transparent 60%),radial-gradient(ellipse at 75% 30%,rgba(20,184,166,0.2) 0%,transparent 55%);pointer-events:none;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.75;margin-bottom:6px;position:relative;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;position:relative;}
+    header .meta{opacity:0.8;font-size:0.9rem;position:relative;}
+    main{max-width:820px;margin:36px auto;padding:0 24px 60px;}
+    .ref-box{background:white;border:2px solid #e0e7ff;border-radius:10px;padding:16px 22px;margin-bottom:32px;}
+    .ref-box .ref-title{font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#4338ca;margin-bottom:10px;}
+    .ref-pair{display:flex;gap:28px;flex-wrap:wrap;}
+    .ref-item{display:flex;align-items:center;gap:10px;}
+    .ref-sym{font-size:2rem;width:38px;text-align:center;}
+    .ref-text{font-size:0.9rem;color:#334155;}
+    .ref-text strong{display:block;}
+    section{margin-bottom:44px;}
+    h2{font-size:1.2rem;font-weight:800;color:#0f172a;border-left:5px solid #6366f1;padding-left:12px;margin-bottom:16px;}
+    .instructions{color:#4b5563;font-size:0.9rem;margin-bottom:16px;font-style:italic;}
+    .answer-line{border-bottom:2px solid #d1d5db;min-height:26px;width:90%;display:inline-block;}
+    .answer-label{font-size:0.82rem;color:#6b7280;margin-right:6px;}
+    /* cards */
+    .prob-card{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .pnum{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;}
+    .ptext{font-weight:700;font-size:0.95rem;margin-bottom:10px;}
+    .psub{font-size:0.85rem;color:#64748b;margin-bottom:10px;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:26px;width:100%;}
+    /* symbol choice grid */
+    .sym-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    @media(max-width:560px){.sym-grid{grid-template-columns:1fr;}}
+    .sym-card{background:white;border-radius:10px;padding:16px 18px;box-shadow:0 1px 5px rgba(0,0,0,0.07);text-align:center;}
+    .sym-card .sym-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;}
+    .sym-card .sym-scenario{font-size:0.9rem;font-weight:700;margin-bottom:12px;text-align:left;}
+    .sym-card .sym-choices{display:flex;gap:16px;justify-content:center;}
+    .sym-choice{display:flex;flex-direction:column;align-items:center;gap:4px;}
+    .sym-choice .sym-label{font-size:0.75rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;}
+    .sym-choice .sym-box{width:44px;height:44px;border-radius:8px;border:2px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:1.6rem;background:#f8fafc;}
+    .sym-choice .sym-line{border-bottom:2px solid #d1d5db;width:60px;margin-top:4px;}
+    /* field pattern analysis */
+    .pattern-card{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .pc-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;}
+    .pc-text{font-weight:700;font-size:0.95rem;margin-bottom:8px;}
+    .pc-sub{font-size:0.85rem;color:#64748b;margin-bottom:14px;}
+    .mini-scene{display:grid;grid-template-columns:1fr 12px 1fr;border-radius:8px;overflow:hidden;border:1.5px solid #e2e8f0;max-width:400px;margin-bottom:12px;}
+    .ms-left{padding:12px;text-align:center;}
+    .ms-wire{background:#334155;}
+    .ms-right{padding:12px;text-align:center;}
+    .ms-label{font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:7px;}
+    .mini-field{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;}
+    .mf{height:30px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;border-radius:4px;}
+    .mf-dot{background:#f0fdf4;color:#166534;}.mf-cross{background:#fff7ed;color:#92400e;}
+    /* diagram drawing task */
+    .draw-task{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .dt-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;}
+    .dt-text{font-weight:700;font-size:0.95rem;margin-bottom:8px;}
+    .dt-sub{font-size:0.85rem;color:#64748b;margin-bottom:14px;}
+    .blank-scene{display:grid;grid-template-columns:1fr 14px 1fr;border-radius:8px;overflow:hidden;border:2px dashed #cbd5e1;max-width:420px;}
+    .bs-left{background:#f8fafc;padding:14px;text-align:center;}
+    .bs-wire{background:#334155;}
+    .bs-right{background:#f8fafc;padding:14px;text-align:center;}
+    .bs-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#94a3b8;margin-bottom:8px;}
+    .blank-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+    .blank-cell{border:1.5px dashed #cbd5e1;border-radius:5px;height:34px;background:white;}
+    /* IB exam-style MCQ */
+    .mcq-card{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .mcq-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;}
+    .mcq-stem{font-weight:700;font-size:0.95rem;margin-bottom:12px;line-height:1.55;}
+    .mcq-options{display:flex;flex-direction:column;gap:8px;}
+    .mcq-opt{display:flex;gap:10px;align-items:flex-start;font-size:0.92rem;}
+    .mcq-let{font-weight:800;min-width:20px;color:#6366f1;}
+    .mcq-circle{width:18px;height:18px;border-radius:50%;border:2px solid #cbd5e1;flex-shrink:0;margin-top:2px;}
+    .mcq-text{color:#374151;}
+    /* answer key */
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:linear-gradient(135deg,#4338ca,#6366f1);color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #toggle-key-btn:hover{opacity:0.9;}
+    #answer-key{display:none;background:#f5f3ff;border:2px solid #c4b5fd;border-radius:14px;padding:28px 32px;}
+    #answer-key h2{border-left-color:#7c3aed;margin-bottom:22px;}
+    .key-section{margin-bottom:26px;}
+    .key-section h3{font-size:0.95rem;font-weight:800;color:#4338ca;margin-bottom:12px;}
+    .key-text{background:white;border-radius:8px;padding:12px 16px;font-size:0.9rem;margin-bottom:10px;}
+    .key-text strong{color:#4338ca;}
+    .key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    @media(max-width:500px){.key-grid{grid-template-columns:1fr;}}
+    .key-item{background:white;border-radius:8px;padding:10px 14px;font-size:0.9rem;}
+    .key-item .knum{font-weight:700;color:#64748b;font-size:0.8rem;display:block;margin-bottom:2px;}
+    .key-item .kans{color:#4338ca;font-weight:800;font-size:1rem;}
+    .key-item .kexpl{color:#4b5563;font-size:0.8rem;margin-top:3px;}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f172a,#1e293b,#0f172a);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#4338ca);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">IB Physics · Unit 27 · Take-Home Assignment</div>
+  <h1>3D Vectors — Homework</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date due: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+
+  <!-- Reference box -->
+  <div class="ref-box">
+    <div class="ref-title">Notation Reference</div>
+    <div class="ref-pair">
+      <div class="ref-item">
+        <div class="ref-sym" style="color:#1d4ed8;">⊙</div>
+        <div class="ref-text"><strong>Out of the page</strong> — dot = arrowhead toward you</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-sym" style="color:#92400e;">⊗</div>
+        <div class="ref-text"><strong>Into the page</strong> — cross = arrow tail going away</div>
+      </div>
+      <div style="font-size:0.85rem;color:#64748b;padding-top:4px;"><strong>Axes:</strong> x = left/right &nbsp;·&nbsp; y = up/down &nbsp;·&nbsp; z = in/out of page</div>
+    </div>
+  </div>
+
+  <!-- Part A: IB-Style Multiple Choice -->
+  <section>
+    <h2>Part A — IB-Style Multiple Choice</h2>
+    <p class="instructions">Circle the letter of the best answer for each question. Each question is worth 1 mark.</p>
+
+    <div class="mcq-card">
+      <div class="mcq-num">Question 1</div>
+      <div class="mcq-stem">Which symbol correctly represents a magnetic field vector pointing OUT of the page?</div>
+      <div class="mcq-options">
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">A.</span><span class="mcq-text">⊗ (cross inside circle)</span></div>
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">B.</span><span class="mcq-text">⊙ (dot inside circle)</span></div>
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">C.</span><span class="mcq-text">→ (right-pointing arrow)</span></div>
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">D.</span><span class="mcq-text">↓ (downward arrow)</span></div>
+      </div>
+    </div>
+
+    <div class="mcq-card">
+      <div class="mcq-num">Question 2</div>
+      <div class="mcq-stem">The cross symbol ⊗ used in 3D vector notation is analogous to which part of an arrow in flight?</div>
+      <div class="mcq-options">
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">A.</span><span class="mcq-text">The sharp metal arrowhead</span></div>
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">B.</span><span class="mcq-text">The wooden shaft (body) of the arrow</span></div>
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">C.</span><span class="mcq-text">The tail feathers (fletching) of the arrow</span></div>
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">D.</span><span class="mcq-text">The string of the bow</span></div>
+      </div>
+    </div>
+
+    <div class="mcq-card">
+      <div class="mcq-num">Question 3</div>
+      <div class="mcq-stem">In a standard 3D coordinate system, the z-axis is:</div>
+      <div class="mcq-options">
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">A.</span><span class="mcq-text">Parallel to both x and y axes</span></div>
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">B.</span><span class="mcq-text">The same as the x-axis, just renamed</span></div>
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">C.</span><span class="mcq-text">Perpendicular to the x-y plane — pointing in or out of the page</span></div>
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">D.</span><span class="mcq-text">A diagonal between x and y</span></div>
+      </div>
+    </div>
+
+    <div class="mcq-card">
+      <div class="mcq-num">Question 4</div>
+      <div class="mcq-stem">Using the laptop screen analogy, which axis comes OUT toward you from the screen?</div>
+      <div class="mcq-options">
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">A.</span><span class="mcq-text">x-axis</span></div>
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">B.</span><span class="mcq-text">y-axis</span></div>
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">C.</span><span class="mcq-text">z-axis</span></div>
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">D.</span><span class="mcq-text">w-axis</span></div>
+      </div>
+    </div>
+
+    <div class="mcq-card">
+      <div class="mcq-num">Question 5</div>
+      <div class="mcq-stem">A physics diagram shows this pattern on both sides of a wire:<br><br>
+      Left side: &nbsp; ⊙ ⊙ ⊙ &nbsp;&nbsp;&nbsp; Right side: &nbsp; ⊗ ⊗ ⊗<br><br>
+      In which direction is the current flowing through the wire?</div>
+      <div class="mcq-options">
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">A.</span><span class="mcq-text">Upward out of the page (positive z)</span></div>
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">B.</span><span class="mcq-text">Downward into the page (negative z)</span></div>
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">C.</span><span class="mcq-text">To the right (positive x)</span></div>
+        <div class="mcq-opt"><div class="mcq-circle"></div><span class="mcq-let">D.</span><span class="mcq-text">Upward (positive y)</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Part B: Field pattern analysis -->
+  <section>
+    <h2>Part B — Read the Field Pattern</h2>
+    <p class="instructions">Each diagram below shows a pre-drawn magnetic field pattern around a wire. Determine the direction of the current and explain your reasoning.</p>
+
+    <div class="pattern-card">
+      <div class="pc-num">Question 6</div>
+      <div class="pc-text">Examine the field pattern shown below.</div>
+      <div class="pc-sub">Left side shows ⊗, right side shows ⊙. What is the current direction?</div>
+      <div class="mini-scene">
+        <div class="ms-left" style="background:#fff7ed;">
+          <div class="ms-label" style="color:#92400e;">Left side</div>
+          <div class="mini-field">
+            <div class="mf mf-cross">⊗</div><div class="mf mf-cross">⊗</div><div class="mf mf-cross">⊗</div>
+            <div class="mf mf-cross">⊗</div><div class="mf mf-cross">⊗</div><div class="mf mf-cross">⊗</div>
+          </div>
+        </div>
+        <div class="ms-wire"></div>
+        <div class="ms-right" style="background:#f0fdf4;">
+          <div class="ms-label" style="color:#166534;">Right side</div>
+          <div class="mini-field">
+            <div class="mf mf-dot">⊙</div><div class="mf mf-dot">⊙</div><div class="mf mf-dot">⊙</div>
+            <div class="mf mf-dot">⊙</div><div class="mf mf-dot">⊙</div><div class="mf mf-dot">⊙</div>
+          </div>
+        </div>
+      </div>
+      <span class="answer-label">Current direction:</span><span class="answer-line" style="width:180px;"></span>
+      <div class="write-lines" style="margin-top:12px;"><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="pattern-card">
+      <div class="pc-num">Question 7</div>
+      <div class="pc-text">Examine this reversed field pattern.</div>
+      <div class="pc-sub">Left side shows ⊙, right side shows ⊗. What changed, and what does it tell us?</div>
+      <div class="mini-scene">
+        <div class="ms-left" style="background:#f0fdf4;">
+          <div class="ms-label" style="color:#166534;">Left side</div>
+          <div class="mini-field">
+            <div class="mf mf-dot">⊙</div><div class="mf mf-dot">⊙</div><div class="mf mf-dot">⊙</div>
+            <div class="mf mf-dot">⊙</div><div class="mf mf-dot">⊙</div><div class="mf mf-dot">⊙</div>
+          </div>
+        </div>
+        <div class="ms-wire"></div>
+        <div class="ms-right" style="background:#fff7ed;">
+          <div class="ms-label" style="color:#92400e;">Right side</div>
+          <div class="mini-field">
+            <div class="mf mf-cross">⊗</div><div class="mf mf-cross">⊗</div><div class="mf mf-cross">⊗</div>
+            <div class="mf mf-cross">⊗</div><div class="mf mf-cross">⊗</div><div class="mf mf-cross">⊗</div>
+          </div>
+        </div>
+      </div>
+      <span class="answer-label">Current direction:</span><span class="answer-line" style="width:180px;"></span>
+      <div class="write-lines" style="margin-top:12px;"><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <!-- Part C: Complete the diagram -->
+  <section>
+    <h2>Part C — Complete the Diagram</h2>
+    <p class="instructions">Fill in the blank cells with the correct symbol (⊙ or ⊗) based on the current direction given.</p>
+
+    <div class="draw-task">
+      <div class="dt-num">Question 8</div>
+      <div class="dt-text">Current is flowing UPWARD out of the page through the central wire.</div>
+      <div class="dt-sub">Fill in ALL cells on both sides of the wire with the correct 3D field direction symbols.</div>
+      <div class="blank-scene">
+        <div class="bs-left">
+          <div class="bs-label">Left side — field goes ___ page</div>
+          <div class="blank-grid">
+            <div class="blank-cell"></div><div class="blank-cell"></div>
+            <div class="blank-cell"></div><div class="blank-cell"></div>
+            <div class="blank-cell"></div><div class="blank-cell"></div>
+            <div class="blank-cell"></div><div class="blank-cell"></div>
+          </div>
+        </div>
+        <div class="bs-wire"></div>
+        <div class="bs-right">
+          <div class="bs-label">Right side — field goes ___ page</div>
+          <div class="blank-grid">
+            <div class="blank-cell"></div><div class="blank-cell"></div>
+            <div class="blank-cell"></div><div class="blank-cell"></div>
+            <div class="blank-cell"></div><div class="blank-cell"></div>
+            <div class="blank-cell"></div><div class="blank-cell"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="draw-task">
+      <div class="dt-num">Question 9</div>
+      <div class="dt-text">The current through the wire is reversed: now flowing DOWNWARD into the page.</div>
+      <div class="dt-sub">Fill in ALL cells. Compare to Question 8 — what is different?</div>
+      <div class="blank-scene">
+        <div class="bs-left">
+          <div class="bs-label">Left side — field goes ___ page</div>
+          <div class="blank-grid">
+            <div class="blank-cell"></div><div class="blank-cell"></div>
+            <div class="blank-cell"></div><div class="blank-cell"></div>
+            <div class="blank-cell"></div><div class="blank-cell"></div>
+            <div class="blank-cell"></div><div class="blank-cell"></div>
+          </div>
+        </div>
+        <div class="bs-wire"></div>
+        <div class="bs-right">
+          <div class="bs-label">Right side — field goes ___ page</div>
+          <div class="blank-grid">
+            <div class="blank-cell"></div><div class="blank-cell"></div>
+            <div class="blank-cell"></div><div class="blank-cell"></div>
+            <div class="blank-cell"></div><div class="blank-cell"></div>
+            <div class="blank-cell"></div><div class="blank-cell"></div>
+          </div>
+        </div>
+      </div>
+      <div class="write-lines" style="margin-top:14px;"><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <!-- Part D: Extended response -->
+  <section>
+    <h2>Part D — Extended Response</h2>
+    <p class="instructions">Answer each question in complete sentences. These questions assess your conceptual understanding.</p>
+
+    <div class="prob-card">
+      <div class="pnum">Question 10</div>
+      <div class="ptext">A student is drawing a physics diagram of a magnetic field and writes "B = 0.5 T to the right." Is this description complete for a 3D situation? What additional information might be needed, and how would you show it?</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="prob-card">
+      <div class="pnum">Question 11</div>
+      <div class="ptext">Describe what a "dimension" means in physics. Explain why each axis must be at 90° to the others, and what would happen if two axes were NOT at 90°.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="prob-card">
+      <div class="pnum">Question 12</div>
+      <div class="ptext">A friend who missed class asks: "Why do we use a dot for out-of-page and a cross for into-page? Why not just write the words?" Give them two reasons why the dot/cross notation is better in physics diagrams.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="prob-card" style="border-left:4px solid #6366f1;">
+      <div class="pnum" style="color:#6366f1;">Question 13 — IB Exam Style (Extended)</div>
+      <div class="ptext">The diagram below shows a cross-sectional view of a current-carrying wire surrounded by its magnetic field.</div>
+      <div class="psub">Region A (left): magnetic field is INTO the page &nbsp;|&nbsp; Region B (right): magnetic field is OUT OF the page</div>
+      <div style="background:#f8fafc;border-radius:8px;padding:14px;margin-bottom:14px;font-size:0.88rem;color:#374151;">
+        <div style="font-weight:700;margin-bottom:8px;">Part (a):</div>
+        <p>Draw the correct symbols in Region A and Region B to represent the magnetic field directions described above.</p>
+      </div>
+      <div style="background:#f8fafc;border-radius:8px;padding:14px;margin-bottom:14px;font-size:0.88rem;color:#374151;">
+        <div style="font-weight:700;margin-bottom:8px;">Part (b):</div>
+        <p>State the direction of the current in the wire and explain how you determined this from the field pattern.</p>
+      </div>
+      <div style="background:#f8fafc;border-radius:8px;padding:14px;margin-bottom:14px;font-size:0.88rem;color:#374151;">
+        <div style="font-weight:700;margin-bottom:8px;">Part (c):</div>
+        <p>If the current were doubled in magnitude but kept in the same direction, how would the magnetic field pattern change? Would the symbols need to change?</p>
+      </div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <!-- Answer Key -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="document.getElementById('answer-key').style.display=(document.getElementById('answer-key').style.display==='none'?'block':'none');this.textContent=(document.getElementById('answer-key').style.display==='none'?'Show Answer Key':'Hide Answer Key');">Show Answer Key</button>
+  </div>
+
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A — Multiple Choice</h3>
+      <div class="key-grid">
+        <div class="key-item"><span class="knum">Question 1</span><span class="kans">B — ⊙ (dot inside circle)</span><div class="kexpl">⊙ = arrowhead coming toward you = out of page</div></div>
+        <div class="key-item"><span class="knum">Question 2</span><span class="kans">C — Tail feathers (fletching)</span><div class="kexpl">The cross looks like the feathered tail of an arrow flying away</div></div>
+        <div class="key-item"><span class="knum">Question 3</span><span class="kans">C — Perpendicular to the x-y plane</span><div class="kexpl">z is at 90° to both x and y; it points in/out of the page</div></div>
+        <div class="key-item"><span class="knum">Question 4</span><span class="kans">C — z-axis</span><div class="kexpl">z comes out toward you (or goes away from you into the screen)</div></div>
+        <div class="key-item"><span class="knum">Question 5</span><span class="kans">B — Into the page (negative z)</span><div class="kexpl">⊙ on left and ⊗ on right = current flowing into the page</div></div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B — Read the Field Pattern</h3>
+      <div class="key-text"><strong>Question 6:</strong> Current is flowing UPWARD out of the page.<br>Reasoning: ⊗ (into page) on the left and ⊙ (out of page) on the right matches the standard pattern for current flowing out of the page.</div>
+      <div class="key-text"><strong>Question 7:</strong> Current is flowing DOWNWARD into the page.<br>Reasoning: ⊙ (out of page) on the left and ⊗ (into page) on the right — the entire pattern is flipped compared to Q6. When current reverses, the magnetic field reverses with it.</div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C — Complete the Diagram</h3>
+      <div class="key-text"><strong>Question 8 — Current out of page:</strong><br>Left side: all ⊗ (field into the page) &nbsp;·&nbsp; blank: "into"<br>Right side: all ⊙ (field out of the page) &nbsp;·&nbsp; blank: "out of"</div>
+      <div class="key-text"><strong>Question 9 — Current into page:</strong><br>Left side: all ⊙ (field out of the page) &nbsp;·&nbsp; blank: "out of"<br>Right side: all ⊗ (field into the page) &nbsp;·&nbsp; blank: "into"<br><em>Difference: All symbols are swapped — reversing current direction reverses every field direction.</em></div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part D — Extended Response</h3>
+      <div class="key-text"><strong>Question 10:</strong> "B = 0.5 T to the right" describes the x-component only. In a 3D situation, the field could also have a y-component (up/down) or z-component (into/out of page). If the field is purely in the x-direction and we are looking at a flat 2D diagram, the description may be complete. But in a 3D context — e.g., a magnetic field around a wire — the field often has a z-component, which would be shown using ⊙ or ⊗ symbols on the diagram.</div>
+      <div class="key-text"><strong>Question 11:</strong> A dimension is an independent direction of motion — any movement along one axis cannot move you along another. Each axis must be at 90° to all others because this is the definition of independence. If two axes were NOT at 90°, moving along one would automatically create motion along the other — they would no longer be independent directions. You would not truly have an additional degree of freedom.</div>
+      <div class="key-text"><strong>Question 12:</strong> Accept any two good reasons, e.g.: (1) The symbols are compact and fit inside a diagram cell — words would take too much space. (2) The symbols are universal across languages — every physicist in the world recognizes ⊙ and ⊗ regardless of language. (3) The symbols are visually intuitive — they literally look like what they represent (arrowhead / tail feathers). (4) They can be drawn quickly in a grid to show a field pattern over a whole region.</div>
+      <div class="key-text"><strong>Question 13:</strong><br>(a) Region A (left): fill with ⊗ symbols; Region B (right): fill with ⊙ symbols.<br>(b) Current is flowing UPWARD out of the page. Reasoning: the pattern ⊗ on the left and ⊙ on the right matches a current flowing out of the page — the magnetic field circles the wire, going into the page on the left and out on the right.<br>(c) The symbols would NOT need to change. The same ⊗ and ⊙ pattern would remain — doubling the current doubles the strength (magnitude) of the field but does not change its direction. The symbols only convey direction, not magnitude.</div>
+    </div>
+  </div>
+
+</main>
+
+<footer style="text-align:center;padding:28px 20px;font-size:0.85rem;color:#94a3b8;">IB Physics · Unit 27: 3D Vectors — Homework &nbsp;·&nbsp; ⊙ = out of page &nbsp; ⊗ = into page</footer>
+
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organizing a Data Table — Physics Lesson</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root{--blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--teal:#0d9488;--dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);font-size:17px;line-height:1.75;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;}
+    header{background:linear-gradient(135deg,#134e4a 0%,#0f766e 55%,#0d9488 100%);color:white;padding:52px 60px 48px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 50%,rgba(20,184,166,0.3) 0%,transparent 60%),radial-gradient(ellipse at 75% 30%,rgba(6,182,212,0.2) 0%,transparent 55%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.4);}}
+    header .chip{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px;position:relative;}
+    header h1{font-size:2.9rem;font-weight:900;letter-spacing:-1px;position:relative;margin-bottom:10px;background:linear-gradient(90deg,#99f6e4,#a5f3fc,#99f6e4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1.05rem;color:rgba(255,255,255,0.82);position:relative;max-width:540px;margin:0 auto;}
+    main{max-width:960px;margin:48px auto;padding:0 24px 80px;}
+    section{margin-bottom:60px;}
+    .section-label{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+    .section-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    .section-label h2{font-size:1.5rem;font-weight:900;color:var(--dark);}
+
+    /* intro */
+    .intro-card{background:white;border-radius:18px;padding:26px 30px;box-shadow:0 4px 20px rgba(0,0,0,0.07);border-left:6px solid #0d9488;margin-bottom:24px;}
+    .intro-card p{color:#374151;font-size:0.95rem;margin-bottom:10px;}
+    .intro-card p:last-child{margin-bottom:0;}
+
+    /* table anatomy */
+    .anatomy-wrap{background:white;border-radius:18px;padding:28px 32px;box-shadow:0 4px 20px rgba(0,0,0,0.07);margin-bottom:28px;}
+    .anatomy-wrap h3{font-size:1.05rem;font-weight:800;color:#134e4a;margin-bottom:18px;}
+    .dt-label{font-size:0.78rem;font-weight:700;color:#0d9488;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+    .data-table{width:100%;border-collapse:collapse;font-size:0.88rem;}
+    .data-table th, .data-table td{border:2px solid #e2e8f0;padding:8px 12px;text-align:center;}
+    .data-table thead tr:first-child th{background:#134e4a;color:white;font-size:0.82rem;}
+    .data-table thead tr:last-child th{background:#0f766e;color:white;font-size:0.78rem;}
+    .data-table td{background:white;}
+    .data-table tr:nth-child(even) td{background:#f0fdfa;}
+    .col-iv{background:#dbeafe !important;font-weight:700;color:#1d4ed8;}
+    .col-dv1, .col-dv2, .col-dv3{background:#dcfce7 !important;}
+    .col-avg{background:#fef3c7 !important;font-weight:700;}
+    .col-stat{background:#fde8d8 !important;}
+    .col-err{background:#fee2e2 !important;font-weight:700;color:#991b1b;}
+
+    /* annotation cards */
+    .annot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+    @media(max-width:660px){.annot-grid{grid-template-columns:1fr;}}
+    .annot-card{border-radius:14px;padding:16px 18px;}
+    .annot-card h4{font-size:0.9rem;font-weight:800;margin-bottom:6px;}
+    .annot-card p{font-size:0.82rem;color:#374151;}
+    .ac-blue{background:#eff6ff;border:2px solid #bfdbfe;}
+    .ac-blue h4{color:#1d4ed8;}
+    .ac-green{background:#f0fdf4;border:2px solid #bbf7d0;}
+    .ac-green h4{color:#15803d;}
+    .ac-amber{background:#fffbeb;border:2px solid #fde68a;}
+    .ac-amber h4{color:#92400e;}
+    .ac-orange{background:#fff7ed;border:2px solid #fed7aa;}
+    .ac-orange h4{color:#c2410c;}
+    .ac-red{background:#fef2f2;border:2px solid #fecaca;}
+    .ac-red h4{color:#991b1b;}
+    .ac-teal{background:#f0fdfa;border:2px solid #99f6e4;}
+    .ac-teal h4{color:#134e4a;}
+
+    /* formula cards */
+    .formula-strip{background:linear-gradient(135deg,#134e4a,#0f766e);border-radius:18px;padding:28px 36px;color:white;margin-bottom:28px;}
+    .formula-strip h3{font-size:0.85rem;text-transform:uppercase;letter-spacing:1.5px;opacity:0.7;margin-bottom:16px;}
+    .fs-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+    @media(max-width:600px){.fs-grid{grid-template-columns:1fr;}}
+    .fs-item{background:rgba(255,255,255,0.1);border-radius:12px;padding:14px 18px;}
+    .fs-item h4{font-size:0.82rem;text-transform:uppercase;letter-spacing:0.5px;opacity:0.75;margin-bottom:8px;}
+    .fs-item .eq{font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;}
+
+    /* worked example */
+    .worked-block{background:white;border-radius:18px;box-shadow:0 4px 20px rgba(0,0,0,0.07);overflow:hidden;margin-bottom:24px;}
+    .wb-head{background:linear-gradient(135deg,#134e4a,#0f766e);color:white;padding:16px 24px;display:flex;align-items:center;gap:14px;}
+    .wb-badge{background:rgba(255,255,255,0.2);font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:4px 14px;border-radius:20px;}
+    .wb-title{font-size:1rem;font-weight:700;}
+    .wb-body{padding:22px 28px;}
+    .wb-body p{font-size:0.92rem;color:#374151;margin-bottom:10px;}
+
+    /* axis rules */
+    .axis-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px;}
+    @media(max-width:600px){.axis-grid{grid-template-columns:1fr;}}
+    .axis-card{border-radius:14px;padding:18px 20px;border:2px solid;}
+    .ax-x{background:#eff6ff;border-color:#93c5fd;}
+    .ax-x h4{color:#1d4ed8;font-size:0.95rem;font-weight:800;margin-bottom:8px;}
+    .ax-y{background:#f0fdf4;border-color:#86efac;}
+    .ax-y h4{color:#15803d;font-size:0.95rem;font-weight:800;margin-bottom:8px;}
+    .axis-card p{font-size:0.88rem;color:#374151;}
+    .axis-card .example{font-family:'Space Mono',monospace;font-size:0.9rem;background:white;padding:6px 12px;border-radius:8px;display:inline-block;margin-top:8px;}
+
+    /* error bar callout */
+    .error-bar-box{background:#fef2f2;border:2px solid #fca5a5;border-radius:16px;padding:22px 26px;margin-bottom:24px;}
+    .error-bar-box h3{font-size:1rem;font-weight:800;color:#991b1b;margin-bottom:10px;}
+    .error-bar-box p{font-size:0.9rem;color:#7f1d1d;}
+    .error-bar-box .rule{font-family:'Space Mono',monospace;font-size:0.95rem;background:white;padding:8px 16px;border-radius:8px;display:inline-block;margin-top:8px;color:#991b1b;font-weight:700;}
+
+    /* tip */
+    .tip-box{background:#fffbeb;border:2px solid #fde68a;border-radius:14px;padding:16px 22px;margin-bottom:24px;}
+    .tip-box h4{font-size:0.92rem;font-weight:800;color:#92400e;margin-bottom:6px;}
+    .tip-box p{font-size:0.87rem;color:#78350f;}
+
+    /* quiz */
+    .quiz-section{background:linear-gradient(135deg,#134e4a,#0f766e);border-radius:20px;padding:32px;color:white;}
+    .quiz-section h3{font-size:1.3rem;font-weight:900;margin-bottom:6px;}
+    .quiz-section p{font-size:0.88rem;opacity:0.75;margin-bottom:24px;}
+    .quiz-q{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:18px 22px;margin-bottom:14px;}
+    .quiz-q .qtext{font-size:0.95rem;margin-bottom:14px;font-weight:700;}
+    .options{display:flex;flex-wrap:wrap;gap:10px;}
+    .opt-btn{background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);color:white;font-family:'Nunito',sans-serif;font-size:0.88rem;font-weight:700;padding:8px 16px;border-radius:30px;cursor:pointer;transition:all 0.2s;}
+    .opt-btn:hover{background:rgba(255,255,255,0.2);transform:scale(1.04);}
+    .opt-btn.correct{background:#22c55e;border-color:#22c55e;animation:popIn 0.3s ease;}
+    .opt-btn.wrong{background:#ef4444;border-color:#ef4444;}
+    .feedback{font-size:0.85rem;margin-top:10px;padding:8px 14px;border-radius:8px;display:none;}
+    .feedback.show{display:block;}
+    .feedback.ok{background:rgba(34,197,94,0.2);color:#bbf7d0;}
+    .feedback.bad{background:rgba(239,68,68,0.2);color:#fecaca;}
+    @keyframes popIn{0%{transform:scale(0.9);}60%{transform:scale(1.1);}100%{transform:scale(1);}}
+    footer{text-align:center;padding:32px 20px;font-size:0.85rem;color:var(--muted);}
+  </style>
+</head>
+<body>
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="star" style="width:3px;height:3px;top:12%;left:8%;animation-delay:0s"></div>
+  <div class="star" style="width:2px;height:2px;top:25%;left:15%;animation-delay:0.5s"></div>
+  <div class="star" style="width:4px;height:4px;top:10%;left:32%;animation-delay:1s"></div>
+  <div class="star" style="width:3px;height:3px;top:68%;left:22%;animation-delay:0.3s"></div>
+  <div class="star" style="width:2px;height:2px;top:18%;left:76%;animation-delay:0.8s"></div>
+  <div class="star" style="width:4px;height:4px;top:42%;left:88%;animation-delay:1.2s"></div>
+  <div class="chip">⚛️ Physics · High School · Lab Skills</div>
+  <h1>Organizing a Data Table</h1>
+  <p class="subtitle">Learn how to build a complete IB Physics data table — with IV, DV trials, averages, statistical uncertainty, and error bars</p>
+</header>
+
+<main>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#ccfbf1;">📋</div>
+    <h2>What Is a Data Table?</h2>
+  </div>
+  <div class="intro-card">
+    <p>A <strong>data table</strong> is where you record the data from your experiment before displaying it as a graph. In IB Physics, every data table has a specific structure with labeled columns for the independent variable, repeated trials of the dependent variable, averages, statistical uncertainty, and error bars.</p>
+    <p>A good data table makes your experiment <em>reproducible</em> and your uncertainty <em>transparent</em>. It is the foundation of every IB lab report.</p>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#d1fae5;">🗂️</div>
+    <h2>Anatomy of an IB Data Table</h2>
+  </div>
+  <div class="anatomy-wrap">
+    <h3>Standard IB Data Table Structure</h3>
+    <p style="font-size:0.85rem;color:#64748b;margin-bottom:6px;">Data Table: &nbsp;&nbsp;&nbsp; Control Values: _______________</p>
+    <div style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th rowspan="2" class="col-iv">IV<br>±____</th>
+            <th colspan="3">DV: ___<br>±____</th>
+            <th rowspan="2" class="col-avg">Average DV</th>
+            <th rowspan="2" class="col-stat">Statistical<br>Uncertainty</th>
+            <th rowspan="2" class="col-err">Error Bars</th>
+          </tr>
+          <tr>
+            <th class="col-dv1">Trial 1</th>
+            <th class="col-dv2">Trial 2</th>
+            <th class="col-dv3">Trial 3</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-iv"></td><td></td><td></td><td></td><td class="col-avg"></td><td class="col-stat"></td><td class="col-err"></td></tr>
+          <tr><td class="col-iv"></td><td></td><td></td><td></td><td class="col-avg"></td><td class="col-stat"></td><td class="col-err"></td></tr>
+          <tr><td class="col-iv"></td><td></td><td></td><td></td><td class="col-avg"></td><td class="col-stat"></td><td class="col-err"></td></tr>
+          <tr><td class="col-iv"></td><td></td><td></td><td></td><td class="col-avg"></td><td class="col-stat"></td><td class="col-err"></td></tr>
+          <tr><td class="col-iv"></td><td></td><td></td><td></td><td class="col-avg"></td><td class="col-stat"></td><td class="col-err"></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="annot-grid">
+    <div class="annot-card ac-blue">
+      <h4>IV Column (blue)</h4>
+      <p>Independent Variable — what you control and change. Label as: <em>variable name / unit</em>. Include the measurement uncertainty (±) in the header.</p>
+    </div>
+    <div class="annot-card ac-green">
+      <h4>DV Trials (green)</h4>
+      <p>Dependent Variable — what you measure. At least 3 repeated trials. Label the DV header with name and unit; each trial column just needs "Trial 1", "Trial 2", "Trial 3".</p>
+    </div>
+    <div class="annot-card ac-amber">
+      <h4>Average DV (yellow)</h4>
+      <p>Mean of the trials: <strong>Average = sum of trials ÷ number of trials</strong>. This is the value you plot on the graph.</p>
+    </div>
+    <div class="annot-card ac-orange">
+      <h4>Statistical Uncertainty (orange)</h4>
+      <p>How spread out are the trials? Formula: <strong>±(max − min) / 2</strong>. This reflects how repeatable your measurements are.</p>
+    </div>
+    <div class="annot-card ac-red">
+      <h4>Error Bars (red)</h4>
+      <p>The larger of the measurement uncertainty and the statistical uncertainty. This is what you actually draw on the graph as error bars.</p>
+    </div>
+    <div class="annot-card ac-teal">
+      <h4>Control Values</h4>
+      <p>Variables you kept constant throughout. List them above the table. These show the reader you ran a fair test.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fef3c7;">🧮</div>
+    <h2>Key Formulas</h2>
+  </div>
+  <div class="formula-strip">
+    <h3>Data Table Calculations</h3>
+    <div class="fs-grid">
+      <div class="fs-item">
+        <h4>Average DV</h4>
+        <div class="eq">Average = (T1 + T2 + T3) / 3</div>
+      </div>
+      <div class="fs-item">
+        <h4>Statistical Uncertainty</h4>
+        <div class="eq">Δ_stat = (max − min) / 2</div>
+      </div>
+      <div class="fs-item">
+        <h4>Error Bar value</h4>
+        <div class="eq">Error Bar = larger of (Δ_measurement, Δ_stat)</div>
+      </div>
+      <div class="fs-item">
+        <h4>Column Label Format</h4>
+        <div class="eq">Variable name / unit</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#dcfce7;">🔬</div>
+    <h2>Worked Example — Spring Stretch</h2>
+  </div>
+  <div class="intro-card" style="border-left-color:#15803d;">
+    <p><strong>Research Question:</strong> How does the mass of an object hung from a spring affect the stretch of the spring?</p>
+    <p><strong>Control Values:</strong> Wire diameter &amp; length, coil diameter, material of spring, temperature</p>
+    <p><strong>IV:</strong> Mass (kg) ± 0.001 &nbsp;|&nbsp; <strong>DV:</strong> Stretch (m) ± 0.001</p>
+  </div>
+
+  <div style="overflow-x:auto;margin-bottom:18px;">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th rowspan="2" class="col-iv">IV: Mass (kg)<br>± 0.001</th>
+          <th colspan="3">DV: Stretch (m) ± 0.001</th>
+          <th rowspan="2" class="col-avg">Average DV (m)</th>
+          <th rowspan="2" class="col-stat">Statistical<br>Uncertainty</th>
+          <th rowspan="2" class="col-err">Error Bars</th>
+        </tr>
+        <tr><th>Trial 1</th><th>Trial 2</th><th>Trial 3</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="col-iv">0.050</td><td>0.012</td><td>0.010</td><td>0.008</td><td class="col-avg">0.010</td><td class="col-stat">0.002</td><td class="col-err">0.002</td></tr>
+        <tr><td class="col-iv">0.100</td><td>0.018</td><td>0.022</td><td>0.022</td><td class="col-avg">0.021</td><td class="col-stat">0.002</td><td class="col-err">0.002</td></tr>
+        <tr><td class="col-iv">0.150</td><td>0.030</td><td>0.031</td><td>0.029</td><td class="col-avg">0.030</td><td class="col-stat">0.001</td><td class="col-err">0.001</td></tr>
+        <tr><td class="col-iv">0.200</td><td>0.040</td><td>0.042</td><td>0.038</td><td class="col-avg">0.040</td><td class="col-stat">0.002</td><td class="col-err">0.002</td></tr>
+        <tr><td class="col-iv">0.250</td><td>0.052</td><td>0.050</td><td>0.048</td><td class="col-avg">0.050</td><td class="col-stat">0.002</td><td class="col-err">0.002</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="worked-block">
+    <div class="wb-head">
+      <div class="wb-badge">Row 1 worked</div>
+      <div class="wb-title">Mass = 0.050 kg — calculating each column</div>
+    </div>
+    <div class="wb-body">
+      <p><strong>Average:</strong> (0.012 + 0.010 + 0.008) / 3 = 0.030 / 3 = <strong>0.010 m</strong></p>
+      <p><strong>Statistical Uncertainty:</strong> (max − min) / 2 = (0.012 − 0.008) / 2 = 0.004 / 2 = <strong>± 0.002 m</strong></p>
+      <p><strong>Error Bar:</strong> Compare measurement uncertainty (± 0.001 m) with statistical uncertainty (± 0.002 m). The larger is <strong>0.002 m</strong>, so the error bar = ± 0.002 m.</p>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <h4>Why is the error bar the LARGER uncertainty?</h4>
+    <p>The error bar must represent the total uncertainty in your DV. If your measurements scatter more than your instrument precision (statistical > measurement), the scatter dominates. If your instrument is less precise than the scatter (measurement > statistical), the instrument limit dominates. Always use whichever is larger — it's the most honest representation of how uncertain your data point is.</p>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#dbeafe;">📊</div>
+    <h2>Worked Example 2 — Marbles</h2>
+  </div>
+  <div style="overflow-x:auto;margin-bottom:18px;">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th rowspan="2" class="col-iv">IV: Diameter (mm)<br>± 0.2</th>
+          <th colspan="3">DV: # of Marbles (f)</th>
+          <th rowspan="2" class="col-avg">Average DV (f)</th>
+          <th rowspan="2" class="col-stat">Statistical<br>Uncertainty</th>
+          <th rowspan="2" class="col-err">Error Bars</th>
+        </tr>
+        <tr><th>Trial 1</th><th>Trial 2</th><th>Trial 3</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="col-iv">0.0</td><td>0</td><td>0</td><td>0</td><td class="col-avg">0</td><td class="col-stat">0</td><td class="col-err">1</td></tr>
+        <tr><td class="col-iv">3.8</td><td>4</td><td>4</td><td>4</td><td class="col-avg">4</td><td class="col-stat">0</td><td class="col-err">1</td></tr>
+        <tr><td class="col-iv">4.7</td><td>6</td><td>6</td><td>6</td><td class="col-avg">6</td><td class="col-stat">0</td><td class="col-err">1</td></tr>
+        <tr><td class="col-iv">7.2</td><td>17</td><td>17</td><td>18</td><td class="col-avg">17</td><td class="col-stat">0.5</td><td class="col-err">1</td></tr>
+        <tr><td class="col-iv">9.8</td><td>30</td><td>31</td><td>30</td><td class="col-avg">30</td><td class="col-stat">0.5</td><td class="col-err">1</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="intro-card" style="border-left-color:#1d4ed8;">
+    <p><strong>Control values:</strong> Marble material, temperature. In this experiment the DV (count of marbles) has no measurement instrument — so the measurement uncertainty is ±1 (you can't count half a marble). Even when statistical uncertainty is 0, the error bar remains 1 because that is the measurement precision floor.</p>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fee2e2;">⚠️</div>
+    <h2>Error Bars &amp; Axis Rules</h2>
+  </div>
+
+  <div class="error-bar-box">
+    <h3>Error Bar Rule</h3>
+    <p>To find the error bar value, compare the measurement uncertainty and statistical uncertainty of the DV. The <strong>larger uncertainty</strong> is the error bar value.</p>
+    <div class="rule">Error Bar = max( Δ_measurement , Δ_statistical )</div>
+    <p style="margin-top:10px;">The error bar column in your data table is what you actually draw on the graph for each data point.</p>
+  </div>
+
+  <div class="axis-grid">
+    <div class="axis-card ax-x">
+      <h4>X Axis (Horizontal) — Always the IV</h4>
+      <p>The Independent Variable always goes on the x (horizontal) axis. Label each axis with the <strong>variable name / unit</strong>.</p>
+      <div class="example">Mass (kg)</div>
+    </div>
+    <div class="axis-card ax-y">
+      <h4>Y Axis (Vertical) — Always the DV</h4>
+      <p>The Dependent Variable always goes on the y (vertical) axis. Error bars from your table are plotted on this axis (Y-axis error bars).</p>
+      <div class="example">Stretch (m)</div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <h4>X-axis vs Y-axis error bars</h4>
+    <p>The IV uncertainty (e.g. ± 0.001 kg on mass) gives you <strong>X-axis error bars</strong>. The Error Bar column from your table (larger of measurement vs statistical uncertainty of the DV) gives you <strong>Y-axis error bars</strong>. Both are plotted on your graph. In many experiments X error bars are very small compared to Y error bars.</p>
+  </div>
+</section>
+
+<section>
+  <div class="quiz-section">
+    <h3>⚡ Quick Check</h3>
+    <p>Test your data table knowledge.</p>
+    <div class="quiz-q" id="q1">
+      <div class="qtext">Three trials of a stretch measurement give: 0.030, 0.031, 0.029 m. What is the statistical uncertainty?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q1',false,'(max−min)/2 = (0.031−0.029)/2 = 0.002/2 = 0.001, not 0.002.')">± 0.002 m</button>
+        <button class="opt-btn" onclick="check(this,'q1',true,'Correct! (max−min)/2 = (0.031−0.029)/2 = 0.001 m')">± 0.001 m</button>
+        <button class="opt-btn" onclick="check(this,'q1',false,'The average is 0.030, but statistical uncertainty = (max−min)/2 = 0.001.')">± 0.030 m</button>
+      </div>
+      <div class="feedback" id="q1-fb"></div>
+    </div>
+    <div class="quiz-q" id="q2">
+      <div class="qtext">The measurement uncertainty of the DV is ± 0.001 m. The statistical uncertainty for a row is ± 0.002 m. What is the error bar?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q2',false,'We take the LARGER, not add them together.')">± 0.003 m</button>
+        <button class="opt-btn" onclick="check(this,'q2',false,'We take the LARGER uncertainty, not the smaller.')">± 0.001 m</button>
+        <button class="opt-btn" onclick="check(this,'q2',true,'Correct! Error bar = larger of (0.001, 0.002) = 0.002 m.')">± 0.002 m</button>
+      </div>
+      <div class="feedback" id="q2-fb"></div>
+    </div>
+    <div class="quiz-q" id="q3">
+      <div class="qtext">Which variable goes on the x-axis (horizontal) of your graph?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q3',false,'The DV goes on the y (vertical) axis.')">The Dependent Variable (DV)</button>
+        <button class="opt-btn" onclick="check(this,'q3',true,'Correct! The Independent Variable (IV) always goes on the x (horizontal) axis.')">The Independent Variable (IV)</button>
+        <button class="opt-btn" onclick="check(this,'q3',false,'The average goes on the y-axis as the plotted value, not the x-axis.')">The Average DV</button>
+      </div>
+      <div class="feedback" id="q3-fb"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer>Physics · High School &nbsp;·&nbsp; Unit 14: Organizing a Data Table · IB Physics Lab Skills</footer>
+<script>
+function check(btn,qid,correct,msg){
+  var q=document.getElementById(qid);var fb=document.getElementById(qid+'-fb');
+  q.querySelectorAll('.opt-btn').forEach(function(b){b.disabled=true;b.style.opacity='0.55';b.style.cursor='default';});
+  btn.style.opacity='1';btn.classList.add(correct?'correct':'wrong');
+  fb.textContent=(correct?'✅ ':'❌ ')+msg;fb.className='feedback show '+(correct?'ok':'bad');
+}
+</script>
+</body>
+</html>

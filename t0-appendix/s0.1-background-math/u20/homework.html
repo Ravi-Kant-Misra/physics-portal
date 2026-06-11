@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finding the Angle of a Vector — Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root{
+      --purple:#7c3aed;--violet:#6d28d9;--deep:#4c1d95;
+      --green:#22c55e;--amber:#f59e0b;--red:#ef4444;--blue:#3b82f6;
+      --teal:#0891b2;
+      --dark:#0f172a;--bg:#f5f3ff;--muted:#94a3b8;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:17px;line-height:1.75;background-image:radial-gradient(circle,#ddd6fe 1px,transparent 1px);background-size:28px 28px;}
+
+    /* LOCK */
+    #lock-screen{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#4c1d95 0%,#6d28d9 50%,#7c3aed 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
+    #lock-screen .lock-icon{font-size:3.5rem;animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
+    #lock-screen h2{color:white;font-size:1.8rem;font-weight:900;}
+    #lock-screen p{color:rgba(255,255,255,0.75);font-size:1rem;}
+    #lock-screen .pw-box{display:flex;gap:10px;align-items:center;margin-top:8px;}
+    #pw-input{padding:12px 20px;border-radius:12px;border:2px solid rgba(255,255,255,0.4);background:rgba(255,255,255,0.15);color:white;font-size:1.1rem;font-family:'Nunito',sans-serif;font-weight:700;width:220px;outline:none;}
+    #pw-input::placeholder{color:rgba(255,255,255,0.5);}
+    #pw-input:focus{border-color:white;}
+    #pw-btn{padding:12px 24px;border-radius:12px;border:none;background:white;color:var(--deep);font-family:'Nunito',sans-serif;font-weight:900;font-size:1rem;cursor:pointer;transition:transform 0.15s;}
+    #pw-btn:hover{transform:scale(1.05);}
+    #pw-error{color:#fca5a5;font-size:0.9rem;font-weight:700;min-height:20px;}
+
+    /* HEADER */
+    header{background:linear-gradient(135deg,#4c1d95 0%,#6d28d9 50%,#7c3aed 100%);color:white;padding:44px 60px 40px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(167,139,250,0.35) 0%,transparent 60%),radial-gradient(ellipse at 80% 30%,rgba(196,181,253,0.25) 0%,transparent 55%);pointer-events:none;}
+    header .chip{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;position:relative;}
+    header h1{font-size:2.6rem;font-weight:900;letter-spacing:-0.5px;position:relative;margin-bottom:8px;background:linear-gradient(90deg,#c4b5fd,#e9d5ff,#f5d0fe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1rem;color:rgba(255,255,255,0.75);position:relative;}
+    header .meta{display:flex;gap:24px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
+    header .meta-item{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:4px 14px;font-size:0.82rem;color:rgba(255,255,255,0.85);font-weight:700;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;}to{opacity:0.9;}}
+
+    /* LAYOUT */
+    main{max-width:900px;margin:40px auto;padding:0 24px 80px;}
+
+    /* FORMULA QUICK REF */
+    .formula-ref{background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:14px;padding:14px 22px;color:white;margin-bottom:24px;display:flex;gap:24px;flex-wrap:wrap;justify-content:center;}
+    .fr-item{text-align:center;}
+    .fr-item .fr-label{font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:4px;}
+    .fr-item .fr-formula{font-family:'Space Mono',monospace;font-size:0.9rem;font-weight:700;color:#c4b5fd;}
+
+    /* INSTRUCT */
+    .instruct-banner{background:linear-gradient(135deg,#4c1d95,#7c3aed);border-radius:16px;padding:16px 22px;color:white;margin-bottom:28px;display:flex;gap:14px;align-items:center;}
+    .ib-icon{font-size:2rem;flex-shrink:0;}
+    .ib-body p{font-size:0.88rem;color:rgba(255,255,255,0.9);}
+
+    /* SECTION LABEL */
+    .section-label{display:flex;align-items:center;gap:12px;margin-bottom:18px;margin-top:40px;}
+    .section-icon{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;font-weight:900;flex-shrink:0;}
+    .section-label h2{font-size:1.3rem;font-weight:900;}
+
+    /* PROBLEM CARD (purple) */
+    .problem-card{background:white;border-radius:18px;margin-bottom:20px;box-shadow:0 4px 20px rgba(109,40,217,0.09);overflow:hidden;border-left:5px solid var(--purple);}
+    .pc-header{display:flex;align-items:center;gap:14px;padding:13px 22px;background:#faf5ff;border-bottom:2px solid #ede9fe;}
+    .pc-num{background:var(--deep);color:white;font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:3px 13px;border-radius:20px;}
+    .pc-type{font-size:0.78rem;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:0.5px;}
+    .pc-body{padding:18px 22px;}
+    .scenario{font-size:0.96rem;color:#1e293b;margin-bottom:12px;font-weight:600;}
+    .given-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+    .g-chip{background:#f1f5f9;border-radius:8px;padding:3px 11px;font-size:0.83rem;font-weight:700;color:#334155;}
+    .g-chip.v{background:#fee2e2;color:#7f1d1d;}
+    .g-chip.h{background:#dbeafe;color:#1e3a8a;}
+    .g-chip.hyp{background:#f3e8ff;color:#5b21b6;}
+
+    /* TEAL CARD for extended/challenging */
+    .extended-card{background:white;border-radius:18px;margin-bottom:20px;box-shadow:0 4px 20px rgba(8,145,178,0.1);overflow:hidden;border-left:5px solid var(--teal);}
+    .ec-header{display:flex;align-items:center;gap:14px;padding:13px 22px;background:#ecfeff;border-bottom:2px solid #a5f3fc;}
+    .ec-num{background:#164e63;color:white;font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:3px 13px;border-radius:20px;}
+    .ec-type{font-size:0.78rem;font-weight:700;color:#0891b2;text-transform:uppercase;letter-spacing:0.5px;}
+    .ec-body{padding:18px 22px;}
+
+    /* WORK AREA */
+    .work-area{background:#f8f7ff;border:2px dashed #c4b5fd;border-radius:12px;min-height:90px;padding:12px 14px;margin-top:8px;font-size:0.83rem;color:#c4b5fd;font-style:italic;}
+
+    /* ANSWER ROWS */
+    .answer-row{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap;}
+    .answer-label{font-weight:800;font-size:0.88rem;color:#374151;}
+    .answer-input{border:2px solid #c4b5fd;border-radius:10px;padding:7px 12px;font-family:'Space Mono',monospace;font-size:0.95rem;font-weight:700;width:115px;outline:none;transition:border-color 0.2s;}
+    .answer-input:focus{border-color:var(--purple);}
+    .check-btn{padding:7px 16px;border-radius:10px;border:none;background:linear-gradient(135deg,#4c1d95,#7c3aed);color:white;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.86rem;cursor:pointer;transition:transform 0.15s;}
+    .check-btn:hover{transform:scale(1.04);}
+    .show-ans-btn{background:none;border:2px solid #c4b5fd;color:var(--purple);font-family:'Nunito',sans-serif;font-weight:800;font-size:0.8rem;border-radius:8px;padding:5px 11px;cursor:pointer;transition:all 0.15s;}
+    .show-ans-btn:hover{background:#ede9fe;}
+    .ans-feedback{font-size:0.83rem;font-weight:700;padding:6px 12px;border-radius:8px;display:none;margin-top:6px;}
+    .af-correct{display:block;background:#f0fdf4;color:#15803d;border:1px solid #4ade80;}
+    .af-wrong{display:block;background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;}
+    .af-show{display:block;}
+    .answer-reveal{display:none;background:linear-gradient(135deg,#ede9fe,#faf5ff);border-radius:10px;padding:12px 16px;margin-top:10px;font-size:0.88rem;}
+    .answer-reveal.visible{display:block;}
+    .ar-formula{font-family:'Space Mono',monospace;font-weight:700;color:#5b21b6;font-size:0.95rem;}
+    .ar-result{font-size:1.05rem;font-weight:900;color:#4c1d95;margin-top:4px;}
+
+    /* STEPS */
+    .steps{display:flex;flex-direction:column;gap:7px;margin:10px 0;}
+    .step{display:flex;gap:10px;align-items:flex-start;font-size:0.88rem;color:#374151;}
+    .step-dot{width:22px;height:22px;border-radius:50%;background:#ede9fe;color:#5b21b6;font-weight:800;font-size:0.72rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+
+    /* INFO BOX */
+    .info-box{background:#f0f9ff;border-left:4px solid #0891b2;border-radius:0 10px 10px 0;padding:10px 16px;font-size:0.88rem;color:#164e63;margin-bottom:12px;}
+
+    /* MULTI PART */
+    .sub-q{background:#f8f7ff;border-radius:10px;padding:12px 16px;margin-bottom:10px;border-left:3px solid #c4b5fd;}
+    .sub-q .sq-label{font-size:0.78rem;font-weight:800;color:#5b21b6;margin-bottom:6px;}
+
+    /* COMPREHENSION Q */
+    .concept-q{background:#fffbeb;border-radius:12px;padding:14px 18px;margin-bottom:12px;border-left:4px solid #f59e0b;}
+    .concept-q .cq-label{font-size:0.75rem;font-weight:800;color:#92400e;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+    .concept-q .cq-text{font-size:0.92rem;color:#1e293b;font-weight:600;}
+
+    /* ANSWER KEY */
+    .answer-key-section{background:white;border-radius:18px;padding:24px 28px;box-shadow:0 4px 20px rgba(0,0,0,0.07);border:3px solid #fbbf24;margin-top:8px;}
+    .ak-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+    .ak-badge{background:linear-gradient(135deg,#f59e0b,#d97706);color:white;padding:6px 18px;border-radius:20px;font-weight:900;font-size:0.85rem;}
+    .ak-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+    @media(max-width:560px){.ak-grid{grid-template-columns:1fr;}}
+    .ak-item{background:#fffbeb;border-radius:10px;padding:11px 14px;border-left:3px solid #f59e0b;}
+    .ak-item .ak-q{font-size:0.76rem;color:#92400e;font-weight:700;margin-bottom:3px;}
+    .ak-item .ak-ans{font-family:'Space Mono',monospace;font-weight:700;font-size:0.95rem;color:#78350f;}
+    .ak-item .ak-work{font-size:0.76rem;color:#64748b;margin-top:2px;}
+
+    /* RUBRIC */
+    .rubric{background:white;border-radius:16px;padding:20px 22px;box-shadow:0 3px 14px rgba(0,0,0,0.07);margin-top:24px;border-top:4px solid var(--purple);}
+    .rubric h3{font-size:1rem;font-weight:900;margin-bottom:14px;color:var(--dark);}
+    .rubric-row{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #f1f5f9;align-items:flex-start;}
+    .rubric-row:last-child{border-bottom:none;}
+    .rr-mark{width:36px;height:36px;border-radius:10px;background:#ede9fe;color:#5b21b6;font-weight:900;font-size:0.82rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .rr-body{font-size:0.87rem;color:#374151;}
+    .rr-body strong{display:block;color:#1e293b;}
+  </style>
+</head>
+<body>
+
+<!-- LOCK -->
+<div id="lock-screen">
+  <div class="lock-icon">&#128274;</div>
+  <h2>IB Physics — Unit 20</h2>
+  <p>Enter the password to access this homework</p>
+  <div class="pw-box">
+    <input id="pw-input" type="password" placeholder="Password..." autocomplete="off">
+    <button id="pw-btn" onclick="checkPw()">Unlock</button>
+  </div>
+  <div id="pw-error"></div>
+</div>
+
+<div id="content" style="display:none;">
+
+<header>
+  <span class="star" style="width:3px;height:3px;top:20%;left:12%;animation-delay:0.3s;"></span>
+  <span class="star" style="width:4px;height:4px;top:40%;left:80%;animation-delay:1s;"></span>
+  <span class="star" style="width:3px;height:3px;top:70%;left:90%;animation-delay:1.7s;"></span>
+  <div class="chip">Homework &nbsp;&#183;&nbsp; Unit 20 &nbsp;&#183;&nbsp; Vectors</div>
+  <h1>Finding the Angle — Homework</h1>
+  <p class="subtitle">Independent practice: inverse trig, real-world applications, and extended problems</p>
+  <div class="meta">
+    <span class="meta-item">&#128338; ~30 min</span>
+    <span class="meta-item">10 questions</span>
+    <span class="meta-item">Show all working</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- FORMULA QUICK REF -->
+  <div class="formula-ref">
+    <div class="fr-item"><div class="fr-label">Inverse Sine</div><div class="fr-formula">sin&#8315;&#185;(opp/hyp)=&#952;</div></div>
+    <div class="fr-item"><div class="fr-label">Inverse Cosine</div><div class="fr-formula">cos&#8315;&#185;(adj/hyp)=&#952;</div></div>
+    <div class="fr-item"><div class="fr-label">Inverse Tangent</div><div class="fr-formula">tan&#8315;&#185;(opp/adj)=&#952;</div></div>
+    <div class="fr-item"><div class="fr-label">Pythagoras</div><div class="fr-formula">R=&#8730;(x&#178;+y&#178;)</div></div>
+  </div>
+
+  <div class="instruct-banner">
+    <div class="ib-icon">&#127968;</div>
+    <div class="ib-body">
+      <p><strong>Homework Instructions:</strong> Show all working for full marks. State the formula used, substitute values, and give a final answer with correct units and direction. Round angles to 1 decimal place.</p>
+    </div>
+  </div>
+
+  <!-- PART A: CORE PRACTICE -->
+  <div class="section-label">
+    <div class="section-icon" style="background:#ede9fe;">A</div>
+    <h2>Part A — Core Problems</h2>
+  </div>
+
+  <!-- HW Problem 1 -->
+  <div class="problem-card">
+    <div class="pc-header">
+      <span class="pc-num">Question 1</span>
+      <span class="pc-type">Identify correct formula</span>
+    </div>
+    <div class="pc-body">
+      <p class="scenario">A vector has a vertical component of <strong>8 m (South)</strong> and a horizontal component of <strong>15 m (East)</strong>. Find the angle the resultant makes with the horizontal.</p>
+      <div class="given-row">
+        <span class="g-chip h">Horizontal (adj) = 15 m</span>
+        <span class="g-chip v">Vertical (opp) = 8 m</span>
+      </div>
+      <div class="work-area">Work space...</div>
+      <div class="answer-row">
+        <span class="answer-label">&#952; =</span>
+        <input class="answer-input" id="h1-inp" type="text" placeholder="e.g. 28.1°">
+        <button class="check-btn" onclick="checkAns('h1','28.1','tan⁻¹(8/15)=28.1° South of East')">Check</button>
+        <button class="show-ans-btn" onclick="toggleAns('h1-reveal')">Show Answer</button>
+      </div>
+      <div class="ans-feedback" id="h1-fb"></div>
+      <div class="answer-reveal" id="h1-reveal">
+        <div class="ar-formula">&#952; = tan&#8315;&#185;(8/15) = tan&#8315;&#185;(0.533)</div>
+        <div class="ar-result">&#952; = 28.1&#176; South of East</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HW Problem 2 -->
+  <div class="problem-card">
+    <div class="pc-header">
+      <span class="pc-num">Question 2</span>
+      <span class="pc-type">sin&#8315;&#185; — hypotenuse given</span>
+    </div>
+    <div class="pc-body">
+      <p class="scenario">A resultant force has magnitude <strong>20 N</strong> and a vertical component of <strong>12 N (North)</strong>. What angle does it make with the horizontal?</p>
+      <div class="given-row">
+        <span class="g-chip hyp">Hypotenuse = 20 N</span>
+        <span class="g-chip v">Vertical (opp) = 12 N</span>
+      </div>
+      <div class="work-area">Work space...</div>
+      <div class="answer-row">
+        <span class="answer-label">&#952; =</span>
+        <input class="answer-input" id="h2-inp" type="text" placeholder="e.g. 36.9°">
+        <button class="check-btn" onclick="checkAns('h2','36.9','sin⁻¹(12/20)=36.9°')">Check</button>
+        <button class="show-ans-btn" onclick="toggleAns('h2-reveal')">Show Answer</button>
+      </div>
+      <div class="ans-feedback" id="h2-fb"></div>
+      <div class="answer-reveal" id="h2-reveal">
+        <div class="ar-formula">&#952; = sin&#8315;&#185;(12/20) = sin&#8315;&#185;(0.6)</div>
+        <div class="ar-result">&#952; = 36.9&#176; North of East</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HW Problem 3 -->
+  <div class="problem-card">
+    <div class="pc-header">
+      <span class="pc-num">Question 3</span>
+      <span class="pc-type">cos&#8315;&#185; — horizontal and hypotenuse</span>
+    </div>
+    <div class="pc-body">
+      <p class="scenario">A vector has a magnitude of <strong>10 m/s</strong> and a horizontal component of <strong>6 m/s (West)</strong>. Find the angle from horizontal.</p>
+      <div class="given-row">
+        <span class="g-chip hyp">Hypotenuse = 10 m/s</span>
+        <span class="g-chip h">Horizontal (adj) = 6 m/s</span>
+      </div>
+      <div class="work-area">Work space...</div>
+      <div class="answer-row">
+        <span class="answer-label">&#952; =</span>
+        <input class="answer-input" id="h3-inp" type="text" placeholder="e.g. 53.1°">
+        <button class="check-btn" onclick="checkAns('h3','53.1','cos⁻¹(6/10)=53.1°')">Check</button>
+        <button class="show-ans-btn" onclick="toggleAns('h3-reveal')">Show Answer</button>
+      </div>
+      <div class="ans-feedback" id="h3-fb"></div>
+      <div class="answer-reveal" id="h3-reveal">
+        <div class="ar-formula">&#952; = cos&#8315;&#185;(6/10) = cos&#8315;&#185;(0.6)</div>
+        <div class="ar-result">&#952; = 53.1&#176;</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HW Problem 4 -->
+  <div class="problem-card">
+    <div class="pc-header">
+      <span class="pc-num">Question 4</span>
+      <span class="pc-type">Full problem — magnitude and angle</span>
+    </div>
+    <div class="pc-body">
+      <p class="scenario">A hiker walks <strong>7 km East</strong> then <strong>24 km North</strong>. Find both the magnitude of the resultant displacement and its angle from horizontal.</p>
+      <div class="given-row">
+        <span class="g-chip h">East = 7 km</span>
+        <span class="g-chip v">North = 24 km</span>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Find the magnitude (Pythagoras): R = &#8730;(7&#178; + 24&#178;)</span></div>
+        <div class="step"><div class="step-dot">2</div><span>Find angle: &#952; = tan&#8315;&#185;(vertical / horizontal)</span></div>
+      </div>
+      <div class="work-area" style="margin-top:10px;">Work space...</div>
+      <div class="answer-row" style="flex-direction:column;align-items:flex-start;gap:10px;">
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+          <span class="answer-label">Magnitude R =</span>
+          <input class="answer-input" id="h4m-inp" type="text" placeholder="e.g. 25 km">
+          <button class="check-btn" onclick="checkAns('h4m','25','√(49+576)=√625=25 km')">Check</button>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+          <span class="answer-label">&#952; =</span>
+          <input class="answer-input" id="h4a-inp" type="text" placeholder="e.g. 73.7°">
+          <button class="check-btn" onclick="checkAns('h4a','73.7','tan⁻¹(24/7)=73.7°')">Check</button>
+        </div>
+        <button class="show-ans-btn" onclick="toggleAns('h4-reveal')">Show Full Answer</button>
+      </div>
+      <div class="ans-feedback" id="h4m-fb"></div>
+      <div class="ans-feedback" id="h4a-fb"></div>
+      <div class="answer-reveal" id="h4-reveal">
+        <div class="ar-formula">R = &#8730;(7&#178;+24&#178;) = &#8730;(49+576) = &#8730;625 = 25 km</div>
+        <div class="ar-formula" style="margin-top:6px;">&#952; = tan&#8315;&#185;(24/7) = tan&#8315;&#185;(3.429)</div>
+        <div class="ar-result">25 km at 73.7&#176; North of East</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HW Problem 5 -->
+  <div class="problem-card">
+    <div class="pc-header">
+      <span class="pc-num">Question 5</span>
+      <span class="pc-type">Two forces — quadrant awareness</span>
+    </div>
+    <div class="pc-body">
+      <p class="scenario">Two forces act on a ball: <strong>F&#8321; = 40 N South</strong> and <strong>F&#8322; = 30 N West</strong>. Find the resultant magnitude and its angle from horizontal (West direction).</p>
+      <div class="given-row">
+        <span class="g-chip h">West (adj) = 30 N</span>
+        <span class="g-chip v">South (opp) = 40 N</span>
+      </div>
+      <div class="work-area">Work space...</div>
+      <div class="answer-row" style="flex-direction:column;align-items:flex-start;gap:10px;">
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+          <span class="answer-label">Magnitude R =</span>
+          <input class="answer-input" id="h5m-inp" type="text" placeholder="e.g. 50 N">
+          <button class="check-btn" onclick="checkAns('h5m','50','√(900+1600)=√2500=50 N')">Check</button>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+          <span class="answer-label">&#952; =</span>
+          <input class="answer-input" id="h5a-inp" type="text" placeholder="e.g. 53.1°">
+          <button class="check-btn" onclick="checkAns('h5a','53.1','tan⁻¹(40/30)=53.1° South of West')">Check</button>
+        </div>
+        <button class="show-ans-btn" onclick="toggleAns('h5-reveal')">Show Full Answer</button>
+      </div>
+      <div class="ans-feedback" id="h5m-fb"></div>
+      <div class="ans-feedback" id="h5a-fb"></div>
+      <div class="answer-reveal" id="h5-reveal">
+        <div class="ar-formula">R = &#8730;(30&#178;+40&#178;) = &#8730;(900+1600) = &#8730;2500 = 50 N</div>
+        <div class="ar-formula" style="margin-top:6px;">&#952; = tan&#8315;&#185;(40/30) = tan&#8315;&#185;(1.333)</div>
+        <div class="ar-result">50 N at 53.1&#176; South of West</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART B: APPLIED / REAL WORLD -->
+  <div class="section-label">
+    <div class="section-icon" style="background:#e0f2fe;">B</div>
+    <h2>Part B — Applied Problems</h2>
+  </div>
+
+  <!-- HW Scenario 1: Boat -->
+  <div class="extended-card">
+    <div class="ec-header">
+      <span class="ec-num">Question 6</span>
+      <span class="ec-type">Boat crossing a river</span>
+    </div>
+    <div class="ec-body">
+      <div class="info-box">A boat heads <strong>directly across a river at 4 m/s (East)</strong>. The river current flows <strong>South at 3 m/s</strong>.</div>
+      <div class="sub-q">
+        <div class="sq-label">(a) Find the resultant speed</div>
+        <div class="answer-row">
+          <span class="answer-label">Speed =</span>
+          <input class="answer-input" id="h6a-inp" type="text" placeholder="e.g. 5 m/s">
+          <button class="check-btn" onclick="checkAns('h6a','5','√(16+9)=√25=5 m/s')">Check</button>
+        </div>
+        <div class="ans-feedback" id="h6a-fb"></div>
+      </div>
+      <div class="sub-q">
+        <div class="sq-label">(b) Find the angle from horizontal (East direction)</div>
+        <div class="answer-row">
+          <span class="answer-label">&#952; =</span>
+          <input class="answer-input" id="h6b-inp" type="text" placeholder="e.g. 36.9°">
+          <button class="check-btn" onclick="checkAns('h6b','36.9','tan⁻¹(3/4)=36.9° South of East')">Check</button>
+        </div>
+        <div class="ans-feedback" id="h6b-fb"></div>
+      </div>
+      <button class="show-ans-btn" style="margin-top:10px;" onclick="toggleAns('h6-reveal')">Show Full Answer</button>
+      <div class="answer-reveal" id="h6-reveal">
+        <div class="ar-formula">(a) R = &#8730;(4&#178;+3&#178;) = &#8730;25 = 5 m/s</div>
+        <div class="ar-formula" style="margin-top:6px;">(b) &#952; = tan&#8315;&#185;(3/4) = tan&#8315;&#185;(0.75)</div>
+        <div class="ar-result">5 m/s at 36.9&#176; South of East</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HW Scenario 2: Projectile-like -->
+  <div class="extended-card">
+    <div class="ec-header">
+      <span class="ec-num">Question 7</span>
+      <span class="ec-type">Launching a ball</span>
+    </div>
+    <div class="ec-body">
+      <div class="info-box">A ball is thrown and has a horizontal velocity of <strong>12 m/s</strong> and a vertical velocity of <strong>9 m/s upward</strong> at the moment of release.</div>
+      <div class="sub-q">
+        <div class="sq-label">(a) Find the launch speed (magnitude of velocity)</div>
+        <div class="answer-row">
+          <span class="answer-label">v =</span>
+          <input class="answer-input" id="h7a-inp" type="text" placeholder="e.g. 15 m/s">
+          <button class="check-btn" onclick="checkAns('h7a','15','√(144+81)=√225=15 m/s')">Check</button>
+        </div>
+        <div class="ans-feedback" id="h7a-fb"></div>
+      </div>
+      <div class="sub-q">
+        <div class="sq-label">(b) Find the launch angle above horizontal</div>
+        <div class="answer-row">
+          <span class="answer-label">&#952; =</span>
+          <input class="answer-input" id="h7b-inp" type="text" placeholder="e.g. 36.9°">
+          <button class="check-btn" onclick="checkAns('h7b','36.9','tan⁻¹(9/12)=36.9° above horizontal')">Check</button>
+        </div>
+        <div class="ans-feedback" id="h7b-fb"></div>
+      </div>
+      <button class="show-ans-btn" style="margin-top:10px;" onclick="toggleAns('h7-reveal')">Show Full Answer</button>
+      <div class="answer-reveal" id="h7-reveal">
+        <div class="ar-formula">(a) v = &#8730;(12&#178;+9&#178;) = &#8730;(144+81) = &#8730;225 = 15 m/s</div>
+        <div class="ar-formula" style="margin-top:6px;">(b) &#952; = tan&#8315;&#185;(9/12) = tan&#8315;&#185;(0.75)</div>
+        <div class="ar-result">15 m/s at 36.9&#176; above horizontal</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HW Scenario 3: Multi-step -->
+  <div class="extended-card">
+    <div class="ec-header">
+      <span class="ec-num">Question 8</span>
+      <span class="ec-type">Drone navigation</span>
+    </div>
+    <div class="ec-body">
+      <div class="info-box">A drone flies <strong>East at 6 m/s</strong> and simultaneously rises <strong>upward at 8 m/s</strong>. A wind pushes it <strong>West at 2 m/s</strong>.</div>
+      <div class="steps" style="margin-bottom:12px;">
+        <div class="step"><div class="step-dot">1</div><span>Net horizontal = 6 m/s East &#8722; 2 m/s West = 4 m/s East</span></div>
+        <div class="step"><div class="step-dot">2</div><span>Vertical = 8 m/s up (unchanged)</span></div>
+        <div class="step"><div class="step-dot">3</div><span>Find resultant and angle.</span></div>
+      </div>
+      <div class="work-area">Work space...</div>
+      <div class="answer-row" style="flex-direction:column;align-items:flex-start;gap:10px;">
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+          <span class="answer-label">Speed =</span>
+          <input class="answer-input" id="h8m-inp" type="text" placeholder="e.g. 8.9 m/s">
+          <button class="check-btn" onclick="checkAns('h8m','8.9','√(16+64)=√80≈8.9 m/s')">Check</button>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+          <span class="answer-label">&#952; =</span>
+          <input class="answer-input" id="h8a-inp" type="text" placeholder="e.g. 63.4°">
+          <button class="check-btn" onclick="checkAns('h8a','63.4','tan⁻¹(8/4)=63.4° above horizontal')">Check</button>
+        </div>
+        <button class="show-ans-btn" onclick="toggleAns('h8-reveal')">Show Full Answer</button>
+      </div>
+      <div class="ans-feedback" id="h8m-fb"></div>
+      <div class="ans-feedback" id="h8a-fb"></div>
+      <div class="answer-reveal" id="h8-reveal">
+        <div class="ar-formula">Net horizontal = 4 m/s East, Vertical = 8 m/s up</div>
+        <div class="ar-formula" style="margin-top:4px;">R = &#8730;(4&#178;+8&#178;) = &#8730;80 &#8776; 8.9 m/s</div>
+        <div class="ar-formula" style="margin-top:4px;">&#952; = tan&#8315;&#185;(8/4) = tan&#8315;&#185;(2)</div>
+        <div class="ar-result">8.9 m/s at 63.4&#176; above horizontal (East)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART C: CONCEPTUAL / EXTENDED -->
+  <div class="section-label">
+    <div class="section-icon" style="background:#fef3c7;">C</div>
+    <h2>Part C — Conceptual Questions</h2>
+  </div>
+
+  <!-- Conceptual 1 -->
+  <div class="problem-card">
+    <div class="pc-header">
+      <span class="pc-num">Question 9</span>
+      <span class="pc-type">Explain the reasoning</span>
+    </div>
+    <div class="pc-body">
+      <div class="concept-q">
+        <div class="cq-label">Conceptual</div>
+        <div class="cq-text">A student uses tan&#8315;&#185;(horizontal/vertical) to find an angle "from horizontal". Is this correct? Explain why or why not and state the correct formula.</div>
+      </div>
+      <div class="work-area" style="min-height:110px;">Answer space (write or type your reasoning)...</div>
+      <button class="show-ans-btn" style="margin-top:12px;" onclick="toggleAns('h9-reveal')">Show Model Answer</button>
+      <div class="answer-reveal" id="h9-reveal">
+        <div class="ar-formula">Incorrect. The angle is from horizontal, so horizontal = adjacent and vertical = opposite.</div>
+        <div class="ar-result" style="font-size:0.95rem;margin-top:6px;">Correct formula: &#952; = tan&#8315;&#185;(vertical / horizontal) = tan&#8315;&#185;(opposite / adjacent). Swapping gives the complement of the desired angle (90&#176; &#8722; &#952;), which measures from the vertical instead.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conceptual 2 -->
+  <div class="problem-card">
+    <div class="pc-header">
+      <span class="pc-num">Question 10</span>
+      <span class="pc-type">Challenge — when are all three formulas equivalent?</span>
+    </div>
+    <div class="pc-body">
+      <div class="concept-q">
+        <div class="cq-label">Challenge</div>
+        <div class="cq-text">If a right triangle has a vertical component of 5 m and a horizontal component of 5 m, calculate the angle using all three inverse trig functions (you will need to find the hypotenuse first). What do you notice?</div>
+      </div>
+      <div class="work-area" style="min-height:120px;">Work space...</div>
+      <button class="show-ans-btn" style="margin-top:12px;" onclick="toggleAns('h10-reveal')">Show Full Answer</button>
+      <div class="answer-reveal" id="h10-reveal">
+        <div class="ar-formula">Hypotenuse = &#8730;(5&#178;+5&#178;) = &#8730;50 = 5&#8730;2 &#8776; 7.07 m</div>
+        <div class="ar-formula" style="margin-top:4px;">sin&#8315;&#185;(5/7.07) = sin&#8315;&#185;(0.707) = 45&#176;</div>
+        <div class="ar-formula" style="margin-top:4px;">cos&#8315;&#185;(5/7.07) = cos&#8315;&#185;(0.707) = 45&#176;</div>
+        <div class="ar-formula" style="margin-top:4px;">tan&#8315;&#185;(5/5) = tan&#8315;&#185;(1) = 45&#176;</div>
+        <div class="ar-result" style="margin-top:8px;">All three give 45&#176;! This happens because when the two legs are equal, the triangle is an isosceles right triangle. sin and cos give the same answer because sin(45&#176;) = cos(45&#176;) = 1/&#8730;2.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANSWER KEY -->
+  <div class="section-label" style="margin-top:48px;">
+    <div class="section-icon" style="background:#fef3c7;">&#128273;</div>
+    <h2>Answer Key</h2>
+  </div>
+  <div class="answer-key-section">
+    <div class="ak-header">
+      <span class="ak-badge">Full Answer Key</span>
+      <span style="font-size:0.85rem;color:#64748b;">Attempt all questions before checking</span>
+    </div>
+    <div class="ak-grid">
+      <div class="ak-item"><div class="ak-q">Q1</div><div class="ak-ans">28.1&#176; S of E</div><div class="ak-work">tan&#8315;&#185;(8/15) = 28.1&#176;</div></div>
+      <div class="ak-item"><div class="ak-q">Q2</div><div class="ak-ans">36.9&#176; N of E</div><div class="ak-work">sin&#8315;&#185;(12/20) = 36.9&#176;</div></div>
+      <div class="ak-item"><div class="ak-q">Q3</div><div class="ak-ans">53.1&#176;</div><div class="ak-work">cos&#8315;&#185;(6/10) = 53.1&#176;</div></div>
+      <div class="ak-item"><div class="ak-q">Q4</div><div class="ak-ans">25 km, 73.7&#176; N of E</div><div class="ak-work">&#8730;625=25; tan&#8315;&#185;(24/7)=73.7&#176;</div></div>
+      <div class="ak-item"><div class="ak-q">Q5</div><div class="ak-ans">50 N, 53.1&#176; S of W</div><div class="ak-work">&#8730;2500=50; tan&#8315;&#185;(40/30)=53.1&#176;</div></div>
+      <div class="ak-item"><div class="ak-q">Q6</div><div class="ak-ans">5 m/s, 36.9&#176; S of E</div><div class="ak-work">&#8730;25=5; tan&#8315;&#185;(3/4)=36.9&#176;</div></div>
+      <div class="ak-item"><div class="ak-q">Q7</div><div class="ak-ans">15 m/s, 36.9&#176; above</div><div class="ak-work">&#8730;225=15; tan&#8315;&#185;(9/12)=36.9&#176;</div></div>
+      <div class="ak-item"><div class="ak-q">Q8</div><div class="ak-ans">8.9 m/s, 63.4&#176;</div><div class="ak-work">Net horiz=4; &#8730;80&#8776;8.9; tan&#8315;&#185;(8/4)=63.4&#176;</div></div>
+      <div class="ak-item" style="grid-column:1/-1;"><div class="ak-q">Q9 — Key point</div><div class="ak-ans" style="font-size:0.88rem;font-family:'Nunito',sans-serif;">Incorrect. Use tan&#8315;&#185;(vertical/horizontal) to get angle FROM horizontal. The student's formula gives 90&#176;&#8722;&#952; (angle from vertical).</div></div>
+      <div class="ak-item" style="grid-column:1/-1;"><div class="ak-q">Q10 — Key point</div><div class="ak-ans" style="font-size:0.88rem;font-family:'Nunito',sans-serif;">Hyp=5&#8730;2&#8776;7.07 m. All three formulas give 45&#176; because the legs are equal, making it an isosceles right triangle.</div></div>
+    </div>
+  </div>
+
+  <!-- MARKING RUBRIC -->
+  <div class="rubric">
+    <h3>Marking Guide (for teacher use)</h3>
+    <div class="rubric-row"><div class="rr-mark">F</div><div class="rr-body"><strong>Formula choice (1 mark)</strong>State which inverse trig formula is being used and why (which sides are known).</div></div>
+    <div class="rubric-row"><div class="rr-mark">S</div><div class="rr-body"><strong>Substitution (1 mark)</strong>Correctly substitute numerical values into the formula.</div></div>
+    <div class="rubric-row"><div class="rr-mark">A</div><div class="rr-body"><strong>Answer with units and direction (1 mark)</strong>Numerical answer to 1 d.p., correct units (degrees &#176;), and direction stated (e.g. "South of East").</div></div>
+    <div class="rubric-row"><div class="rr-mark">M</div><div class="rr-body"><strong>Magnitude (Q4–8: 1 extra mark)</strong>Correct Pythagorean magnitude calculated before or alongside the angle.</div></div>
+  </div>
+
+</main>
+</div>
+
+<script>
+  function checkPw(){
+    const val=document.getElementById('pw-input').value;
+    if(val==='physics2024'){
+      document.getElementById('lock-screen').style.display='none';
+      document.getElementById('content').style.display='block';
+    } else {
+      document.getElementById('pw-error').textContent='Incorrect password. Please try again.';
+      document.getElementById('pw-input').value='';
+    }
+  }
+  document.getElementById('pw-input').addEventListener('keydown',function(e){if(e.key==='Enter')checkPw();});
+
+  function checkAns(id, correct, explanation){
+    const inp=document.getElementById(id+'-inp');
+    const fb=document.getElementById(id+'-fb');
+    const val=inp.value.trim().replace('°','').replace(',','.').replace(/[^0-9.]/g,'');
+    const num=parseFloat(val);
+    const correctNum=parseFloat(correct);
+    if(Math.abs(num-correctNum)<0.2){
+      fb.innerHTML='&#10003; Correct! '+explanation;
+      fb.className='ans-feedback af-correct af-show';
+      inp.style.borderColor='#4ade80';
+    } else {
+      fb.innerHTML='&#10007; Not quite — try again or click "Show Answer".';
+      fb.className='ans-feedback af-wrong af-show';
+      inp.style.borderColor='#fca5a5';
+    }
+  }
+
+  function toggleAns(id){
+    const el=document.getElementById(id);
+    el.classList.toggle('visible');
+  }
+</script>
+</body>
+</html>

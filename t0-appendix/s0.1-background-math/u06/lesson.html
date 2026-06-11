@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proportional Relationships — Physics Lesson</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root{--blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--orange:#f97316;--dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);font-size:17px;line-height:1.75;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;}
+    header{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#1e1b4b 100%);color:white;padding:52px 60px 48px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 50%,rgba(99,102,241,0.35) 0%,transparent 60%),radial-gradient(ellipse at 75% 30%,rgba(245,158,11,0.2) 0%,transparent 55%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.4);}}
+    header .chip{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px;position:relative;}
+    header h1{font-size:2.9rem;font-weight:900;letter-spacing:-1px;position:relative;margin-bottom:10px;background:linear-gradient(90deg,#c7d2fe,#fde68a,#fbcfe8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1.05rem;color:rgba(255,255,255,0.8);position:relative;max-width:540px;margin:0 auto;}
+    main{max-width:940px;margin:48px auto;padding:0 24px 80px;}
+    section{margin-bottom:64px;}
+    .section-label{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+    .section-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    .section-label h2{font-size:1.5rem;font-weight:900;color:var(--dark);}
+
+    /* proportional symbol */
+    .prop-intro{background:white;border-radius:18px;padding:28px 36px;box-shadow:0 4px 20px rgba(0,0,0,0.07);border-left:6px solid #6366f1;margin-bottom:24px;}
+    .prop-intro .sym-row{font-family:'Space Mono',monospace;font-size:2rem;font-weight:700;color:#312e81;margin:12px 0;}
+    .prop-intro p{color:#374151;font-size:0.95rem;margin-bottom:8px;}
+    .prop-chain{background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:16px;padding:22px 32px;color:white;margin-bottom:28px;}
+    .prop-chain .pc-row{display:flex;align-items:center;gap:24px;flex-wrap:wrap;justify-content:center;margin-bottom:12px;}
+    .prop-chain .pc-row:last-child{margin-bottom:0;}
+    .prop-chain .pc-sym{font-family:'Space Mono',monospace;font-size:1.5rem;font-weight:700;}
+    .prop-chain .pc-arrow{font-size:1.4rem;color:rgba(255,255,255,0.5);}
+    .prop-chain .pc-eq{font-family:'Space Mono',monospace;font-size:1.5rem;font-weight:700;color:#fde68a;}
+    .prop-chain p{font-size:0.88rem;opacity:0.8;text-align:center;}
+
+    /* 4 relationship cards */
+    .four-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;}
+    @media(max-width:640px){.four-grid{grid-template-columns:1fr;}}
+    .rel-card{background:white;border-radius:18px;box-shadow:0 4px 18px rgba(0,0,0,0.07);overflow:hidden;}
+    .rel-head{padding:18px 22px 14px;}
+    .rel-title{font-size:1.05rem;font-weight:900;margin-bottom:4px;}
+    .rel-body{padding:0 22px 20px;}
+    .rel-eq{font-family:'Space Mono',monospace;font-size:1rem;background:#f8fafc;border-radius:8px;padding:10px 14px;margin-bottom:12px;line-height:1.8;}
+    .rel-eq .hl{font-weight:700;}
+    /* svg graph placeholder */
+    .graph-wrap{background:#f8fafc;border-radius:10px;padding:12px;margin-bottom:10px;text-align:center;}
+    .rel-note{font-size:0.83rem;color:#64748b;}
+    .rel-bullets{font-size:0.85rem;color:#374151;padding-left:16px;}
+    .rel-bullets li{margin-bottom:4px;}
+
+    /* color themes */
+    .rel-linear .rel-head{background:linear-gradient(135deg,#dbeafe,#eff6ff);}
+    .rel-linear .rel-title{color:#1d4ed8;}
+    .rel-quad .rel-head{background:linear-gradient(135deg,#dcfce7,#f0fdf4);}
+    .rel-quad .rel-title{color:#15803d;}
+    .rel-inv .rel-head{background:linear-gradient(135deg,#fef3c7,#fffbeb);}
+    .rel-inv .rel-title{color:#92400e;}
+    .rel-invsq .rel-head{background:linear-gradient(135deg,#fee2e2,#fef2f2);}
+    .rel-invsq .rel-title{color:#991b1b;}
+
+    /* method box */
+    .method-box{background:white;border-radius:18px;padding:28px 32px;box-shadow:0 4px 18px rgba(0,0,0,0.07);margin-bottom:28px;border-top:5px solid #6366f1;}
+    .method-box h3{font-size:1.1rem;font-weight:900;margin-bottom:14px;color:#1e1b4b;}
+    .method-steps{display:flex;flex-direction:column;gap:12px;}
+    .method-step{display:flex;gap:14px;align-items:flex-start;}
+    .ms-dot{width:30px;height:30px;border-radius:50%;background:#ede9fe;color:#4338ca;font-weight:800;font-size:0.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+    .ms-text{font-size:0.93rem;color:#374151;}
+
+    /* examples */
+    .example-block{background:white;border-radius:18px;margin-bottom:24px;box-shadow:0 4px 18px rgba(0,0,0,0.07);overflow:hidden;}
+    .ex-head{padding:16px 24px;display:flex;align-items:center;gap:14px;}
+    .ex-badge{font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:4px 14px;border-radius:20px;}
+    .ex-title{font-size:1rem;font-weight:700;}
+    .ex-body{padding:22px 28px;}
+    .eq-display{font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;background:#f8fafc;padding:12px 18px;border-radius:10px;margin-bottom:16px;}
+    .analysis-row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px;}
+    .analysis-col{flex:1;min-width:200px;}
+    .analysis-col h4{font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;}
+    .step-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;font-size:0.88rem;color:#374151;}
+    .s-dot{width:20px;height:20px;border-radius:50%;font-weight:800;font-size:0.72rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .result-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:0.82rem;font-weight:700;margin-bottom:6px;}
+    .bullets li{font-size:0.85rem;color:#374151;margin-bottom:4px;}
+
+    /* graph section */
+    .graph-gallery{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:28px;}
+    @media(max-width:600px){.graph-gallery{grid-template-columns:1fr;}}
+    .graph-card{background:white;border-radius:14px;padding:18px 20px;box-shadow:0 2px 12px rgba(0,0,0,0.06);}
+    .graph-card h4{font-size:0.9rem;font-weight:800;margin-bottom:12px;}
+    .graph-card p{font-size:0.82rem;color:#64748b;margin-top:8px;}
+
+    /* quiz */
+    .quiz-section{background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:20px;padding:32px;color:white;}
+    .quiz-section h3{font-size:1.3rem;font-weight:900;margin-bottom:6px;}
+    .quiz-section p{font-size:0.88rem;opacity:0.75;margin-bottom:24px;}
+    .quiz-q{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:18px 22px;margin-bottom:14px;}
+    .quiz-q .qtext{font-size:0.95rem;margin-bottom:10px;font-weight:700;}
+    .quiz-q .qeq{font-family:'Space Mono',monospace;font-size:1.2rem;font-weight:700;margin-bottom:14px;}
+    .options{display:flex;flex-wrap:wrap;gap:10px;}
+    .opt-btn{background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);color:white;font-family:'Nunito',sans-serif;font-size:0.88rem;font-weight:700;padding:8px 16px;border-radius:30px;cursor:pointer;transition:all 0.2s;}
+    .opt-btn:hover{background:rgba(255,255,255,0.2);transform:scale(1.04);}
+    .opt-btn.correct{background:#22c55e;border-color:#22c55e;animation:popIn 0.3s ease;}
+    .opt-btn.wrong{background:#ef4444;border-color:#ef4444;}
+    .feedback{font-size:0.85rem;margin-top:10px;padding:8px 14px;border-radius:8px;display:none;}
+    .feedback.show{display:block;}
+    .feedback.ok{background:rgba(34,197,94,0.2);color:#bbf7d0;}
+    .feedback.bad{background:rgba(239,68,68,0.2);color:#fecaca;}
+    @keyframes popIn{0%{transform:scale(0.9);}60%{transform:scale(1.1);}100%{transform:scale(1);}}
+    footer{text-align:center;padding:32px 20px;font-size:0.85rem;color:var(--muted);}
+  </style>
+</head>
+<body>
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="star" style="width:3px;height:3px;top:12%;left:8%;animation-delay:0s"></div>
+  <div class="star" style="width:2px;height:2px;top:25%;left:15%;animation-delay:0.5s"></div>
+  <div class="star" style="width:4px;height:4px;top:10%;left:30%;animation-delay:1s"></div>
+  <div class="star" style="width:3px;height:3px;top:70%;left:20%;animation-delay:0.3s"></div>
+  <div class="star" style="width:2px;height:2px;top:15%;left:75%;animation-delay:0.8s"></div>
+  <div class="chip">⚛️ Physics · High School · Mathematics</div>
+  <h1>Proportional Relationships</h1>
+  <p class="subtitle">Linear, Quadratic, Inverse, and Inverse Square — the four shapes of physics equations</p>
+</header>
+
+<main>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#e0e7ff;">∝</div>
+    <h2>The Proportionality Symbol ∝</h2>
+  </div>
+  <div class="prop-intro">
+    <p>The symbol <strong>∝</strong> means <em>"is proportional to."</em> When we write y ∝ x, we mean that y and x are related by a constant multiplier — doubling x doubles y, tripling x triples y, and so on.</p>
+    <div class="sym-row">y ∝ x &nbsp;⟺&nbsp; y = cx</div>
+    <p>"y is proportional to x" means y equals <strong>some constant c multiplied by x</strong>. The constant c doesn't change — it's a fixed property of the system (like mass, or gravitational constant).</p>
+    <p style="margin-top:8px;">Proportionality is also <strong>symmetric</strong>: if y ∝ x then x ∝ y. But because y = cx, we get x = (1/c)y — the constant flips.</p>
+  </div>
+  <div class="prop-chain">
+    <div class="pc-row">
+      <span class="pc-sym">y ∝ x</span><span class="pc-arrow">⟷</span><span class="pc-sym">x ∝ y</span>
+    </div>
+    <div class="pc-row">
+      <span class="pc-eq">y = cx</span><span class="pc-arrow">⟷</span><span class="pc-eq">x = (1/c)y</span>
+    </div>
+    <p>If y is proportional to x, x is proportional to y — but with a reciprocal constant.</p>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#dbeafe;">📈</div>
+    <h2>The Four Proportional Relationships</h2>
+  </div>
+
+  <div class="four-grid">
+    <!-- Linear -->
+    <div class="rel-card rel-linear">
+      <div class="rel-head"><div class="rel-title">Linear &nbsp; y ∝ x</div></div>
+      <div class="rel-body">
+        <div class="rel-eq"><span class="hl" style="color:#1d4ed8;">y ∝ x</span><br>y = cx</div>
+        <div class="graph-wrap">
+          <svg viewBox="0 0 180 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:170px;">
+            <line x1="20" y1="110" x2="165" y2="110" stroke="#d1d5db" stroke-width="1.5"/>
+            <line x1="20" y1="110" x2="20" y2="15" stroke="#d1d5db" stroke-width="1.5"/>
+            <text x="172" y="114" font-size="11" fill="#94a3b8">x</text>
+            <text x="14" y="12" font-size="11" fill="#94a3b8">y</text>
+            <line x1="25" y1="105" x2="155" y2="22" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <ul class="rel-bullets">
+          <li>Straight line through origin</li>
+          <li>Double x → double y</li>
+          <li>y/x = constant</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Quadratic -->
+    <div class="rel-card rel-quad">
+      <div class="rel-head"><div class="rel-title">Quadratic &nbsp; y ∝ x²</div></div>
+      <div class="rel-body">
+        <div class="rel-eq"><span class="hl" style="color:#15803d;">y ∝ x²</span><br>y = cx²</div>
+        <div class="graph-wrap">
+          <svg viewBox="0 0 180 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:170px;">
+            <line x1="20" y1="110" x2="165" y2="110" stroke="#d1d5db" stroke-width="1.5"/>
+            <line x1="20" y1="110" x2="20" y2="15" stroke="#d1d5db" stroke-width="1.5"/>
+            <text x="172" y="114" font-size="11" fill="#94a3b8">x</text>
+            <text x="14" y="12" font-size="11" fill="#94a3b8">y</text>
+            <path d="M25,108 Q80,100 110,70 Q135,45 155,18" stroke="#22c55e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <ul class="rel-bullets">
+          <li>Parabola through origin</li>
+          <li>Double x → quadruple y</li>
+          <li>y/x² = constant</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Inverse -->
+    <div class="rel-card rel-inv">
+      <div class="rel-head"><div class="rel-title">Inverse &nbsp; y ∝ 1/x</div></div>
+      <div class="rel-body">
+        <div class="rel-eq"><span class="hl" style="color:#92400e;">y ∝ 1/x</span><br>y = c/x &nbsp; (= c·x⁻¹)</div>
+        <div class="graph-wrap">
+          <svg viewBox="0 0 180 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:170px;">
+            <line x1="20" y1="110" x2="165" y2="110" stroke="#d1d5db" stroke-width="1.5"/>
+            <line x1="20" y1="110" x2="20" y2="15" stroke="#d1d5db" stroke-width="1.5"/>
+            <text x="172" y="114" font-size="11" fill="#94a3b8">x</text>
+            <text x="14" y="12" font-size="11" fill="#94a3b8">y</text>
+            <path d="M28,18 Q35,30 45,44 Q60,62 80,76 Q110,92 155,104" stroke="#f59e0b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <ul class="rel-bullets">
+          <li>Hyperbola — never touches axes</li>
+          <li>Double x → halve y</li>
+          <li>xy = constant</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Inverse Square -->
+    <div class="rel-card rel-invsq">
+      <div class="rel-head"><div class="rel-title">Inverse Square &nbsp; y ∝ 1/x²</div></div>
+      <div class="rel-body">
+        <div class="rel-eq"><span class="hl" style="color:#991b1b;">y ∝ 1/x²</span><br>y = c/x² &nbsp; (= c·x⁻²)</div>
+        <div class="graph-wrap">
+          <svg viewBox="0 0 180 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:170px;">
+            <line x1="20" y1="110" x2="165" y2="110" stroke="#d1d5db" stroke-width="1.5"/>
+            <line x1="20" y1="110" x2="20" y2="15" stroke="#d1d5db" stroke-width="1.5"/>
+            <text x="172" y="114" font-size="11" fill="#94a3b8">x</text>
+            <text x="14" y="12" font-size="11" fill="#94a3b8">y</text>
+            <path d="M28,15 Q32,22 38,36 Q50,62 70,82 Q100,98 155,107" stroke="#ef4444" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <ul class="rel-bullets">
+          <li>Steeper drop than inverse</li>
+          <li>Double x → quarter y</li>
+          <li>yx² = constant</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fef3c7;">🔍</div>
+    <h2>How to Identify the Relationship from an Equation</h2>
+  </div>
+  <div class="method-box">
+    <h3>The Method — Hold all other variables constant</h3>
+    <div class="method-steps">
+      <div class="method-step"><div class="ms-dot">1</div><div class="ms-text">Identify the two variables you are comparing (y and x)</div></div>
+      <div class="method-step"><div class="ms-dot">2</div><div class="ms-text">Hold all <em>other</em> variables constant — treat them as part of the constant c</div></div>
+      <div class="method-step"><div class="ms-dot">3</div><div class="ms-text">Rearrange so the equation looks like one of: y = cx, y = cx², y = c/x, or y = c/x²</div></div>
+      <div class="method-step"><div class="ms-dot">4</div><div class="ms-text">If both variables appear on the same side, rearrange so one variable is on each side</div></div>
+      <div class="method-step"><div class="ms-dot">5</div><div class="ms-text">Match the form to one of the four relationships and identify the graph shape</div></div>
+    </div>
+  </div>
+
+  <!-- Example 1: F = ma, F vs a -->
+  <div class="example-block">
+    <div class="ex-head" style="background:linear-gradient(135deg,#1e3a8a,#1d4ed8);">
+      <div class="ex-badge" style="background:rgba(255,255,255,0.2);color:white;">Example 1</div>
+      <div class="ex-title" style="color:white;">F = ma &nbsp;— Relationship between Force and Acceleration?</div>
+    </div>
+    <div class="ex-body">
+      <div class="eq-display">F = ma &nbsp;(hold mass m constant)</div>
+      <div class="analysis-row">
+        <div class="analysis-col">
+          <h4 style="color:#1d4ed8;">Steps</h4>
+          <div class="step-row"><div class="s-dot" style="background:#dbeafe;color:#1d4ed8;">1</div>Variables: F and a</div>
+          <div class="step-row"><div class="s-dot" style="background:#dbeafe;color:#1d4ed8;">2</div>Hold m constant → m = c</div>
+          <div class="step-row"><div class="s-dot" style="background:#dbeafe;color:#1d4ed8;">3</div>Equation becomes: F = c·a</div>
+          <div class="step-row"><div class="s-dot" style="background:#dbeafe;color:#1d4ed8;">4</div>This matches y = cx ✓</div>
+        </div>
+        <div class="analysis-col">
+          <h4 style="color:#1d4ed8;">Conclusion</h4>
+          <div class="result-tag" style="background:#dbeafe;color:#1d4ed8;">LINEAR relationship</div>
+          <ul class="bullets">
+            <li>F ∝ a</li>
+            <li>Force is proportional to acceleration</li>
+            <li>F vs. a graph is a <strong>straight line</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example 2: F = ma, m vs a -->
+  <div class="example-block">
+    <div class="ex-head" style="background:linear-gradient(135deg,#92400e,#b45309);">
+      <div class="ex-badge" style="background:rgba(255,255,255,0.2);color:white;">Example 2</div>
+      <div class="ex-title" style="color:white;">F = ma &nbsp;— Relationship between Mass and Acceleration?</div>
+    </div>
+    <div class="ex-body">
+      <div class="eq-display">F = ma &nbsp;(hold force F constant)</div>
+      <div class="analysis-row">
+        <div class="analysis-col">
+          <h4 style="color:#92400e;">Steps</h4>
+          <div class="step-row"><div class="s-dot" style="background:#fef3c7;color:#92400e;">1</div>Variables: m and a</div>
+          <div class="step-row"><div class="s-dot" style="background:#fef3c7;color:#92400e;">2</div>Hold F constant → F = c</div>
+          <div class="step-row"><div class="s-dot" style="background:#fef3c7;color:#92400e;">3</div>Rearrange: m = F/a = c/a = c·a⁻¹</div>
+          <div class="step-row"><div class="s-dot" style="background:#fef3c7;color:#92400e;">4</div>Matches y = c/x ✓</div>
+        </div>
+        <div class="analysis-col">
+          <h4 style="color:#92400e;">Conclusion</h4>
+          <div class="result-tag" style="background:#fef3c7;color:#92400e;">INVERSE relationship</div>
+          <ul class="bullets">
+            <li>m ∝ 1/a</li>
+            <li>Mass is proportional to 1/acceleration</li>
+            <li>m vs. a graph is a <strong>hyperbola</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example 3: g = Gm/r², g vs m -->
+  <div class="example-block">
+    <div class="ex-head" style="background:linear-gradient(135deg,#065f46,#059669);">
+      <div class="ex-badge" style="background:rgba(255,255,255,0.2);color:white;">Example 3</div>
+      <div class="ex-title" style="color:white;">g = Gm/r² &nbsp;— Relationship between gravitational field g and mass m?</div>
+    </div>
+    <div class="ex-body">
+      <div class="eq-display">g = Gm/r² &nbsp;(hold r constant)</div>
+      <div class="analysis-row">
+        <div class="analysis-col">
+          <h4 style="color:#065f46;">Steps</h4>
+          <div class="step-row"><div class="s-dot" style="background:#dcfce7;color:#065f46;">1</div>Variables: g and m</div>
+          <div class="step-row"><div class="s-dot" style="background:#dcfce7;color:#065f46;">2</div>Hold G and r constant → G/r² = c</div>
+          <div class="step-row"><div class="s-dot" style="background:#dcfce7;color:#065f46;">3</div>Equation: g = c·m</div>
+          <div class="step-row"><div class="s-dot" style="background:#dcfce7;color:#065f46;">4</div>Matches y = cx ✓</div>
+        </div>
+        <div class="analysis-col">
+          <h4 style="color:#065f46;">Conclusion</h4>
+          <div class="result-tag" style="background:#dcfce7;color:#065f46;">LINEAR relationship</div>
+          <ul class="bullets">
+            <li>g ∝ m</li>
+            <li>Gravitational field ∝ mass</li>
+            <li>g vs. m graph is a <strong>straight line</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example 4: g = Gm/r², m vs r -->
+  <div class="example-block">
+    <div class="ex-head" style="background:linear-gradient(135deg,#7f1d1d,#991b1b);">
+      <div class="ex-badge" style="background:rgba(255,255,255,0.2);color:white;">Example 4</div>
+      <div class="ex-title" style="color:white;">g = Gm/r² &nbsp;— Relationship between mass m and distance r?</div>
+    </div>
+    <div class="ex-body">
+      <div class="eq-display">g = Gm/r² &nbsp;(hold g and G constant)</div>
+      <div class="analysis-row">
+        <div class="analysis-col">
+          <h4 style="color:#991b1b;">Steps</h4>
+          <div class="step-row"><div class="s-dot" style="background:#fee2e2;color:#991b1b;">1</div>Variables: m and r</div>
+          <div class="step-row"><div class="s-dot" style="background:#fee2e2;color:#991b1b;">2</div>Hold g and G constant: g/G = c</div>
+          <div class="step-row"><div class="s-dot" style="background:#fee2e2;color:#991b1b;">3</div>Rearrange: c·r² = m → m = c·r²</div>
+          <div class="step-row"><div class="s-dot" style="background:#fee2e2;color:#991b1b;">4</div>Matches y = cx² ✓</div>
+        </div>
+        <div class="analysis-col">
+          <h4 style="color:#991b1b;">Conclusion</h4>
+          <div class="result-tag" style="background:#fee2e2;color:#991b1b;">QUADRATIC relationship</div>
+          <ul class="bullets">
+            <li>m ∝ r²</li>
+            <li>Mass is proportional to distance squared</li>
+            <li>m vs. r graph is a <strong>parabola</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#f3e8ff;">📊</div>
+    <h2>Reading Relationships from Graphs</h2>
+  </div>
+  <p style="color:#475569;margin-bottom:20px;">You can also identify proportional relationships by looking at the shape of a graph — assuming all other variables are held constant.</p>
+  <div class="graph-gallery">
+    <div class="graph-card">
+      <h4 style="color:#1d4ed8;">Linear — Momentum vs. Velocity</h4>
+      <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+        <line x1="25" y1="120" x2="185" y2="120" stroke="#d1d5db" stroke-width="1.5"/>
+        <line x1="25" y1="120" x2="25" y2="15" stroke="#d1d5db" stroke-width="1.5"/>
+        <text x="10" y="126" font-size="10" fill="#94a3b8">0</text>
+        <text x="188" y="124" font-size="10" fill="#374151" font-style="italic">v</text>
+        <text x="10" y="14" font-size="10" fill="#374151" font-style="italic">p</text>
+        <line x1="28" y1="118" x2="175" y2="28" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <p>p ∝ v — straight line through origin. Momentum is proportional to velocity.</p>
+    </div>
+    <div class="graph-card">
+      <h4 style="color:#15803d;">Quadratic — Kinetic Energy vs. Velocity</h4>
+      <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+        <line x1="25" y1="120" x2="185" y2="120" stroke="#d1d5db" stroke-width="1.5"/>
+        <line x1="25" y1="120" x2="25" y2="15" stroke="#d1d5db" stroke-width="1.5"/>
+        <text x="10" y="126" font-size="10" fill="#94a3b8">0</text>
+        <text x="188" y="124" font-size="10" fill="#374151" font-style="italic">v</text>
+        <text x="10" y="14" font-size="10" fill="#374151" font-style="italic">Eₖ</text>
+        <path d="M27,118 Q80,115 110,90 Q140,60 175,22" stroke="#22c55e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+      <p>Eₖ ∝ v² — parabola. Kinetic energy is quadratically proportional to velocity.</p>
+    </div>
+    <div class="graph-card">
+      <h4 style="color:#92400e;">Inverse — Resistance vs. Current</h4>
+      <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+        <line x1="25" y1="120" x2="185" y2="120" stroke="#d1d5db" stroke-width="1.5"/>
+        <line x1="25" y1="120" x2="25" y2="15" stroke="#d1d5db" stroke-width="1.5"/>
+        <text x="10" y="126" font-size="10" fill="#94a3b8">0</text>
+        <text x="188" y="124" font-size="10" fill="#374151" font-style="italic">I</text>
+        <text x="10" y="14" font-size="10" fill="#374151" font-style="italic">R</text>
+        <path d="M30,18 Q40,32 55,50 Q75,72 100,88 Q130,102 175,114" stroke="#f59e0b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+      <p>R ∝ 1/I — hyperbola. Resistance is inversely proportional to current.</p>
+    </div>
+    <div class="graph-card">
+      <h4 style="color:#991b1b;">Inverse Square — Electric Field vs. Distance</h4>
+      <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+        <line x1="25" y1="120" x2="185" y2="120" stroke="#d1d5db" stroke-width="1.5"/>
+        <line x1="25" y1="120" x2="25" y2="15" stroke="#d1d5db" stroke-width="1.5"/>
+        <text x="10" y="126" font-size="10" fill="#94a3b8">0</text>
+        <text x="188" y="124" font-size="10" fill="#374151" font-style="italic">d</text>
+        <text x="8" y="14" font-size="10" fill="#374151" font-style="italic">E</text>
+        <path d="M30,16 Q36,26 44,42 Q58,68 78,88 Q108,105 175,116" stroke="#ef4444" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+      <p>E ∝ 1/d² — inverse square curve, drops faster than plain inverse.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="quiz-section">
+    <h3>⚡ Quick Check</h3>
+    <p>Identify the proportional relationship.</p>
+    <div class="quiz-q" id="q1">
+      <div class="qtext">For the equation Eₖ = ½mv², what is the relationship between Eₖ and v (holding m constant)?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q1',false,'Linear would mean Eₖ = cv, but v is squared in the formula.')">Linear (Eₖ ∝ v)</button>
+        <button class="opt-btn" onclick="check(this,'q1',true,'Correct! Hold m constant → ½m = c → Eₖ = c·v². This is quadratic: Eₖ ∝ v².')">Quadratic (Eₖ ∝ v²)</button>
+        <button class="opt-btn" onclick="check(this,'q1',false,'Inverse would mean v is in the denominator. Here v² is in the numerator.')">Inverse (Eₖ ∝ 1/v)</button>
+      </div>
+      <div class="feedback" id="q1-fb"></div>
+    </div>
+    <div class="quiz-q" id="q2">
+      <div class="qtext">For g = Gm/r², what is the relationship between g and r (hold m and G constant)?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q2',false,'Linear means g = cr, but r is squared in the denominator.')">Linear</button>
+        <button class="opt-btn" onclick="check(this,'q2',false,'Inverse means g = c/r, but r is squared — so it drops faster.')">Inverse</button>
+        <button class="opt-btn" onclick="check(this,'q2',true,'Correct! Hold Gm constant → c = Gm → g = c/r². This is inverse square: g ∝ 1/r².')">Inverse Square</button>
+      </div>
+      <div class="feedback" id="q2-fb"></div>
+    </div>
+    <div class="quiz-q" id="q3">
+      <div class="qtext">A graph of y vs x is a straight line through the origin. Which statement must be true?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q3',false,'A parabola shows quadratic (y ∝ x²), not a straight line.')">y ∝ x²</button>
+        <button class="opt-btn" onclick="check(this,'q3',true,'Correct! A straight line through the origin means y = cx, so y ∝ x (linear).')">y ∝ x</button>
+        <button class="opt-btn" onclick="check(this,'q3',false,'A hyperbola shows inverse (y ∝ 1/x), not a straight line.')">y ∝ 1/x</button>
+      </div>
+      <div class="feedback" id="q3-fb"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer>Physics · High School &nbsp;·&nbsp; Unit 6: Proportional Relationships — Linear, Quadratic, Inverse, Inverse Square</footer>
+<script>
+function check(btn,qid,correct,msg){
+  var q=document.getElementById(qid);
+  var fb=document.getElementById(qid+'-fb');
+  q.querySelectorAll('.opt-btn').forEach(function(b){b.disabled=true;b.style.opacity='0.55';b.style.cursor='default';});
+  btn.style.opacity='1';
+  btn.classList.add(correct?'correct':'wrong');
+  fb.textContent=(correct?'✅ ':'❌ ')+msg;
+  fb.className='feedback show '+(correct?'ok':'bad');
+}
+</script>
+</body>
+</html>

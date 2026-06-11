@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kinematics from Geometry — Classwork</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root{--blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:860px;margin:36px auto;padding:0 24px 60px;}
+    .ref-box{background:white;border:2px solid #bfdbfe;border-radius:12px;padding:20px 24px;margin-bottom:28px;}
+    .ref-box h3{color:#1e3a5f;font-size:1rem;font-weight:800;margin-bottom:12px;}
+    .ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    @media(max-width:580px){.ref-grid{grid-template-columns:1fr;}}
+    .ref-item{background:#eff6ff;border-radius:8px;padding:10px 14px;font-size:0.88rem;}
+    .ref-item .sym{font-family:'Space Mono',monospace;font-weight:700;color:#1d4ed8;display:block;margin-bottom:2px;}
+    .ref-eq-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+    .eq-chip{background:#1e3a5f;color:white;font-family:'Space Mono',monospace;font-size:0.82rem;font-weight:700;padding:5px 12px;border-radius:8px;}
+    section{margin-bottom:44px;}
+    h2{font-size:1.2rem;font-weight:800;color:#1e3a5f;border-left:5px solid #3b82f6;padding-left:12px;margin-bottom:16px;}
+    .instructions{color:#4b5563;font-size:0.9rem;margin-bottom:16px;font-style:italic;}
+    .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    @media(max-width:600px){.problem-grid{grid-template-columns:1fr;}}
+    .problem-card{background:white;border-radius:10px;padding:18px 20px;box-shadow:0 1px 6px rgba(0,0,0,0.08);}
+    .problem-num{font-size:0.72rem;font-weight:800;text-transform:uppercase;color:#6b7280;margin-bottom:6px;letter-spacing:0.5px;}
+    .scenario{font-size:0.95rem;font-weight:600;color:#1a1a2e;margin-bottom:12px;line-height:1.55;}
+    .field-set{display:flex;flex-direction:column;gap:8px;}
+    .field-row{display:flex;align-items:center;gap:8px;font-size:0.88rem;font-weight:600;}
+    .fill-line{border-bottom:2px solid #d1d5db;min-height:26px;flex:1;}
+    .workbox{border:1.5px solid #e2e8f0;border-radius:6px;min-height:60px;margin-top:8px;padding:6px;}
+    .workbox-label{font-size:0.72rem;color:#94a3b8;font-weight:700;text-transform:uppercase;}
+    .short-answer{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 1px 6px rgba(0,0,0,0.08);margin-bottom:14px;}
+    .short-answer .q{font-weight:700;margin-bottom:10px;font-size:0.95rem;color:#1e3a5f;}
+    .write-lines{display:flex;flex-direction:column;gap:16px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+    .graph-problem{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 1px 6px rgba(0,0,0,0.08);margin-bottom:14px;}
+    .graph-problem .gp-q{font-weight:700;margin-bottom:12px;font-size:0.95rem;color:#1e3a5f;}
+    .graph-subq{display:flex;flex-direction:column;gap:12px;margin-top:10px;}
+    .graph-subq-item{display:flex;align-items:center;gap:10px;font-size:0.9rem;font-weight:600;}
+    .graph-subq-item .sq-label{min-width:22px;font-weight:800;color:#1d4ed8;}
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#1e3a5f;color:white;border:none;padding:12px 36px;font-size:1rem;font-weight:800;border-radius:10px;cursor:pointer;font-family:inherit;transition:background 0.2s;}
+    #toggle-key-btn:hover{background:#1d4ed8;}
+    #answer-key{display:none;background:#eff6ff;border:2px solid #93c5fd;border-radius:14px;padding:28px 32px;margin-top:16px;}
+    #answer-key h2{color:#1e3a5f;border-left-color:#3b82f6;margin-bottom:24px;}
+    .key-section{margin-bottom:28px;}
+    .key-section h3{font-size:1rem;font-weight:800;color:#1e3a5f;margin-bottom:14px;}
+    .key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    .key-item{background:white;border-radius:8px;padding:12px 16px;font-size:0.92rem;}
+    .key-item .kq{font-size:0.78rem;color:#6b7280;margin-bottom:3px;font-weight:700;}
+    .key-item .kans{color:#1d4ed8;font-weight:700;font-family:'Space Mono',monospace;font-size:0.9rem;}
+    .key-item .kexpl{color:#4b5563;font-size:0.8rem;margin-top:4px;line-height:1.5;}
+    .short-ans-key{background:white;border-radius:8px;padding:14px 18px;font-size:0.92rem;margin-bottom:10px;}
+    .short-ans-key strong{color:#1d4ed8;}
+    .tip-note{background:#fffbeb;border:2px solid #fde68a;border-radius:10px;padding:12px 18px;margin-bottom:20px;font-size:0.88rem;color:#78350f;font-weight:600;}
+    /* SVG graph in problem */
+    .vt-graph-wrap{margin:10px 0;background:#f8faff;border-radius:8px;padding:10px;}
+    .ans-fill{border-bottom:2px solid #d1d5db;min-height:24px;display:inline-block;min-width:80px;}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">&#128274;</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">Kinematics &middot; Unit 12 &middot; In-Class Activity</div>
+  <h1>Kinematics from Geometry &mdash; Classwork</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+
+  <!-- Reference Box -->
+  <div class="ref-box">
+    <h3>Reference &mdash; The 4 Kinematic Equations &amp; Their Geometric Origins</h3>
+    <div class="ref-grid">
+      <div class="ref-item"><span class="sym">u</span>Initial velocity (ms&#8315;&#185;)</div>
+      <div class="ref-item"><span class="sym">v</span>Final velocity (ms&#8315;&#185;)</div>
+      <div class="ref-item"><span class="sym">a</span>Acceleration (ms&#8315;&sup2;)</div>
+      <div class="ref-item"><span class="sym">t</span>Time (s)</div>
+      <div class="ref-item"><span class="sym">s</span>Displacement (m)</div>
+      <div class="ref-item" style="background:#f0fdf4;border:1px solid #86efac;">
+        <span class="sym" style="color:#15803d;">Geometric proof</span>
+        Slope of v-t graph = a; Area under v-t graph = s
+      </div>
+    </div>
+    <div class="ref-eq-row">
+      <div class="eq-chip">v = u + at</div>
+      <div class="eq-chip">s = ut + &frac12;at&sup2;</div>
+      <div class="eq-chip">s = (u+v)/2 &times; t</div>
+      <div class="eq-chip">v&sup2; = u&sup2; + 2as</div>
+    </div>
+    <p style="margin-top:10px;font-size:0.82rem;color:#6b7280;">Eq.1 from slope; Eq.2 from rectangle+triangle areas; Eq.3 from trapezoid area; Eq.4 algebraic combination.</p>
+  </div>
+
+  <!-- PART A: Calculation Problems -->
+  <section>
+    <h2>Part A &mdash; Applying the Geometric Equations (6 Problems)</h2>
+    <p class="instructions">Use the kinematic equations proven geometrically. Show all working. Include units in every answer.</p>
+    <div class="problem-grid">
+
+      <!-- Problem 1 -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 1 &mdash; v = u + at (Slope proof)</div>
+        <div class="scenario">A cyclist starts at rest and accelerates at 2 ms&#8315;&sup2; for 10 seconds. Find the final velocity.</div>
+        <div class="field-set">
+          <div class="field-row"><span>u =</span><div class="fill-line"></div><span>ms&#8315;&#185;</span></div>
+          <div class="field-row"><span>a =</span><div class="fill-line"></div><span>ms&#8315;&sup2;</span></div>
+          <div class="field-row"><span>t =</span><div class="fill-line"></div><span>s</span></div>
+          <div class="field-row"><span>v =</span><div class="fill-line"></div><span>ms&#8315;&#185;</span></div>
+        </div>
+        <div class="workbox"><div class="workbox-label">Working</div></div>
+      </div>
+
+      <!-- Problem 2 -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 2 &mdash; v = u + at (Slope proof)</div>
+        <div class="scenario">A ball rolls with initial velocity 8 ms&#8315;&#185; and decelerates at 1.5 ms&#8315;&sup2;. Find its velocity after 4 seconds.</div>
+        <div class="field-set">
+          <div class="field-row"><span>u =</span><div class="fill-line"></div><span>ms&#8315;&#185;</span></div>
+          <div class="field-row"><span>a =</span><div class="fill-line"></div><span>ms&#8315;&sup2;</span></div>
+          <div class="field-row"><span>t =</span><div class="fill-line"></div><span>s</span></div>
+          <div class="field-row"><span>v =</span><div class="fill-line"></div><span>ms&#8315;&#185;</span></div>
+        </div>
+        <div class="workbox"><div class="workbox-label">Working</div></div>
+      </div>
+
+      <!-- Problem 3 -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 3 &mdash; s = ut + &frac12;at&sup2; (Rectangle + Triangle)</div>
+        <div class="scenario">A car has initial velocity u = 4 ms&#8315;&#185; and accelerates at a = 3 ms&#8315;&sup2; for t = 5 s. Find the displacement by calculating the rectangle and triangle areas separately.</div>
+        <div class="field-set">
+          <div class="field-row"><span>Rectangle area (ut) =</span><div class="fill-line"></div><span>m</span></div>
+          <div class="field-row"><span>Triangle area (&frac12;at&sup2;) =</span><div class="fill-line"></div><span>m</span></div>
+          <div class="field-row"><span>s =</span><div class="fill-line"></div><span>m</span></div>
+        </div>
+        <div class="workbox"><div class="workbox-label">Working</div></div>
+      </div>
+
+      <!-- Problem 4 -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 4 &mdash; s = ut + &frac12;at&sup2; (Rectangle + Triangle)</div>
+        <div class="scenario">An object starts from rest (u = 0) and accelerates at 5 ms&#8315;&sup2; for 6 seconds. Find the displacement.</div>
+        <div class="field-set">
+          <div class="field-row"><span>Rectangle area (ut) =</span><div class="fill-line"></div><span>m</span></div>
+          <div class="field-row"><span>Triangle area (&frac12;at&sup2;) =</span><div class="fill-line"></div><span>m</span></div>
+          <div class="field-row"><span>s =</span><div class="fill-line"></div><span>m</span></div>
+        </div>
+        <div class="workbox"><div class="workbox-label">Working</div></div>
+      </div>
+
+      <!-- Problem 5 -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 5 &mdash; s = (u+v)/2 &times; t (Trapezoid)</div>
+        <div class="scenario">A sprinter accelerates from u = 2 ms&#8315;&#185; to v = 10 ms&#8315;&#185; in t = 4 s. Find the displacement using the trapezoid area formula.</div>
+        <div class="field-set">
+          <div class="field-row"><span>u =</span><div class="fill-line"></div><span>ms&#8315;&#185;</span></div>
+          <div class="field-row"><span>v =</span><div class="fill-line"></div><span>ms&#8315;&#185;</span></div>
+          <div class="field-row"><span>t =</span><div class="fill-line"></div><span>s</span></div>
+          <div class="field-row"><span>s =</span><div class="fill-line"></div><span>m</span></div>
+        </div>
+        <div class="workbox"><div class="workbox-label">Working</div></div>
+      </div>
+
+      <!-- Problem 6 -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 6 &mdash; s = (u+v)/2 &times; t (Trapezoid)</div>
+        <div class="scenario">A bus accelerates uniformly from u = 5 ms&#8315;&#185; to v = 25 ms&#8315;&#185; over t = 10 s. Find the displacement using the trapezoid method.</div>
+        <div class="field-set">
+          <div class="field-row"><span>u =</span><div class="fill-line"></div><span>ms&#8315;&#185;</span></div>
+          <div class="field-row"><span>v =</span><div class="fill-line"></div><span>ms&#8315;&#185;</span></div>
+          <div class="field-row"><span>t =</span><div class="fill-line"></div><span>s</span></div>
+          <div class="field-row"><span>s =</span><div class="fill-line"></div><span>m</span></div>
+        </div>
+        <div class="workbox"><div class="workbox-label">Working</div></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PART B: Graph-Based Problems -->
+  <section>
+    <h2>Part B &mdash; Reading and Interpreting v-t Graphs (4 Problems)</h2>
+    <p class="instructions">Use the v-t graphs below. Identify the labeled geometric regions and calculate the quantities asked.</p>
+
+    <!-- Graph Problem 1 -->
+    <div class="graph-problem">
+      <div class="gp-q">B1. The v-t graph below shows an object with u = 3 ms&#8315;&#185;, a = 2 ms&#8315;&sup2;, t = 5 s.</div>
+      <div class="vt-graph-wrap">
+        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:360px;display:block;">
+          <defs><pattern id="gridB1" width="28" height="18" patternUnits="userSpaceOnUse"><path d="M 28 0 L 0 0 0 18" fill="none" stroke="#e2e8f0" stroke-width="0.7"/></pattern></defs>
+          <rect x="40" y="10" width="260" height="160" fill="url(#gridB1)"/>
+          <!-- Blue rectangle -->
+          <rect x="40" y="110" width="220" height="60" fill="#3b82f6" opacity="0.2"/>
+          <!-- Green triangle -->
+          <polygon points="40,110 260,110 260,10" fill="#22c55e" opacity="0.25"/>
+          <!-- Axes -->
+          <line x1="40" y1="170" x2="300" y2="170" stroke="#ef4444" stroke-width="2"/>
+          <line x1="40" y1="10" x2="40" y2="170" stroke="#3b82f6" stroke-width="2"/>
+          <!-- v-t line: (40,110) to (260,10) -->
+          <line x1="40" y1="110" x2="260" y2="10" stroke="#1d4ed8" stroke-width="2.5"/>
+          <!-- dashed right vertical -->
+          <line x1="260" y1="10" x2="260" y2="170" stroke="#111827" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <!-- dashed horizontal at u -->
+          <line x1="40" y1="110" x2="260" y2="110" stroke="#ef4444" stroke-width="1.2" stroke-dasharray="4,3"/>
+          <!-- Labels -->
+          <text x="26" y="114" fill="#f97316" font-family="Space Mono" font-size="11" font-weight="700">u=3</text>
+          <text x="244" y="8" fill="#a855f7" font-family="Space Mono" font-size="11" font-weight="700">v=?</text>
+          <text x="255" y="185" fill="#3b82f6" font-family="Space Mono" font-size="11" font-weight="700">t=5</text>
+          <text x="130" y="148" fill="#1d4ed8" font-family="Space Mono" font-size="10" font-weight="700">ut</text>
+          <text x="195" y="75" fill="#15803d" font-family="Space Mono" font-size="10" font-weight="700">&#189;at&#178;</text>
+          <text x="155" y="188" fill="#ef4444" font-family="Nunito" font-size="11" font-weight="800">Time (s)</text>
+          <text x="14" y="95" fill="#3b82f6" font-family="Nunito" font-size="11" font-weight="800" transform="rotate(-90,14,95)">Velocity</text>
+        </svg>
+      </div>
+      <div class="graph-subq">
+        <div class="graph-subq-item"><span class="sq-label">(a)</span><span>Calculate the final velocity v using v = u + at:&nbsp;</span><div class="ans-fill"></div><span>&nbsp;ms&#8315;&#185;</span></div>
+        <div class="graph-subq-item"><span class="sq-label">(b)</span><span>Area of blue rectangle (ut):&nbsp;</span><div class="ans-fill"></div><span>&nbsp;m</span></div>
+        <div class="graph-subq-item"><span class="sq-label">(c)</span><span>Area of green triangle (&frac12;at&sup2;):&nbsp;</span><div class="ans-fill"></div><span>&nbsp;m</span></div>
+        <div class="graph-subq-item"><span class="sq-label">(d)</span><span>Total displacement s = rectangle + triangle:&nbsp;</span><div class="ans-fill"></div><span>&nbsp;m</span></div>
+      </div>
+    </div>
+
+    <!-- Graph Problem 2 -->
+    <div class="graph-problem">
+      <div class="gp-q">B2. A v-t graph shows a trapezoid with u = 6 ms&#8315;&#185;, v = 18 ms&#8315;&#185;, t = 8 s.</div>
+      <div class="vt-graph-wrap">
+        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:360px;display:block;">
+          <defs><pattern id="gridB2" width="28" height="18" patternUnits="userSpaceOnUse"><path d="M 28 0 L 0 0 0 18" fill="none" stroke="#e2e8f0" stroke-width="0.7"/></pattern></defs>
+          <rect x="40" y="10" width="260" height="160" fill="url(#gridB2)"/>
+          <!-- Trapezoid: (40,120),(40,170),(260,170),(260,30) -->
+          <polygon points="40,120 40,170 260,170 260,30" fill="#3b82f6" opacity="0.22"/>
+          <polygon points="40,120 40,170 260,170 260,30" fill="none" stroke="#3b82f6" stroke-width="1.5"/>
+          <!-- Axes -->
+          <line x1="40" y1="170" x2="300" y2="170" stroke="#ef4444" stroke-width="2"/>
+          <line x1="40" y1="10" x2="40" y2="170" stroke="#3b82f6" stroke-width="2"/>
+          <!-- Sloped line -->
+          <line x1="40" y1="120" x2="260" y2="30" stroke="#ef4444" stroke-width="2.5"/>
+          <!-- Labels -->
+          <text x="12" y="124" fill="#f97316" font-family="Space Mono" font-size="10" font-weight="700">u=6</text>
+          <text x="263" y="34" fill="#a855f7" font-family="Space Mono" font-size="10" font-weight="700">v=18</text>
+          <text x="140" y="120" fill="#1d4ed8" font-family="Nunito" font-size="12" font-weight="800">Trapezoid</text>
+          <text x="140" y="136" fill="#1d4ed8" font-family="Space Mono" font-size="10" font-weight="700">s = ?</text>
+          <text x="155" y="188" fill="#ef4444" font-family="Nunito" font-size="11" font-weight="800">Time (s)</text>
+          <text x="14" y="95" fill="#3b82f6" font-family="Nunito" font-size="11" font-weight="800" transform="rotate(-90,14,95)">Velocity</text>
+        </svg>
+      </div>
+      <div class="graph-subq">
+        <div class="graph-subq-item"><span class="sq-label">(a)</span><span>Identify the two parallel sides of the trapezoid: base<sub>1</sub> =&nbsp;</span><div class="ans-fill" style="min-width:40px;"></div><span>&nbsp;and base<sub>2</sub> =&nbsp;</span><div class="ans-fill" style="min-width:40px;"></div></div>
+        <div class="graph-subq-item"><span class="sq-label">(b)</span><span>Height of trapezoid = t =&nbsp;</span><div class="ans-fill" style="min-width:40px;"></div><span>&nbsp;s</span></div>
+        <div class="graph-subq-item"><span class="sq-label">(c)</span><span>Displacement s = (u+v)/2 &times; t =&nbsp;</span><div class="ans-fill"></div><span>&nbsp;m</span></div>
+      </div>
+    </div>
+
+    <!-- Graph Problem 3 -->
+    <div class="graph-problem">
+      <div class="gp-q">B3. A v-t graph for an object has the line starting at u = 0 (origin) and reaching v = 20 ms&#8315;&#185; at t = 4 s. The area under the line is a triangle only (since u = 0).</div>
+      <div class="vt-graph-wrap">
+        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:360px;display:block;">
+          <defs><pattern id="gridB3" width="28" height="22" patternUnits="userSpaceOnUse"><path d="M 28 0 L 0 0 0 22" fill="none" stroke="#e2e8f0" stroke-width="0.7"/></pattern></defs>
+          <rect x="40" y="10" width="260" height="160" fill="url(#gridB3)"/>
+          <!-- Triangle: origin to v=20 at t=4 -->
+          <polygon points="40,170 200,170 200,30" fill="#22c55e" opacity="0.3"/>
+          <!-- Axes -->
+          <line x1="40" y1="170" x2="300" y2="170" stroke="#ef4444" stroke-width="2"/>
+          <line x1="40" y1="10" x2="40" y2="170" stroke="#3b82f6" stroke-width="2"/>
+          <!-- v-t line from origin -->
+          <line x1="40" y1="170" x2="200" y2="30" stroke="#1d4ed8" stroke-width="2.5"/>
+          <line x1="200" y1="30" x2="200" y2="170" stroke="#111827" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <!-- Labels -->
+          <text x="26" y="174" fill="#f97316" font-family="Space Mono" font-size="11" font-weight="700">u=0</text>
+          <text x="203" y="28" fill="#a855f7" font-family="Space Mono" font-size="11" font-weight="700">v=20</text>
+          <text x="196" y="187" fill="#3b82f6" font-family="Space Mono" font-size="11" font-weight="700">t=4</text>
+          <text x="130" y="130" fill="#15803d" font-family="Space Mono" font-size="11" font-weight="700">&#189;&times;b&times;h</text>
+          <text x="155" y="195" fill="#ef4444" font-family="Nunito" font-size="11" font-weight="800">Time (s)</text>
+        </svg>
+      </div>
+      <div class="graph-subq">
+        <div class="graph-subq-item"><span class="sq-label">(a)</span><span>Base of triangle = t =&nbsp;</span><div class="ans-fill" style="min-width:40px;"></div><span>&nbsp;s</span></div>
+        <div class="graph-subq-item"><span class="sq-label">(b)</span><span>Height of triangle = v =&nbsp;</span><div class="ans-fill" style="min-width:40px;"></div><span>&nbsp;ms&#8315;&#185;</span></div>
+        <div class="graph-subq-item"><span class="sq-label">(c)</span><span>Displacement = &frac12; &times; base &times; height =&nbsp;</span><div class="ans-fill"></div><span>&nbsp;m</span></div>
+        <div class="graph-subq-item"><span class="sq-label">(d)</span><span>What is the acceleration of this object?&nbsp;</span><div class="ans-fill"></div><span>&nbsp;ms&#8315;&sup2;</span></div>
+      </div>
+    </div>
+
+    <!-- Graph Problem 4 -->
+    <div class="graph-problem">
+      <div class="gp-q">B4. A v-t graph shows a straight line from (0, 10) to (6, 22). Answer the questions about the geometric features.</div>
+      <div class="graph-subq">
+        <div class="graph-subq-item"><span class="sq-label">(a)</span><span>What is the initial velocity u?&nbsp;</span><div class="ans-fill"></div><span>&nbsp;ms&#8315;&#185;</span></div>
+        <div class="graph-subq-item"><span class="sq-label">(b)</span><span>What is the final velocity v?&nbsp;</span><div class="ans-fill"></div><span>&nbsp;ms&#8315;&#185;</span></div>
+        <div class="graph-subq-item"><span class="sq-label">(c)</span><span>What is the rise (= v &minus; u) of the line?&nbsp;</span><div class="ans-fill"></div><span>&nbsp;ms&#8315;&#185;</span></div>
+        <div class="graph-subq-item"><span class="sq-label">(d)</span><span>Slope = acceleration a = rise / run =&nbsp;</span><div class="ans-fill"></div><span>&nbsp;ms&#8315;&sup2;</span></div>
+        <div class="graph-subq-item"><span class="sq-label">(e)</span><span>Displacement using trapezoid: s = (u+v)/2 &times; t =&nbsp;</span><div class="ans-fill"></div><span>&nbsp;m</span></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- PART C: Short Answer -->
+  <section>
+    <h2>Part C &mdash; Short Answer (3 Questions)</h2>
+    <p class="instructions">Answer in complete sentences. Use the geometric proofs as the basis for your explanations.</p>
+
+    <div class="short-answer">
+      <div class="q">C1. Explain in your own words why the area under a velocity-time graph equals the displacement of the object. Connect this to one of the kinematic equations.</div>
+      <div class="write-lines">
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+
+    <div class="short-answer">
+      <div class="q">C2. Describe the two geometric shapes that make up the area under a v-t graph for an object with non-zero initial velocity and positive acceleration. What kinematic quantity does each shape's area represent?</div>
+      <div class="write-lines">
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+
+    <div class="short-answer">
+      <div class="q">C3. The equation v&sup2; = u&sup2; + 2as cannot be proven directly from the v-t graph (unlike the other three equations). Describe the algebraic method used to derive it from two other kinematic equations.</div>
+      <div class="write-lines">
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Answer Key Toggle -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="var k=document.getElementById('answer-key');var b=document.getElementById('toggle-key-btn');if(k.style.display==='none'||k.style.display===''){k.style.display='block';b.textContent='Hide Answer Key';}else{k.style.display='none';b.textContent='Show Answer Key';}">Show Answer Key</button>
+  </div>
+
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A &mdash; Calculation Problems</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="kq">Problem 1 — v = u + at</div>
+          <div class="kans">v = 20 ms&#8315;&#185;</div>
+          <div class="kexpl">u=0, a=2, t=10. v = 0 + 2&times;10 = 20 ms&#8315;&#185;. Geometrically: the line rises from 0 by a&times;t = 2&times;10 = 20.</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Problem 2 — v = u + at (deceleration)</div>
+          <div class="kans">v = 2 ms&#8315;&#185;</div>
+          <div class="kexpl">u=8, a=&minus;1.5, t=4. v = 8 + (&minus;1.5)&times;4 = 8 &minus; 6 = 2 ms&#8315;&#185;. The line has negative slope; it falls by 6 over 4 s.</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Problem 3 — Rectangle + Triangle</div>
+          <div class="kans">s = 57.5 m</div>
+          <div class="kexpl">Rectangle = u&times;t = 4&times;5 = 20 m. Triangle = &frac12;&times;a&times;t&sup2; = &frac12;&times;3&times;25 = 37.5 m. Total = 20 + 37.5 = 57.5 m.</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Problem 4 — From rest: rectangle = 0</div>
+          <div class="kans">s = 90 m</div>
+          <div class="kexpl">u=0 &rarr; rectangle = 0&times;6 = 0. Triangle = &frac12;&times;5&times;36 = 90 m. s = 0 + 90 = 90 m.</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Problem 5 — Trapezoid</div>
+          <div class="kans">s = 24 m</div>
+          <div class="kexpl">s = (u+v)/2 &times; t = (2+10)/2 &times; 4 = 6 &times; 4 = 24 m.</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Problem 6 — Trapezoid</div>
+          <div class="kans">s = 150 m</div>
+          <div class="kexpl">s = (u+v)/2 &times; t = (5+25)/2 &times; 10 = 15 &times; 10 = 150 m.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B &mdash; Graph Problems</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="kq">B1 — Reading v-t graph (u=3, a=2, t=5)</div>
+          <div class="kans">(a) v=13 ms&#8315;&#185;; (b) 15 m; (c) 25 m; (d) 40 m</div>
+          <div class="kexpl">(a) v=3+2&times;5=13. (b) rectangle=3&times;5=15. (c) triangle=&frac12;&times;2&times;25=25. (d) s=15+25=40 m. Check: s=(3+13)/2&times;5=8&times;5=40 ✓</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">B2 — Trapezoid (u=6, v=18, t=8)</div>
+          <div class="kans">(a) 6 &amp; 18; (b) t=8 s; (c) s=96 m</div>
+          <div class="kexpl">s=(6+18)/2&times;8=12&times;8=96 m. The parallel sides are the two velocity values; height is time.</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">B3 — Triangle only (u=0, v=20, t=4)</div>
+          <div class="kans">(a) 4 s; (b) 20 ms&#8315;&#185;; (c) 40 m; (d) 5 ms&#8315;&sup2;</div>
+          <div class="kexpl">s=&frac12;&times;4&times;20=40 m. a=v/t=20/4=5 ms&#8315;&sup2;. When u=0, the rectangle vanishes and only the triangle remains.</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">B4 — Line from (0,10) to (6,22)</div>
+          <div class="kans">(a) 10; (b) 22; (c) 12; (d) 2 ms&#8315;&sup2;; (e) 96 m</div>
+          <div class="kexpl">Rise=22&minus;10=12. Run=6. a=12/6=2 ms&#8315;&sup2;. s=(10+22)/2&times;6=16&times;6=96 m.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C &mdash; Short Answer Model Answers</h3>
+      <div class="short-ans-key">
+        <strong>C1.</strong> The area under a v-t graph equals displacement because displacement is the product of velocity and time (s = v&times;t for constant velocity). When velocity changes linearly (constant acceleration), we split the area into geometric shapes and sum them. The rectangle gives ut (the displacement if there were no acceleration) and the triangle gives &frac12;at&sup2; (the extra displacement due to acceleration). Together: s = ut + &frac12;at&sup2;.
+      </div>
+      <div class="short-ans-key">
+        <strong>C2.</strong> For non-zero initial velocity u and positive acceleration a: (1) A <strong>blue rectangle</strong> sits below the horizontal dashed line at height u. Its area = base &times; height = t &times; u = <em>ut</em>, representing the displacement the object would have if it moved at constant initial velocity the whole time. (2) A <strong>green triangle</strong> sits above the dashed line. Its height = at (the rise from the slope proof) and base = t. Area = &frac12;&times;t&times;at = &frac12;at&sup2;, the additional displacement from accelerating.
+      </div>
+      <div class="short-ans-key">
+        <strong>C3.</strong> From Equation 1, rearrange to get t = (v&minus;u)/a. Substitute this into Equation 3 (s = (u+v)/2 &times; t): s = (u+v)/2 &times; (v&minus;u)/a. Multiply both sides by 2a: 2as = (v+u)(v&minus;u) = v&sup2;&minus;u&sup2;. Rearranging gives v&sup2; = u&sup2; + 2as.
+      </div>
+    </div>
+  </div>
+
+</main>
+<footer style="text-align:center;padding:28px 20px;font-size:0.82rem;color:#94a3b8;">Kinematics &middot; Unit 12 &mdash; Classwork &nbsp;|&nbsp; Physics Class</footer>
+</body>
+</html>

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review of Trig — Finding Missing Sides: Classwork</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0fdf4;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#14532d 0%,#15803d 50%,#16a34a 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:840px;margin:36px auto;padding:0 24px 60px;}
+
+    /* reference box */
+    .ref-box{background:white;border:2px solid #86efac;border-radius:12px;padding:20px 24px;margin-bottom:36px;}
+    .ref-box h3{color:#14532d;font-size:1rem;font-weight:800;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px;}
+    .ref-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    @media(max-width:620px){.ref-grid{grid-template-columns:1fr;}}
+    .ref-tile{background:#f0fdf4;border-radius:8px;padding:12px 14px;border-left:4px solid #16a34a;text-align:center;}
+    .ref-tile .rt-name{font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;color:#14532d;margin-bottom:4px;}
+    .ref-tile .rt-base{font-family:'Space Mono',monospace;font-size:0.82rem;color:#374151;margin-bottom:6px;}
+    .ref-tile .rt-forms{font-size:0.78rem;color:#64748b;}
+    .ref-tile .rt-forms span{display:block;font-family:'Space Mono',monospace;font-size:0.8rem;font-weight:700;color:#15803d;margin-top:2px;}
+
+    section{margin-bottom:44px;}
+    h2{font-size:1.2rem;font-weight:800;color:#14532d;border-left:5px solid #16a34a;padding-left:12px;margin-bottom:18px;}
+    .instructions{color:#4b5563;font-size:0.9rem;margin-bottom:18px;font-style:italic;}
+
+    /* problem cards */
+    .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+    @media(max-width:580px){.problem-grid{grid-template-columns:1fr;}}
+    .problem-card{background:white;border-radius:10px;padding:18px 20px;box-shadow:0 2px 8px rgba(20,83,45,0.08);border-top:3px solid #86efac;}
+    .problem-num{font-size:0.72rem;font-weight:800;text-transform:uppercase;color:#15803d;margin-bottom:8px;letter-spacing:0.5px;}
+    .given-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+    .given-pill{background:#dcfce7;color:#15803d;font-family:'Space Mono',monospace;font-size:0.85rem;font-weight:700;padding:4px 11px;border-radius:14px;}
+    .find-pill{background:#fef3c7;color:#92400e;font-family:'Space Mono',monospace;font-size:0.85rem;font-weight:700;padding:4px 11px;border-radius:14px;}
+    .answer-block{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
+    .answer-row{display:flex;align-items:center;gap:10px;font-size:0.88rem;color:#374151;}
+    .answer-label{font-family:'Space Mono',monospace;font-weight:700;min-width:28px;color:#15803d;}
+    .answer-line{border-bottom:2px solid #d1d5db;flex:1;min-height:22px;}
+    .work-area{border:2px dashed #86efac;border-radius:8px;min-height:64px;margin-top:8px;padding:6px 10px;}
+    .work-label{font-size:0.7rem;font-weight:800;color:#15803d;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;}
+
+    /* wide problem */
+    .problem-wide{background:white;border-radius:10px;padding:20px 22px;box-shadow:0 2px 8px rgba(20,83,45,0.08);border-top:3px solid #86efac;margin-bottom:14px;}
+    .problem-wide .problem-num{font-size:0.72rem;font-weight:800;text-transform:uppercase;color:#15803d;margin-bottom:10px;letter-spacing:0.5px;}
+    .wide-work{border:2px dashed #86efac;border-radius:8px;min-height:80px;margin-top:12px;padding:8px 12px;}
+
+    /* short answer */
+    .short-answer{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:14px;}
+    .short-answer .q{font-weight:700;margin-bottom:10px;font-size:0.95rem;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+
+    /* answer key */
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#15803d;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #toggle-key-btn:hover{background:#14532d;}
+    #answer-key{display:none;background:#f0fdf4;border:2px solid #86efac;border-radius:14px;padding:28px 32px;}
+    #answer-key h2{color:#14532d;border-left-color:#16a34a;margin-bottom:22px;}
+    .key-section{margin-bottom:28px;}
+    .key-section h3{font-size:0.95rem;font-weight:800;color:#14532d;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;}
+    .key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    @media(max-width:560px){.key-grid{grid-template-columns:1fr;}}
+    .key-item{background:white;border-radius:8px;padding:12px 16px;font-size:0.9rem;border-left:3px solid #16a34a;}
+    .key-item .knum{font-size:0.72rem;font-weight:800;color:#15803d;text-transform:uppercase;margin-bottom:4px;}
+    .key-item .kans{font-family:'Space Mono',monospace;font-weight:700;color:#14532d;font-size:1rem;}
+    .key-item .kexpl{color:#64748b;font-size:0.8rem;margin-top:3px;}
+    .key-note{background:white;border-radius:8px;padding:14px 18px;font-size:0.92rem;color:#374151;margin-bottom:10px;border-left:3px solid #16a34a;}
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">&#128274;</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">&#10060; Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#15803d,#16a34a);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class &#8594;</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">IB Physics &middot; Vectors Unit &middot; In-Class Activity</div>
+  <h1>Review of Trig: Finding Missing Sides — Classwork</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+
+  <!-- Reference Box -->
+  <div class="ref-box">
+    <h3>Formula Reference — 3-Step Method</h3>
+    <div class="ref-grid">
+      <div class="ref-tile">
+        <div class="rt-name">Sin(&#952;) = O/H</div>
+        <div class="rt-base">Use: O &amp; H involved</div>
+        <div class="rt-forms">
+          Rearranges to:
+          <span>O = H &middot; Sin(&#952;)</span>
+          <span>H = O / Sin(&#952;)</span>
+        </div>
+      </div>
+      <div class="ref-tile">
+        <div class="rt-name">Cos(&#952;) = A/H</div>
+        <div class="rt-base">Use: A &amp; H involved</div>
+        <div class="rt-forms">
+          Rearranges to:
+          <span>A = H &middot; Cos(&#952;)</span>
+          <span>H = A / Cos(&#952;)</span>
+        </div>
+      </div>
+      <div class="ref-tile">
+        <div class="rt-name">Tan(&#952;) = O/A</div>
+        <div class="rt-base">Use: O &amp; A involved</div>
+        <div class="rt-forms">
+          Rearranges to:
+          <span>O = A &middot; Tan(&#952;)</span>
+          <span>A = O / Tan(&#952;)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART A: Straightforward Side-Finding -->
+  <section>
+    <h2>Part A — Find the Missing Side</h2>
+    <p class="instructions">Use the 3-step method. Write which identity you used, rearrange it, then calculate. Show all work.</p>
+
+    <div class="problem-grid">
+      <!-- 1 -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 1 — Find Opposite (Sin)</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 40&deg;</span>
+          <span class="given-pill">H = 25</span>
+          <span class="find-pill">Find: O</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Identity:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">Rearrange:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">O =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 2 — Find Adjacent (Cos)</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 55&deg;</span>
+          <span class="given-pill">H = 30</span>
+          <span class="find-pill">Find: A</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Identity:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">Rearrange:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">A =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 3 — Find Opposite (Tan)</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 35&deg;</span>
+          <span class="given-pill">A = 12</span>
+          <span class="find-pill">Find: O</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Identity:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">Rearrange:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">O =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+
+      <!-- 4 -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 4 — Find Hypotenuse (Sin)</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 20&deg;</span>
+          <span class="given-pill">O = 9</span>
+          <span class="find-pill">Find: H</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Identity:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">Rearrange:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">H =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+
+      <!-- 5 -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 5 — Find Hypotenuse (Cos)</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 50&deg;</span>
+          <span class="given-pill">A = 18</span>
+          <span class="find-pill">Find: H</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Identity:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">Rearrange:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">H =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+
+      <!-- 6 -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 6 — Find Adjacent (Tan)</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 65&deg;</span>
+          <span class="given-pill">O = 20</span>
+          <span class="find-pill">Find: A</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Identity:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">Rearrange:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">A =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART B: Real-World Applications -->
+  <section>
+    <h2>Part B — Real-World Applications</h2>
+    <p class="instructions">For each scenario, identify O, A, H and &theta;, choose the correct identity, and solve. Show all 3 steps.</p>
+
+    <!-- B1 -->
+    <div class="problem-wide">
+      <div class="problem-num">Problem 7 — Ramp Length</div>
+      <p style="font-size:0.92rem;color:#374151;margin-bottom:10px;">A loading ramp makes a 20&deg; angle with the ground. The horizontal distance from the base to the wall is 6 m. How long is the ramp (hypotenuse)?</p>
+      <div class="given-row">
+        <span class="given-pill">&#952; = 20&deg;</span>
+        <span class="given-pill">Adjacent = 6 m</span>
+        <span class="find-pill">Find: H</span>
+      </div>
+      <div style="margin-top:8px;">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px;">
+          <span style="font-size:0.88rem;color:#374151;">Step 1 — Identity used:</span>
+          <div style="border-bottom:2px solid #d1d5db;flex:1;min-width:100px;min-height:22px;"></div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px;">
+          <span style="font-size:0.88rem;color:#374151;">Step 2 — Rearranged formula:</span>
+          <div style="border-bottom:2px solid #d1d5db;flex:1;min-width:100px;min-height:22px;"></div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <span style="font-size:0.88rem;color:#374151;">Step 3 — Answer:</span>
+          <div style="border-bottom:2px solid #d1d5db;flex:1;min-width:100px;min-height:22px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B2 -->
+    <div class="problem-wide">
+      <div class="problem-num">Problem 8 — Height of a Tree</div>
+      <p style="font-size:0.92rem;color:#374151;margin-bottom:10px;">A physicist stands 15 m from the base of a tree. The angle of elevation to the top is 38&deg;. How tall is the tree (opposite side)?</p>
+      <div class="given-row">
+        <span class="given-pill">&#952; = 38&deg;</span>
+        <span class="given-pill">Adjacent = 15 m</span>
+        <span class="find-pill">Find: O</span>
+      </div>
+      <div style="margin-top:8px;">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px;">
+          <span style="font-size:0.88rem;color:#374151;">Step 1 — Identity used:</span>
+          <div style="border-bottom:2px solid #d1d5db;flex:1;min-width:100px;min-height:22px;"></div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px;">
+          <span style="font-size:0.88rem;color:#374isti;">Step 2 — Rearranged formula:</span>
+          <div style="border-bottom:2px solid #d1d5db;flex:1;min-width:100px;min-height:22px;"></div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <span style="font-size:0.88rem;color:#374151;">Step 3 — Answer:</span>
+          <div style="border-bottom:2px solid #d1d5db;flex:1;min-width:100px;min-height:22px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B3 -->
+    <div class="problem-wide">
+      <div class="problem-num">Problem 9 — Projectile Horizontal Distance</div>
+      <p style="font-size:0.92rem;color:#374151;margin-bottom:10px;">A ball is launched at 45&deg; and travels along a straight path of 50 m (hypotenuse). What is the horizontal distance covered (adjacent)?</p>
+      <div class="given-row">
+        <span class="given-pill">&#952; = 45&deg;</span>
+        <span class="given-pill">H = 50 m</span>
+        <span class="find-pill">Find: A</span>
+      </div>
+      <div style="margin-top:8px;">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px;">
+          <span style="font-size:0.88rem;color:#374151;">Step 1 — Identity used:</span>
+          <div style="border-bottom:2px solid #d1d5db;flex:1;min-width:100px;min-height:22px;"></div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px;">
+          <span style="font-size:0.88rem;color:#374151;">Step 2 — Rearranged formula:</span>
+          <div style="border-bottom:2px solid #d1d5db;flex:1;min-width:100px;min-height:22px;"></div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <span style="font-size:0.88rem;color:#374151;">Step 3 — Answer:</span>
+          <div style="border-bottom:2px solid #d1d5db;flex:1;min-width:100px;min-height:22px;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART C: Mixed Challenge -->
+  <section>
+    <h2>Part C — Mixed Challenge</h2>
+    <p class="instructions">These problems require you to identify what is given and what is missing before choosing your method.</p>
+
+    <div class="problem-grid">
+      <!-- C1 -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 10</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 70&deg;</span>
+          <span class="given-pill">H = 40</span>
+          <span class="find-pill">Find: A</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Use:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">A =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+
+      <!-- C2 -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 11</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 22&deg;</span>
+          <span class="given-pill">O = 5</span>
+          <span class="find-pill">Find: A</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Use:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">A =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+
+      <!-- C3 -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 12</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 48&deg;</span>
+          <span class="given-pill">A = 7</span>
+          <span class="find-pill">Find: H</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Use:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">H =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+
+      <!-- C4 -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 13</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 33&deg;</span>
+          <span class="given-pill">H = 16</span>
+          <span class="find-pill">Find: O</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Use:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">O =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART D: Reflection -->
+  <section>
+    <h2>Part D — Reflection</h2>
+    <div class="short-answer">
+      <div class="q">1. In your own words, explain Step 1 of the 3-step method. Why do you need to look at which sides are involved before choosing an identity?</div>
+      <div class="write-lines">
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+    <div class="short-answer">
+      <div class="q">2. When the unknown side is in the <em>denominator</em> of the trig ratio (like H in Sin = O/H), how does the rearrangement change? Give an example.</div>
+      <div class="write-lines">
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANSWER KEY TOGGLE -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+  </div>
+
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A — Find the Missing Side</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="knum">Problem 1</div>
+          <div class="kans">O = 25 &middot; Sin(40&deg;) = 25 &times; 0.643 = 16.1</div>
+          <div class="kexpl">Sin(&theta;) = O/H &rarr; O = H&middot;Sin(&theta;)</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 2</div>
+          <div class="kans">A = 30 &middot; Cos(55&deg;) = 30 &times; 0.574 = 17.2</div>
+          <div class="kexpl">Cos(&theta;) = A/H &rarr; A = H&middot;Cos(&theta;)</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 3</div>
+          <div class="kans">O = 12 &middot; Tan(35&deg;) = 12 &times; 0.700 = 8.4</div>
+          <div class="kexpl">Tan(&theta;) = O/A &rarr; O = A&middot;Tan(&theta;)</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 4</div>
+          <div class="kans">H = 9 / Sin(20&deg;) = 9 / 0.342 = 26.3</div>
+          <div class="kexpl">Sin(&theta;) = O/H &rarr; H = O/Sin(&theta;)</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 5</div>
+          <div class="kans">H = 18 / Cos(50&deg;) = 18 / 0.643 = 28.0</div>
+          <div class="kexpl">Cos(&theta;) = A/H &rarr; H = A/Cos(&theta;)</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 6</div>
+          <div class="kans">A = 20 / Tan(65&deg;) = 20 / 2.145 = 9.3</div>
+          <div class="kexpl">Tan(&theta;) = O/A &rarr; A = O/Tan(&theta;)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B — Real-World Applications</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="knum">Problem 7 — Ramp</div>
+          <div class="kans">H = 6 / Cos(20&deg;) = 6 / 0.940 = 6.4 m</div>
+          <div class="kexpl">A &amp; H involved &rarr; use Cos; rearrange to H = A/Cos(&theta;)</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 8 — Tree Height</div>
+          <div class="kans">O = 15 &middot; Tan(38&deg;) = 15 &times; 0.781 = 11.7 m</div>
+          <div class="kexpl">A &amp; O involved &rarr; use Tan; rearrange to O = A&middot;Tan(&theta;)</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 9 — Horizontal Distance</div>
+          <div class="kans">A = 50 &middot; Cos(45&deg;) = 50 &times; 0.707 = 35.4 m</div>
+          <div class="kexpl">A &amp; H involved &rarr; use Cos; rearrange to A = H&middot;Cos(&theta;)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C — Mixed Challenge</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="knum">Problem 10</div>
+          <div class="kans">A = 40 &middot; Cos(70&deg;) = 40 &times; 0.342 = 13.7</div>
+          <div class="kexpl">A &amp; H &rarr; Cos; A = H&middot;Cos(&theta;)</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 11</div>
+          <div class="kans">A = 5 / Tan(22&deg;) = 5 / 0.404 = 12.4</div>
+          <div class="kexpl">O &amp; A &rarr; Tan; A = O/Tan(&theta;)</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 12</div>
+          <div class="kans">H = 7 / Cos(48&deg;) = 7 / 0.669 = 10.5</div>
+          <div class="kexpl">A &amp; H &rarr; Cos; H = A/Cos(&theta;)</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 13</div>
+          <div class="kans">O = 16 &middot; Sin(33&deg;) = 16 &times; 0.545 = 8.7</div>
+          <div class="kexpl">O &amp; H &rarr; Sin; O = H&middot;Sin(&theta;)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+function toggleKey() {
+  var key = document.getElementById('answer-key');
+  var btn = document.getElementById('toggle-key-btn');
+  if (key.style.display === 'none' || key.style.display === '') {
+    key.style.display = 'block';
+    btn.textContent = 'Hide Answer Key';
+  } else {
+    key.style.display = 'none';
+    btn.textContent = 'Show Answer Key';
+  }
+}
+</script>
+</body>
+</html>

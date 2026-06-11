@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kinematic Equations — Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root{--blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#1e40af 0%,#2563eb 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:860px;margin:36px auto;padding:0 24px 60px;}
+    .ref-box{background:white;border:2px solid #bfdbfe;border-radius:12px;padding:20px 24px;margin-bottom:10px;}
+    .ref-box h3{color:#1e3a5f;font-size:1rem;font-weight:800;margin-bottom:12px;}
+    .ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    @media(max-width:580px){.ref-grid{grid-template-columns:1fr;}}
+    .ref-item{background:#eff6ff;border-radius:8px;padding:10px 14px;font-size:0.88rem;}
+    .ref-item .sym{font-family:'Space Mono',monospace;font-weight:700;color:#1d4ed8;display:block;margin-bottom:2px;}
+    .ref-eq-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+    .eq-chip{background:#1e3a5f;color:white;font-family:'Space Mono',monospace;font-size:0.82rem;font-weight:700;padding:5px 12px;border-radius:8px;}
+    .tip-note{background:#fffbeb;border:2px solid #fde68a;border-radius:10px;padding:12px 18px;margin-bottom:24px;font-size:0.88rem;color:#78350f;font-weight:600;}
+    section{margin-bottom:44px;}
+    h2{font-size:1.2rem;font-weight:800;color:#1e3a5f;border-left:5px solid #2563eb;padding-left:12px;margin-bottom:16px;}
+    .instructions{color:#4b5563;font-size:0.9rem;margin-bottom:16px;font-style:italic;}
+    .problem-card{background:white;border-radius:10px;padding:20px 24px;box-shadow:0 1px 6px rgba(0,0,0,0.08);margin-bottom:16px;}
+    .problem-num{font-size:0.72rem;font-weight:800;text-transform:uppercase;color:#6b7280;margin-bottom:6px;letter-spacing:0.5px;}
+    .scenario{font-size:0.97rem;font-weight:600;color:#1a1a2e;margin-bottom:14px;line-height:1.55;}
+    .suvat-mini{width:100%;border-collapse:collapse;margin-bottom:14px;}
+    .suvat-mini th{background:#1e3a5f;color:white;font-family:'Space Mono',monospace;font-size:0.78rem;padding:5px 8px;text-align:center;}
+    .suvat-mini td{background:#eff6ff;text-align:center;padding:6px 8px;font-family:'Space Mono',monospace;font-size:0.82rem;font-weight:700;border:2px solid white;}
+    .suvat-mini td.given{color:#1d4ed8;}
+    .suvat-mini td.blank-cell{background:#f8faff;color:#d1d5db;font-size:0.72rem;font-style:italic;}
+    .field-set{display:flex;flex-direction:column;gap:8px;}
+    .field-row{display:flex;align-items:center;gap:8px;font-size:0.9rem;font-weight:600;}
+    .fill-line{border-bottom:2px solid #d1d5db;min-height:26px;flex:1;}
+    .eq-line{display:flex;align-items:center;gap:8px;font-size:0.88rem;margin-top:4px;}
+    .eq-label{font-size:0.75rem;color:#6b7280;font-weight:700;text-transform:uppercase;min-width:80px;}
+    .workbox{border:1.5px solid #e2e8f0;border-radius:6px;min-height:80px;margin-top:10px;padding:8px;}
+    .workbox-label{font-size:0.72rem;color:#94a3b8;font-weight:700;text-transform:uppercase;}
+    .tf-list{display:flex;flex-direction:column;gap:14px;}
+    .tf-item{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 1px 6px rgba(0,0,0,0.08);}
+    .tf-item .tf-q{font-weight:600;font-size:0.97rem;color:#1a1a2e;margin-bottom:10px;}
+    .tf-options{display:flex;gap:20px;margin-bottom:10px;}
+    .tf-option{display:flex;align-items:center;gap:8px;font-weight:800;font-size:0.92rem;cursor:pointer;}
+    .tf-circle{width:18px;height:18px;border-radius:50%;border:2.5px solid #d1d5db;flex-shrink:0;}
+    .correction-label{font-size:0.78rem;color:#6b7280;font-weight:700;text-transform:uppercase;margin-bottom:4px;margin-top:4px;}
+    .correction-lines{display:flex;flex-direction:column;gap:10px;}
+    .correction-line{border-bottom:2px solid #d1d5db;min-height:24px;width:100%;}
+    .challenge-card{background:linear-gradient(135deg,#1e3a5f,#1d4ed8);color:white;border-radius:14px;padding:22px 26px;margin-bottom:16px;}
+    .challenge-card .problem-num{color:rgba(255,255,255,0.6);}
+    .challenge-card .scenario{color:rgba(255,255,255,0.9);margin-bottom:14px;}
+    .challenge-card .workbox{border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.07);min-height:100px;}
+    .challenge-card .workbox-label{color:rgba(255,255,255,0.5);}
+    .challenge-card .field-row{color:white;}
+    .challenge-card .fill-line{border-bottom-color:rgba(255,255,255,0.4);}
+    .challenge-card .eq-label{color:rgba(255,255,255,0.6);}
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#1e40af;color:white;border:none;padding:12px 36px;font-size:1rem;font-weight:800;border-radius:10px;cursor:pointer;font-family:inherit;transition:background 0.2s;}
+    #toggle-key-btn:hover{background:#2563eb;}
+    #answer-key{display:none;background:#eff6ff;border:2px solid #93c5fd;border-radius:14px;padding:28px 32px;margin-top:16px;}
+    #answer-key h2{color:#1e3a5f;border-left-color:#2563eb;margin-bottom:24px;}
+    .key-section{margin-bottom:28px;}
+    .key-section h3{font-size:1rem;font-weight:800;color:#1e3a5f;margin-bottom:14px;}
+    .key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    .key-item{background:white;border-radius:8px;padding:12px 16px;font-size:0.92rem;}
+    .key-item .kq{font-size:0.78rem;color:#6b7280;margin-bottom:3px;font-weight:700;}
+    .key-item .kans{color:#1d4ed8;font-weight:700;font-family:'Space Mono',monospace;font-size:0.9rem;}
+    .key-item .kexpl{color:#4b5563;font-size:0.8rem;margin-top:4px;line-height:1.55;}
+    .short-ans-key{background:white;border-radius:8px;padding:14px 18px;font-size:0.92rem;margin-bottom:10px;line-height:1.6;}
+    .short-ans-key strong{color:#1d4ed8;}
+    .tf-key{background:white;border-radius:8px;padding:12px 16px;margin-bottom:8px;}
+    .tf-key .tfk-q{font-size:0.8rem;color:#6b7280;font-weight:700;margin-bottom:4px;}
+    .tf-key .tfk-ans{font-weight:800;margin-bottom:4px;}
+    .tf-key .tfk-ans.true{color:#15803d;}
+    .tf-key .tfk-ans.false{color:#b91c1c;}
+    .tf-key .tfk-expl{font-size:0.82rem;color:#4b5563;line-height:1.5;}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">&#128274;</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">Kinematics &middot; Unit 11 &middot; Homework</div>
+  <h1>Kinematic Equations &mdash; Homework</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Due: _____________</div>
+</header>
+
+<main>
+  <!-- Reference Box -->
+  <div class="ref-box">
+    <h3>Reference &mdash; SUVAT Variables &amp; Equations</h3>
+    <div class="ref-grid">
+      <div class="ref-item"><span class="sym">s</span>Displacement (m)</div>
+      <div class="ref-item"><span class="sym">u</span>Initial velocity (ms&#8315;&#185;)</div>
+      <div class="ref-item"><span class="sym">v</span>Final velocity (ms&#8315;&#185;)</div>
+      <div class="ref-item"><span class="sym">a</span>Acceleration (ms&#8315;&#178;)</div>
+      <div class="ref-item"><span class="sym">t</span>Time (s)</div>
+    </div>
+    <div class="ref-eq-row">
+      <div class="eq-chip">v = u + at</div>
+      <div class="eq-chip">s = ut + &frac12;at&#178;</div>
+      <div class="eq-chip">v&#178; = u&#178; + 2as</div>
+      <div class="eq-chip">s = (u+v)t/2</div>
+    </div>
+  </div>
+  <div class="tip-note">Homework tip: Always fill in a SUVAT table first. Define your positive direction clearly and keep it consistent. Show all algebraic steps — do not jump straight to the number substitution.</div>
+
+  <!-- PART A: 6 Calculation Problems -->
+  <section>
+    <h2>Part A &mdash; Full Working Problems</h2>
+    <p class="instructions">For each problem: fill the SUVAT table, state the equation, rearrange algebraically, substitute numerically, and box your answer with correct units.</p>
+
+    <!-- HW P1 -->
+    <div class="problem-card">
+      <div class="problem-num">Problem 1</div>
+      <div class="scenario">A sprinter starts from rest and reaches 9 ms&#8315;&#185; in 3 seconds. What is the sprinter's acceleration?</div>
+      <table class="suvat-mini"><tr><th>s</th><th>u</th><th>v</th><th>a</th><th>t</th></tr>
+        <tr><td class="blank-cell">—</td><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell">?</td><td class="blank-cell"></td></tr></table>
+      <div class="field-set">
+        <div class="eq-line"><span class="eq-label">Equation:</span><div class="fill-line"></div></div>
+        <div class="eq-line"><span class="eq-label">Rearrange:</span><div class="fill-line"></div></div>
+        <div class="eq-line"><span class="eq-label">Answer:</span><div class="fill-line"></div></div>
+      </div>
+      <div class="workbox"><div class="workbox-label">Full working</div></div>
+    </div>
+
+    <!-- HW P2 -->
+    <div class="problem-card">
+      <div class="problem-num">Problem 2</div>
+      <div class="scenario">A car travelling at 25 ms&#8315;&#185; brakes with an acceleration of &minus;5 ms&#8315;&#178;. How far does it travel before stopping?</div>
+      <table class="suvat-mini"><tr><th>s</th><th>u</th><th>v</th><th>a</th><th>t</th></tr>
+        <tr><td class="blank-cell">?</td><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell">—</td></tr></table>
+      <div class="field-set">
+        <div class="eq-line"><span class="eq-label">Equation:</span><div class="fill-line"></div></div>
+        <div class="eq-line"><span class="eq-label">Rearrange:</span><div class="fill-line"></div></div>
+        <div class="eq-line"><span class="eq-label">Answer:</span><div class="fill-line"></div></div>
+      </div>
+      <div class="workbox"><div class="workbox-label">Full working</div></div>
+    </div>
+
+    <!-- HW P3 -->
+    <div class="problem-card">
+      <div class="problem-num">Problem 3</div>
+      <div class="scenario">A rocket accelerates from 200 ms&#8315;&#185; to 500 ms&#8315;&#185; over a distance of 3500 m. What is its acceleration?</div>
+      <table class="suvat-mini"><tr><th>s</th><th>u</th><th>v</th><th>a</th><th>t</th></tr>
+        <tr><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell">?</td><td class="blank-cell">—</td></tr></table>
+      <div class="field-set">
+        <div class="eq-line"><span class="eq-label">Equation:</span><div class="fill-line"></div></div>
+        <div class="eq-line"><span class="eq-label">Rearrange:</span><div class="fill-line"></div></div>
+        <div class="eq-line"><span class="eq-label">Answer:</span><div class="fill-line"></div></div>
+      </div>
+      <div class="workbox"><div class="workbox-label">Full working</div></div>
+    </div>
+
+    <!-- HW P4 -->
+    <div class="problem-card">
+      <div class="problem-num">Problem 4 &mdash; Sign Convention</div>
+      <div class="scenario">A ball is thrown downward off a cliff with an initial velocity of 4 ms&#8315;&#185;. It accelerates due to gravity at 10 ms&#8315;&#178; downward (define downward as positive). What is the velocity of the ball after 2.5 seconds?</div>
+      <table class="suvat-mini"><tr><th>s</th><th>u</th><th>v</th><th>a</th><th>t</th></tr>
+        <tr><td class="blank-cell">—</td><td class="blank-cell"></td><td class="blank-cell">?</td><td class="blank-cell"></td><td class="blank-cell"></td></tr></table>
+      <div class="field-set">
+        <div class="eq-line"><span class="eq-label">Equation:</span><div class="fill-line"></div></div>
+        <div class="eq-line"><span class="eq-label">Answer:</span><div class="fill-line"></div></div>
+      </div>
+      <div class="workbox"><div class="workbox-label">Full working</div></div>
+    </div>
+
+    <!-- HW P5 -->
+    <div class="problem-card">
+      <div class="problem-num">Problem 5 &mdash; Sign Convention</div>
+      <div class="scenario">A ball rolling up a ramp at 6 ms&#8315;&#185; decelerates due to gravity at 5 ms&#8315;&#178; (define up = positive). How far up the ramp does it travel before momentarily stopping?</div>
+      <table class="suvat-mini"><tr><th>s</th><th>u</th><th>v</th><th>a</th><th>t</th></tr>
+        <tr><td class="blank-cell">?</td><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell">—</td></tr></table>
+      <div class="field-set">
+        <div class="eq-line"><span class="eq-label">Equation:</span><div class="fill-line"></div></div>
+        <div class="eq-line"><span class="eq-label">Answer:</span><div class="fill-line"></div></div>
+      </div>
+      <div class="workbox"><div class="workbox-label">Full working</div></div>
+    </div>
+
+    <!-- HW P6 -->
+    <div class="problem-card">
+      <div class="problem-num">Problem 6 &mdash; Two-Phase Problem</div>
+      <div class="scenario">A bus accelerates from rest at 1.2 ms&#8315;&#178; for 15 seconds, then travels at constant velocity for 30 seconds before braking to a stop in 10 seconds. Find the total displacement of the bus.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div>
+          <div style="font-size:0.7rem;font-weight:800;color:#1d4ed8;margin-bottom:4px;">PHASE 1</div>
+          <table class="suvat-mini"><tr><th>s</th><th>u</th><th>v</th><th>a</th><th>t</th></tr>
+            <tr><td class="blank-cell">?</td><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell"></td></tr></table>
+        </div>
+        <div>
+          <div style="font-size:0.7rem;font-weight:800;color:#15803d;margin-bottom:4px;">PHASE 2</div>
+          <table class="suvat-mini"><tr><th>s</th><th>u</th><th>v</th><th>a</th><th>t</th></tr>
+            <tr><td class="blank-cell">?</td><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell"></td></tr></table>
+        </div>
+        <div>
+          <div style="font-size:0.7rem;font-weight:800;color:#b45309;margin-bottom:4px;">PHASE 3</div>
+          <table class="suvat-mini"><tr><th>s</th><th>u</th><th>v</th><th>a</th><th>t</th></tr>
+            <tr><td class="blank-cell">?</td><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell"></td></tr></table>
+        </div>
+      </div>
+      <div class="field-set">
+        <div class="eq-line"><span class="eq-label">s&#8321; =</span><div class="fill-line"></div></div>
+        <div class="eq-line"><span class="eq-label">s&#8322; =</span><div class="fill-line"></div></div>
+        <div class="eq-line"><span class="eq-label">s&#8323; =</span><div class="fill-line"></div></div>
+        <div class="eq-line"><span class="eq-label">Total s =</span><div class="fill-line"></div></div>
+      </div>
+      <div class="workbox" style="min-height:90px;"><div class="workbox-label">Full working</div></div>
+    </div>
+
+  </section>
+
+  <!-- PART B: True/False -->
+  <section>
+    <h2>Part B &mdash; True or False</h2>
+    <p class="instructions">Circle True or False. If False, write the correct statement on the lines provided.</p>
+    <div class="tf-list">
+
+      <div class="tf-item">
+        <div class="tf-q">Statement 1: The kinematic equations can be used on any part of a journey regardless of whether the acceleration changes value during that portion.</div>
+        <div class="tf-options">
+          <label class="tf-option"><div class="tf-circle"></div> True</label>
+          <label class="tf-option"><div class="tf-circle"></div> False</label>
+        </div>
+        <div class="correction-label">If False, write the correct statement:</div>
+        <div class="correction-lines">
+          <div class="correction-line"></div>
+          <div class="correction-line"></div>
+        </div>
+      </div>
+
+      <div class="tf-item">
+        <div class="tf-q">Statement 2: If you define "right" as positive and an object moves left, its velocity must be written as a negative number in the SUVAT table.</div>
+        <div class="tf-options">
+          <label class="tf-option"><div class="tf-circle"></div> True</label>
+          <label class="tf-option"><div class="tf-circle"></div> False</label>
+        </div>
+        <div class="correction-label">If False, write the correct statement:</div>
+        <div class="correction-lines">
+          <div class="correction-line"></div>
+          <div class="correction-line"></div>
+        </div>
+      </div>
+
+      <div class="tf-item">
+        <div class="tf-q">Statement 3: The equation v&#178; = u&#178; + 2as should be used when time is unknown and not needed.</div>
+        <div class="tf-options">
+          <label class="tf-option"><div class="tf-circle"></div> True</label>
+          <label class="tf-option"><div class="tf-circle"></div> False</label>
+        </div>
+        <div class="correction-label">If False, write the correct statement:</div>
+        <div class="correction-lines">
+          <div class="correction-line"></div>
+          <div class="correction-line"></div>
+        </div>
+      </div>
+
+      <div class="tf-item">
+        <div class="tf-q">Statement 4: In a multi-phase problem, the displacement from each phase must be added together only if all phases occurred in the same direction.</div>
+        <div class="tf-options">
+          <label class="tf-option"><div class="tf-circle"></div> True</label>
+          <label class="tf-option"><div class="tf-circle"></div> False</label>
+        </div>
+        <div class="correction-label">If False, write the correct statement:</div>
+        <div class="correction-lines">
+          <div class="correction-line"></div>
+          <div class="correction-line"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PART C: Challenge Problems -->
+  <section>
+    <h2>Part C &mdash; Challenge Problems</h2>
+    <p class="instructions">These problems require multi-step reasoning. Show all phases, all equations, all working.</p>
+
+    <div class="challenge-card">
+      <div class="problem-num">Challenge Problem 1</div>
+      <div class="scenario">A train accelerates from rest at 0.5 ms&#8315;&#178; for 60 seconds. It then travels at constant speed for 120 seconds. Finally, it decelerates uniformly to rest in 40 seconds.<br><br>
+      (a) What is the maximum speed reached by the train?<br>
+      (b) What is the total displacement of the train?<br>
+      (c) What is the deceleration in phase 3?</div>
+      <div class="field-set">
+        <div class="eq-line"><span class="eq-label" style="color:rgba(255,255,255,0.7);">(a) v&#8322;&#8321;&#8346; =</span><div class="fill-line"></div></div>
+        <div class="eq-line"><span class="eq-label" style="color:rgba(255,255,255,0.7);">(b) s&#8348;&#8338;&#8348;&#8341;&#8343; =</span><div class="fill-line"></div></div>
+        <div class="eq-line"><span class="eq-label" style="color:rgba(255,255,255,0.7);">(c) a&#8323; =</span><div class="fill-line"></div></div>
+      </div>
+      <div class="workbox"><div class="workbox-label">Full working — use phases</div></div>
+    </div>
+
+    <div class="challenge-card">
+      <div class="problem-num">Challenge Problem 2</div>
+      <div class="scenario">A ball is launched straight upward from the ground with an initial velocity of 20 ms&#8315;&#185;. Gravity decelerates it at 10 ms&#8315;&#178; (define upward as positive).<br><br>
+      (a) How long does it take to reach maximum height?<br>
+      (b) What is the maximum height reached?<br>
+      (c) What is the velocity of the ball after 3.5 seconds?<br>
+      (d) Describe the motion at 3.5 seconds — is the ball going up or down? How do you know from the sign?</div>
+      <div class="field-set">
+        <div class="eq-line"><span class="eq-label" style="color:rgba(255,255,255,0.7);">(a) t =</span><div class="fill-line"></div></div>
+        <div class="eq-line"><span class="eq-label" style="color:rgba(255,255,255,0.7);">(b) s&#8322;&#8321;&#8346; =</span><div class="fill-line"></div></div>
+        <div class="eq-line"><span class="eq-label" style="color:rgba(255,255,255,0.7);">(c) v&#8323;.&#8325; =</span><div class="fill-line"></div></div>
+        <div class="eq-line"><span class="eq-label" style="color:rgba(255,255,255,0.7);">(d) Direction:</span><div class="fill-line"></div></div>
+      </div>
+      <div class="workbox" style="min-height:110px;"><div class="workbox-label">Full working</div></div>
+    </div>
+
+  </section>
+
+  <!-- Answer Key Toggle -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+  </div>
+
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A &mdash; Calculations</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="kq">Problem 1 — Sprinter's acceleration</div>
+          <div class="kans">a = 3 ms&#8315;&#178;</div>
+          <div class="kexpl">v = u + at &rarr; 9 = 0 + a(3) &rarr; a = 9/3 = 3 ms&#8315;&#178;</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Problem 2 — Braking car</div>
+          <div class="kans">s = 62.5 m</div>
+          <div class="kexpl">v&#178; = u&#178; + 2as &rarr; 0 = 625 + 2(-5)s &rarr; 10s = 625 &rarr; s = 62.5 m</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Problem 3 — Rocket acceleration</div>
+          <div class="kans">a = 30 ms&#8315;&#178;</div>
+          <div class="kexpl">v&#178; = u&#178; + 2as &rarr; 250000 = 40000 + 2a(3500) &rarr; 210000 = 7000a &rarr; a = 30 ms&#8315;&#178;</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Problem 4 — Ball thrown down (downward +)</div>
+          <div class="kans">v = 29 ms&#8315;&#185; downward</div>
+          <div class="kexpl">u = +4, a = +10, t = 2.5. v = 4 + 10(2.5) = 4 + 25 = 29 ms&#8315;&#185; (positive = downward)</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Problem 5 — Ball up ramp (upward +)</div>
+          <div class="kans">s = 3.6 m</div>
+          <div class="kexpl">u = +6, v = 0, a = -5. v&#178; = u&#178; + 2as &rarr; 0 = 36 + 2(-5)s &rarr; 10s = 36 &rarr; s = 3.6 m</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Problem 6 — Bus three phases</div>
+          <div class="kans">s&#8321; = 135 m, s&#8322; = 540 m, s&#8323; = 90 m, Total = 765 m</div>
+          <div class="kexpl">P1: u=0,a=1.2,t=15 &rarr; v=18 ms&#8315;&#185;, s=&frac12;(1.2)(225)=135 m. P2: u=v=18,t=30 &rarr; s=540 m. P3: u=18,v=0,t=10 &rarr; s=(18+0)(10)/2=90 m. Total=135+540+90=765 m</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B &mdash; True or False</h3>
+      <div class="tf-key">
+        <div class="tfk-q">Statement 1</div>
+        <div class="tfk-ans false">FALSE</div>
+        <div class="tfk-expl">The kinematic equations can only be used when acceleration is constant throughout the portion of motion being analysed. If acceleration changes, the journey must be split into separate phases — one SUVAT table per constant-acceleration segment.</div>
+      </div>
+      <div class="tf-key">
+        <div class="tfk-q">Statement 2</div>
+        <div class="tfk-ans true">TRUE</div>
+        <div class="tfk-expl">If "right" is defined as positive, any velocity in the leftward (negative) direction must be written with a minus sign in the SUVAT table. This is essential for the algebra to give the correct result.</div>
+      </div>
+      <div class="tf-key">
+        <div class="tfk-q">Statement 3</div>
+        <div class="tfk-ans true">TRUE</div>
+        <div class="tfk-expl">The equation v&#178; = u&#178; + 2as does not contain time (t), making it ideal when time is either unknown or not required. It connects velocities, acceleration, and displacement.</div>
+      </div>
+      <div class="tf-key">
+        <div class="tfk-q">Statement 4</div>
+        <div class="tfk-ans false">FALSE</div>
+        <div class="tfk-expl">Displacements from each phase are added together using standard vector addition (taking signs into account). If phases occur in opposite directions, the signed displacements are added — some may cancel. You do not need all phases to be in the same direction to add them.</div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C &mdash; Challenge Problems</h3>
+      <div class="short-ans-key">
+        <strong>Challenge 1:</strong><br>
+        Phase 1 (accelerating): u = 0, a = 0.5, t = 60 &rarr; <strong>v = 0 + 0.5(60) = 30 ms&#8315;&#185;</strong> (max speed). s&#8321; = &frac12;(0.5)(60)&#178; = 900 m.<br>
+        Phase 2 (constant): u = v = 30, t = 120 &rarr; s&#8322; = 30 &times; 120 = 3600 m.<br>
+        Phase 3 (braking): u = 30, v = 0, t = 40 &rarr; s&#8323; = (30+0)(40)/2 = 600 m. Deceleration: v = u + at &rarr; 0 = 30 + a(40) &rarr; <strong>a = &minus;0.75 ms&#8315;&#178;</strong>.<br>
+        <strong>Total displacement = 900 + 3600 + 600 = 5100 m</strong>
+      </div>
+      <div class="short-ans-key">
+        <strong>Challenge 2:</strong> Define upward = positive. u = +20, a = &minus;10.<br>
+        <strong>(a)</strong> At max height v = 0: v = u + at &rarr; 0 = 20 &minus; 10t &rarr; <strong>t = 2 s</strong>.<br>
+        <strong>(b)</strong> v&#178; = u&#178; + 2as &rarr; 0 = 400 + 2(&minus;10)s &rarr; 20s = 400 &rarr; <strong>s = 20 m</strong>.<br>
+        <strong>(c)</strong> At t = 3.5 s: v = 20 + (&minus;10)(3.5) = 20 &minus; 35 = <strong>&minus;15 ms&#8315;&#185;</strong>.<br>
+        <strong>(d)</strong> The velocity is negative (&minus;15 ms&#8315;&#185;). Since upward was defined as positive, a negative velocity means the ball is moving <em>downward</em>. At 3.5 s the ball has already passed its maximum height (at 2 s) and is falling back toward the ground.
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+function toggleKey(){
+  var key = document.getElementById('answer-key');
+  var btn = document.getElementById('toggle-key-btn');
+  if(key.style.display === 'none' || key.style.display === ''){
+    key.style.display = 'block';
+    btn.textContent = 'Hide Answer Key';
+  } else {
+    key.style.display = 'none';
+    btn.textContent = 'Show Answer Key';
+  }
+}
+</script>
+</body>
+</html>

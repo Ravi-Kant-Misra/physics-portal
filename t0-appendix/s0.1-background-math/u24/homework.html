@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review of Trig Sides — Homework | IB Physics</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root{--amber:#d97706;--amber-dark:#78350f;--amber-mid:#b45309;--dark:#1c1917;--bg:#fffbf5;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:17px;line-height:1.75;background-image:radial-gradient(circle,#fed7aa 1px,transparent 1px);background-size:28px 28px;}
+
+    header{background:linear-gradient(135deg,#78350f 0%,#b45309 50%,#d97706 100%);color:white;padding:44px 60px 40px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 50%,rgba(251,191,36,0.3) 0%,transparent 60%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:rgba(255,255,255,0.9);animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.5);}}
+    header .chip{display:inline-block;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;position:relative;}
+    header h1{font-size:2.6rem;font-weight:900;position:relative;margin-bottom:8px;background:linear-gradient(90deg,#fef3c7,#fde68a,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1rem;color:rgba(255,255,255,0.8);position:relative;}
+
+    main{max-width:860px;margin:44px auto;padding:0 24px 80px;}
+    section{margin-bottom:56px;}
+    .section-label{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+    .section-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+    .section-label h2{font-size:1.4rem;font-weight:900;color:var(--dark);}
+
+    .prob-card{background:white;border-radius:16px;padding:22px 26px;box-shadow:0 3px 16px rgba(0,0,0,0.07);margin-bottom:18px;border-left:5px solid #d97706;}
+    .prob-card h3{font-size:1rem;font-weight:900;color:#78350f;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+    .prob-badge{background:linear-gradient(135deg,#78350f,#d97706);color:white;border-radius:8px;padding:2px 10px;font-size:0.8rem;font-weight:800;}
+    .prob-card p{font-size:0.95rem;color:#374151;margin-bottom:10px;}
+    .prob-card .hint{font-size:0.83rem;color:#a8a29e;font-style:italic;}
+
+    .diagram-inline{display:block;margin:12px auto;max-width:220px;}
+
+    .answer-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;}
+    .answer-field{display:flex;flex-direction:column;gap:4px;}
+    .answer-field label{font-size:0.8rem;font-weight:800;color:#78350f;text-transform:uppercase;letter-spacing:0.8px;}
+    .answer-input{border:2px solid #fed7aa;border-radius:10px;padding:8px 14px;font-size:1rem;font-family:'Space Mono',monospace;font-weight:700;color:#78350f;background:#fffbf5;outline:none;width:140px;transition:border-color 0.2s;}
+    .answer-input:focus{border-color:#d97706;background:white;}
+
+    .btn-check{background:linear-gradient(135deg,#78350f,#d97706);color:white;border:none;border-radius:10px;padding:10px 22px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:14px;transition:opacity 0.2s;}
+    .btn-check:hover{opacity:0.88;}
+    .btn-show{background:white;color:#78350f;border:2px solid #fbbf24;border-radius:10px;padding:8px 20px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:10px;transition:all 0.2s;}
+    .btn-show:hover{background:#fef3c7;}
+
+    .feedback-msg{margin-top:10px;padding:10px 14px;border-radius:10px;font-size:0.9rem;font-weight:700;display:none;}
+    .fb-ok{background:#dcfce7;color:#14532d;}
+    .fb-err{background:#fee2e2;color:#991b1b;}
+
+    .answer-key{background:#fef3c7;border:2px solid #fbbf24;border-radius:12px;padding:14px 18px;margin-top:12px;display:none;}
+    .answer-key p{font-size:0.9rem;color:#78350f;margin-bottom:5px;}
+    .answer-key p:last-child{margin-bottom:0;}
+    .answer-key .mono{font-family:'Space Mono',monospace;font-weight:700;}
+    .answer-key strong{color:#451a03;}
+
+    .formula-ref{background:white;border-radius:16px;padding:18px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border-left:4px solid #d97706;margin-bottom:22px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;}
+    .formula-ref span{font-family:'Space Mono',monospace;font-size:0.92rem;font-weight:700;color:#78350f;background:#fef3c7;padding:4px 10px;border-radius:8px;}
+    .formula-ref .ref-title{font-size:0.85rem;font-weight:800;color:#374151;width:100%;}
+
+    /* EXTENDED PROBLEM */
+    .ext-problem{background:linear-gradient(135deg,#fef9ee,#fef3c7);border-radius:18px;padding:26px 28px;box-shadow:0 4px 18px rgba(0,0,0,0.07);margin-bottom:20px;border:2px solid #fbbf24;}
+    .ext-problem h3{font-size:1rem;font-weight:900;color:#78350f;margin-bottom:12px;}
+    .ext-problem p{font-size:0.95rem;color:#374151;margin-bottom:8px;}
+    .work-area{width:100%;border:2px solid #fed7aa;border-radius:10px;padding:10px 14px;font-size:0.95rem;font-family:'Nunito',sans-serif;color:#374151;background:#fffbf5;resize:vertical;min-height:90px;outline:none;margin-top:8px;}
+    .work-area:focus{border-color:#d97706;background:white;}
+
+    /* PASSWORD GATE */
+    #gate{position:fixed;inset:0;background:linear-gradient(135deg,#78350f 0%,#b45309 50%,#d97706 100%);display:flex;align-items:center;justify-content:center;z-index:9999;}
+    .gate-box{background:white;border-radius:24px;padding:40px 44px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.35);}
+    .gate-icon{font-size:3rem;margin-bottom:14px;}
+    .gate-box h2{font-size:1.6rem;font-weight:900;color:#78350f;margin-bottom:8px;}
+    .gate-box p{font-size:0.95rem;color:#78716c;margin-bottom:24px;}
+    .gate-input{width:100%;border:2px solid #fed7aa;border-radius:12px;padding:12px 16px;font-size:1.1rem;font-family:'Space Mono',monospace;font-weight:700;color:#78350f;outline:none;text-align:center;transition:border-color 0.2s;}
+    .gate-input:focus{border-color:#d97706;}
+    .gate-btn{margin-top:16px;width:100%;background:linear-gradient(135deg,#78350f,#d97706);color:white;border:none;border-radius:12px;padding:13px;font-size:1.05rem;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:opacity 0.2s;}
+    .gate-btn:hover{opacity:0.88;}
+    .gate-error{color:#dc2626;font-size:0.88rem;margin-top:10px;font-weight:700;display:none;}
+
+    .final-score{background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #fbbf24;border-radius:16px;padding:20px 24px;text-align:center;margin-top:28px;display:none;}
+    .final-score p{font-size:1.15rem;font-weight:800;color:#78350f;}
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-icon">&#128274;</div>
+    <h2>IB Physics</h2>
+    <p>Enter the password to access this homework.</p>
+    <input class="gate-input" type="password" id="pwInput" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="gate-btn" onclick="checkPw()">Unlock</button>
+    <p class="gate-error" id="pwErr">Incorrect password. Try again.</p>
+  </div>
+</div>
+<script>function checkPw(){const v=document.getElementById('pwInput').value;if(v==='physics2024'){document.getElementById('gate').style.display='none';}else{document.getElementById('pwErr').style.display='block';}}</script>
+
+<script>document.addEventListener('DOMContentLoaded',()=>{const h=document.querySelector('header');for(let i=0;i<18;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*3+1;s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*3}s;`;h.appendChild(s);}});</script>
+
+<header>
+  <div class="chip">IB Physics &mdash; Unit 24 &mdash; Homework</div>
+  <h1>Review of Trig Sides</h1>
+  <p class="subtitle">Identifying Sides &bull; Trig Ratios &bull; Solving for Missing Sides &bull; Multi-Step Problems</p>
+</header>
+
+<main>
+
+  <!-- FORMULA REFERENCE -->
+  <div class="formula-ref">
+    <div class="ref-title">Quick Reference &mdash; SOH CAH TOA</div>
+    <span>Sin(&theta;) = Opp/Hyp</span>
+    <span>Cos(&theta;) = Adj/Hyp</span>
+    <span>Tan(&theta;) = Opp/Adj</span>
+  </div>
+
+  <!-- PART A: Identify sides -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#fef3c7;">&#128204;</div>
+      <h2>Part A &mdash; Identify the Sides</h2>
+    </div>
+
+    <!-- HW Q1: 6-8-10 triangle, angle at bottom left -->
+    <div class="prob-card">
+      <h3><span class="prob-badge">HW 1</span> 6-8-10 Right Triangle &mdash; Angle &theta; at Bottom-Left</h3>
+      <svg class="diagram-inline" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="20,140 180,140 20,30" fill="#fef9ee" stroke="#d97706" stroke-width="2"/>
+        <rect x="20" y="122" width="16" height="16" fill="none" stroke="#78350f" stroke-width="1.5"/>
+        <path d="M 20,140 L 44,140 A 24,24 0 0,0 20,116 Z" fill="rgba(217,119,6,0.2)" stroke="#d97706" stroke-width="1.2"/>
+        <text x="42" y="134" font-size="13" font-weight="700" fill="#78350f" font-family="Nunito,sans-serif">&#952;</text>
+        <!-- Label sides as X, Y, Z -->
+        <text x="4" y="92" font-size="11" font-weight="700" fill="#374151" font-family="Nunito,sans-serif" transform="rotate(-90,10,92)">Side X (len=6)</text>
+        <text x="95" y="156" font-size="11" font-weight="700" fill="#374151" font-family="Nunito,sans-serif" text-anchor="middle">Side Y (len=8)</text>
+        <text x="118" y="68" font-size="11" font-weight="700" fill="#374151" font-family="Nunito,sans-serif" transform="rotate(-54,118,78)">Side Z (len=10)</text>
+      </svg>
+      <p>Identify each side relative to &theta; at the bottom-left. Use: Opposite (O), Adjacent (A), Hypotenuse (H).</p>
+      <div class="answer-row">
+        <div class="answer-field"><label>Side X =</label><input class="answer-input" id="h1x" maxlength="1" placeholder="O/A/H"></div>
+        <div class="answer-field"><label>Side Y =</label><input class="answer-input" id="h1y" maxlength="1" placeholder="O/A/H"></div>
+        <div class="answer-field"><label>Side Z =</label><input class="answer-input" id="h1z" maxlength="1" placeholder="O/A/H"></div>
+      </div>
+      <button class="btn-check" onclick="checkH1()">Check Answers</button>
+      <div class="feedback-msg" id="h1-fb"></div>
+      <button class="btn-show" onclick="toggleKey('h1-key')">Show Answer Key</button>
+      <div class="answer-key" id="h1-key">
+        <p><strong>Side X (vertical, length 6):</strong> <span class="mono">Opposite</span> &mdash; directly across from &theta;, does not touch it.</p>
+        <p><strong>Side Y (horizontal, length 8):</strong> <span class="mono">Adjacent</span> &mdash; the base of angle &theta;, right next to it.</p>
+        <p><strong>Side Z (diagonal, length 10):</strong> <span class="mono">Hypotenuse</span> &mdash; longest side, opposite the right angle.</p>
+      </div>
+    </div>
+
+    <!-- HW Q2: same triangle, angle at top right -->
+    <div class="prob-card">
+      <h3><span class="prob-badge">HW 2</span> Same 6-8-10 Triangle &mdash; Angle &theta; at Top-Right Corner</h3>
+      <svg class="diagram-inline" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="20,140 180,140 180,30" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+        <rect x="162" y="122" width="16" height="16" fill="none" stroke="#1d4ed8" stroke-width="1.5"/>
+        <path d="M 180,30 L 156,30 A 24,24 0 0,1 180,54 Z" fill="rgba(59,130,246,0.2)" stroke="#3b82f6" stroke-width="1.2"/>
+        <text x="145" y="50" font-size="13" font-weight="700" fill="#1d4ed8" font-family="Nunito,sans-serif">&#952;</text>
+        <text x="95" y="156" font-size="11" font-weight="700" fill="#374151" font-family="Nunito,sans-serif" text-anchor="middle">Side X (len=8)</text>
+        <text x="190" y="90" font-size="11" font-weight="700" fill="#374151" font-family="Nunito,sans-serif" transform="rotate(90,188,90)" text-anchor="middle">Side Y (len=6)</text>
+        <text x="78" y="70" font-size="11" font-weight="700" fill="#374151" font-family="Nunito,sans-serif" transform="rotate(-54,78,80)">Side Z (len=10)</text>
+      </svg>
+      <p>Now &theta; is at the top-right corner. How do the labels change?</p>
+      <div class="answer-row">
+        <div class="answer-field"><label>Side X =</label><input class="answer-input" id="h2x" maxlength="1" placeholder="O/A/H"></div>
+        <div class="answer-field"><label>Side Y =</label><input class="answer-input" id="h2y" maxlength="1" placeholder="O/A/H"></div>
+        <div class="answer-field"><label>Side Z =</label><input class="answer-input" id="h2z" maxlength="1" placeholder="O/A/H"></div>
+      </div>
+      <button class="btn-check" onclick="checkH2()">Check Answers</button>
+      <div class="feedback-msg" id="h2-fb"></div>
+      <button class="btn-show" onclick="toggleKey('h2-key')">Show Answer Key</button>
+      <div class="answer-key" id="h2-key">
+        <p><strong>Side X (horizontal base, length 8):</strong> <span class="mono">Opposite</span> &mdash; now it is across from &theta; at the top-right.</p>
+        <p><strong>Side Y (vertical right, length 6):</strong> <span class="mono">Adjacent</span> &mdash; now it sits right next to &theta;.</p>
+        <p><strong>Side Z (diagonal, length 10):</strong> <span class="mono">Hypotenuse</span> &mdash; unchanged, always the longest side.</p>
+        <p><strong>Note:</strong> Opposite (8) and Adjacent (6) have swapped from HW 1 because the angle moved!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART B: Trig ratios -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#dcfce7;">&#128200;</div>
+      <h2>Part B &mdash; Calculate Trig Ratios</h2>
+    </div>
+
+    <!-- HW Q3: 6-8-10 at bottom-left -->
+    <div class="prob-card">
+      <h3><span class="prob-badge">HW 3</span> 6-8-10 Triangle &mdash; &theta; at Bottom-Left</h3>
+      <p>Using Opp = 6, Adj = 8, Hyp = 10 from HW 1, calculate all three trig ratios (decimal, 2 dp).</p>
+      <div class="answer-row">
+        <div class="answer-field"><label>Sin(&theta;) =</label><input class="answer-input" id="h3sin" placeholder="0.xx"></div>
+        <div class="answer-field"><label>Cos(&theta;) =</label><input class="answer-input" id="h3cos" placeholder="0.xx"></div>
+        <div class="answer-field"><label>Tan(&theta;) =</label><input class="answer-input" id="h3tan" placeholder="0.xx"></div>
+      </div>
+      <button class="btn-check" onclick="checkH3()">Check Answers</button>
+      <div class="feedback-msg" id="h3-fb"></div>
+      <button class="btn-show" onclick="toggleKey('h3-key')">Show Answer Key</button>
+      <div class="answer-key" id="h3-key">
+        <p><span class="mono">Sin(&theta;) = 6/10 = 0.60</span></p>
+        <p><span class="mono">Cos(&theta;) = 8/10 = 0.80</span></p>
+        <p><span class="mono">Tan(&theta;) = 6/8 = 0.75</span></p>
+        <p><strong>Tip:</strong> Notice that this is the same set of ratios as the 3-4-5 triangle from the lesson! (6-8-10 is just a scaled-up version.)</p>
+      </div>
+    </div>
+
+    <!-- HW Q4: 9-40-41 triangle -->
+    <div class="prob-card">
+      <h3><span class="prob-badge">HW 4</span> 9-40-41 Right Triangle &mdash; &theta; at Bottom-Left</h3>
+      <svg class="diagram-inline" viewBox="0 0 200 155" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="20,135 180,135 20,15" fill="#fef9ee" stroke="#d97706" stroke-width="2"/>
+        <rect x="20" y="117" width="16" height="16" fill="none" stroke="#78350f" stroke-width="1.5"/>
+        <path d="M 20,135 L 44,135 A 24,24 0 0,0 20,111 Z" fill="rgba(217,119,6,0.2)" stroke="#d97706" stroke-width="1.2"/>
+        <text x="42" y="129" font-size="13" font-weight="700" fill="#78350f" font-family="Nunito,sans-serif">&#952;</text>
+        <text x="3" y="82" font-size="11" font-weight="700" fill="#92400e" font-family="Space Mono,monospace" transform="rotate(-90,10,82)">9</text>
+        <text x="95" y="150" font-size="11" font-weight="700" fill="#1d4ed8" font-family="Space Mono,monospace" text-anchor="middle">40</text>
+        <text x="114" y="60" font-size="11" font-weight="700" fill="#166534" font-family="Space Mono,monospace" transform="rotate(-56,114,70)">41</text>
+      </svg>
+      <p>Opposite = 9, Adjacent = 40, Hypotenuse = 41. Calculate all three trig ratios.</p>
+      <div class="answer-row">
+        <div class="answer-field"><label>Sin(&theta;) =</label><input class="answer-input" id="h4sin" placeholder="0.xx"></div>
+        <div class="answer-field"><label>Cos(&theta;) =</label><input class="answer-input" id="h4cos" placeholder="0.xx"></div>
+        <div class="answer-field"><label>Tan(&theta;) =</label><input class="answer-input" id="h4tan" placeholder="0.xx"></div>
+      </div>
+      <button class="btn-check" onclick="checkH4()">Check Answers</button>
+      <div class="feedback-msg" id="h4-fb"></div>
+      <button class="btn-show" onclick="toggleKey('h4-key')">Show Answer Key</button>
+      <div class="answer-key" id="h4-key">
+        <p><span class="mono">Sin(&theta;) = 9/41 &asymp; 0.22</span></p>
+        <p><span class="mono">Cos(&theta;) = 40/41 &asymp; 0.98</span></p>
+        <p><span class="mono">Tan(&theta;) = 9/40 = 0.23</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART C: Solve for missing sides -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#dbeafe;">&#128269;</div>
+      <h2>Part C &mdash; Solve for Missing Sides</h2>
+    </div>
+    <p style="font-size:0.93rem;color:#57534e;margin-bottom:18px;">Use the 3-step method. Show your working in the work area. Round to 1 decimal place unless stated.</p>
+
+    <!-- HW Q5 -->
+    <div class="prob-card">
+      <h3><span class="prob-badge">HW 5</span> Find the Adjacent Side</h3>
+      <p>A right triangle has angle &theta; = 35&#176; and Hypotenuse = 60 m. Find the Adjacent side (A).</p>
+      <p class="hint">Hint: Which function uses Adjacent and Hypotenuse?</p>
+      <textarea class="work-area" id="h5work" placeholder="Show your 3-step working here..."></textarea>
+      <div class="answer-row">
+        <div class="answer-field"><label>Function Used</label><input class="answer-input" id="h5fn" maxlength="12" placeholder="Sin/Cos/Tan"></div>
+        <div class="answer-field"><label>A = (m)</label><input class="answer-input" id="h5ans" placeholder="0.0"></div>
+      </div>
+      <button class="btn-check" onclick="checkH5()">Check Answers</button>
+      <div class="feedback-msg" id="h5-fb"></div>
+      <button class="btn-show" onclick="toggleKey('h5-key')">Show Answer Key</button>
+      <div class="answer-key" id="h5-key">
+        <p><strong>Step 1:</strong> Know Hypotenuse, want Adjacent &rarr; use <span class="mono">Cos</span></p>
+        <p><strong>Step 2:</strong> <span class="mono">Cos(&theta;) = A/H &nbsp;&rarr;&nbsp; A = H &times; Cos(&theta;)</span></p>
+        <p><strong>Step 3:</strong> <span class="mono">A = 60 &times; Cos(35&#176;) = 60 &times; 0.819 &asymp; 49.1 m</span></p>
+      </div>
+    </div>
+
+    <!-- HW Q6 -->
+    <div class="prob-card">
+      <h3><span class="prob-badge">HW 6</span> Find the Opposite Side</h3>
+      <p>A right triangle has angle &theta; = 62&#176; and Hypotenuse = 45 m. Find the Opposite side (O).</p>
+      <p class="hint">Hint: Which function uses Opposite and Hypotenuse?</p>
+      <textarea class="work-area" id="h6work" placeholder="Show your 3-step working here..."></textarea>
+      <div class="answer-row">
+        <div class="answer-field"><label>Function Used</label><input class="answer-input" id="h6fn" maxlength="12" placeholder="Sin/Cos/Tan"></div>
+        <div class="answer-field"><label>O = (m)</label><input class="answer-input" id="h6ans" placeholder="0.0"></div>
+      </div>
+      <button class="btn-check" onclick="checkH6()">Check Answers</button>
+      <div class="feedback-msg" id="h6-fb"></div>
+      <button class="btn-show" onclick="toggleKey('h6-key')">Show Answer Key</button>
+      <div class="answer-key" id="h6-key">
+        <p><strong>Step 1:</strong> Know Hypotenuse, want Opposite &rarr; use <span class="mono">Sin</span></p>
+        <p><strong>Step 2:</strong> <span class="mono">Sin(&theta;) = O/H &nbsp;&rarr;&nbsp; O = H &times; Sin(&theta;)</span></p>
+        <p><strong>Step 3:</strong> <span class="mono">O = 45 &times; Sin(62&#176;) = 45 &times; 0.883 &asymp; 39.7 m</span></p>
+      </div>
+    </div>
+
+    <!-- HW Q7 -->
+    <div class="prob-card">
+      <h3><span class="prob-badge">HW 7</span> Find the Hypotenuse</h3>
+      <p>A right triangle has angle &theta; = 48&#176; and Adjacent = 35 m. Find the Hypotenuse (H).</p>
+      <p class="hint">Hint: Which function uses Adjacent and Hypotenuse? How do you rearrange it?</p>
+      <textarea class="work-area" id="h7work" placeholder="Show your 3-step working here..."></textarea>
+      <div class="answer-row">
+        <div class="answer-field"><label>Function Used</label><input class="answer-input" id="h7fn" maxlength="12" placeholder="Sin/Cos/Tan"></div>
+        <div class="answer-field"><label>H = (m)</label><input class="answer-input" id="h7ans" placeholder="0.0"></div>
+      </div>
+      <button class="btn-check" onclick="checkH7()">Check Answers</button>
+      <div class="feedback-msg" id="h7-fb"></div>
+      <button class="btn-show" onclick="toggleKey('h7-key')">Show Answer Key</button>
+      <div class="answer-key" id="h7-key">
+        <p><strong>Step 1:</strong> Know Adjacent, want Hypotenuse &rarr; use <span class="mono">Cos</span></p>
+        <p><strong>Step 2:</strong> <span class="mono">Cos(&theta;) = A/H &nbsp;&rarr;&nbsp; H = A / Cos(&theta;)</span></p>
+        <p><strong>Step 3:</strong> <span class="mono">H = 35 / Cos(48&#176;) = 35 / 0.669 &asymp; 52.3 m</span></p>
+      </div>
+    </div>
+
+    <!-- HW Q8 -->
+    <div class="prob-card">
+      <h3><span class="prob-badge">HW 8</span> Find the Opposite Side (Tan rearrangement)</h3>
+      <p>A right triangle has angle &theta; = 72&#176; and Adjacent = 12 m. Find the Opposite side (O).</p>
+      <textarea class="work-area" id="h8work" placeholder="Show your 3-step working here..."></textarea>
+      <div class="answer-row">
+        <div class="answer-field"><label>Function Used</label><input class="answer-input" id="h8fn" maxlength="12" placeholder="Sin/Cos/Tan"></div>
+        <div class="answer-field"><label>O = (m)</label><input class="answer-input" id="h8ans" placeholder="0.0"></div>
+      </div>
+      <button class="btn-check" onclick="checkH8()">Check Answers</button>
+      <div class="feedback-msg" id="h8-fb"></div>
+      <button class="btn-show" onclick="toggleKey('h8-key')">Show Answer Key</button>
+      <div class="answer-key" id="h8-key">
+        <p><strong>Step 1:</strong> Know Adjacent, want Opposite &rarr; use <span class="mono">Tan</span></p>
+        <p><strong>Step 2:</strong> <span class="mono">Tan(&theta;) = O/A &nbsp;&rarr;&nbsp; O = A &times; Tan(&theta;)</span></p>
+        <p><strong>Step 3:</strong> <span class="mono">O = 12 &times; Tan(72&#176;) = 12 &times; 3.078 &asymp; 36.9 m</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART D: Extended / Multi-step -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#fde68a;">&#11088;</div>
+      <h2>Part D &mdash; Extended Problems</h2>
+    </div>
+    <p style="font-size:0.93rem;color:#57534e;margin-bottom:18px;">These problems require you to apply multiple steps or think carefully about which sides correspond to the angle given.</p>
+
+    <!-- HW Q9: two-part problem -->
+    <div class="ext-problem">
+      <h3>HW 9 &mdash; Find Both Missing Sides</h3>
+      <p>A right triangle has one angle &theta; = 20&#176; and the <strong>Hypotenuse = 100 m</strong>. Find <em>both</em> the Opposite and Adjacent sides.</p>
+      <p>Part (a): Find the Opposite side using Sin.</p>
+      <p>Part (b): Find the Adjacent side using Cos.</p>
+      <textarea class="work-area" id="h9work" placeholder="Write your full working for both parts here..."></textarea>
+      <div class="answer-row" style="margin-top:14px;">
+        <div class="answer-field"><label>Opposite (m)</label><input class="answer-input" id="h9opp" placeholder="0.0"></div>
+        <div class="answer-field"><label>Adjacent (m)</label><input class="answer-input" id="h9adj" placeholder="0.0"></div>
+      </div>
+      <button class="btn-check" onclick="checkH9()">Check Answers</button>
+      <div class="feedback-msg" id="h9-fb"></div>
+      <button class="btn-show" onclick="toggleKey('h9-key')">Show Answer Key</button>
+      <div class="answer-key" id="h9-key">
+        <p><strong>Part (a) &mdash; Opposite:</strong></p>
+        <p><span class="mono">Sin(&theta;) = O/H &rarr; O = H &times; Sin(20&#176;) = 100 &times; 0.342 &asymp; 34.2 m</span></p>
+        <p><strong>Part (b) &mdash; Adjacent:</strong></p>
+        <p><span class="mono">Cos(&theta;) = A/H &rarr; A = H &times; Cos(20&#176;) = 100 &times; 0.940 &asymp; 94.0 m</span></p>
+        <p><strong>Check:</strong> <span class="mono">&radic;(34.2&sup2; + 94.0&sup2;) = &radic;(1169.6 + 8836) = &radic;10005.6 &asymp; 100 &check;</span></p>
+      </div>
+    </div>
+
+    <!-- HW Q10: concept question -->
+    <div class="ext-problem">
+      <h3>HW 10 &mdash; Conceptual Understanding</h3>
+      <p>A right triangle has the <strong>same side lengths</strong> but you move angle &theta; from the bottom-left to the other non-right angle (top-right).</p>
+      <p>(a) Which sides change their labels (Opposite / Adjacent / Hypotenuse)?</p>
+      <p>(b) If originally Sin(&theta;) = 0.6, what does Sin become for the new angle? (Give your answer as a decimal.)</p>
+      <p>(c) What trig function for the new angle gives you 0.6? Explain why using SOH-CAH-TOA.</p>
+      <textarea class="work-area" id="h10work" placeholder="Write your answers and reasoning here..." style="min-height:120px;"></textarea>
+      <button class="btn-show" onclick="toggleKey('h10-key')" style="margin-top:10px;">Show Answer Key</button>
+      <div class="answer-key" id="h10-key">
+        <p><strong>(a)</strong> The <span class="mono">Opposite</span> and <span class="mono">Adjacent</span> swap. The Hypotenuse never changes because it is always the side opposite the right angle, regardless of which other angle is called &theta;.</p>
+        <p><strong>(b)</strong> If the original triangle had Sin(&theta;) = Opp/Hyp = 0.6, then when you move to the new angle, the old Opposite becomes the new Adjacent. So Sin(new &theta;) = new Opp / Hyp = old Adj / Hyp = Cos(old &theta;).</p>
+        <p>Since Cos(old &theta;) = Adj/Hyp and Sin + Cos complement each other in a right triangle: <span class="mono">Sin(new &theta;) = 0.8</span> (if old triangle was 3-4-5: Cos = 4/5 = 0.8).</p>
+        <p><strong>(c)</strong> <span class="mono">Cos(new &theta;) = 0.6</span>, because what was the Opposite (= 3) is now the Adjacent of the new angle, and Cos = Adj/Hyp. The two non-right angles are complementary (add to 90&#176;), so Sin of one equals Cos of the other.</p>
+      </div>
+    </div>
+
+    <div class="final-score" id="finalScore"><p id="finalScoreText"></p></div>
+  </section>
+
+</main>
+
+<script>
+let scores={};
+function norm(s){return s.trim().toLowerCase();}
+function near(a,b,tol){return Math.abs(parseFloat(a)-b)<tol;}
+
+function showFeedback(id,ok,msg){
+  const el=document.getElementById(id+'-fb');
+  el.className='feedback-msg '+(ok?'fb-ok':'fb-err');
+  el.textContent=msg;
+  el.style.display='block';
+}
+function toggleKey(id){
+  const el=document.getElementById(id);
+  el.style.display=(el.style.display==='none'||!el.style.display)?'block':'none';
+}
+
+function checkH1(){
+  const x=norm(document.getElementById('h1x').value);
+  const y=norm(document.getElementById('h1y').value);
+  const z=norm(document.getElementById('h1z').value);
+  const ok=(x==='o'&&y==='a'&&z==='h');
+  scores.h1=ok;
+  showFeedback('h1',ok,ok?'Correct! X=Opposite (vertical, across from θ), Y=Adjacent (base, next to θ), Z=Hypotenuse (longest side).':'Not quite. With θ at bottom-left: X (vertical)=Opposite, Y (base)=Adjacent, Z (diagonal)=Hypotenuse.');
+}
+function checkH2(){
+  const x=norm(document.getElementById('h2x').value);
+  const y=norm(document.getElementById('h2y').value);
+  const z=norm(document.getElementById('h2z').value);
+  const ok=(x==='o'&&y==='a'&&z==='h');
+  scores.h2=ok;
+  showFeedback('h2',ok,ok?'Correct! Moving θ to the top-right swaps Opposite and Adjacent. X=Opposite (now=8), Y=Adjacent (now=6), Z=Hypotenuse (unchanged=10).':'When θ moves to the top-right: X (horizontal base, len=8) becomes Opposite, Y (vertical right, len=6) becomes Adjacent, Z=Hypotenuse.');
+}
+function checkH3(){
+  const s=document.getElementById('h3sin').value;
+  const c=document.getElementById('h3cos').value;
+  const t=document.getElementById('h3tan').value;
+  const ok=near(s,6/10,0.02)&&near(c,8/10,0.02)&&near(t,6/8,0.02);
+  scores.h3=ok;
+  showFeedback('h3',ok,ok?'Correct! Sin=6/10=0.60, Cos=8/10=0.80, Tan=6/8=0.75.':'Check your fractions: Sin=Opp/Hyp=6/10, Cos=Adj/Hyp=8/10, Tan=Opp/Adj=6/8.');
+}
+function checkH4(){
+  const s=document.getElementById('h4sin').value;
+  const c=document.getElementById('h4cos').value;
+  const t=document.getElementById('h4tan').value;
+  const ok=near(s,9/41,0.02)&&near(c,40/41,0.02)&&near(t,9/40,0.02);
+  scores.h4=ok;
+  showFeedback('h4',ok,ok?'Correct! Sin=9/41≈0.22, Cos=40/41≈0.98, Tan=9/40=0.23.':'Check: Sin=9/41≈0.22, Cos=40/41≈0.98, Tan=9/40≈0.23.');
+}
+function checkH5(){
+  const fn=norm(document.getElementById('h5fn').value);
+  const ans=document.getElementById('h5ans').value;
+  const okFn=(fn==='cos'||fn==='cosine');
+  const okAns=near(ans,60*Math.cos(35*Math.PI/180),1.0);
+  const ok=okFn&&okAns;
+  scores.h5=ok;
+  showFeedback('h5',ok,ok?'Correct! Cos(35°)=0.819, A=60×0.819≈49.1 m.':`Not quite. ${okFn?'':'Use Cos (links Adj & Hyp). '}${okAns?'':'Expected A≈49.1 m.'}`);
+}
+function checkH6(){
+  const fn=norm(document.getElementById('h6fn').value);
+  const ans=document.getElementById('h6ans').value;
+  const okFn=(fn==='sin'||fn==='sine');
+  const okAns=near(ans,45*Math.sin(62*Math.PI/180),1.0);
+  const ok=okFn&&okAns;
+  scores.h6=ok;
+  showFeedback('h6',ok,ok?'Correct! Sin(62°)=0.883, O=45×0.883≈39.7 m.':`Not quite. ${okFn?'':'Use Sin (links Opp & Hyp). '}${okAns?'':'Expected O≈39.7 m.'}`);
+}
+function checkH7(){
+  const fn=norm(document.getElementById('h7fn').value);
+  const ans=document.getElementById('h7ans').value;
+  const okFn=(fn==='cos'||fn==='cosine');
+  const okAns=near(ans,35/Math.cos(48*Math.PI/180),1.0);
+  const ok=okFn&&okAns;
+  scores.h7=ok;
+  showFeedback('h7',ok,ok?'Correct! Cos(48°)=0.669, H=35/0.669≈52.3 m.':`Not quite. ${okFn?'':'Use Cos (Adj & Hyp). '}${okAns?'':'Expected H≈52.3 m.'}`);
+}
+function checkH8(){
+  const fn=norm(document.getElementById('h8fn').value);
+  const ans=document.getElementById('h8ans').value;
+  const okFn=(fn==='tan'||fn==='tangent');
+  const okAns=near(ans,12*Math.tan(72*Math.PI/180),1.0);
+  const ok=okFn&&okAns;
+  scores.h8=ok;
+  showFeedback('h8',ok,ok?'Correct! Tan(72°)=3.078, O=12×3.078≈36.9 m.':`Not quite. ${okFn?'':'Use Tan (links Opp & Adj). '}${okAns?'':'Expected O≈36.9 m.'}`);
+}
+function checkH9(){
+  const opp=document.getElementById('h9opp').value;
+  const adj=document.getElementById('h9adj').value;
+  const okOpp=near(opp,100*Math.sin(20*Math.PI/180),1.0);
+  const okAdj=near(adj,100*Math.cos(20*Math.PI/180),1.0);
+  const ok=okOpp&&okAdj;
+  scores.h9=ok;
+  showFeedback('h9',ok,ok?'Correct! O=100×Sin(20°)≈34.2 m, A=100×Cos(20°)≈94.0 m.':`Not quite. ${okOpp?'':'O=H×Sin(20°)≈34.2 m. '}${okAdj?'':'A=H×Cos(20°)≈94.0 m.'}`);
+}
+</script>
+
+</body>
+</html>

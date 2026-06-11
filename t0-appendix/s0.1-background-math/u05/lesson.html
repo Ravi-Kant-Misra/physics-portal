@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Factor-Label Conversion — Physics Lesson</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root{--teal:#14b8a6;--green:#22c55e;--blue:#3b82f6;--dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);font-size:17px;line-height:1.75;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;}
+    header{background:linear-gradient(135deg,#064e3b 0%,#065f46 50%,#047857 100%);color:white;padding:52px 60px 48px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 50%,rgba(20,184,166,0.3) 0%,transparent 60%),radial-gradient(ellipse at 75% 30%,rgba(34,197,94,0.2) 0%,transparent 55%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.4);}}
+    header .chip{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px;position:relative;}
+    header h1{font-size:2.9rem;font-weight:900;letter-spacing:-1px;position:relative;margin-bottom:10px;background:linear-gradient(90deg,#a7f3d0,#6ee7b7,#d1fae5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1.05rem;color:rgba(255,255,255,0.8);position:relative;max-width:520px;margin:0 auto;}
+    main{max-width:920px;margin:48px auto;padding:0 24px 80px;}
+    section{margin-bottom:64px;}
+    .section-label{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+    .section-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    .section-label h2{font-size:1.5rem;font-weight:900;color:var(--dark);}
+
+    /* concept */
+    .concept-card{background:white;border-radius:18px;padding:28px 32px;box-shadow:0 4px 20px rgba(0,0,0,0.07);border-left:6px solid #10b981;margin-bottom:24px;}
+    .concept-card p{color:#374151;margin-bottom:10px;font-size:0.95rem;}
+
+    /* key insight */
+    .key-insight{background:linear-gradient(135deg,#064e3b,#065f46);border-radius:18px;padding:28px 36px;color:white;text-align:center;margin-bottom:28px;}
+    .key-insight h3{font-size:0.85rem;text-transform:uppercase;letter-spacing:1.5px;opacity:0.7;margin-bottom:14px;}
+    .key-insight .big-eq{font-family:'Space Mono',monospace;font-size:1.5rem;font-weight:700;margin-bottom:14px;}
+    .key-insight p{font-size:0.9rem;opacity:0.85;max-width:480px;margin:0 auto;}
+
+    /* 3 steps */
+    .steps-row{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:28px;}
+    @media(max-width:640px){.steps-row{grid-template-columns:1fr;}}
+    .step-card{background:white;border-radius:16px;padding:20px 18px;box-shadow:0 3px 14px rgba(0,0,0,0.07);border-top:4px solid #10b981;}
+    .step-card .s-num{font-size:2rem;font-weight:900;color:#10b981;line-height:1;margin-bottom:8px;}
+    .step-card h4{font-size:0.95rem;font-weight:800;margin-bottom:8px;}
+    .step-card p{font-size:0.85rem;color:#475569;}
+    .step-card .s-visual{font-family:'Space Mono',monospace;font-size:0.85rem;background:#f0fdf4;border-radius:8px;padding:8px 12px;margin-top:10px;color:#065f46;}
+
+    /* example blocks */
+    .example-block{background:white;border-radius:18px;margin-bottom:26px;box-shadow:0 4px 20px rgba(0,0,0,0.07);overflow:hidden;}
+    .ex-head{background:linear-gradient(135deg,#064e3b,#065f46);color:white;padding:16px 24px;display:flex;align-items:center;gap:14px;}
+    .ex-badge{background:rgba(255,255,255,0.2);color:white;font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:4px 14px;border-radius:20px;}
+    .ex-title{font-size:1rem;font-weight:700;}
+    .ex-body{padding:22px 28px;}
+    .ex-goal{font-size:0.9rem;color:#475569;margin-bottom:16px;}
+    .conversion-chain{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+    .c-number{font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;color:#065f46;}
+    .c-unit-old{font-family:'Space Mono',monospace;font-size:1.1rem;text-decoration:line-through;color:#ef4444;}
+    .c-frac{background:#f0fdf4;border:2px solid #6ee7b7;border-radius:10px;padding:8px 14px;display:flex;flex-direction:column;align-items:center;gap:2px;}
+    .c-frac .top{font-family:'Space Mono',monospace;font-size:0.95rem;font-weight:700;color:#065f46;border-bottom:2px solid #10b981;padding-bottom:3px;width:100%;text-align:center;}
+    .c-frac .bot{font-family:'Space Mono',monospace;font-size:0.95rem;font-weight:700;color:#ef4444;padding-top:3px;width:100%;text-align:center;}
+    .c-times{font-size:1.2rem;color:#64748b;font-weight:700;}
+    .c-result{font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;color:#065f46;background:#dcfce7;padding:6px 14px;border-radius:8px;}
+    .ex-note{font-size:0.85rem;color:#064e3b;background:#f0fdf4;border-radius:10px;padding:10px 16px;border-left:3px solid #10b981;}
+
+    /* conversation factor */
+    .cf-box{background:#fffbeb;border:2px solid #fde68a;border-radius:16px;padding:22px 28px;margin-bottom:28px;}
+    .cf-box h3{font-size:1rem;font-weight:800;color:#92400e;margin-bottom:10px;}
+    .cf-box p{font-size:0.9rem;color:#78350f;}
+    .cf-box .cf-eq{font-family:'Space Mono',monospace;font-size:1rem;background:white;padding:8px 16px;border-radius:8px;display:inline-block;margin:8px 0;}
+
+    /* quiz */
+    .quiz-section{background:linear-gradient(135deg,#064e3b,#065f46);border-radius:20px;padding:32px;color:white;}
+    .quiz-section h3{font-size:1.3rem;font-weight:900;margin-bottom:6px;}
+    .quiz-section p{font-size:0.88rem;opacity:0.75;margin-bottom:24px;}
+    .quiz-q{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:18px 22px;margin-bottom:14px;}
+    .quiz-q .qtext{font-size:0.95rem;margin-bottom:14px;font-weight:700;}
+    .options{display:flex;flex-wrap:wrap;gap:10px;}
+    .opt-btn{background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);color:white;font-family:'Nunito',sans-serif;font-size:0.88rem;font-weight:700;padding:8px 16px;border-radius:30px;cursor:pointer;transition:all 0.2s;}
+    .opt-btn:hover{background:rgba(255,255,255,0.2);transform:scale(1.04);}
+    .opt-btn.correct{background:#22c55e;border-color:#22c55e;animation:popIn 0.3s ease;}
+    .opt-btn.wrong{background:#ef4444;border-color:#ef4444;}
+    .feedback{font-size:0.85rem;margin-top:10px;padding:8px 14px;border-radius:8px;display:none;}
+    .feedback.show{display:block;}
+    .feedback.ok{background:rgba(34,197,94,0.2);color:#bbf7d0;}
+    .feedback.bad{background:rgba(239,68,68,0.2);color:#fecaca;}
+    @keyframes popIn{0%{transform:scale(0.9);}60%{transform:scale(1.1);}100%{transform:scale(1);}}
+    footer{text-align:center;padding:32px 20px;font-size:0.85rem;color:var(--muted);}
+  </style>
+</head>
+<body>
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="star" style="width:3px;height:3px;top:12%;left:8%;animation-delay:0s"></div>
+  <div class="star" style="width:2px;height:2px;top:25%;left:15%;animation-delay:0.5s"></div>
+  <div class="star" style="width:4px;height:4px;top:10%;left:30%;animation-delay:1s"></div>
+  <div class="star" style="width:3px;height:3px;top:70%;left:20%;animation-delay:0.3s"></div>
+  <div class="star" style="width:2px;height:2px;top:15%;left:75%;animation-delay:0.8s"></div>
+  <div class="chip">⚛️ Physics · High School · Measurement</div>
+  <h1>Converting Units</h1>
+  <p class="subtitle">Master the Factor-Label Method — a foolproof system for converting any unit to any other</p>
+</header>
+
+<main>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#dcfce7;">💡</div>
+    <h2>What Does It Mean to Convert a Unit?</h2>
+  </div>
+  <div class="concept-card">
+    <p>When you <strong>convert a unit</strong>, you are rewriting the <em>same measurement</em> using a different unit. The actual physical quantity doesn't change — only the way it's written does.</p>
+    <p>For example: 6 feet and 72 inches describe the same height. They represent the same value, just written with different units. This is possible because 1 foot = 12 inches, so you can multiply by the fraction 12 inches/1 foot without changing the actual measurement.</p>
+  </div>
+  <div class="key-insight">
+    <h3>The Core Idea</h3>
+    <div class="big-eq">6 feet × (12 inches / 1 foot) = 72 inches</div>
+    <p>The two measurements represent the same value — they're just written with different units. Multiplying by a conversion factor always equals multiplying by 1.</p>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#bbf7d0;">🔢</div>
+    <h2>The 3-Step Factor-Label Method</h2>
+  </div>
+  <div class="steps-row">
+    <div class="step-card">
+      <div class="s-num">1</div>
+      <h4>Put old unit on bottom</h4>
+      <p>Write a fraction with the unit you want to get rid of in the <strong>denominator</strong>. It will cancel with the unit of your original number.</p>
+      <div class="s-visual">Old Number × ___<br>              Old Unit</div>
+    </div>
+    <div class="step-card">
+      <div class="s-num">2</div>
+      <h4>Put new unit on top</h4>
+      <p>Write the unit you want to end up with in the <strong>numerator</strong>. This is what survives after cancellation.</p>
+      <div class="s-visual">Old Number × New Unit<br>              Old Unit</div>
+    </div>
+    <div class="step-card">
+      <div class="s-num">3</div>
+      <h4>Choose equal numbers</h4>
+      <p>Fill in numbers so that <strong>numerator = denominator</strong> (the fraction = 1). Multiply/divide as needed.</p>
+      <div class="s-visual">Old # × Number A · New Unit<br>         Number B · Old Unit</div>
+    </div>
+  </div>
+  <div class="cf-box">
+    <h3>Why This Works — The Conversion Factor</h3>
+    <p>Each fraction you write is called a <strong>conversion factor</strong>. Because the numerator equals the denominator (just written in different units), the fraction equals exactly <strong>1</strong>. Multiplying by 1 never changes the actual value — only the unit.</p>
+    <div class="cf-eq">( 12 cars / 1 bus ) → top = bottom in real units → = 1</div>
+    <p style="margin-top:8px;">a × 1 × 1 × 1 = a &nbsp;— you can chain as many conversion factors as needed!</p>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#d1fae5;">🔬</div>
+    <h2>Worked Examples</h2>
+  </div>
+
+  <div class="example-block">
+    <div class="ex-head">
+      <div class="ex-badge">Example 1</div>
+      <div class="ex-title">Convert 3500 meters to kilometers</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-goal">Goal: m → km &nbsp;|&nbsp; Relationship: 1 km = 1000 m</div>
+      <div class="conversion-chain">
+        <div class="c-number">3500</div>
+        <div class="c-unit-old">m</div>
+        <div class="c-times">×</div>
+        <div class="c-frac"><div class="top">1 km</div><div class="bot">1000 m</div></div>
+        <div class="c-times">=</div>
+        <div class="c-result">3.5 km</div>
+      </div>
+      <div class="ex-note">The meters (m) cancel top and bottom, leaving only km. 3500 ÷ 1000 = 3.5</div>
+    </div>
+  </div>
+
+  <div class="example-block">
+    <div class="ex-head">
+      <div class="ex-badge">Example 2</div>
+      <div class="ex-title">Convert 50 km/h to m/s (multi-step)</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-goal">Goal: km·h⁻¹ → m·s⁻¹ &nbsp;|&nbsp; Two conversions needed: km→m and h→s</div>
+      <div class="conversion-chain">
+        <div class="c-number">50.0</div>
+        <div class="c-unit-old">km/h</div>
+        <div class="c-times">×</div>
+        <div class="c-frac"><div class="top">1000 m</div><div class="bot">1 km</div></div>
+        <div class="c-times">×</div>
+        <div class="c-frac"><div class="top">1 h</div><div class="bot">60 min</div></div>
+        <div class="c-times">×</div>
+        <div class="c-frac"><div class="top">1 min</div><div class="bot">60 s</div></div>
+        <div class="c-times">=</div>
+        <div class="c-result">13.9 m/s</div>
+      </div>
+      <div class="ex-note">km cancels, h and min cancel. Remaining units: m and s. 50 × 1000 ÷ 60 ÷ 60 = 13.9̄</div>
+    </div>
+  </div>
+
+  <div class="example-block">
+    <div class="ex-head">
+      <div class="ex-badge">Example 3</div>
+      <div class="ex-title">Convert 3 years to seconds</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-goal">Chain: years → days → hours → minutes → seconds</div>
+      <div class="conversion-chain" style="font-size:0.9rem;">
+        <div class="c-number">3</div>
+        <div class="c-unit-old">yr</div>
+        <div class="c-times">×</div>
+        <div class="c-frac"><div class="top">365 days</div><div class="bot">1 yr</div></div>
+        <div class="c-times">×</div>
+        <div class="c-frac"><div class="top">24 h</div><div class="bot">1 day</div></div>
+        <div class="c-times">×</div>
+        <div class="c-frac"><div class="top">60 min</div><div class="bot">1 h</div></div>
+        <div class="c-times">×</div>
+        <div class="c-frac"><div class="top">60 s</div><div class="bot">1 min</div></div>
+        <div class="c-times">=</div>
+        <div class="c-result">94,608,000 s</div>
+      </div>
+      <div class="ex-note">All intermediate units cancel. 3 × 365 × 24 × 60 × 60 = 94,608,000 s ≈ 9.46 × 10⁷ s</div>
+    </div>
+  </div>
+
+  <div class="example-block">
+    <div class="ex-head">
+      <div class="ex-badge">Example 4</div>
+      <div class="ex-title">Non-unit conversion: 8 buses → basketballs</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-goal">Given: 1 bus = 12 cars; 3 cars = 1 truck; 1 truck = 1000 basketballs</div>
+      <div class="conversion-chain" style="font-size:0.9rem;">
+        <div class="c-number">8</div>
+        <div class="c-unit-old">buses</div>
+        <div class="c-times">×</div>
+        <div class="c-frac"><div class="top">12 cars</div><div class="bot">1 bus</div></div>
+        <div class="c-times">×</div>
+        <div class="c-frac"><div class="top">1 truck</div><div class="bot">3 cars</div></div>
+        <div class="c-times">×</div>
+        <div class="c-frac"><div class="top">1000 bball</div><div class="bot">1 truck</div></div>
+        <div class="c-times">=</div>
+        <div class="c-result">32,000</div>
+      </div>
+      <div class="ex-note">This shows the method works for ANY unit — not just physics units. 8 × 12 ÷ 3 × 1000 = 32,000 basketballs</div>
+    </div>
+  </div>
+
+  <div class="example-block">
+    <div class="ex-head">
+      <div class="ex-badge">Example 5</div>
+      <div class="ex-title">How many mm are in 2 Mm? (prefix-to-prefix)</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-goal">Go via base unit: Mm → m → mm</div>
+      <div class="conversion-chain">
+        <div class="c-number">2</div>
+        <div class="c-unit-old">Mm</div>
+        <div class="c-times">×</div>
+        <div class="c-frac"><div class="top">10⁶ m</div><div class="bot">1 Mm</div></div>
+        <div class="c-times">×</div>
+        <div class="c-frac"><div class="top">1 mm</div><div class="bot">10⁻³ m</div></div>
+        <div class="c-times">=</div>
+        <div class="c-result">2 × 10⁹ mm</div>
+      </div>
+      <div class="ex-note">Mm cancels, m cancels. 2 × 10⁶ ÷ 10⁻³ = 2 × 10⁶⁺³ = 2 × 10⁹ mm</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="quiz-section">
+    <h3>⚡ Quick Check</h3>
+    <p>Apply the factor-label method.</p>
+    <div class="quiz-q" id="q1">
+      <div class="qtext">Convert 2.5 km to meters. Which conversion factor is correct?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q1',false,'This would give km²/m — the km does not cancel correctly.')">2.5 km × (1 km / 1000 m)</button>
+        <button class="opt-btn" onclick="check(this,'q1',true,'Correct! km cancels: 2.5 × 1000 = 2500 m.')">2.5 km × (1000 m / 1 km)</button>
+        <button class="opt-btn" onclick="check(this,'q1',false,'This keeps km on top — it does not cancel.')">2.5 km × (1000 m / 1 m)</button>
+      </div>
+      <div class="feedback" id="q1-fb"></div>
+    </div>
+    <div class="quiz-q" id="q2">
+      <div class="qtext">A car travels at 90 km/h. What is this speed in m/s?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q2',false,'Incorrect — you may have multiplied by 3600 instead of dividing. 90 km/h × (1000/3600) = 25 m/s.')">0.025 m/s</button>
+        <button class="opt-btn" onclick="check(this,'q2',false,'That is 90 × 1000 = 90000. You forgot to divide by 3600 seconds per hour.')">90,000 m/s</button>
+        <button class="opt-btn" onclick="check(this,'q2',true,'Correct! 90 × 1000 ÷ 3600 = 25 m/s.')">25 m/s</button>
+      </div>
+      <div class="feedback" id="q2-fb"></div>
+    </div>
+    <div class="quiz-q" id="q3">
+      <div class="qtext">Why can you multiply by a conversion factor without changing the actual quantity?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q3',false,'The units do change — but the physical quantity they represent stays the same.')">Because you are changing both the number and the unit simultaneously</button>
+        <button class="opt-btn" onclick="check(this,'q3',true,'Correct! Each conversion factor = 1 (numerator and denominator are equal in value). Multiplying by 1 never changes the actual quantity.')">Because each conversion factor equals 1 — numerator and denominator represent the same value</button>
+        <button class="opt-btn" onclick="check(this,'q3',false,'The numbers do change — but proportionally so the physical value is unchanged.')">Because the numbers stay the same</button>
+      </div>
+      <div class="feedback" id="q3-fb"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer>Physics · High School &nbsp;·&nbsp; Unit 5: Converting Units Using the Factor-Label Method</footer>
+<script>
+function check(btn,qid,correct,msg){
+  var q=document.getElementById(qid);
+  var fb=document.getElementById(qid+'-fb');
+  q.querySelectorAll('.opt-btn').forEach(function(b){b.disabled=true;b.style.opacity='0.55';b.style.cursor='default';});
+  btn.style.opacity='1';
+  btn.classList.add(correct?'correct':'wrong');
+  fb.textContent=(correct?'✅ ':'❌ ')+msg;
+  fb.className='feedback show '+(correct?'ok':'bad');
+}
+</script>
+</body>
+</html>

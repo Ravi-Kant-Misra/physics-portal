@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Free Fall — Homework · Kinematics Unit 13</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;
+  --red:#ef4444;--dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:radial-gradient(circle,#cbd5e1 1px,transparent 1px);
+  background-size:28px 28px;opacity:.45;pointer-events:none;z-index:0;
+}
+#gate{
+  position:fixed;inset:0;z-index:999;
+  background:linear-gradient(135deg,#1e40af,#2563eb);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.2rem;
+}
+#gate h2{color:#fff;font-size:1.8rem;font-weight:800;}
+#gate p{color:#bfdbfe;font-size:.95rem;}
+#gate input{
+  padding:.75rem 1.2rem;border-radius:12px;border:2px solid #3b82f6;
+  font-size:1rem;font-family:'Nunito',sans-serif;outline:none;width:260px;
+  background:#0f172a;color:#fff;
+}
+#gate button{
+  padding:.75rem 2rem;border-radius:12px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;
+  font-size:1rem;font-weight:700;font-family:'Nunito',sans-serif;transition:opacity .2s;
+}
+#gate button:hover{opacity:.85;}
+#gate-err{color:#fca5a5;font-size:.9rem;min-height:1.2rem;}
+#main{display:none;position:relative;z-index:1;}
+
+/* HEADER */
+header{
+  background:linear-gradient(135deg,#1e40af 0%,#2563eb 100%);
+  padding:3rem 2rem 2.5rem;text-align:center;position:relative;overflow:hidden;
+}
+.stars{position:absolute;inset:0;pointer-events:none;}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 2.5s infinite ease-in-out alternate;}
+@keyframes twinkle{0%{opacity:.2;transform:scale(.8);}100%{opacity:1;transform:scale(1.2);}}
+.chip{
+  display:inline-block;background:rgba(255,255,255,.15);color:#e0f2fe;
+  font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:.3rem .9rem;border-radius:99px;border:1px solid rgba(255,255,255,.25);
+  margin-bottom:1rem;font-family:'Space Mono',monospace;
+}
+header h1{
+  font-size:clamp(2rem,4.5vw,3rem);font-weight:900;
+  background:linear-gradient(135deg,#ffffff 0%,#bfdbfe 50%,#818cf8 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1.15;margin-bottom:.5rem;
+}
+header p.subtitle{color:#bfdbfe;font-size:1rem;font-weight:600;}
+header .hw-badge{
+  display:inline-block;background:rgba(255,255,255,.18);
+  color:#fcd34d;font-size:.8rem;font-weight:700;
+  padding:.25rem .9rem;border-radius:99px;
+  border:1px solid rgba(252,211,77,.4);margin-top:.5rem;
+  font-family:'Space Mono',monospace;
+}
+
+/* layout */
+.container{max-width:920px;margin:0 auto;padding:2.5rem 1.5rem 5rem;}
+.section-title{
+  font-size:1.2rem;font-weight:800;color:var(--dark);
+  margin:2.5rem 0 1rem;display:flex;align-items:center;gap:.6rem;
+}
+.section-title::before{
+  content:'';display:block;width:4px;height:1.3rem;border-radius:2px;
+  background:linear-gradient(180deg,var(--blue),var(--indigo));
+}
+
+/* reference box */
+.ref-box{
+  background:linear-gradient(135deg,#1e40af,#2563eb);
+  border-radius:16px;padding:1.4rem 1.8rem;margin-bottom:.8rem;color:#fff;
+}
+.ref-box h3{
+  font-size:.85rem;font-weight:700;color:#bfdbfe;text-transform:uppercase;
+  letter-spacing:.08em;margin-bottom:.9rem;font-family:'Space Mono',monospace;
+}
+.ref-grid{display:flex;flex-wrap:wrap;gap:.6rem;}
+.ref-item{
+  background:rgba(255,255,255,.12);border-radius:10px;
+  padding:.4rem .9rem;font-family:'Space Mono',monospace;font-size:.83rem;color:#e0f2fe;
+}
+.tip-banner{
+  background:linear-gradient(135deg,#fffbeb,#fef3c7);
+  border:1.5px solid #fcd34d;border-radius:12px;
+  padding:.9rem 1.2rem;margin-bottom:2rem;
+  display:flex;gap:.7rem;align-items:flex-start;
+}
+.tip-banner p{font-size:.88rem;color:#92400e;font-weight:600;}
+
+/* problem card with full working space */
+.prob-card{
+  background:#fff;border:1.5px solid #e2e8f0;border-radius:16px;
+  padding:1.5rem 1.6rem;margin-bottom:1.2rem;
+}
+.prob-head{display:flex;align-items:center;gap:.8rem;margin-bottom:.7rem;}
+.prob-num-badge{
+  background:linear-gradient(135deg,#1e40af,#2563eb);
+  color:#fff;font-weight:800;font-size:.82rem;
+  padding:.25rem .75rem;border-radius:99px;font-family:'Space Mono',monospace;
+  white-space:nowrap;
+}
+.prob-q{font-size:.98rem;font-weight:600;color:var(--dark);line-height:1.6;}
+.given-section{
+  background:#f8faff;border:1px solid #e2e8f0;border-radius:10px;
+  padding:.7rem 1rem;margin:.8rem 0;
+}
+.given-section .given-title{
+  font-size:.72rem;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem;
+  font-family:'Space Mono',monospace;
+}
+.given-row{display:flex;flex-wrap:wrap;gap:.5rem;}
+.given-pill{
+  background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;
+  padding:.25rem .65rem;font-family:'Space Mono',monospace;font-size:.8rem;color:#1e40af;
+}
+.work-section{margin-top:.9rem;}
+.work-section .work-title{
+  font-size:.72rem;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem;
+  font-family:'Space Mono',monospace;
+}
+.line{height:28px;border-bottom:1.5px solid #e2e8f0;margin-bottom:.25rem;}
+.formula-line{height:36px;border-bottom:2px solid #bfdbfe;margin-bottom:.25rem;background:#f8faff;border-radius:0;}
+.answer-box{
+  background:linear-gradient(135deg,#f0fdf4,#dcfce7);
+  border:1.5px solid #86efac;border-radius:10px;
+  padding:.45rem .9rem;margin-top:.7rem;
+  font-size:.88rem;font-weight:700;color:#166534;
+  display:flex;align-items:center;gap:.5rem;
+}
+.answer-box span.ans-label{color:var(--muted);font-weight:600;font-size:.78rem;font-family:'Space Mono',monospace;}
+
+/* True/False section */
+.tf-card{
+  background:#fff;border:1.5px solid #e2e8f0;border-radius:16px;
+  padding:1.4rem 1.6rem;margin-bottom:1rem;
+}
+.tf-statement{font-size:.97rem;font-weight:600;color:var(--dark);margin-bottom:.8rem;line-height:1.6;}
+.tf-options{display:flex;gap:1rem;margin-bottom:.7rem;}
+.tf-btn{
+  padding:.35rem 1.2rem;border-radius:8px;border:2px solid #e2e8f0;
+  background:#f8faff;font-weight:700;font-size:.9rem;cursor:pointer;
+  font-family:'Nunito',sans-serif;transition:all .15s;color:var(--dark);
+}
+.tf-btn:hover{border-color:var(--blue);}
+.correction-label{font-size:.75rem;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem;font-family:'Space Mono',monospace;}
+.correction-line{height:28px;border-bottom:1.5px solid #e2e8f0;margin-bottom:.25rem;}
+
+/* challenge */
+.challenge-card{
+  background:linear-gradient(135deg,#1e3a5f,#1d4ed8);
+  border-radius:18px;padding:1.6rem 1.8rem;margin-bottom:1.2rem;color:#fff;
+}
+.challenge-card .c-badge{
+  display:inline-block;background:rgba(245,158,11,.2);
+  color:#fcd34d;font-size:.75rem;font-weight:700;
+  padding:.2rem .7rem;border-radius:99px;
+  border:1px solid rgba(245,158,11,.4);margin-bottom:.6rem;
+  font-family:'Space Mono',monospace;
+}
+.challenge-card .prob-q{color:#e0f2fe;}
+.challenge-card .given-section{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);}
+.challenge-card .given-title{color:#94a3b8;}
+.challenge-card .given-pill{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#e0f2fe;}
+.challenge-card .work-title{color:#94a3b8;}
+.challenge-card .line{border-bottom-color:rgba(255,255,255,.15);}
+.challenge-card .formula-line{background:rgba(255,255,255,.05);border-bottom-color:rgba(255,255,255,.2);}
+.challenge-card .answer-box{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.4);color:#86efac;}
+
+/* answer key */
+#answer-key{display:none;margin-top:2rem;}
+.key-box{background:linear-gradient(135deg,#0f172a,#1e3a5f);border-radius:18px;padding:2rem 2rem;color:#fff;}
+.key-box h3{font-size:1.1rem;font-weight:800;color:#bfdbfe;margin-bottom:1.4rem;display:flex;align-items:center;gap:.5rem;}
+.key-item{background:rgba(255,255,255,.07);border-radius:12px;padding:.9rem 1.1rem;margin-bottom:.8rem;border-left:3px solid var(--green);}
+.key-item .k-num{font-family:'Space Mono',monospace;font-size:.78rem;color:var(--green);font-weight:700;margin-bottom:.3rem;}
+.key-item .k-ans{font-weight:800;color:#fff;font-size:1rem;margin-bottom:.25rem;}
+.key-item .k-work{font-family:'Space Mono',monospace;font-size:.8rem;color:#94a3b8;line-height:1.7;}
+.key-item.tf-key{border-left-color:var(--amber);}
+.key-item.tf-key .k-ans{color:#fcd34d;}
+.key-item.challenge-key{border-left-color:#f472b6;}
+.key-item.challenge-key .k-ans{color:#f9a8d4;}
+
+#toggle-key-btn{
+  padding:.75rem 1.8rem;border-radius:12px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#1e40af,#2563eb);color:#fff;
+  font-size:.95rem;font-weight:700;font-family:'Nunito',sans-serif;
+  transition:opacity .2s;margin-top:2rem;display:block;
+}
+#toggle-key-btn:hover{opacity:.85;}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <h2>Physics Portal</h2>
+  <p>Enter the password to access this homework.</p>
+  <input type="password" id="pwd-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPwd()"/>
+  <button onclick="checkPwd()">Unlock</button>
+  <div id="gate-err"></div>
+</div>
+
+<div id="main">
+<header>
+  <div class="stars" id="stars-container"></div>
+  <div class="chip">Kinematics &middot; Unit 13</div>
+  <h1>Free Fall — Homework</h1>
+  <p class="subtitle">Independent practice to consolidate free fall concepts</p>
+  <div class="hw-badge">Show all working for full marks</div>
+</header>
+
+<div class="container">
+
+  <!-- REFERENCE + TIP -->
+  <div class="ref-box">
+    <h3>Reference Sheet</h3>
+    <div class="ref-grid">
+      <div class="ref-item">g = 9.81 m/s² (down)</div>
+      <div class="ref-item">v² = u² + 2as</div>
+      <div class="ref-item">v = u + at</div>
+      <div class="ref-item">s = ut + ½at²</div>
+      <div class="ref-item">Dropped: u = 0</div>
+      <div class="ref-item">At peak: v = 0</div>
+      <div class="ref-item">Up = + → a = −9.81 m/s²</div>
+      <div class="ref-item">Down = + → a = +9.81 m/s²</div>
+    </div>
+  </div>
+  <div class="tip-banner">
+    <span style="font-size:1.3rem;">&#128161;</span>
+    <p>Always (1) write your sign convention, (2) list all given quantities, (3) choose the correct formula, (4) substitute and solve, (5) state the answer with direction and units.</p>
+  </div>
+
+  <!-- PART A: CALCULATION PROBLEMS -->
+  <div class="section-title">Part A — Calculation Problems</div>
+
+  <!-- HW Q1 -->
+  <div class="prob-card">
+    <div class="prob-head">
+      <span class="prob-num-badge">HW 1</span>
+      <div class="prob-q">A cliff diver falls freely from a height of 22 m. What is his velocity just before entering the water? (Down = +)</div>
+    </div>
+    <div class="given-section">
+      <div class="given-title">Given</div>
+      <div class="given-row">
+        <span class="given-pill">a = 9.81 m/s²</span>
+        <span class="given-pill">s = 22 m</span>
+        <span class="given-pill">u = 0</span>
+        <span class="given-pill">v = ?</span>
+      </div>
+    </div>
+    <div class="work-section">
+      <div class="work-title">Formula &amp; Working</div>
+      <div class="formula-line"></div>
+      <div class="line"></div><div class="line"></div><div class="line"></div>
+    </div>
+    <div class="answer-box"><span class="ans-label">ANS:</span> <span style="flex:1;"></span></div>
+  </div>
+
+  <!-- HW Q2 -->
+  <div class="prob-card">
+    <div class="prob-head">
+      <span class="prob-num-badge">HW 2</span>
+      <div class="prob-q">A ball is thrown straight up at 14 m/s. What maximum height does it reach above the release point? (Up = +)</div>
+    </div>
+    <div class="given-section">
+      <div class="given-title">Given</div>
+      <div class="given-row">
+        <span class="given-pill">u = +14 m/s</span>
+        <span class="given-pill">a = −9.81 m/s²</span>
+        <span class="given-pill">v = 0 (peak)</span>
+        <span class="given-pill">s = ?</span>
+      </div>
+    </div>
+    <div class="work-section">
+      <div class="work-title">Formula &amp; Working</div>
+      <div class="formula-line"></div>
+      <div class="line"></div><div class="line"></div><div class="line"></div>
+    </div>
+    <div class="answer-box"><span class="ans-label">ANS:</span> <span style="flex:1;"></span></div>
+  </div>
+
+  <!-- HW Q3 -->
+  <div class="prob-card">
+    <div class="prob-head">
+      <span class="prob-num-badge">HW 3</span>
+      <div class="prob-q">A ball is thrown upward at 22 m/s. How long does it take to reach the highest point? (Up = +, a = −9.81 m/s²)</div>
+    </div>
+    <div class="given-section">
+      <div class="given-title">Given</div>
+      <div class="given-row">
+        <span class="given-pill">u = +22 m/s</span>
+        <span class="given-pill">a = −9.81 m/s²</span>
+        <span class="given-pill">v = 0</span>
+        <span class="given-pill">t = ?</span>
+      </div>
+    </div>
+    <div class="work-section">
+      <div class="work-title">Formula &amp; Working</div>
+      <div class="formula-line"></div>
+      <div class="line"></div><div class="line"></div><div class="line"></div>
+    </div>
+    <div class="answer-box"><span class="ans-label">ANS:</span> <span style="flex:1;"></span></div>
+  </div>
+
+  <!-- HW Q4 -->
+  <div class="prob-card">
+    <div class="prob-head">
+      <span class="prob-num-badge">HW 4</span>
+      <div class="prob-q">An object is dropped from rest and takes 4.2 s to reach the ground. How high above the ground was the object when it was released? (Down = +)</div>
+    </div>
+    <div class="given-section">
+      <div class="given-title">Given</div>
+      <div class="given-row">
+        <span class="given-pill">u = 0</span>
+        <span class="given-pill">a = 9.81 m/s²</span>
+        <span class="given-pill">t = 4.2 s</span>
+        <span class="given-pill">s = ?</span>
+      </div>
+    </div>
+    <div class="work-section">
+      <div class="work-title">Formula &amp; Working</div>
+      <div class="formula-line"></div>
+      <div class="line"></div><div class="line"></div><div class="line"></div>
+    </div>
+    <div class="answer-box"><span class="ans-label">ANS:</span> <span style="flex:1;"></span></div>
+  </div>
+
+  <!-- HW Q5 -->
+  <div class="prob-card">
+    <div class="prob-head">
+      <span class="prob-num-badge">HW 5</span>
+      <div class="prob-q">A ball is thrown upward at 30 m/s from the top of a 40 m building. The ball falls all the way to the ground below the building. Find the total time of flight from the moment the ball is thrown to when it hits the ground. (Up = +)</div>
+    </div>
+    <div class="given-section">
+      <div class="given-title">Strategy: Split into two parts at the peak (v = 0)</div>
+      <div class="given-row">
+        <span class="given-pill">u = +30 m/s</span>
+        <span class="given-pill">a = −9.81 m/s²</span>
+        <span class="given-pill">Cliff = 40 m</span>
+      </div>
+    </div>
+    <div class="work-section">
+      <div class="work-title">Part 1 — Time to peak (v = u + at)</div>
+      <div class="line"></div><div class="line"></div><div class="line"></div>
+      <div class="work-title" style="margin-top:.5rem;">Part 2 — Time from peak to ground</div>
+      <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+    </div>
+    <div class="answer-box"><span class="ans-label">ANS:</span> <span style="flex:1;"></span></div>
+  </div>
+
+  <!-- HW Q6 -->
+  <div class="prob-card">
+    <div class="prob-head">
+      <span class="prob-num-badge">HW 6</span>
+      <div class="prob-q">A ball is dropped from the top of a building and reaches a velocity of 35 m/s just before hitting the ground. How tall is the building? (Down = +)</div>
+    </div>
+    <div class="given-section">
+      <div class="given-title">Given</div>
+      <div class="given-row">
+        <span class="given-pill">u = 0</span>
+        <span class="given-pill">a = 9.81 m/s²</span>
+        <span class="given-pill">v = 35 m/s</span>
+        <span class="given-pill">s = ?</span>
+      </div>
+    </div>
+    <div class="work-section">
+      <div class="work-title">Formula &amp; Working</div>
+      <div class="formula-line"></div>
+      <div class="line"></div><div class="line"></div><div class="line"></div>
+    </div>
+    <div class="answer-box"><span class="ans-label">ANS:</span> <span style="flex:1;"></span></div>
+  </div>
+
+  <!-- PART B: TRUE/FALSE -->
+  <div class="section-title">Part B — True or False</div>
+  <p style="font-size:.9rem;color:var(--muted);margin-bottom:1.2rem;font-weight:600;">Circle TRUE or FALSE. If FALSE, write a corrected statement on the lines provided.</p>
+
+  <div class="tf-card">
+    <div class="prob-head"><span class="prob-num-badge">TF 7</span></div>
+    <div class="tf-statement">"A ball thrown straight upward is NOT in free fall while it is moving upward, because its velocity and acceleration are in opposite directions."</div>
+    <div class="tf-options">
+      <div class="tf-btn">TRUE</div>
+      <div class="tf-btn">FALSE</div>
+    </div>
+    <div class="correction-label">If FALSE — write the correct statement:</div>
+    <div class="correction-line"></div>
+    <div class="correction-line"></div>
+  </div>
+
+  <div class="tf-card">
+    <div class="prob-head"><span class="prob-num-badge">TF 8</span></div>
+    <div class="tf-statement">"At the highest point of a free-fall trajectory, both the velocity and the acceleration are equal to zero."</div>
+    <div class="tf-options">
+      <div class="tf-btn">TRUE</div>
+      <div class="tf-btn">FALSE</div>
+    </div>
+    <div class="correction-label">If FALSE — write the correct statement:</div>
+    <div class="correction-line"></div>
+    <div class="correction-line"></div>
+  </div>
+
+  <div class="tf-card">
+    <div class="prob-head"><span class="prob-num-badge">TF 9</span></div>
+    <div class="tf-statement">"If a ball is dropped from rest, its velocity increases by 9.81 m/s every second."</div>
+    <div class="tf-options">
+      <div class="tf-btn">TRUE</div>
+      <div class="tf-btn">FALSE</div>
+    </div>
+    <div class="correction-label">If FALSE — write the correct statement:</div>
+    <div class="correction-line"></div>
+    <div class="correction-line"></div>
+  </div>
+
+  <div class="tf-card">
+    <div class="prob-head"><span class="prob-num-badge">TF 10</span></div>
+    <div class="tf-statement">"A heavier ball dropped from the same height as a lighter ball will reach the ground first, because gravity pulls harder on heavier objects."</div>
+    <div class="tf-options">
+      <div class="tf-btn">TRUE</div>
+      <div class="tf-btn">FALSE</div>
+    </div>
+    <div class="correction-label">If FALSE — write the correct statement:</div>
+    <div class="correction-line"></div>
+    <div class="correction-line"></div>
+  </div>
+
+  <!-- PART C: CHALLENGE -->
+  <div class="section-title">Part C — Challenge Problems</div>
+
+  <div class="challenge-card">
+    <div class="c-badge">CHALLENGE 11</div>
+    <div class="prob-q">A ball is thrown upward at 16 m/s from the top of a cliff. It passes the throwing height again on the way down after some time. (a) How long does it take for the ball to return to the same height it was thrown from? (b) What is its velocity when it returns to the throwing height? (Up = +)</div>
+    <div class="given-section">
+      <div class="given-title">Hint: When the ball returns to the original height, s = 0. Use s = ut + ½at²</div>
+      <div class="given-row">
+        <span class="given-pill">u = +16 m/s</span>
+        <span class="given-pill">a = −9.81 m/s²</span>
+        <span class="given-pill">s = 0</span>
+      </div>
+    </div>
+    <div class="work-section">
+      <div class="work-title">Part (a) — Time to return</div>
+      <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+      <div class="work-title" style="margin-top:.5rem;">Part (b) — Velocity at return</div>
+      <div class="line"></div><div class="line"></div><div class="line"></div>
+    </div>
+    <div class="answer-box"><span class="ans-label">ANS (a):</span> <span style="flex:1;"></span></div>
+    <div class="answer-box" style="margin-top:.5rem;"><span class="ans-label">ANS (b):</span> <span style="flex:1;"></span></div>
+  </div>
+
+  <div class="challenge-card">
+    <div class="c-badge">CHALLENGE 12</div>
+    <div class="prob-q">Two balls are dropped from the same height of 80 m at the same time. Ball A is dropped from rest. Ball B is thrown downward at an initial speed of 5 m/s. (a) Which ball hits the ground first? (b) By how many seconds does it hit the ground before the other ball? (Down = +)</div>
+    <div class="given-section">
+      <div class="given-title">Ball A: u=0, Ball B: u=5 m/s, both a=9.81 m/s², s=80 m</div>
+      <div class="given-row">
+        <span class="given-pill">Use: s = ut + ½at²</span>
+      </div>
+    </div>
+    <div class="work-section">
+      <div class="work-title">Ball A — time to ground</div>
+      <div class="line"></div><div class="line"></div><div class="line"></div>
+      <div class="work-title" style="margin-top:.5rem;">Ball B — time to ground (quadratic)</div>
+      <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+      <div class="work-title" style="margin-top:.5rem;">Difference</div>
+      <div class="line"></div><div class="line"></div>
+    </div>
+    <div class="answer-box"><span class="ans-label">ANS:</span> <span style="flex:1;"></span></div>
+  </div>
+
+  <!-- ANSWER KEY -->
+  <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+
+  <div id="answer-key">
+    <div class="key-box">
+      <h3>Answer Key — Free Fall Homework</h3>
+
+      <!-- Part A -->
+      <div class="key-item">
+        <div class="k-num">HW 1 — Cliff diver, 22 m drop</div>
+        <div class="k-ans">v = 20.8 m/s downward</div>
+        <div class="k-work">v² = u² + 2as = 0 + 2(9.81)(22) = 431.64
+v = √431.64 = 20.8 m/s</div>
+      </div>
+
+      <div class="key-item">
+        <div class="k-num">HW 2 — Thrown up at 14 m/s, max height</div>
+        <div class="k-ans">s = 9.99 m ≈ 10.0 m</div>
+        <div class="k-work">v² = u² + 2as
+0 = 14² + 2(−9.81)s
+0 = 196 − 19.62s
+19.62s = 196
+s = 196 / 19.62 = 9.99 m ≈ 10.0 m</div>
+      </div>
+
+      <div class="key-item">
+        <div class="k-num">HW 3 — Thrown up at 22 m/s, time to peak</div>
+        <div class="k-ans">t = 2.24 s</div>
+        <div class="k-work">v = u + at
+0 = 22 + (−9.81)t
+9.81t = 22
+t = 22 / 9.81 = 2.24 s</div>
+      </div>
+
+      <div class="key-item">
+        <div class="k-num">HW 4 — Dropped, t=4.2 s, find height</div>
+        <div class="k-ans">s = 86.5 m</div>
+        <div class="k-work">s = ut + ½at²
+s = 0 + ½(9.81)(4.2)²
+s = 4.905 × 17.64
+s = 86.5 m</div>
+      </div>
+
+      <div class="key-item">
+        <div class="k-num">HW 5 — Building problem (u=30 m/s up, building=40 m)</div>
+        <div class="k-ans">Total time = 7.14 s</div>
+        <div class="k-work">Part 1 (throw to peak):
+0 = 30 + (−9.81)t₁
+t₁ = 30/9.81 = 3.06 s
+
+Height above building: v²=u²+2as → 0=900+2(−9.81)s → s=900/19.62=45.9 m
+
+Part 2 (peak to ground): total fall = 45.9+40 = 85.9 m, u=0
+85.9 = ½(9.81)t₂²
+t₂² = 85.9/4.905 = 17.51
+t₂ = 4.18 s
+
+Total = 3.06 + 4.18 = 7.24 s
+
+(Using s=ut+½at² directly from throw: s=−40, u=+30, a=−9.81:
+−40 = 30t − 4.905t²
+4.905t² − 30t − 40 = 0
+t = [30 ± √(900 + 4×4.905×40)] / (2×4.905)
+t = [30 ± √(900+784.8)] / 9.81
+t = [30 ± √1684.8] / 9.81
+t = [30 ± 41.05] / 9.81
+t = 71.05/9.81 = 7.24 s)</div>
+      </div>
+
+      <div class="key-item">
+        <div class="k-num">HW 6 — Ball reaches 35 m/s, find building height</div>
+        <div class="k-ans">s = 62.5 m</div>
+        <div class="k-work">v² = u² + 2as
+35² = 0 + 2(9.81)s
+1225 = 19.62s
+s = 1225 / 19.62 = 62.5 m</div>
+      </div>
+
+      <!-- Part B T/F -->
+      <div class="key-item tf-key">
+        <div class="k-num">TF 7 — "Not in free fall while moving upward"</div>
+        <div class="k-ans">FALSE</div>
+        <div class="k-work">Correct statement: A ball thrown upward IS in free fall while moving upward, because only gravity acts on it after release. Free fall is defined by the FORCE acting (gravity only), not the direction of velocity. Having v and a in opposite directions just means the ball is decelerating — it is still in free fall.</div>
+      </div>
+
+      <div class="key-item tf-key">
+        <div class="k-num">TF 8 — "At the top, both v and a are zero"</div>
+        <div class="k-ans">FALSE</div>
+        <div class="k-work">Correct statement: At the highest point, v = 0 m/s (instantaneously), BUT the acceleration is still 9.81 m/s² downward. Gravity never stops acting during free fall. Acceleration is zero only if there are no net forces — but gravity is still present.</div>
+      </div>
+
+      <div class="key-item tf-key">
+        <div class="k-num">TF 9 — "Velocity increases by 9.81 m/s every second"</div>
+        <div class="k-ans">TRUE</div>
+        <div class="k-work">This is TRUE. The acceleration due to gravity is 9.81 m/s². By definition, acceleration = change in velocity per second. So every second, the speed increases by 9.81 m/s.
+After 1 s: v = 9.81 m/s; after 2 s: v = 19.62 m/s; etc.</div>
+      </div>
+
+      <div class="key-item tf-key">
+        <div class="k-num">TF 10 — "Heavier ball falls faster"</div>
+        <div class="k-ans">FALSE</div>
+        <div class="k-work">Correct statement: In free fall (neglecting air resistance), all objects fall with the same acceleration g = 9.81 m/s², regardless of mass. Both balls hit the ground at the same time. Galileo demonstrated this. While gravity does pull harder on heavier objects, heavier objects also have more inertia — the effects cancel exactly (a = F/m = mg/m = g).</div>
+      </div>
+
+      <!-- Part C -->
+      <div class="key-item challenge-key">
+        <div class="k-num">Challenge 11 — Return to same height (u=16 m/s)</div>
+        <div class="k-ans">(a) t = 3.26 s  |  (b) v = −16 m/s (16 m/s downward)</div>
+        <div class="k-work">(a) s = ut + ½at²; at return s = 0:
+0 = 16t + ½(−9.81)t²
+0 = 16t − 4.905t²
+0 = t(16 − 4.905t)
+t = 0 (at launch) OR t = 16/4.905 = 3.26 s
+
+(b) v = u + at = 16 + (−9.81)(3.26) = 16 − 31.98 = −16.0 m/s
+Speed = 16 m/s, direction = downward.
+(This confirms free-fall symmetry: same speed at same height.)</div>
+      </div>
+
+      <div class="key-item challenge-key">
+        <div class="k-num">Challenge 12 — Two balls, Ball B thrown down at 5 m/s</div>
+        <div class="k-ans">Ball B hits first. Difference ≈ 0.56 s</div>
+        <div class="k-work">Ball A (u=0):
+80 = ½(9.81)t²
+t² = 80/4.905 = 16.31
+t_A = 4.04 s
+
+Ball B (u=5 m/s down):
+80 = 5t + ½(9.81)t²
+80 = 5t + 4.905t²
+4.905t² + 5t − 80 = 0
+t = [−5 ± √(25 + 4×4.905×80)] / (2×4.905)
+t = [−5 ± √(25 + 1569.6)] / 9.81
+t = [−5 ± √1594.6] / 9.81
+t = [−5 ± 39.93] / 9.81
+t = 34.93/9.81 = 3.56 s (taking positive root)
+
+Difference = 4.04 − 3.56 = 0.48 s
+(Ball B hits the ground approximately 0.48 s before Ball A.)</div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /container -->
+</div><!-- /main -->
+
+<script>
+(function(){
+  const KEY='phys_auth';const CORRECT=btoa('physics2024');
+  if(localStorage.getItem(KEY)===CORRECT){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('main').style.display='block';
+  }
+})();
+function checkPwd(){
+  const v=document.getElementById('pwd-input').value;
+  const CORRECT=btoa('physics2024');
+  if(btoa(v)===CORRECT){
+    localStorage.setItem('phys_auth',CORRECT);
+    document.getElementById('gate').style.display='none';
+    document.getElementById('main').style.display='block';
+  } else {
+    document.getElementById('gate-err').textContent='Incorrect password. Please try again.';
+  }
+}
+function toggleKey(){
+  const k=document.getElementById('answer-key');
+  const btn=document.getElementById('toggle-key-btn');
+  if(k.style.display==='none'||k.style.display===''){
+    k.style.display='block';btn.textContent='Hide Answer Key';
+  } else {
+    k.style.display='none';btn.textContent='Show Answer Key';
+  }
+}
+(function(){
+  const c=document.getElementById('stars-container');
+  for(let i=0;i<45;i++){
+    const s=document.createElement('div');s.className='star';
+    const sz=Math.random()*2.5+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;
+      animation-delay:${Math.random()*3}s;animation-duration:${1.5+Math.random()*2.5}s;`;
+    c.appendChild(s);
+  }
+})();
+</script>
+</body>
+</html>

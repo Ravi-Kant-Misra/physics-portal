@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Acceleration — Kinematics Unit 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;
+    --red:#ef4444;--dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+  body::before{
+    content:'';position:fixed;inset:0;
+    background-image:radial-gradient(circle,#cbd5e1 1px,transparent 1px);
+    background-size:28px 28px;pointer-events:none;z-index:0;opacity:.55;
+  }
+  /* PASSWORD GATE */
+  #gate{
+    position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#1e3a5f,#1d4ed8 60%,#1e40af);
+  }
+  #gate-box{
+    background:#fff;border-radius:20px;padding:2.5rem 2rem;width:320px;text-align:center;
+    box-shadow:0 25px 60px rgba(0,0,0,.35);
+  }
+  #gate-box h2{font-size:1.4rem;font-weight:800;color:var(--dark);margin-bottom:.4rem;}
+  #gate-box p{font-size:.85rem;color:var(--muted);margin-bottom:1.4rem;}
+  #gate-input{
+    width:100%;padding:.7rem 1rem;border:2px solid #e2e8f0;border-radius:10px;
+    font-family:'Nunito',sans-serif;font-size:1rem;outline:none;transition:border .2s;
+  }
+  #gate-input:focus{border-color:var(--blue);}
+  #gate-btn{
+    margin-top:.9rem;width:100%;padding:.75rem;background:linear-gradient(90deg,var(--blue),var(--indigo));
+    color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;
+    font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s;
+  }
+  #gate-btn:hover{opacity:.88;}
+  #gate-err{color:var(--red);font-size:.83rem;margin-top:.55rem;min-height:1.1rem;}
+  /* MAIN */
+  #main{display:none;position:relative;z-index:1;}
+  /* HEADER */
+  header{
+    background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 60%,#1e40af 100%);
+    padding:3.5rem 2rem 3rem;text-align:center;position:relative;overflow:hidden;
+  }
+  .stars{position:absolute;inset:0;pointer-events:none;}
+  .star{
+    position:absolute;background:#fff;border-radius:50%;
+    animation:twinkle var(--dur,3s) ease-in-out infinite;
+    opacity:0;
+  }
+  @keyframes twinkle{0%,100%{opacity:0;transform:scale(.6);}50%{opacity:.9;transform:scale(1.2);}}
+  .chip{
+    display:inline-block;background:rgba(255,255,255,.15);backdrop-filter:blur(6px);
+    border:1px solid rgba(255,255,255,.3);color:#e0e7ff;
+    font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    padding:.35rem .9rem;border-radius:999px;margin-bottom:1.2rem;
+  }
+  header h1{
+    font-size:clamp(2rem,5vw,3.4rem);font-weight:900;
+    background:linear-gradient(90deg,#ffffff,#bfdbfe,#a5b4fc);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    line-height:1.1;margin-bottom:.7rem;
+  }
+  header p.sub{color:#bfdbfe;font-size:1.05rem;font-weight:600;max-width:540px;margin:0 auto;}
+  /* CONTENT */
+  .content{max-width:860px;margin:0 auto;padding:2.5rem 1.25rem 4rem;}
+  /* CARDS */
+  .card{
+    background:#fff;border-radius:18px;padding:2rem;margin-bottom:1.8rem;
+    box-shadow:0 4px 20px rgba(59,130,246,.08);border:1px solid #e8edf5;
+  }
+  .card-title{
+    font-size:1.25rem;font-weight:800;color:var(--dark);margin-bottom:1.1rem;
+    display:flex;align-items:center;gap:.6rem;
+  }
+  .card-title .icon{font-size:1.4rem;}
+  /* DEFINITION TABLE */
+  .def-table{width:100%;border-collapse:collapse;margin:.5rem 0;}
+  .def-table th{
+    background:linear-gradient(90deg,#1e3a5f,#1d4ed8);color:#fff;
+    padding:.65rem .9rem;font-size:.82rem;font-weight:700;letter-spacing:.04em;text-align:left;
+  }
+  .def-table th:first-child{border-radius:8px 0 0 0;}
+  .def-table th:last-child{border-radius:0 8px 0 0;}
+  .def-table td{
+    padding:.65rem .9rem;font-size:.9rem;border-bottom:1px solid #e8edf5;vertical-align:top;
+  }
+  .def-table tr:last-child td{border-bottom:none;}
+  .def-table tr:hover td{background:#f1f5fb;}
+  .def-cell-def{color:var(--red);font-weight:700;}
+  .def-cell-eq{font-family:'Space Mono',monospace;font-weight:700;color:var(--blue);}
+  /* SYMBOL KEY */
+  .symbol-key{
+    display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.2rem;
+  }
+  .sym{
+    background:#f1f5fb;border:1px solid #e2e8f0;border-radius:10px;
+    padding:.45rem .9rem;font-family:'Space Mono',monospace;font-size:.88rem;font-weight:700;color:var(--dark);
+  }
+  .sym span{color:var(--blue);}
+  /* GESE BOX */
+  .gese{
+    background:#f8faff;border:2px solid #e0e7ff;border-radius:14px;
+    padding:1.4rem 1.5rem;margin-top:1rem;
+  }
+  .gese-row{display:flex;gap:.6rem;align-items:baseline;margin-bottom:.7rem;}
+  .gese-row:last-child{margin-bottom:0;}
+  .gese-label{
+    display:inline-block;min-width:2.6rem;font-weight:900;font-size:1rem;
+    color:#fff;background:var(--blue);border-radius:7px;padding:.15rem .45rem;text-align:center;
+  }
+  .gese-label.u{background:var(--indigo);}
+  .gese-label.e{background:var(--amber);}
+  .gese-label.s{background:var(--green);}
+  .gese-content{font-size:.93rem;line-height:1.6;font-family:'Space Mono',monospace;}
+  .answer-line{
+    background:linear-gradient(90deg,#d1fae5,#a7f3d0);border:2px solid var(--green);
+    border-radius:10px;padding:.6rem 1rem;margin-top:.8rem;
+    font-family:'Space Mono',monospace;font-weight:700;font-size:1rem;color:#065f46;text-align:center;
+  }
+  /* INFO BOXES */
+  .insight{
+    background:linear-gradient(135deg,#eff6ff,#eef2ff);border-left:4px solid var(--blue);
+    border-radius:0 12px 12px 0;padding:1rem 1.2rem;margin:1rem 0;
+  }
+  .insight strong{color:var(--blue);font-weight:800;}
+  .tip{
+    background:linear-gradient(135deg,#fefce8,#fef3c7);border-left:4px solid var(--amber);
+    border-radius:0 12px 12px 0;padding:1rem 1.2rem;margin:1rem 0;
+  }
+  .tip strong{color:#92400e;font-weight:800;}
+  .warning{
+    background:linear-gradient(135deg,#fef2f2,#fee2e2);border-left:4px solid var(--red);
+    border-radius:0 12px 12px 0;padding:1rem 1.2rem;margin:1rem 0;
+  }
+  .warning strong{color:#991b1b;font-weight:800;}
+  .success{
+    background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-left:4px solid var(--green);
+    border-radius:0 12px 12px 0;padding:1rem 1.2rem;margin:1rem 0;
+  }
+  .success strong{color:#14532d;font-weight:800;}
+  /* SECTION HEADINGS */
+  .section-heading{
+    font-size:1.05rem;font-weight:800;color:var(--blue);margin:1.4rem 0 .7rem;
+    letter-spacing:.02em;
+  }
+  p{line-height:1.75;margin-bottom:.7rem;}
+  /* VECTOR DIAGRAMS */
+  .diagram-wrap{display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:center;margin:1.2rem 0;}
+  .diagram-box{text-align:center;}
+  .diagram-label{font-size:.82rem;font-weight:700;margin-top:.5rem;text-transform:uppercase;letter-spacing:.05em;}
+  .label-red{color:var(--red);}
+  .label-blue{color:var(--blue);}
+  /* QUADRANT TABLE */
+  .quad-wrap{overflow-x:auto;margin:1.2rem 0;}
+  .quad-table{border-collapse:collapse;width:100%;min-width:540px;}
+  .quad-table th,.quad-table td{border:2px solid #e2e8f0;padding:.5rem .7rem;text-align:center;font-size:.86rem;}
+  .quad-table th{background:#1e3a5f;color:#fff;font-weight:700;}
+  .quad-faster{background:#d1fae5;}
+  .quad-slower{background:#fee2e2;}
+  .quad-note{font-size:.78rem;color:var(--muted);font-style:italic;}
+  /* FORMULA BOX */
+  .formula-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1rem 0;}
+  .formula-card{
+    background:linear-gradient(135deg,#eff6ff,#eef2ff);border:2px solid #c7d2fe;
+    border-radius:14px;padding:1rem;text-align:center;
+  }
+  .formula-card .formula{font-family:'Space Mono',monospace;font-size:1.15rem;font-weight:700;color:var(--indigo);}
+  .formula-card .formula-label{font-size:.78rem;color:var(--muted);margin-top:.3rem;}
+  /* THREE WAYS */
+  .three-ways{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;margin:1.2rem 0;}
+  .way-card{
+    border-radius:14px;padding:1.2rem;text-align:center;border:2px solid;
+  }
+  .way-card.up{border-color:var(--green);background:#f0fdf4;}
+  .way-card.down{border-color:var(--blue);background:#eff6ff;}
+  .way-card.dir{border-color:var(--amber);background:#fffbeb;}
+  .way-card h3{font-weight:800;font-size:1rem;margin-bottom:.5rem;}
+  .way-card.up h3{color:var(--green);}
+  .way-card.down h3{color:var(--blue);}
+  .way-card.dir h3{color:var(--amber);}
+  /* QUIZ */
+  .quiz-wrap{margin-top:1rem;}
+  .q-item{margin-bottom:1.5rem;}
+  .q-text{font-weight:700;font-size:.97rem;margin-bottom:.7rem;}
+  .q-options{display:flex;flex-direction:column;gap:.4rem;}
+  .q-opt{
+    display:flex;align-items:center;gap:.7rem;padding:.6rem .9rem;
+    border:2px solid #e2e8f0;border-radius:10px;cursor:pointer;
+    transition:background .15s,border-color .15s;font-size:.9rem;
+  }
+  .q-opt:hover{background:#f1f5fb;border-color:var(--blue);}
+  .q-opt input{accent-color:var(--blue);}
+  .q-feedback{font-size:.83rem;margin-top:.4rem;font-weight:700;min-height:1rem;padding:.35rem .7rem;border-radius:8px;}
+  .q-feedback.correct{background:#d1fae5;color:#065f46;}
+  .q-feedback.wrong{background:#fee2e2;color:#991b1b;}
+  .quiz-submit{
+    margin-top:1rem;padding:.7rem 2rem;background:linear-gradient(90deg,var(--blue),var(--indigo));
+    color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;
+    font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s;
+  }
+  .quiz-submit:hover{opacity:.88;}
+  #quiz-result{
+    margin-top:1rem;padding:1rem 1.2rem;border-radius:12px;font-weight:700;font-size:1rem;
+    display:none;
+  }
+  /* RESPONSIVE */
+  @media(max-width:600px){
+    .content{padding:1.5rem .8rem 3rem;}
+    .card{padding:1.3rem;}
+    header{padding:2.5rem 1rem 2rem;}
+  }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div id="gate-box">
+    <h2>Physics Portal</h2>
+    <p>Enter the class password to continue.</p>
+    <input id="gate-input" type="password" placeholder="Password" autocomplete="current-password"/>
+    <button id="gate-btn">Unlock</button>
+    <div id="gate-err"></div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main">
+  <!-- HEADER -->
+  <header>
+    <div class="stars" id="stars-container"></div>
+    <div class="chip">Kinematics &middot; Unit 3</div>
+    <h1>Acceleration</h1>
+    <p class="sub">What it means to change velocity — and why direction always matters.</p>
+  </header>
+
+  <div class="content">
+
+    <!-- DEFINITION & FORMULA CARD -->
+    <div class="card">
+      <div class="card-title"><span class="icon">📐</span> Definition &amp; Key Formula</div>
+      <table class="def-table">
+        <thead>
+          <tr><th>Definition</th><th>Variable</th><th>Unit</th><th>Equation</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="def-cell-def">Acceleration is the change in an object's velocity divided by the time the change takes place. Acceleration is a vector.</td>
+            <td><strong>a</strong></td>
+            <td><strong>ms⁻²</strong></td>
+            <td class="def-cell-eq">a = ΔV / t<br/>a = (V − U) / t</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="symbol-key">
+        <div class="sym"><span>Δ</span> "Delta" = Change in</div>
+        <div class="sym"><span>ΔV</span> = Change in Velocity</div>
+        <div class="sym"><span>U</span> = Initial Velocity</div>
+        <div class="sym"><span>V</span> = Final Velocity</div>
+        <div class="sym"><span>a</span> = Acceleration</div>
+        <div class="sym"><span>t</span> = Time</div>
+      </div>
+
+      <div class="formula-grid" style="margin-top:1.4rem;">
+        <div class="formula-card">
+          <div class="formula">a = ΔV / t</div>
+          <div class="formula-label">Basic definition</div>
+        </div>
+        <div class="formula-card">
+          <div class="formula">a = (V − U) / t</div>
+          <div class="formula-label">Expanded form</div>
+        </div>
+        <div class="formula-card">
+          <div class="formula">V = U + at</div>
+          <div class="formula-label">Rearranged (solve for V)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VARIABLES TABLE -->
+    <div class="card">
+      <div class="card-title"><span class="icon">🔢</span> Variables &amp; Units Reference</div>
+      <table class="def-table">
+        <thead>
+          <tr><th>Symbol</th><th>Meaning</th><th>Unit</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="font-family:'Space Mono',monospace;font-weight:700;">a</td><td>Acceleration</td><td>ms⁻²</td></tr>
+          <tr><td style="font-family:'Space Mono',monospace;font-weight:700;">U</td><td>Initial Velocity</td><td>ms⁻¹</td></tr>
+          <tr><td style="font-family:'Space Mono',monospace;font-weight:700;">V</td><td>Final Velocity</td><td>ms⁻¹</td></tr>
+          <tr><td style="font-family:'Space Mono',monospace;font-weight:700;">ΔV</td><td>Change in Velocity (V − U)</td><td>ms⁻¹</td></tr>
+          <tr><td style="font-family:'Space Mono',monospace;font-weight:700;">t</td><td>Time</td><td>s</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- WORKED EXAMPLE -->
+    <div class="card">
+      <div class="card-title"><span class="icon">✏️</span> Worked Example — GESE Method</div>
+      <div class="insight">
+        <strong>Example:</strong> A car accelerates from rest at 10 ms⁻² for 6 seconds. What is its final velocity?
+      </div>
+      <div class="gese">
+        <div class="gese-row">
+          <span class="gese-label">G</span>
+          <span class="gese-content">U = 0 ms⁻¹ &nbsp;|&nbsp; t = 6 s &nbsp;|&nbsp; a = 10 ms⁻²</span>
+        </div>
+        <div class="gese-row">
+          <span class="gese-label u">U</span>
+          <span class="gese-content">V = ?</span>
+        </div>
+        <div class="gese-row">
+          <span class="gese-label e">E</span>
+          <span class="gese-content">a = (V − U) / t</span>
+        </div>
+        <div class="gese-row">
+          <span class="gese-label s">S</span>
+          <span class="gese-content">
+            Step 1: Multiply both sides by t &rarr; &nbsp; ta = V − U<br/>
+            Step 2: Add U to both sides &rarr; &nbsp; ta + U = V<br/>
+            Step 3: Substitute &rarr; &nbsp; (6 s)(10 ms⁻²) + 0 ms⁻¹ = V
+          </span>
+        </div>
+        <div class="answer-line">V = 60 ms⁻¹</div>
+      </div>
+
+      <!-- SVG visual of car + answer -->
+      <div style="margin-top:1.4rem;text-align:center;">
+        <svg viewBox="0 0 420 110" width="100%" style="max-width:420px;" xmlns="http://www.w3.org/2000/svg">
+          <!-- Road -->
+          <rect x="0" y="82" width="420" height="8" rx="2" fill="#e2e8f0"/>
+          <!-- Car body -->
+          <rect x="18" y="52" width="90" height="30" rx="6" fill="#ef4444"/>
+          <rect x="32" y="38" width="58" height="22" rx="5" fill="#fca5a5"/>
+          <!-- Wheels -->
+          <circle cx="38" cy="82" r="10" fill="#1e293b"/>
+          <circle cx="38" cy="82" r="5" fill="#94a3b8"/>
+          <circle cx="90" cy="82" r="10" fill="#1e293b"/>
+          <circle cx="90" cy="82" r="5" fill="#94a3b8"/>
+          <!-- Velocity arrow -->
+          <defs>
+            <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#22c55e"/>
+            </marker>
+          </defs>
+          <line x1="115" y1="66" x2="290" y2="66" stroke="#22c55e" stroke-width="4" marker-end="url(#arrowhead)"/>
+          <text x="175" y="59" fill="#14532d" font-family="Space Mono,monospace" font-size="13" font-weight="bold">60 ms⁻¹</text>
+          <!-- Clock icon -->
+          <circle cx="355" cy="55" r="28" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+          <text x="355" y="50" text-anchor="middle" fill="#1d4ed8" font-family="Nunito,sans-serif" font-size="11" font-weight="700">t = 6 s</text>
+          <text x="355" y="65" text-anchor="middle" fill="#1d4ed8" font-family="Nunito,sans-serif" font-size="10">Time</text>
+          <!-- Start label -->
+          <text x="18" y="32" fill="#64748b" font-family="Nunito,sans-serif" font-size="11">U = 0 ms⁻¹</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- WHY IT'S A VECTOR -->
+    <div class="card">
+      <div class="card-title"><span class="icon">➡️</span> Why Acceleration is a Vector</div>
+      <p>Acceleration is a change in velocity, which is itself a vector. To show how velocity changes over time we need to use another vector to add that change to the original velocity.</p>
+
+      <div class="section-heading">Numerical Demonstration</div>
+      <!-- SVG arrow diagram -->
+      <div style="margin:1rem 0;text-align:center;">
+        <svg viewBox="0 0 400 90" width="100%" style="max-width:400px;" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arr-black" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#1e293b"/></marker>
+            <marker id="arr-blue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#3b82f6"/></marker>
+            <marker id="arr-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#ef4444"/></marker>
+          </defs>
+          <!-- t0 row -->
+          <text x="10" y="24" font-family="Space Mono,monospace" font-size="11" fill="#64748b">t₀=0s</text>
+          <line x1="70" y1="20" x2="170" y2="20" stroke="#1e293b" stroke-width="3" marker-end="url(#arr-black)"/>
+          <text x="105" y="15" font-family="Space Mono,monospace" font-size="11" fill="#1e293b">V₀ = 10 ms⁻¹</text>
+          <!-- t1 row -->
+          <text x="10" y="60" font-family="Space Mono,monospace" font-size="11" fill="#64748b">t₁=1s</text>
+          <line x1="70" y1="56" x2="190" y2="56" stroke="#3b82f6" stroke-width="3" marker-end="url(#arr-blue)"/>
+          <text x="105" y="51" font-family="Space Mono,monospace" font-size="11" fill="#3b82f6">V₁ = 12 ms⁻¹</text>
+          <!-- Delta V arrow -->
+          <line x1="170" y1="56" x2="190" y2="56" stroke="#ef4444" stroke-width="4" marker-end="url(#arr-red)"/>
+          <text x="193" y="60" font-family="Space Mono,monospace" font-size="11" fill="#ef4444" font-weight="bold">ΔV = 2 ms⁻¹</text>
+          <!-- Calculation -->
+          <text x="10" y="85" font-family="Space Mono,monospace" font-size="12" fill="#6366f1" font-weight="bold">a = 2 ms⁻¹ / 1 s = 2 ms⁻²</text>
+        </svg>
+      </div>
+
+      <div class="insight">
+        <strong>Key point:</strong> The <em>red arrow</em> (ΔV = 2 ms⁻¹) is the change in velocity. Dividing this by time gives acceleration: <strong>a = 2 ms⁻²</strong>.
+      </div>
+    </div>
+
+    <!-- SPEEDING UP vs SLOWING DOWN -->
+    <div class="card">
+      <div class="card-title"><span class="icon">⚡</span> Speeding Up vs. Slowing Down</div>
+      <div class="section-heading">Why Direction of Acceleration Matters</div>
+      <p>The direction of acceleration matters for how the velocity changes. If the acceleration points in the same direction as the velocity, the object will <strong>speed up</strong>. If the acceleration points in the opposite direction as velocity, the object will <strong>slow down</strong>.</p>
+
+      <div class="diagram-wrap">
+        <!-- Speeding Up SVG -->
+        <div class="diagram-box">
+          <svg viewBox="0 0 200 140" width="190" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="av" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,6 2.5,0 5" fill="#1e293b"/></marker>
+              <marker id="aa" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,6 2.5,0 5" fill="#ef4444"/></marker>
+            </defs>
+            <!-- Row 1 -->
+            <line x1="10" y1="20" x2="55" y2="20" stroke="#1e293b" stroke-width="2.5" marker-end="url(#av)"/>
+            <text x="60" y="24" font-family="Nunito,sans-serif" font-size="10" fill="#64748b">v</text>
+            <line x1="10" y1="33" x2="35" y2="33" stroke="#ef4444" stroke-width="2.5" marker-end="url(#aa)"/>
+            <text x="40" y="37" font-family="Nunito,sans-serif" font-size="10" fill="#ef4444">a →</text>
+            <!-- Row 2 -->
+            <line x1="10" y1="58" x2="75" y2="58" stroke="#1e293b" stroke-width="2.5" marker-end="url(#av)"/>
+            <line x1="10" y1="71" x2="35" y2="71" stroke="#ef4444" stroke-width="2.5" marker-end="url(#aa)"/>
+            <!-- Row 3 -->
+            <line x1="10" y1="96" x2="100" y2="96" stroke="#1e293b" stroke-width="2.5" marker-end="url(#av)"/>
+            <line x1="10" y1="109" x2="35" y2="109" stroke="#ef4444" stroke-width="2.5" marker-end="url(#aa)"/>
+            <!-- Row 4 -->
+            <line x1="10" y1="130" x2="130" y2="130" stroke="#1e293b" stroke-width="2.5" marker-end="url(#av)"/>
+            <line x1="10" y1="138" x2="35" y2="138" stroke="#ef4444" stroke-width="2.5" marker-end="url(#aa)"/>
+          </svg>
+          <div class="diagram-label label-red">Speeding Up</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:.3rem;">v and a in same direction</div>
+        </div>
+        <!-- Slowing Down SVG -->
+        <div class="diagram-box">
+          <svg viewBox="0 0 200 140" width="190" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="av2" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,6 2.5,0 5" fill="#1e293b"/></marker>
+              <marker id="aa2" markerWidth="6" markerHeight="5" refX="0" refY="2.5" orient="auto"><polygon points="6 0,0 2.5,6 5" fill="#3b82f6"/></marker>
+            </defs>
+            <!-- Row 1 — longest v -->
+            <line x1="10" y1="20" x2="130" y2="20" stroke="#1e293b" stroke-width="2.5" marker-end="url(#av2)"/>
+            <text x="135" y="24" font-family="Nunito,sans-serif" font-size="10" fill="#64748b">v</text>
+            <line x1="130" y1="33" x2="100" y2="33" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#aa2)"/>
+            <text x="60" y="37" font-family="Nunito,sans-serif" font-size="10" fill="#3b82f6">← a</text>
+            <!-- Row 2 -->
+            <line x1="10" y1="58" x2="100" y2="58" stroke="#1e293b" stroke-width="2.5" marker-end="url(#av2)"/>
+            <line x1="130" y1="71" x2="100" y2="71" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#aa2)"/>
+            <!-- Row 3 -->
+            <line x1="10" y1="96" x2="70" y2="96" stroke="#1e293b" stroke-width="2.5" marker-end="url(#av2)"/>
+            <line x1="130" y1="109" x2="100" y2="109" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#aa2)"/>
+            <!-- Row 4 -->
+            <line x1="10" y1="130" x2="40" y2="130" stroke="#1e293b" stroke-width="2.5" marker-end="url(#av2)"/>
+            <line x1="130" y1="138" x2="100" y2="138" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#aa2)"/>
+          </svg>
+          <div class="diagram-label label-blue">Slowing Down</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:.3rem;">v and a in opposite directions</div>
+        </div>
+      </div>
+
+      <div class="success">
+        <strong>Rule:</strong> Same direction (v and a) &rarr; speeds up. &nbsp; Opposite direction (v and a) &rarr; slows down.
+      </div>
+    </div>
+
+    <!-- MISCONCEPTION vs CORRECT -->
+    <div class="card">
+      <div class="card-title"><span class="icon">🎯</span> Common Misconception vs. Correct Understanding</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.4rem;">
+        <div class="warning">
+          <strong>Common Misconception:</strong><br/>
+          "Positive acceleration means the object is getting faster. Negative acceleration means the object is getting slower."
+        </div>
+        <div class="success">
+          <strong>Correct Understanding:</strong><br/>
+          "If the acceleration has the <em>same sign</em> as velocity, the object is getting faster. If the acceleration has the <em>opposite sign</em> as velocity, the object is getting slower."
+        </div>
+      </div>
+
+      <div class="quad-wrap">
+        <table class="quad-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>+ Start Velocity</th>
+              <th>− Start Velocity</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>+ Acceleration<br/>(a = +1 ms⁻²)</strong></td>
+              <td class="quad-faster">
+                <strong style="color:#065f46;">Getting FASTER ✓</strong><br/>
+                <span class="quad-note">Same sign (+,+)</span><br/>
+                V₀=4, V₁=5, V₂=6, V₃=7, V₄=8 ms⁻¹
+              </td>
+              <td class="quad-slower">
+                <strong style="color:#991b1b;">Getting SLOWER ✗</strong><br/>
+                <span class="quad-note">Opposite sign (+,−)</span><br/>
+                V₀=−4, V₁=−3, V₂=−2, V₃=−1, V₄=0 ms⁻¹
+              </td>
+            </tr>
+            <tr>
+              <td><strong>− Acceleration<br/>(a = −1 ms⁻²)</strong></td>
+              <td class="quad-slower">
+                <strong style="color:#991b1b;">Getting SLOWER ✗</strong><br/>
+                <span class="quad-note">Opposite sign (−,+)</span><br/>
+                V₀=4, V₁=3, V₂=2, V₃=1, V₄=0 ms⁻¹
+              </td>
+              <td class="quad-faster">
+                <strong style="color:#065f46;">Getting FASTER ✓</strong><br/>
+                <span class="quad-note">Same sign (−,−)</span><br/>
+                V₀=−4, V₁=−5, V₂=−6, V₃=−7, V₄=−8 ms⁻¹
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tip">
+        <strong>Memory tip:</strong> The highlighted cells (top-left and bottom-right) are both "same sign" — that's when the object gets faster. Think of a number line: if a and v push in the same direction, magnitude grows.
+      </div>
+    </div>
+
+    <!-- THREE WAYS -->
+    <div class="card">
+      <div class="card-title"><span class="icon">🔄</span> 3 Ways an Object Can Accelerate</div>
+      <div class="three-ways">
+        <div class="way-card up">
+          <h3>1. Speeding Up</h3>
+          <!-- mini SVG -->
+          <svg viewBox="0 0 160 50" width="140" xmlns="http://www.w3.org/2000/svg">
+            <defs><marker id="gu" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,6 2.5,0 5" fill="#16a34a"/></marker></defs>
+            <rect x="5" y="12" width="35" height="18" rx="4" fill="#ef4444"/>
+            <line x1="42" y1="21" x2="65" y2="21" stroke="#16a34a" stroke-width="2.5" marker-end="url(#gu)"/>
+            <rect x="80" y="12" width="35" height="18" rx="4" fill="#ef4444"/>
+            <line x1="117" y1="21" x2="155" y2="21" stroke="#16a34a" stroke-width="3" marker-end="url(#gu)"/>
+          </svg>
+          <p style="font-size:.82rem;margin-top:.5rem;color:#166534;">Velocity magnitude <strong>increases</strong>. a and v point the same direction.</p>
+        </div>
+        <div class="way-card down">
+          <h3>2. Slowing Down</h3>
+          <svg viewBox="0 0 160 50" width="140" xmlns="http://www.w3.org/2000/svg">
+            <defs><marker id="gd" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,6 2.5,0 5" fill="#2563eb"/></marker></defs>
+            <rect x="5" y="12" width="35" height="18" rx="4" fill="#ef4444"/>
+            <line x1="42" y1="21" x2="95" y2="21" stroke="#2563eb" stroke-width="3" marker-end="url(#gd)"/>
+            <rect x="100" y="12" width="35" height="18" rx="4" fill="#ef4444"/>
+            <line x1="137" y1="21" x2="155" y2="21" stroke="#2563eb" stroke-width="2" marker-end="url(#gd)"/>
+          </svg>
+          <p style="font-size:.82rem;margin-top:.5rem;color:#1e40af;">Velocity magnitude <strong>decreases</strong>. a and v point opposite directions.</p>
+        </div>
+        <div class="way-card dir">
+          <h3>3. Changing Direction</h3>
+          <!-- Vector decomposition SVG -->
+          <svg viewBox="0 0 160 100" width="140" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="gv" markerWidth="7" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="#1e293b"/></marker>
+              <marker id="gvx" markerWidth="7" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="#ef4444"/></marker>
+              <marker id="gvy" markerWidth="7" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="#3b82f6"/></marker>
+            </defs>
+            <!-- Axes -->
+            <line x1="30" y1="80" x2="140" y2="80" stroke="#e2e8f0" stroke-width="1"/>
+            <line x1="30" y1="80" x2="30" y2="15" stroke="#e2e8f0" stroke-width="1"/>
+            <!-- V diagonal -->
+            <line x1="30" y1="80" x2="115" y2="25" stroke="#1e293b" stroke-width="2.5" marker-end="url(#gv)"/>
+            <text x="78" y="45" font-family="Space Mono,monospace" font-size="11" fill="#1e293b" font-weight="bold">V</text>
+            <!-- Vx horizontal -->
+            <line x1="30" y1="80" x2="115" y2="80" stroke="#ef4444" stroke-width="2" marker-end="url(#gvx)" stroke-dasharray="4,3"/>
+            <text x="65" y="95" font-family="Space Mono,monospace" font-size="10" fill="#ef4444">Vx</text>
+            <!-- Vy vertical -->
+            <line x1="115" y1="80" x2="115" y2="25" stroke="#3b82f6" stroke-width="2" marker-end="url(#gvy)" stroke-dasharray="4,3"/>
+            <text x="120" y="55" font-family="Space Mono,monospace" font-size="10" fill="#3b82f6">Vy</text>
+          </svg>
+          <p style="font-size:.82rem;margin-top:.5rem;color:#92400e;">Even at constant speed, if <strong>direction changes</strong>, Vx and Vy change — so velocity changes — so acceleration occurs.</p>
+        </div>
+      </div>
+
+      <div class="insight" style="margin-top:1.2rem;">
+        <strong>Important:</strong> In this and future units, it is extremely important to know exactly when an object is accelerating. An object is accelerating if any of these 3 things is happening — if it is changing its velocity. If it is not doing one of these things, it is not accelerating.
+      </div>
+    </div>
+
+    <!-- INTERACTIVE QUIZ -->
+    <div class="card">
+      <div class="card-title"><span class="icon">🧠</span> Quick Knowledge Check</div>
+      <div class="quiz-wrap" id="quiz">
+
+        <!-- Q1 -->
+        <div class="q-item" id="q1">
+          <div class="q-text">1. A car decelerates from 20 ms⁻¹ to 8 ms⁻¹ in 4 seconds. What is the acceleration?</div>
+          <div class="q-options">
+            <label class="q-opt"><input type="radio" name="q1" value="a"/> −3 ms⁻²</label>
+            <label class="q-opt"><input type="radio" name="q1" value="b"/> +3 ms⁻²</label>
+            <label class="q-opt"><input type="radio" name="q1" value="c"/> −7 ms⁻²</label>
+            <label class="q-opt"><input type="radio" name="q1" value="d"/> +7 ms⁻²</label>
+          </div>
+          <div class="q-feedback" id="fb1"></div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="q-item" id="q2">
+          <div class="q-text">2. An object has a = +3 ms⁻² and V₀ = −6 ms⁻¹. What is happening to its speed?</div>
+          <div class="q-options">
+            <label class="q-opt"><input type="radio" name="q2" value="a"/> Getting faster</label>
+            <label class="q-opt"><input type="radio" name="q2" value="b"/> Getting slower</label>
+            <label class="q-opt"><input type="radio" name="q2" value="c"/> Constant speed</label>
+            <label class="q-opt"><input type="radio" name="q2" value="d"/> Cannot determine</label>
+          </div>
+          <div class="q-feedback" id="fb2"></div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="q-item" id="q3">
+          <div class="q-text">3. Which of the following is NOT one of the 3 ways an object can accelerate?</div>
+          <div class="q-options">
+            <label class="q-opt"><input type="radio" name="q3" value="a"/> Speeding up</label>
+            <label class="q-opt"><input type="radio" name="q3" value="b"/> Slowing down</label>
+            <label class="q-opt"><input type="radio" name="q3" value="c"/> Moving at constant velocity</label>
+            <label class="q-opt"><input type="radio" name="q3" value="d"/> Changing direction</label>
+          </div>
+          <div class="q-feedback" id="fb3"></div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="q-item" id="q4">
+          <div class="q-text">4. Using V = U + at: if U = 5 ms⁻¹, a = −2 ms⁻², and t = 3 s, what is V?</div>
+          <div class="q-options">
+            <label class="q-opt"><input type="radio" name="q4" value="a"/> 11 ms⁻¹</label>
+            <label class="q-opt"><input type="radio" name="q4" value="b"/> −1 ms⁻¹</label>
+            <label class="q-opt"><input type="radio" name="q4" value="c"/> 1 ms⁻¹</label>
+            <label class="q-opt"><input type="radio" name="q4" value="d"/> −11 ms⁻¹</label>
+          </div>
+          <div class="q-feedback" id="fb4"></div>
+        </div>
+
+        <button class="quiz-submit" onclick="gradeQuiz()">Submit Answers</button>
+        <div id="quiz-result"></div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+// PASSWORD
+(function(){
+  const KEY='phys_auth';
+  const CORRECT=btoa('physics2024');
+  if(localStorage.getItem(KEY)===CORRECT){unlock();}
+  document.getElementById('gate-btn').addEventListener('click',check);
+  document.getElementById('gate-input').addEventListener('keydown',function(e){if(e.key==='Enter')check();});
+  function check(){
+    const v=document.getElementById('gate-input').value;
+    if(btoa(v)===CORRECT){localStorage.setItem(KEY,CORRECT);unlock();}
+    else{document.getElementById('gate-err').textContent='Incorrect password. Please try again.';}
+  }
+  function unlock(){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('main').style.display='block';
+  }
+})();
+
+// STARS
+(function(){
+  const c=document.getElementById('stars-container');
+  for(let i=0;i<55;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=Math.random()*3+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${2+Math.random()*4}s;animation-delay:${Math.random()*5}s;`;
+    c.appendChild(s);
+  }
+})();
+
+// QUIZ
+const answers={q1:'a',q2:'b',q3:'c',q4:'c'};
+const explanations={
+  q1:'a = (V−U)/t = (8−20)/4 = −12/4 = −3 ms⁻². The negative sign indicates deceleration.',
+  q2:'a = +3 and V₀ = −6 have OPPOSITE signs, so the object is getting slower (approaching zero).',
+  q3:'Moving at constant velocity means zero acceleration — it does not qualify as one of the 3 ways.',
+  q4:'V = U + at = 5 + (−2)(3) = 5 − 6 = −1 ms⁻¹. Wait — that gives −1. But let me recheck: 5+(−6)=−1. Hmm, answer is −1 ms⁻¹ — option b is correct. Wait the correct option is b (−1 ms⁻¹). The quiz key is set to c=1 ms⁻¹. Let me recalculate: V = 5 + (−2×3) = 5−6 = −1. So the answer is −1 ms⁻¹ = option b.'
+};
+
+function gradeQuiz(){
+  // Recalculate: Q4: V=5+(−2)(3)=5−6=−1 → option b
+  const correctedAnswers={q1:'a',q2:'b',q3:'c',q4:'b'};
+  let score=0;
+  const expl={
+    q1:'a = (V−U)/t = (8−20)/4 = −12/4 = −3 ms⁻². Negative sign indicates deceleration.',
+    q2:'a = +3 and V₀ = −6 have OPPOSITE signs → object is slowing down (moving toward zero).',
+    q3:'Moving at constant velocity = zero acceleration. This is NOT one of the 3 ways to accelerate.',
+    q4:'V = U + at = 5 + (−2)(3) = 5 − 6 = −1 ms⁻¹.'
+  };
+  ['q1','q2','q3','q4'].forEach(function(q){
+    const sel=document.querySelector('input[name="'+q+'"]:checked');
+    const fb=document.getElementById('fb'+q.slice(1));
+    if(!sel){fb.textContent='Please select an answer.';fb.className='q-feedback wrong';return;}
+    if(sel.value===correctedAnswers[q]){
+      score++;fb.textContent='Correct! '+expl[q];fb.className='q-feedback correct';
+    } else {
+      fb.textContent='Incorrect. '+expl[q];fb.className='q-feedback wrong';
+    }
+  });
+  const r=document.getElementById('quiz-result');
+  r.style.display='block';
+  if(score===4){r.style.background='#d1fae5';r.style.color='#065f46';r.textContent='Perfect score! 4/4 — Excellent work!';}
+  else if(score>=2){r.style.background='#fef3c7';r.style.color='#92400e';r.textContent='Good effort! '+score+'/4 — Review the explanations above.';}
+  else{r.style.background='#fee2e2';r.style.color='#991b1b';r.textContent='Keep practising! '+score+'/4 — Re-read the lesson carefully.';}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Vectors — Classwork</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#334155 100%);color:white;padding:32px 60px 28px;position:relative;overflow:hidden;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 60%,rgba(20,184,166,0.25) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(99,102,241,0.2) 0%,transparent 55%);pointer-events:none;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.75;margin-bottom:6px;position:relative;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;position:relative;}
+    header .meta{opacity:0.8;font-size:0.9rem;position:relative;}
+    main{max-width:820px;margin:36px auto;padding:0 24px 60px;}
+    .ref-box{background:white;border:2px solid #ccfbf1;border-radius:10px;padding:16px 22px;margin-bottom:32px;display:flex;gap:32px;flex-wrap:wrap;align-items:center;}
+    .ref-box .ref-title{font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#0f766e;margin-bottom:8px;}
+    .ref-item{display:flex;align-items:center;gap:10px;}
+    .ref-sym{font-size:2rem;width:40px;text-align:center;}
+    .ref-text{font-size:0.9rem;color:#334155;}
+    .ref-text strong{display:block;font-size:0.95rem;color:#0f172a;}
+    section{margin-bottom:44px;}
+    h2{font-size:1.2rem;font-weight:800;color:#0f172a;border-left:5px solid #14b8a6;padding-left:12px;margin-bottom:16px;}
+    .instructions{color:#4b5563;font-size:0.9rem;margin-bottom:16px;font-style:italic;}
+    /* Part A — identify direction */
+    .identify-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+    @media(max-width:600px){.identify-grid{grid-template-columns:1fr 1fr;}}
+    .id-card{background:white;border-radius:10px;padding:18px 14px;box-shadow:0 1px 5px rgba(0,0,0,0.07);text-align:center;}
+    .id-card .id-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;}
+    .id-card .id-symbol{font-size:2.8rem;line-height:1;margin-bottom:12px;}
+    .id-card .answer-label{font-size:0.82rem;color:#6b7280;display:block;margin-bottom:4px;}
+    .answer-line{border-bottom:2px solid #d1d5db;min-height:26px;width:90%;display:inline-block;}
+    /* Part B — drawing tasks */
+    .draw-card{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .draw-card .dc-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;}
+    .draw-card .dc-prompt{font-weight:700;margin-bottom:10px;font-size:0.95rem;}
+    .draw-card .dc-sub{font-size:0.85rem;color:#64748b;margin-bottom:14px;}
+    .draw-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px;}
+    .draw-cell{border:1.5px solid #e2e8f0;border-radius:6px;height:40px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:#e2e8f0;background:#fafafa;}
+    .draw-grid-label{font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#94a3b8;letter-spacing:0.5px;margin-bottom:5px;}
+    /* Part C — wire diagrams */
+    .wire-problem{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .wp-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;}
+    .wp-prompt{font-weight:700;font-size:0.95rem;margin-bottom:8px;}
+    .wp-desc{font-size:0.85rem;color:#64748b;margin-bottom:14px;}
+    .mini-wire-scene{display:grid;grid-template-columns:1fr 12px 1fr;border-radius:8px;overflow:hidden;border:1.5px solid #e2e8f0;max-width:420px;}
+    .mws-left{background:#eff6ff;padding:12px;text-align:center;}
+    .mws-wire{background:#334155;}
+    .mws-right{background:#f0fdf4;padding:12px;text-align:center;}
+    .mws-label{font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;color:#64748b;}
+    .mini-field-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;}
+    .mf-cell{border:1.5px dashed #cbd5e1;border-radius:4px;height:32px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;background:white;}
+    .answer-space{border-bottom:2px solid #d1d5db;min-height:26px;margin-top:10px;width:100%;}
+    /* Part D — short answer */
+    .short-q{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .sq-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;}
+    .sq-text{font-weight:700;font-size:0.95rem;margin-bottom:12px;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:26px;width:100%;}
+    /* answer key */
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:linear-gradient(135deg,#0f172a,#1e293b);color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #toggle-key-btn:hover{opacity:0.9;}
+    #answer-key{display:none;background:#f0fdf4;border:2px solid #86efac;border-radius:14px;padding:28px 32px;}
+    #answer-key h2{border-left-color:#22c55e;margin-bottom:22px;}
+    .key-section{margin-bottom:26px;}
+    .key-section h3{font-size:0.95rem;font-weight:800;color:#166534;margin-bottom:12px;}
+    .key-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+    @media(max-width:500px){.key-grid{grid-template-columns:1fr 1fr;}}
+    .key-item{background:white;border-radius:8px;padding:10px 14px;font-size:0.9rem;}
+    .key-item .knum{font-weight:700;color:#64748b;font-size:0.8rem;display:block;margin-bottom:2px;}
+    .key-item .kans{color:#166534;font-weight:800;font-size:1.05rem;}
+    .key-item .kexpl{color:#4b5563;font-size:0.8rem;margin-top:3px;}
+    .key-text{background:white;border-radius:8px;padding:12px 16px;font-size:0.9rem;margin-bottom:10px;}
+    .key-text strong{color:#166534;}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f172a,#1e293b,#0f172a);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#14b8a6,#06b6d4);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">IB Physics · Unit 27 · In-Class Activity</div>
+  <h1>3D Vectors — Classwork</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+
+  <!-- Reference box -->
+  <div class="ref-box">
+    <div>
+      <div class="ref-title">Notation Reference</div>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;">
+        <div class="ref-item">
+          <div class="ref-sym" style="color:#1d4ed8;">⊙</div>
+          <div class="ref-text"><strong>Out of page</strong>Dot = arrowhead toward you</div>
+        </div>
+        <div class="ref-item">
+          <div class="ref-sym" style="color:#92400e;">⊗</div>
+          <div class="ref-text"><strong>Into page</strong>Cross = arrow tail going away</div>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1;min-width:200px;">
+      <div class="ref-title">Axes</div>
+      <div style="font-size:0.88rem;color:#374151;">x = left/right &nbsp;&bull;&nbsp; y = up/down &nbsp;&bull;&nbsp; z = in/out of page</div>
+    </div>
+  </div>
+
+  <!-- Part A: Identify direction from symbol -->
+  <section>
+    <h2>Part A — Identify the Direction</h2>
+    <p class="instructions">For each symbol shown, write whether the vector is pointing <em>out of the page</em> or <em>into the page</em>.</p>
+    <div class="identify-grid">
+
+      <div class="id-card">
+        <div class="id-num">Problem 1</div>
+        <div class="id-symbol" style="color:#1d4ed8;">⊙</div>
+        <span class="answer-label">Direction:</span>
+        <span class="answer-line"></span>
+      </div>
+
+      <div class="id-card">
+        <div class="id-num">Problem 2</div>
+        <div class="id-symbol" style="color:#92400e;">⊗</div>
+        <span class="answer-label">Direction:</span>
+        <span class="answer-line"></span>
+      </div>
+
+      <div class="id-card">
+        <div class="id-num">Problem 3</div>
+        <div class="id-symbol" style="color:#92400e;">⊗</div>
+        <span class="answer-label">Direction:</span>
+        <span class="answer-line"></span>
+      </div>
+
+      <div class="id-card">
+        <div class="id-num">Problem 4</div>
+        <div class="id-symbol" style="color:#1d4ed8;">⊙</div>
+        <span class="answer-label">Direction:</span>
+        <span class="answer-line"></span>
+      </div>
+
+      <div class="id-card">
+        <div class="id-num">Problem 5</div>
+        <!-- text-based cross using monospace styling -->
+        <div class="id-symbol" style="color:#92400e;font-family:'Space Mono',monospace;font-size:2rem;">✕</div>
+        <span class="answer-label">Is this symbol used for into or out of page?</span>
+        <span class="answer-line"></span>
+      </div>
+
+      <div class="id-card">
+        <div class="id-num">Problem 6</div>
+        <div class="id-symbol" style="color:#1d4ed8;font-size:2.2rem;">•</div>
+        <span class="answer-label">Is this symbol used for into or out of page?</span>
+        <span class="answer-line"></span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Part B: Choose correct symbol -->
+  <section>
+    <h2>Part B — Choose the Correct Symbol</h2>
+    <p class="instructions">For each description, write the correct 3D notation symbol (⊙ or ⊗) in the space provided.</p>
+
+    <div class="draw-card">
+      <div class="dc-num">Problem 7</div>
+      <div class="dc-prompt">A magnetic field pointing out of the page.</div>
+      <span class="answer-label" style="font-size:0.85rem;color:#6b7280;">Correct symbol: </span>
+      <span class="answer-line" style="width:80px;"></span>
+    </div>
+
+    <div class="draw-card">
+      <div class="dc-num">Problem 8</div>
+      <div class="dc-prompt">An arrow representing velocity going INTO the page.</div>
+      <span class="answer-label" style="font-size:0.85rem;color:#6b7280;">Correct symbol: </span>
+      <span class="answer-line" style="width:80px;"></span>
+    </div>
+
+    <div class="draw-card">
+      <div class="dc-num">Problem 9</div>
+      <div class="dc-prompt">An electric field pointing toward the viewer (toward you).</div>
+      <span class="answer-label" style="font-size:0.85rem;color:#6b7280;">Correct symbol: </span>
+      <span class="answer-line" style="width:80px;"></span>
+    </div>
+
+    <div class="draw-card">
+      <div class="dc-num">Problem 10</div>
+      <div class="dc-prompt">Think about an arrow in flight. If you see the TAIL FEATHERS of the arrow, which direction is the arrow traveling relative to you?</div>
+      <div class="write-lines"><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <!-- Part C: Fill in the wire diagram -->
+  <section>
+    <h2>Part C — Wire Field Diagrams</h2>
+    <p class="instructions">Each problem below shows a wire cross-section (the dark vertical bar). The current direction is given. Fill in each empty cell with either ⊙ or ⊗ to show the correct magnetic field direction on each side.</p>
+
+    <div class="wire-problem">
+      <div class="wp-num">Problem 11</div>
+      <div class="wp-prompt">Current flowing UPWARD (out of the page) through the wire.</div>
+      <div class="wp-desc">Recall: on the LEFT of this wire the field goes INTO the page; on the RIGHT it comes OUT.</div>
+      <div class="mini-wire-scene">
+        <div class="mws-left">
+          <div class="mws-label">Left side</div>
+          <div class="mini-field-grid">
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+          </div>
+        </div>
+        <div class="mws-wire"></div>
+        <div class="mws-right">
+          <div class="mws-label">Right side</div>
+          <div class="mini-field-grid">
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wire-problem">
+      <div class="wp-num">Problem 12</div>
+      <div class="wp-prompt">Current flowing DOWNWARD (into the page) through the wire.</div>
+      <div class="wp-desc">Hint: When current reverses direction, the magnetic field reverses too — all ⊙ and ⊗ swap sides.</div>
+      <div class="mini-wire-scene">
+        <div class="mws-left">
+          <div class="mws-label">Left side</div>
+          <div class="mini-field-grid">
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+          </div>
+        </div>
+        <div class="mws-wire"></div>
+        <div class="mws-right">
+          <div class="mws-label">Right side</div>
+          <div class="mini-field-grid">
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+            <div class="mf-cell"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Part D: Short answer conceptual -->
+  <section>
+    <h2>Part D — Short Answer</h2>
+
+    <div class="short-q">
+      <div class="sq-num">Problem 13</div>
+      <div class="sq-text">Explain in your own words: what does the ⊙ symbol physically represent? Use the "arrow in flight" analogy.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="short-q">
+      <div class="sq-num">Problem 14</div>
+      <div class="sq-text">A classmate says, "I don't understand why we need 3D vectors — we can just use x and y for everything." Explain to them ONE situation in IB Physics where the z-direction (in/out of page) is necessary.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="short-q">
+      <div class="sq-num">Problem 15</div>
+      <div class="sq-text">Using the laptop screen analogy: describe what each of the three axes (x, y, and z) represents in terms of directions on or relative to a laptop screen.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="short-q">
+      <div class="sq-num">Problem 16 (Challenge)</div>
+      <div class="sq-text">A magnetic field diagram shows a region filled with ⊗ symbols on the left half of the page and ⊙ symbols on the right half. There is a wire in the center. Is the current in this wire flowing into or out of the page? Explain your reasoning.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <!-- Answer Key -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="document.getElementById('answer-key').style.display=(document.getElementById('answer-key').style.display==='none'?'block':'none');this.textContent=(document.getElementById('answer-key').style.display==='none'?'Show Answer Key':'Hide Answer Key');">Show Answer Key</button>
+  </div>
+
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A — Identify the Direction</h3>
+      <div class="key-grid">
+        <div class="key-item"><span class="knum">Problem 1</span><span class="kans">Out of the page</span><div class="kexpl">⊙ = dot = arrowhead coming toward you</div></div>
+        <div class="key-item"><span class="knum">Problem 2</span><span class="kans">Into the page</span><div class="kexpl">⊗ = cross = tail feathers going away</div></div>
+        <div class="key-item"><span class="knum">Problem 3</span><span class="kans">Into the page</span><div class="kexpl">⊗ = cross = arrow going away from you</div></div>
+        <div class="key-item"><span class="knum">Problem 4</span><span class="kans">Out of the page</span><div class="kexpl">⊙ = dot = coming toward viewer</div></div>
+        <div class="key-item"><span class="knum">Problem 5</span><span class="kans">Into the page</span><div class="kexpl">The ✕ / cross is the symbol for into the page</div></div>
+        <div class="key-item"><span class="knum">Problem 6</span><span class="kans">Out of the page</span><div class="kexpl">The dot (•) represents out of the page</div></div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B — Choose the Correct Symbol</h3>
+      <div class="key-grid">
+        <div class="key-item"><span class="knum">Problem 7</span><span class="kans">⊙ (dot)</span><div class="kexpl">Out of page = dot symbol</div></div>
+        <div class="key-item"><span class="knum">Problem 8</span><span class="kans">⊗ (cross)</span><div class="kexpl">Into page = cross symbol</div></div>
+        <div class="key-item"><span class="knum">Problem 9</span><span class="kans">⊙ (dot)</span><div class="kexpl">"Toward the viewer" = out of page = dot</div></div>
+      </div>
+      <div class="key-text" style="margin-top:10px;"><strong>Problem 10:</strong> If you see the tail feathers, the arrow is flying AWAY from you — i.e., going into the page. This is why ⊗ (the cross, which looks like tail feathers) represents into the page.</div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C — Wire Field Diagrams</h3>
+      <div class="key-text"><strong>Problem 11 — Current UPWARD (out of page):</strong><br>Left side: all ⊗ (field goes INTO the page) &nbsp;|&nbsp; Right side: all ⊙ (field comes OUT of the page)</div>
+      <div class="key-text"><strong>Problem 12 — Current DOWNWARD (into page):</strong><br>Left side: all ⊙ (field comes OUT of the page) &nbsp;|&nbsp; Right side: all ⊗ (field goes INTO the page)<br><em>Everything flips when the current reverses!</em></div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part D — Short Answer</h3>
+      <div class="key-text"><strong>Problem 13:</strong> The ⊙ symbol represents a vector coming OUT of the page (toward the viewer). Using the arrow analogy: if an arrow is flying straight toward you, all you see is the arrowhead — a point (dot). The dot inside the circle in ⊙ represents that arrowhead pointing at your face.</div>
+      <div class="key-text"><strong>Problem 14:</strong> Accept any correct magnetic field example. Best answer: In IB Physics, when we study magnetic fields around current-carrying wires, the field on one side of the wire points into the page and on the other side it points out of the page. Without 3D notation (⊙ and ⊗), we cannot represent these directions on a flat diagram.</div>
+      <div class="key-text"><strong>Problem 15:</strong> x-axis = left-right across the screen surface; y-axis = up-down on the screen surface; z-axis = in/out of the screen (perpendicular to the screen — z comes toward you or goes away from you through the screen).</div>
+      <div class="key-text"><strong>Problem 16 (Challenge):</strong> The current is flowing UPWARD out of the page. The pattern ⊗ on the left and ⊙ on the right exactly matches what we see with current flowing upward (out of the page) through a wire at the center.</div>
+    </div>
+  </div>
+
+</main>
+
+<footer style="text-align:center;padding:28px 20px;font-size:0.85rem;color:#94a3b8;">IB Physics · Unit 27: 3D Vectors — Classwork &nbsp;·&nbsp; ⊙ = out of page &nbsp; ⊗ = into page</footer>
+
+</body>
+</html>

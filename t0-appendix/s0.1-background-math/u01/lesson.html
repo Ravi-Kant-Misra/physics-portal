@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Significant Figures — Physics Lesson</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root {
+      --blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;
+      --red:#ef4444;--pink:#ec4899;--purple:#a855f7;--dark:#0f172a;
+      --card:#ffffff;--bg:#f8faff;--muted:#94a3b8;
+      --sig-bg:#dcfce7;--sig-fg:#15803d;--no-bg:#f1f5f9;--no-fg:#94a3b8;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:17px;line-height:1.75;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;}
+    header{background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);color:white;padding:52px 60px 48px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(99,102,241,0.35) 0%,transparent 60%),radial-gradient(ellipse at 80% 30%,rgba(59,130,246,0.3) 0%,transparent 55%),radial-gradient(ellipse at 60% 80%,rgba(168,85,247,0.2) 0%,transparent 50%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.4);}}
+    header .chip{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px;position:relative;}
+    header h1{font-size:3.2rem;font-weight:900;letter-spacing:-1px;position:relative;margin-bottom:10px;background:linear-gradient(90deg,#a5f3fc,#c4b5fd,#fbcfe8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1.1rem;color:rgba(255,255,255,0.75);position:relative;max-width:500px;margin:0 auto;}
+    main{max-width:900px;margin:48px auto;padding:0 24px 80px;}
+    section{margin-bottom:60px;}
+    .section-label{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+    .section-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    .section-label h2{font-size:1.5rem;font-weight:900;color:var(--dark);}
+    .intro-scene{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+    @media(max-width:640px){.intro-scene{grid-template-columns:1fr;}}
+    .intro-text{background:white;border-radius:16px;padding:24px 28px;box-shadow:0 4px 20px rgba(99,102,241,0.1);border:2px solid #e0e7ff;}
+    .intro-text p{margin-bottom:12px;color:#334155;}
+    .ruler-card{background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:16px;padding:24px 20px;border:2px solid #fbbf24;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;}
+    .ruler-svg{width:100%;max-width:260px;}
+    .ruler-caption{font-size:0.88rem;color:#92400e;font-weight:700;}
+    .analogy-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+    @media(max-width:640px){.analogy-strip{grid-template-columns:1fr;}}
+    .analogy-tile{background:white;border-radius:14px;padding:20px 16px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,0.06);border-top:4px solid transparent;}
+    .analogy-tile .emoji{font-size:2.4rem;margin-bottom:8px;}
+    .analogy-tile h4{font-size:0.95rem;font-weight:800;margin-bottom:6px;}
+    .analogy-tile p{font-size:0.82rem;color:#64748b;}
+    .at-blue{border-top-color:var(--blue);}.at-green{border-top-color:var(--green);}.at-pink{border-top-color:var(--pink);}
+    /* quantity deep-dives */
+    .qty-block{background:white;border-radius:18px;margin-bottom:28px;box-shadow:0 4px 20px rgba(0,0,0,0.07);overflow:hidden;}
+    .qty-header{display:flex;align-items:center;gap:16px;padding:20px 24px 16px;border-bottom:2px solid #f1f5f9;}
+    .qty-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;}
+    .qty-name{font-size:1.35rem;font-weight:900;color:var(--dark);}
+    .qty-unit{font-size:0.82rem;color:#64748b;font-weight:600;margin-top:2px;}
+    .qty-body{display:grid;grid-template-columns:1fr auto;gap:24px;padding:20px 24px;align-items:start;}
+    @media(max-width:640px){.qty-body{grid-template-columns:1fr;}}
+    .qty-explain p{font-size:0.92rem;color:#374151;margin-bottom:12px;}
+    .qty-visual{flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+    .qty-compare{margin:0 24px 16px;background:#f8fafc;border-radius:12px;padding:14px 18px;}
+    .qc-title{font-size:0.8rem;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;}
+    .qc-row{display:flex;align-items:center;gap:12px;padding:7px 10px;border-radius:8px;margin-bottom:6px;font-size:0.88rem;flex-wrap:wrap;}
+    .qc-bad{background:#fff7ed;border-left:3px solid #f97316;}.qc-ok{background:#fefce8;border-left:3px solid #eab308;}.qc-good{background:#f0fdf4;border-left:3px solid #22c55e;}
+    .qc-label{font-weight:700;color:#374151;min-width:140px;}.qc-val{font-family:'Space Mono',monospace;font-weight:700;font-size:0.95rem;min-width:90px;}.qc-sf{color:#475569;}
+    .qty-warning{margin:0 24px 20px;padding:10px 16px;background:#fef2f2;border:1px solid #fca5a5;border-radius:10px;font-size:0.85rem;color:#7f1d1d;}
+    .qty-temp{border-top:4px solid #ef4444;}.qty-mass{border-top:4px solid #22c55e;}.qty-length{border-top:4px solid #a855f7;}
+    /* rules */
+    .rules-grid{display:grid;gap:16px;}
+    .rule-card{background:white;border-radius:16px;padding:20px 24px;box-shadow:0 3px 14px rgba(0,0,0,0.07);display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;border-left:5px solid transparent;transition:transform 0.15s,box-shadow 0.15s;}
+    .rule-card:hover{transform:translateX(4px);box-shadow:0 6px 24px rgba(0,0,0,0.11);}
+    .rc1{border-left-color:var(--blue);}.rc2{border-left-color:var(--amber);}.rc3{border-left-color:var(--green);}.rc4{border-left-color:var(--purple);}
+    .rule-badge{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.3rem;color:white;flex-shrink:0;}
+    .rb1{background:linear-gradient(135deg,#3b82f6,#6366f1);}.rb2{background:linear-gradient(135deg,#f59e0b,#ef4444);}.rb3{background:linear-gradient(135deg,#22c55e,#10b981);}.rb4{background:linear-gradient(135deg,#a855f7,#ec4899);}
+    .rule-body strong{color:var(--dark);display:block;margin-bottom:4px;font-size:1rem;}.rule-body span{font-size:0.88rem;color:#64748b;}
+    .rule-mini{font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:700;padding:6px 10px;border-radius:8px;text-align:center;white-space:nowrap;}
+    .rm1{background:#dbeafe;color:#1d4ed8;}.rm2{background:#fef3c7;color:#92400e;}.rm3{background:#dcfce7;color:#15803d;}.rm4{background:#f3e8ff;color:#7e22ce;}
+    /* spotlight */
+    .spotlight{background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:20px;padding:28px 32px;color:white;margin-bottom:20px;text-align:center;}
+    .spotlight h3{font-size:1rem;opacity:0.75;margin-bottom:18px;text-transform:uppercase;letter-spacing:1px;}
+    .digit-row{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+    .digit-block{display:flex;flex-direction:column;align-items:center;gap:5px;}
+    .digit-char{font-family:'Space Mono',monospace;font-size:2.4rem;font-weight:700;width:52px;height:56px;display:flex;align-items:center;justify-content:center;border-radius:10px;}
+    .dc-sig{background:#22c55e;color:white;box-shadow:0 0 16px rgba(34,197,94,0.5);}.dc-no{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.35);}
+    .digit-tag{font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;padding:2px 6px;border-radius:4px;}
+    .dt-sig{background:#166534;color:#bbf7d0;}.dt-no{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.3);}
+    /* examples */
+    .example-card{background:white;border-radius:18px;margin-bottom:22px;box-shadow:0 4px 20px rgba(0,0,0,0.07);overflow:hidden;}
+    .ex-header{display:flex;align-items:center;gap:14px;padding:16px 24px;border-bottom:2px solid #f1f5f9;}
+    .ex-num{background:var(--dark);color:white;font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:4px 14px;border-radius:20px;}
+    .ex-concept{font-size:0.82rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+    .ex-body{padding:20px 24px;}
+    .number-display-row{display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:14px;}
+    .number-big{font-family:'Space Mono',monospace;font-size:2.8rem;font-weight:700;letter-spacing:0.05em;line-height:1;}
+    .sig{color:var(--sig-fg);background:var(--sig-bg);border-radius:6px;padding:2px 4px;}
+    .not-sig{color:var(--no-fg);background:var(--no-bg);border-radius:6px;padding:2px 4px;}
+    .dp{color:#64748b;}
+    .sig-count-badge{display:flex;flex-direction:column;align-items:center;justify-content:center;width:72px;height:72px;border-radius:50%;font-weight:900;flex-shrink:0;}
+    .sig-count-badge .big-num{font-size:2rem;line-height:1;}.sig-count-badge .label{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.5px;opacity:0.85;}
+    .rule-pill{display:inline-block;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-right:6px;margin-bottom:6px;}
+    .rp1{background:#dbeafe;color:#1d4ed8;}.rp2{background:#fef3c7;color:#92400e;}.rp3{background:#dcfce7;color:#166534;}.rp4{background:#f3e8ff;color:#7e22ce;}
+    .explanation{font-size:0.92rem;color:#475569;line-height:1.65;padding:12px 16px;background:#f8fafc;border-radius:10px;border-left:3px solid #cbd5e1;margin-top:10px;}
+    .steps{display:flex;flex-direction:column;gap:8px;}
+    .step{display:flex;gap:12px;align-items:flex-start;font-size:0.88rem;color:#374151;}
+    .step-dot{width:22px;height:22px;border-radius:50%;background:#e0e7ff;color:#4338ca;font-weight:800;font-size:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    /* zero types */
+    .zero-types{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+    @media(max-width:640px){.zero-types{grid-template-columns:1fr;}}
+    .zero-tile{border-radius:14px;padding:18px 16px;text-align:center;}
+    .zt-lead{background:#fef2f2;border:2px solid #fca5a5;}.zt-trap-no{background:#fefce8;border:2px solid #fde68a;}.zt-trap-yes{background:#f0fdf4;border:2px solid #86efac;}
+    .zero-tile .zt-icon{font-size:2rem;margin-bottom:8px;}.zero-tile .zt-title{font-weight:800;font-size:0.95rem;margin-bottom:6px;}
+    .zero-tile .zt-num{font-family:'Space Mono',monospace;font-size:1.4rem;font-weight:700;margin:8px 0;}.zero-tile .zt-rule{font-size:0.8rem;color:#64748b;}
+    .zt-lead .zt-title{color:#dc2626;}.zt-trap-no .zt-title{color:#d97706;}.zt-trap-yes .zt-title{color:#16a34a;}
+    /* cheat sheet */
+    .cheat-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+    @media(max-width:580px){.cheat-cards{grid-template-columns:1fr;}}
+    .cheat-card{border-radius:14px;padding:18px 20px;display:flex;align-items:flex-start;gap:14px;}
+    .cc-always{background:#f0fdf4;border:2px solid #86efac;}.cc-never{background:#fef2f2;border:2px solid #fca5a5;}.cc-check{background:#fffbeb;border:2px solid #fde68a;}
+    .cc-icon{font-size:1.8rem;flex-shrink:0;margin-top:2px;}
+    .cc-body h4{font-size:0.95rem;font-weight:800;margin-bottom:4px;}
+    .cc-body .cc-example{font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;margin:6px 0;}
+    .cc-body p{font-size:0.8rem;color:#64748b;margin:0;}
+    .always-txt{color:#15803d;}.never-txt{color:#dc2626;}.check-txt{color:#d97706;}
+    /* sci notation */
+    .sci-zone{background:linear-gradient(135deg,#fefce8,#fffbeb);border:2px solid #fbbf24;border-radius:18px;padding:28px 32px;}
+    .sci-zone h3{font-size:1.1rem;font-weight:900;color:#78350f;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+    .sci-demo{background:white;border-radius:12px;padding:18px 24px;margin:16px 0;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+    .sci-num{font-family:'Space Mono',monospace;font-size:2rem;font-weight:700;}
+    .sci-arrow{font-size:1.5rem;color:#d97706;}
+    .sci-breakdown{display:flex;flex-direction:column;gap:4px;}
+    .sci-breakdown .row{font-size:0.88rem;color:#374151;display:flex;align-items:center;gap:8px;}
+    .sci-tag{font-size:0.72rem;font-weight:800;padding:2px 8px;border-radius:10px;text-transform:uppercase;}
+    .st-coef{background:#dcfce7;color:#166534;}.st-pow{background:#fee2e2;color:#991b1b;}
+    .sci-tip{font-size:0.88rem;color:#92400e;margin-top:12px;padding:12px 16px;background:#fef9c3;border-radius:10px;}
+    /* memory */
+    .memory-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    @media(max-width:600px){.memory-grid{grid-template-columns:1fr;}}
+    .memory-card{background:white;border-radius:14px;padding:20px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border-top:4px solid var(--indigo);}
+    .memory-card .mc-emoji{font-size:2rem;margin-bottom:8px;}.memory-card h4{font-weight:800;font-size:0.95rem;color:var(--indigo);margin-bottom:8px;}.memory-card p{font-size:0.87rem;color:#475569;}
+    /* quiz */
+    .quiz-section{background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:20px;padding:32px;color:white;}
+    .quiz-section h3{font-size:1.3rem;font-weight:900;margin-bottom:6px;}.quiz-section p{font-size:0.88rem;opacity:0.75;margin-bottom:24px;}
+    .quiz-q{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:18px 22px;margin-bottom:14px;}
+    .quiz-q .qtext{font-size:0.95rem;margin-bottom:14px;font-weight:700;}.quiz-q .qnum{font-family:'Space Mono',monospace;font-size:1.5rem;font-weight:700;margin-bottom:14px;}
+    .options{display:flex;flex-wrap:wrap;gap:10px;}
+    .opt-btn{background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);color:white;font-family:'Nunito',sans-serif;font-size:0.92rem;font-weight:700;padding:8px 18px;border-radius:30px;cursor:pointer;transition:all 0.2s;}
+    .opt-btn:hover{background:rgba(255,255,255,0.2);transform:scale(1.04);}
+    .opt-btn.correct{background:#22c55e;border-color:#22c55e;animation:popIn 0.3s ease;}.opt-btn.wrong{background:#ef4444;border-color:#ef4444;}
+    .feedback{font-size:0.85rem;margin-top:10px;padding:8px 14px;border-radius:8px;display:none;}
+    .feedback.show{display:block;}.feedback.ok{background:rgba(34,197,94,0.2);color:#bbf7d0;}.feedback.bad{background:rgba(239,68,68,0.2);color:#fecaca;}
+    @keyframes popIn{0%{transform:scale(0.9);}60%{transform:scale(1.1);}100%{transform:scale(1);}}
+    footer{text-align:center;padding:32px 20px;font-size:0.85rem;color:var(--muted);}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="star" style="width:3px;height:3px;top:12%;left:8%;animation-delay:0s"></div>
+  <div class="star" style="width:2px;height:2px;top:25%;left:15%;animation-delay:0.5s"></div>
+  <div class="star" style="width:4px;height:4px;top:10%;left:30%;animation-delay:1s"></div>
+  <div class="star" style="width:3px;height:3px;top:70%;left:20%;animation-delay:0.3s"></div>
+  <div class="star" style="width:2px;height:2px;top:15%;left:75%;animation-delay:0.8s"></div>
+  <div class="star" style="width:4px;height:4px;top:40%;left:88%;animation-delay:1.2s"></div>
+  <div class="star" style="width:5px;height:5px;top:20%;left:55%;animation-delay:0.6s"></div>
+  <div class="chip">⚛️ Physics · High School · Measurement</div>
+  <h1>Significant Figures</h1>
+  <p class="subtitle">Master the art of knowing which digits in a number actually count</p>
+</header>
+
+<main>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#dbeafe;">🤔</div>
+    <h2>Why Do Significant Figures Matter?</h2>
+  </div>
+  <div class="intro-scene">
+    <div class="intro-text">
+      <p>Imagine you measure a desk with a regular school ruler. You get <strong>1.2 m</strong>. Your friend uses a fancy laser measurer and gets <strong>1.2047 m</strong>. Both are "correct" — but they say very different things about <em>how precisely</em> the measurement was made.</p>
+      <p>The digits you can <strong>actually trust</strong> based on your instrument are called <strong>Significant Figures</strong> (sig figs). They tell the reader exactly how good your measurement is — no more, no less.</p>
+      <p>Writing <strong>too many digits</strong> is dishonest — it claims more precision than you have. Writing <strong>too few</strong> throws away real information.</p>
+    </div>
+    <div class="ruler-card">
+      <svg class="ruler-svg" viewBox="0 0 260 90" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="28" width="250" height="34" rx="4" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
+        <g stroke="#92400e" stroke-width="1.5">
+          <line x1="30" y1="28" x2="30" y2="44"/><line x1="55" y1="28" x2="55" y2="38"/>
+          <line x1="80" y1="28" x2="80" y2="44"/><line x1="105" y1="28" x2="105" y2="38"/>
+          <line x1="130" y1="28" x2="130" y2="44"/><line x1="155" y1="28" x2="155" y2="38"/>
+          <line x1="180" y1="28" x2="180" y2="44"/><line x1="205" y1="28" x2="205" y2="38"/>
+          <line x1="230" y1="28" x2="230" y2="44"/>
+        </g>
+        <g font-family="monospace" font-size="9" fill="#78350f" text-anchor="middle">
+          <text x="30" y="57">1</text><text x="80" y="57">2</text><text x="130" y="57">3</text><text x="180" y="57">4</text><text x="230" y="57">5</text>
+        </g>
+        <line x1="148" y1="10" x2="148" y2="26" stroke="#ef4444" stroke-width="2" marker-end="url(#arr)"/>
+        <text x="148" y="8" font-family="sans-serif" font-size="9" fill="#ef4444" text-anchor="middle" font-weight="bold">~3.4 cm?</text>
+        <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ef4444"/></marker></defs>
+      </svg>
+      <div class="ruler-caption">Between two tick marks — what digit do you record?<br>Your sig figs choice tells the story!</div>
+    </div>
+  </div>
+
+  <!-- Temperature -->
+  <div class="qty-block qty-temp">
+    <div class="qty-header">
+      <div class="qty-icon" style="background:linear-gradient(135deg,#ef4444,#f97316);">🌡️</div>
+      <div><div class="qty-name">Temperature</div><div class="qty-unit">Unit: degrees Celsius (°C) or Kelvin (K)</div></div>
+    </div>
+    <div class="qty-body">
+      <div class="qty-explain">
+        <p><strong>What is temperature?</strong> Temperature measures the average kinetic energy of the particles in an object. The hotter something is, the faster its particles move. We use <strong>Celsius (°C)</strong> for everyday measurements and <strong>Kelvin (K)</strong> for scientific calculations.</p>
+        <p><strong>Why do sig figs matter here?</strong> A fever thermometer might be trusted to 0.1°C. A lab thermometer to 0.01°C. Writing more digits than your instrument can read is a lie about your precision.</p>
+      </div>
+      <div class="qty-visual">
+        <svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:200px;">
+          <text x="40" y="14" font-family="sans-serif" font-size="9" font-weight="bold" fill="#dc2626" text-anchor="middle">Basic ±1°C</text>
+          <rect x="32" y="30" width="16" height="110" rx="8" fill="#fee2e2" stroke="#fca5a5" stroke-width="1.5"/>
+          <rect x="36" y="75" width="8" height="65" rx="4" fill="#ef4444"/>
+          <circle cx="40" cy="148" r="11" fill="#ef4444" stroke="#dc2626" stroke-width="1.5"/>
+          <g stroke="#dc2626" stroke-width="1" font-family="monospace" font-size="7" fill="#dc2626">
+            <line x1="48" y1="40" x2="54" y2="40"/><text x="56" y="43">40</text>
+            <line x1="48" y1="65" x2="54" y2="65"/><text x="56" y="68">30</text>
+            <line x1="48" y1="90" x2="54" y2="90"/><text x="56" y="93">20</text>
+            <line x1="48" y1="115" x2="54" y2="115"/><text x="56" y="118">10</text>
+          </g>
+          <text x="40" y="168" font-family="sans-serif" font-size="8" font-weight="bold" fill="#dc2626" text-anchor="middle">36°C — 2 sf</text>
+          <text x="160" y="14" font-family="sans-serif" font-size="9" font-weight="bold" fill="#2563eb" text-anchor="middle">Lab ±0.01°C</text>
+          <rect x="152" y="30" width="16" height="110" rx="8" fill="#dbeafe" stroke="#93c5fd" stroke-width="1.5"/>
+          <rect x="156" y="72" width="8" height="68" rx="4" fill="#3b82f6"/>
+          <circle cx="160" cy="148" r="11" fill="#3b82f6" stroke="#2563eb" stroke-width="1.5"/>
+          <text x="160" y="168" font-family="sans-serif" font-size="8" font-weight="bold" fill="#2563eb" text-anchor="middle">36.47°C — 4 sf</text>
+        </svg>
+      </div>
+    </div>
+    <div class="qty-compare">
+      <div class="qc-title">Same patient, different instruments:</div>
+      <div class="qc-row qc-bad"><span class="qc-label">Fever strip</span><span class="qc-val">37°C</span><span class="qc-sf">→ <strong>2 sig figs</strong> — precision to nearest degree</span></div>
+      <div class="qc-row qc-ok"><span class="qc-label">Clinical thermometer</span><span class="qc-val">36.6°C</span><span class="qc-sf">→ <strong>3 sig figs</strong> — precision to nearest tenth</span></div>
+      <div class="qc-row qc-good"><span class="qc-label">Lab digital probe</span><span class="qc-val">36.47°C</span><span class="qc-sf">→ <strong>4 sig figs</strong> — precision to nearest hundredth</span></div>
+    </div>
+    <div class="qty-warning">⚠️ Writing <strong>36.470000°C</strong> from a basic fever strip is wrong — you're claiming precision you never had!</div>
+  </div>
+
+  <!-- Mass -->
+  <div class="qty-block qty-mass">
+    <div class="qty-header">
+      <div class="qty-icon" style="background:linear-gradient(135deg,#16a34a,#059669);">⚖️</div>
+      <div><div class="qty-name">Mass</div><div class="qty-unit">Unit: grams (g), kilograms (kg), milligrams (mg)</div></div>
+    </div>
+    <div class="qty-body">
+      <div class="qty-explain">
+        <p><strong>What is mass?</strong> Mass measures how much matter is in an object. Unlike weight (which changes depending on gravity), mass stays the same whether you're on Earth, the Moon, or in space.</p>
+        <p><strong>Why do sig figs matter here?</strong> If a pharmacist says a tablet contains <strong>500 mg</strong> of medicine, that's ambiguous — is it exactly 500, or somewhere between 450 and 550? Scientific notation clears it up: 5.00 × 10² mg means three sig figs.</p>
+      </div>
+      <div class="qty-visual">
+        <svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:200px;">
+          <text x="50" y="12" font-family="sans-serif" font-size="9" font-weight="bold" fill="#16a34a" text-anchor="middle">Kitchen Scale</text>
+          <rect x="10" y="18" width="80" height="45" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+          <rect x="18" y="24" width="64" height="30" rx="5" fill="#dcfce7" stroke="#4ade80" stroke-width="1"/>
+          <text x="50" y="45" font-family="'Space Mono',monospace" font-size="14" font-weight="bold" fill="#15803d" text-anchor="middle">250 g</text>
+          <rect x="15" y="62" width="70" height="7" rx="3" fill="#bbf7d0"/>
+          <text x="50" y="85" font-family="sans-serif" font-size="8" font-weight="bold" fill="#16a34a" text-anchor="middle">3 sig figs</text>
+          <text x="150" y="12" font-family="sans-serif" font-size="9" font-weight="bold" fill="#2563eb" text-anchor="middle">Analytical</text>
+          <rect x="110" y="18" width="80" height="45" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+          <rect x="118" y="24" width="64" height="30" rx="5" fill="#dbeafe" stroke="#60a5fa" stroke-width="1"/>
+          <text x="150" y="43" font-family="'Space Mono',monospace" font-size="9" font-weight="bold" fill="#1d4ed8" text-anchor="middle">250.0413 g</text>
+          <rect x="115" y="62" width="70" height="7" rx="3" fill="#bfdbfe"/>
+          <text x="150" y="85" font-family="sans-serif" font-size="8" font-weight="bold" fill="#2563eb" text-anchor="middle">7 sig figs</text>
+          <text x="100" y="108" font-family="sans-serif" font-size="8" fill="#475569" text-anchor="middle">Same object — very different precision!</text>
+        </svg>
+      </div>
+    </div>
+    <div class="qty-compare">
+      <div class="qc-title">Same 250 g object, different scales:</div>
+      <div class="qc-row qc-bad"><span class="qc-label">Bathroom scale</span><span class="qc-val">250 g</span><span class="qc-sf">→ <strong>2–3 sig figs</strong> — ambiguous without decimal!</span></div>
+      <div class="qc-row qc-ok"><span class="qc-label">Kitchen scale</span><span class="qc-val">250. g</span><span class="qc-sf">→ <strong>3 sig figs</strong> — decimal confirms precision to 1 g</span></div>
+      <div class="qc-row qc-good"><span class="qc-label">Analytical balance</span><span class="qc-val">250.0413 g</span><span class="qc-sf">→ <strong>7 sig figs</strong> — precision to 0.0001 g</span></div>
+    </div>
+    <div class="qty-warning">⚠️ A pharmacist needs the analytical balance result. Sig figs tell you which instrument was used!</div>
+  </div>
+
+  <!-- Length -->
+  <div class="qty-block qty-length">
+    <div class="qty-header">
+      <div class="qty-icon" style="background:linear-gradient(135deg,#7c3aed,#a855f7);">📏</div>
+      <div><div class="qty-name">Length</div><div class="qty-unit">Unit: meters (m), centimeters (cm), kilometers (km)</div></div>
+    </div>
+    <div class="qty-body">
+      <div class="qty-explain">
+        <p><strong>What is length?</strong> Length measures how far apart two points are in space. Area and volume are both built from length measurements. Tools range from a simple ruler (to mm) to laser meters (to 0.1 mm).</p>
+        <p><strong>Why do sig figs matter here?</strong> A civil engineer writing <strong>1200 m</strong> for a bridge span is dangerously ambiguous. Is it ±50 m or ±0.5 m? For a bridge, that difference could be catastrophic.</p>
+      </div>
+      <div class="qty-visual">
+        <svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:200px;">
+          <text x="100" y="13" font-family="sans-serif" font-size="9" font-weight="bold" fill="#7c3aed" text-anchor="middle">Measuring the same rod</text>
+          <rect x="15" y="22" width="130" height="11" rx="3" fill="#c4b5fd" stroke="#7c3aed" stroke-width="1.5"/>
+          <text x="100" y="48" font-family="sans-serif" font-size="8" fill="#64748b" text-anchor="middle">Ruler — cm only:</text>
+          <rect x="10" y="53" width="180" height="12" rx="3" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+          <g stroke="#92400e" stroke-width="1"><line x1="10" y1="53" x2="10" y2="65"/><line x1="46" y1="53" x2="46" y2="62"/><line x1="82" y1="53" x2="82" y2="65"/><line x1="118" y1="53" x2="118" y2="62"/><line x1="154" y1="53" x2="154" y2="65"/></g>
+          <text x="100" y="80" font-family="sans-serif" font-size="8.5" font-weight="bold" fill="#d97706" text-anchor="middle">Result: 7 cm → 1 sf</text>
+          <text x="100" y="102" font-family="sans-serif" font-size="8" fill="#64748b" text-anchor="middle">Ruler — mm markings:</text>
+          <rect x="10" y="108" width="180" height="12" rx="3" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/>
+          <g stroke="#6d28d9" stroke-width="0.8">
+            <line x1="10" y1="108" x2="10" y2="120"/><line x1="46" y1="108" x2="46" y2="120"/>
+            <line x1="82" y1="108" x2="82" y2="120"/><line x1="118" y1="108" x2="118" y2="120"/>
+            <line x1="154" y1="108" x2="154" y2="120"/>
+            <line x1="28" y1="108" x2="28" y2="115"/><line x1="64" y1="108" x2="64" y2="115"/>
+            <line x1="100" y1="108" x2="100" y2="115"/><line x1="136" y1="108" x2="136" y2="115"/>
+          </g>
+          <text x="100" y="140" font-family="sans-serif" font-size="8.5" font-weight="bold" fill="#7c3aed" text-anchor="middle">Result: 7.4 cm → 2 sf</text>
+          <text x="100" y="155" font-family="sans-serif" font-size="7.5" fill="#475569" text-anchor="middle">Same rod — sig figs show who was careful</text>
+        </svg>
+      </div>
+    </div>
+    <div class="qty-compare">
+      <div class="qc-title">Measuring the same 74 mm rod:</div>
+      <div class="qc-row qc-bad"><span class="qc-label">Rough tape</span><span class="qc-val">7 cm</span><span class="qc-sf">→ <strong>1 sig fig</strong> — precision ±1 cm</span></div>
+      <div class="qc-row qc-ok"><span class="qc-label">School ruler</span><span class="qc-val">7.4 cm</span><span class="qc-sf">→ <strong>2 sig figs</strong> — precision ±1 mm</span></div>
+      <div class="qc-row qc-good"><span class="qc-label">Vernier caliper</span><span class="qc-val">7.40 cm</span><span class="qc-sf">→ <strong>3 sig figs</strong> — precision ±0.1 mm</span></div>
+    </div>
+    <div class="qty-warning">⚠️ For a bridge or satellite, writing the wrong sig figs can mean real engineering errors!</div>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#ede9fe;">📋</div>
+    <h2>The 4 Rules</h2>
+  </div>
+  <div class="rules-grid">
+    <div class="rule-card rc1">
+      <div class="rule-badge rb1">1</div>
+      <div class="rule-body"><strong>The farthest-left non-zero digit is the MOST significant figure.</strong><span>Non-zero digits (1–9) are always significant. The leftmost one starts the count.</span></div>
+      <div class="rule-mini rm1"><span style="color:#1d4ed8">4</span>27</div>
+    </div>
+    <div class="rule-card rc2">
+      <div class="rule-badge rb2">2</div>
+      <div class="rule-body"><strong>NO decimal point → farthest-right non-zero digit is the LEAST significant.</strong><span>Trailing zeros in a plain whole number are just placeholders — they don't count.</span></div>
+      <div class="rule-mini rm2"><span style="color:#92400e">5</span><span style="color:#d1d5db">00</span></div>
+    </div>
+    <div class="rule-card rc3">
+      <div class="rule-badge rb3">3</div>
+      <div class="rule-body"><strong>Decimal point present → farthest-right digit is the LEAST significant — even if it's zero.</strong><span>Writing a decimal point is a deliberate signal: "I measured this precisely."</span></div>
+      <div class="rule-mini rm3"><span style="color:#166534">500.</span></div>
+    </div>
+    <div class="rule-card rc4">
+      <div class="rule-badge rb4">4</div>
+      <div class="rule-body"><strong>All digits BETWEEN the most and least significant are significant — including zeros.</strong><span>A zero sandwiched between non-zero digits was actually measured. It counts.</span></div>
+      <div class="rule-mini rm4">4<span style="color:#a855f7">0</span>3</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fef9c3;">0️⃣</div>
+    <h2>The Zero Problem</h2>
+  </div>
+  <div class="zero-types">
+    <div class="zero-tile zt-lead">
+      <div class="zt-icon">🚫</div><div class="zt-title">Leading Zeros</div>
+      <div class="zt-num"><span style="color:#fca5a5">0.00</span><span style="color:#16a34a;background:#dcfce7;border-radius:4px;padding:0 3px">4</span></div>
+      <div class="zt-rule">NEVER significant<br>Only show where the decimal is</div>
+    </div>
+    <div class="zero-tile zt-trap-no">
+      <div class="zt-icon">⚠️</div><div class="zt-title">Trailing Zeros (no decimal)</div>
+      <div class="zt-num"><span style="color:#16a34a;background:#dcfce7;border-radius:4px;padding:0 3px">5</span><span style="color:#fde68a">00</span></div>
+      <div class="zt-rule">NOT significant<br>Just placeholder digits</div>
+    </div>
+    <div class="zero-tile zt-trap-yes">
+      <div class="zt-icon">✅</div><div class="zt-title">Trailing Zeros (with decimal)</div>
+      <div class="zt-num"><span style="color:#16a34a;background:#dcfce7;border-radius:4px;padding:0 3px">500.</span></div>
+      <div class="zt-rule">ALWAYS significant<br>Decimal = "I measured this!"</div>
+    </div>
+  </div>
+  <div class="spotlight">
+    <h3>🥪 "Sandwiched" Zeros — Always Count!</h3>
+    <div class="digit-row">
+      <div class="digit-block"><div class="digit-char dc-sig">7</div><div class="digit-tag dt-sig">sig</div></div>
+      <div class="digit-block"><div class="digit-char dc-sig">0</div><div class="digit-tag dt-sig">sig ✓</div></div>
+      <div class="digit-block"><div class="digit-char dc-sig">5</div><div class="digit-tag dt-sig">sig</div></div>
+      <div class="digit-block"><div class="digit-char dc-sig">4</div><div class="digit-tag dt-sig">sig</div></div>
+      <div class="digit-block"><div class="digit-char dc-sig">0</div><div class="digit-tag dt-sig">sig ✓</div></div>
+      <div class="digit-block"><div class="digit-char dc-sig">2</div><div class="digit-tag dt-sig">sig</div></div>
+      <div class="digit-block"><div class="digit-char dc-no">0</div><div class="digit-tag dt-no">no</div></div>
+      <div style="color:rgba(255,255,255,0.4);font-size:1.5rem;padding:0 10px;align-self:center">→</div>
+      <div style="color:#bbf7d0;font-weight:800;font-size:1rem;align-self:center;">6 sig figs</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#dcfce7;">🔬</div>
+    <h2>Step-by-Step Examples</h2>
+  </div>
+
+  <div class="example-card">
+    <div class="ex-header"><div class="ex-num">Example 1</div><div class="ex-concept">No decimal · trailing zeros</div></div>
+    <div class="ex-body">
+      <div class="number-display-row">
+        <div class="number-big"><span class="sig">5</span><span class="not-sig">0</span><span class="not-sig">0</span></div>
+        <div class="sig-count-badge" style="background:#dcfce7;color:#166534;"><div class="big-num">1</div><div class="label">sig fig</div></div>
+      </div>
+      <span class="rule-pill rp1">Rule 1</span><span class="rule-pill rp2">Rule 2</span>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Most significant = leftmost non-zero digit = <strong>5</strong></span></div>
+        <div class="step"><div class="step-dot">2</div><span>No decimal point → least significant = rightmost non-zero digit = <strong>5</strong> (same!)</span></div>
+        <div class="step"><div class="step-dot">3</div><span>Only the <strong>5</strong> is between those boundaries. The two zeros are placeholder digits only.</span></div>
+      </div>
+      <div class="explanation">💡 500 could mean "about five hundred". If you measured exactly 500, write <strong>500.</strong> or <strong>5.00 × 10²</strong> to show all 3 digits count.</div>
+    </div>
+  </div>
+
+  <div class="example-card">
+    <div class="ex-header"><div class="ex-num">Example 2</div><div class="ex-concept">Decimal point added · same digits, different meaning</div></div>
+    <div class="ex-body">
+      <div class="number-display-row">
+        <div class="number-big"><span class="sig">5</span><span class="sig">0</span><span class="sig">0</span><span class="dp">.</span></div>
+        <div class="sig-count-badge" style="background:#dcfce7;color:#166534;"><div class="big-num">3</div><div class="label">sig figs</div></div>
+      </div>
+      <span class="rule-pill rp3">Rule 3</span>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Most significant = <strong>5</strong></span></div>
+        <div class="step"><div class="step-dot">2</div><span>Decimal point present → least significant = rightmost digit = the second zero</span></div>
+        <div class="step"><div class="step-dot">3</div><span>All three digits (5, 0, 0) count!</span></div>
+      </div>
+      <div class="explanation">💡 That tiny dot after 500 tells the reader: "I measured this to the ones place." One dot = three sig figs instead of one.</div>
+    </div>
+  </div>
+
+  <div class="example-card">
+    <div class="ex-header"><div class="ex-num">Example 3</div><div class="ex-concept">Sandwiched zeros · large number</div></div>
+    <div class="ex-body">
+      <div class="number-display-row">
+        <div class="number-big"><span class="sig">7</span><span class="sig">0</span><span class="sig">5</span><span class="sig">4</span><span class="sig">0</span><span class="sig">2</span><span class="not-sig">0</span></div>
+        <div class="sig-count-badge" style="background:#dcfce7;color:#166534;"><div class="big-num">6</div><div class="label">sig figs</div></div>
+      </div>
+      <span class="rule-pill rp1">Rule 1</span><span class="rule-pill rp2">Rule 2</span><span class="rule-pill rp4">Rule 4</span>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Most significant = <strong>7</strong></span></div>
+        <div class="step"><div class="step-dot">2</div><span>No decimal → least significant = rightmost non-zero = <strong>2</strong></span></div>
+        <div class="step"><div class="step-dot">3</div><span>Zeros between 7 and 2 are sandwiched → all significant</span></div>
+        <div class="step"><div class="step-dot">4</div><span>Final zero (after 2) is outside the boundary → NOT significant</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="example-card">
+    <div class="ex-header"><div class="ex-num">Example 4</div><div class="ex-concept">Decimal number · trailing zero counts</div></div>
+    <div class="ex-body">
+      <div class="number-display-row">
+        <div class="number-big"><span class="sig">8</span><span class="sig">0</span><span class="dp">.</span><span class="sig">0</span><span class="sig">4</span><span class="sig">0</span></div>
+        <div class="sig-count-badge" style="background:#dcfce7;color:#166534;"><div class="big-num">5</div><div class="label">sig figs</div></div>
+      </div>
+      <span class="rule-pill rp1">Rule 1</span><span class="rule-pill rp3">Rule 3</span><span class="rule-pill rp4">Rule 4</span>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Most significant = <strong>8</strong></span></div>
+        <div class="step"><div class="step-dot">2</div><span>Decimal present → least significant = trailing <strong>0</strong></span></div>
+        <div class="step"><div class="step-dot">3</div><span>8, 0, 0, 4, 0 → <strong>5 sig figs</strong></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="example-card">
+    <div class="ex-header"><div class="ex-num">Example 5</div><div class="ex-concept">Leading zeros · never count</div></div>
+    <div class="ex-body">
+      <div class="number-display-row">
+        <div class="number-big"><span class="not-sig">0</span><span class="dp">.</span><span class="not-sig">0</span><span class="not-sig">0</span><span class="sig">4</span><span class="sig">0</span><span class="sig">7</span><span class="sig">0</span></div>
+        <div class="sig-count-badge" style="background:#dcfce7;color:#166534;"><div class="big-num">4</div><div class="label">sig figs</div></div>
+      </div>
+      <span class="rule-pill rp1">Rule 1</span><span class="rule-pill rp3">Rule 3</span>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Leading zeros (0.00) just position the decimal — NEVER significant</span></div>
+        <div class="step"><div class="step-dot">2</div><span>Most significant = first non-zero digit = <strong>4</strong></span></div>
+        <div class="step"><div class="step-dot">3</div><span>Decimal present → least significant = trailing <strong>0</strong></span></div>
+        <div class="step"><div class="step-dot">4</div><span>4, 0, 7, 0 → <strong>4 sig figs</strong></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="example-card">
+    <div class="ex-header"><div class="ex-num">Example 6</div><div class="ex-concept">Scientific notation · coefficient only</div></div>
+    <div class="ex-body">
+      <div class="number-display-row">
+        <div class="number-big"><span class="sig">5</span><span class="dp">.</span><span class="sig">0</span><span class="sig">8</span> &times; 10<sup style="font-size:1.2rem">5</sup></div>
+        <div class="sig-count-badge" style="background:#dcfce7;color:#166534;"><div class="big-num">3</div><div class="label">sig figs</div></div>
+      </div>
+      <span class="rule-pill rp4">Sci Notation</span><span class="rule-pill rp4">Rule 4</span>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Only count digits in the <strong>coefficient</strong> (before × 10)</span></div>
+        <div class="step"><div class="step-dot">2</div><span>Coefficient = 5.08 → 3 digits, all significant</span></div>
+        <div class="step"><div class="step-dot">3</div><span>The × 10⁵ tells you the magnitude, not the precision</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fef3c7;">⚡</div>
+    <h2>Quick-Reference Cheat Sheet</h2>
+  </div>
+  <div class="cheat-cards">
+    <div class="cheat-card cc-always"><div class="cc-icon">✅</div><div class="cc-body"><h4 class="always-txt">Non-zero digits (1–9)</h4><div class="cc-example"><span class="sig">4</span><span class="sig">7</span><span class="sig">3</span></div><p>Always significant — no exceptions.</p></div></div>
+    <div class="cheat-card cc-always"><div class="cc-icon">✅</div><div class="cc-body"><h4 class="always-txt">Sandwiched zeros</h4><div class="cc-example"><span class="sig">4</span><span class="sig">0</span><span class="sig">3</span></div><p>Zero between non-zeros = always significant (Rule 4).</p></div></div>
+    <div class="cheat-card cc-never"><div class="cc-icon">❌</div><div class="cc-body"><h4 class="never-txt">Leading zeros</h4><div class="cc-example"><span class="not-sig">0.00</span><span class="sig">4</span></div><p>Never significant — just placeholders.</p></div></div>
+    <div class="cheat-card cc-check"><div class="cc-icon">⚠️</div><div class="cc-body"><h4 class="check-txt">Trailing zeros — no decimal</h4><div class="cc-example"><span class="sig">5</span><span class="not-sig">00</span></div><p>NOT significant. Use sci notation to clarify.</p></div></div>
+    <div class="cheat-card cc-always" style="grid-column:span 2;"><div class="cc-icon">✅</div><div class="cc-body"><h4 class="always-txt">Trailing zeros — WITH decimal point</h4><div class="cc-example"><span class="sig">5</span><span class="sig">0</span><span class="sig">0</span><span class="dp">.</span> &nbsp;&nbsp; <span class="sig">8</span><span class="dp">.</span><span class="sig">0</span><span class="sig">0</span></div><p>Significant! The decimal point signals precision (Rule 3).</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fef9c3;">🔭</div>
+    <h2>Scientific Notation &amp; Sig Figs</h2>
+  </div>
+  <div class="sci-zone">
+    <h3>🔑 The Golden Rule</h3>
+    <p style="color:#78350f;margin-bottom:0;">Only the digits in the <strong>coefficient</strong> count. The power of 10 describes size, not precision.</p>
+    <div class="sci-demo">
+      <div class="sci-num"><span class="sig">3</span><span class="dp">.</span><span class="sig">0</span><span class="sig">6</span><span class="sig">0</span> &nbsp;<span style="color:#94a3b8">×</span>&nbsp; <span style="color:#94a3b8">10<sup>4</sup></span></div>
+      <div class="sci-arrow">→</div>
+      <div class="sci-breakdown">
+        <div class="row"><span class="sci-tag st-coef">Coefficient 3.060</span> → 4 sig figs</div>
+        <div class="row"><span class="sci-tag st-pow">Power 10⁴</span> → does NOT count</div>
+      </div>
+    </div>
+    <div class="sci-tip">💡 <strong>Pro tip:</strong> Instead of writing <strong>5000</strong> (ambiguous), write: 5 × 10³ (1 sf) · 5.0 × 10³ (2 sf) · 5.00 × 10³ (3 sf) · 5.000 × 10³ (4 sf)</div>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#ede9fe;">🧠</div>
+    <h2>Memory Tricks</h2>
+  </div>
+  <div class="memory-grid">
+    <div class="memory-card"><div class="mc-emoji">🏖️</div><h4>Pacific / Atlantic Rule</h4><p>Decimal <strong>P</strong>resent → start from <strong>P</strong>acific (left). Decimal <strong>A</strong>bsent → start from <strong>A</strong>tlantic (right). Count from the first non-zero digit inward.</p></div>
+    <div class="memory-card"><div class="mc-emoji">🥪</div><h4>The Sandwich Zero</h4><p>A zero between two non-zero digits is like filling in a sandwich — it's always there, always counts. 4<strong>0</strong>3, 5<strong>00</strong>2 — all trapped zeros count.</p></div>
+    <div class="memory-card"><div class="mc-emoji">🔬</div><h4>Sci Notation = No Ambiguity</h4><p>Convert to sci notation and leading zeros vanish. Trailing zeros in the coefficient are always significant. No guessing needed!</p></div>
+    <div class="memory-card"><div class="mc-emoji">📍</div><h4>The Decimal Dot Signal</h4><p>That little dot is a signal: <em>"I was careful — every digit shown is real."</em> 500 ≠ 500. — they tell different stories about precision.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="quiz-section">
+    <h3>⚡ Quick Check — Test Yourself!</h3>
+    <p>Click the correct number of significant figures.</p>
+    <div class="quiz-q" id="q1">
+      <div class="qtext">How many significant figures?</div>
+      <div class="qnum">0.00300</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q1',false,'2','Leading zeros never count. Decimal present so 3, 0, 0 all count → 3 sig figs.')">2</button>
+        <button class="opt-btn" onclick="check(this,'q1',true,'3','Correct! 0.00 are leading zeros. Decimal present → 3, 0, 0 are all significant.')">3</button>
+        <button class="opt-btn" onclick="check(this,'q1',false,'5','The leading zeros 0.00 never count.')">5</button>
+        <button class="opt-btn" onclick="check(this,'q1',false,'6','Way too many! Leading zeros are never significant.')">6</button>
+      </div>
+      <div class="feedback" id="q1-fb"></div>
+    </div>
+    <div class="quiz-q" id="q2">
+      <div class="qtext">How many significant figures?</div>
+      <div class="qnum">7040</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q2',false,'2','Count from 7 to 4 — the zero between them is sandwiched and counts too.')">2</button>
+        <button class="opt-btn" onclick="check(this,'q2',true,'3','Correct! No decimal → least significant is 4. Digits 7, 0, 4 → 3 sig figs. Trailing zero not counted.')">3</button>
+        <button class="opt-btn" onclick="check(this,'q2',false,'4','The trailing zero does NOT count — there is no decimal point.')">4</button>
+        <button class="opt-btn" onclick="check(this,'q2',false,'1','The zero between 7 and 4 IS significant — it\'s sandwiched!')">1</button>
+      </div>
+      <div class="feedback" id="q2-fb"></div>
+    </div>
+    <div class="quiz-q" id="q3">
+      <div class="qtext">How many significant figures?</div>
+      <div class="qnum">4.050 × 10²</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q3',false,'2','You may have missed the trailing zero. Decimal present → all digits in coefficient count.')">2</button>
+        <button class="opt-btn" onclick="check(this,'q3',false,'3','Count again: 4, 0, 5, 0 — don\'t forget the trailing zero after decimal.')">3</button>
+        <button class="opt-btn" onclick="check(this,'q3',true,'4','Correct! Coefficient is 4.050. Decimal present → 4, 0, 5, 0 all count → 4 sig figs.')">4</button>
+        <button class="opt-btn" onclick="check(this,'q3',false,'5','The × 10² does not count. Only the coefficient 4.050 matters.')">5</button>
+      </div>
+      <div class="feedback" id="q3-fb"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer>Physics · High School &nbsp;·&nbsp; Unit 1: Significant Figures &nbsp;·&nbsp; 🟢 = significant &nbsp; ⬜ = not significant</footer>
+<script>
+function check(btn,qid,correct,label,msg){
+  var q=document.getElementById(qid);
+  var fb=document.getElementById(qid+'-fb');
+  q.querySelectorAll('.opt-btn').forEach(function(b){b.disabled=true;b.style.opacity='0.55';b.style.cursor='default';});
+  btn.style.opacity='1';
+  btn.classList.add(correct?'correct':'wrong');
+  if(!correct){var ans={q1:'3',q2:'3',q3:'4'};q.querySelectorAll('.opt-btn').forEach(function(b){if(b.textContent.trim()===ans[qid]){b.classList.add('correct');b.style.opacity='1';}});}
+  fb.textContent=(correct?'✅ ':'❌ ')+msg;
+  fb.className='feedback show '+(correct?'ok':'bad');
+}
+</script>
+</body>
+</html>

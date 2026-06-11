@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Unit 10 · Kinematics Transition — Classwork</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --blue:#3b82f6;
+    --green:#22c55e;
+    --amber:#f59e0b;
+    --red:#ef4444;
+    --dark:#0f172a;
+    --bg:#f8faff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Nunito',sans-serif;
+    background-color:var(--bg);
+    background-image:radial-gradient(circle,#cbd5e1 1px,transparent 1px);
+    background-size:28px 28px;
+    color:var(--dark);
+    min-height:100vh;
+  }
+
+  /* GATE */
+  #gate{
+    position:fixed;inset:0;
+    background:linear-gradient(135deg,#0f172a,#1e3a5f);
+    display:flex;align-items:center;justify-content:center;
+    z-index:9999;
+  }
+  .gate-card{
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:20px;padding:48px 56px;
+    text-align:center;max-width:420px;width:90%;
+  }
+  .gate-card h2{color:#e2e8f0;font-size:1.5rem;margin-bottom:8px;}
+  .gate-card p{color:#94a3b8;font-size:.9rem;margin-bottom:28px;}
+  .gate-card input{
+    width:100%;padding:12px 16px;border-radius:10px;
+    border:1px solid rgba(255,255,255,.2);
+    background:rgba(255,255,255,.1);color:#f1f5f9;
+    font-family:'Space Mono',monospace;font-size:1rem;
+    outline:none;margin-bottom:16px;text-align:center;letter-spacing:3px;
+  }
+  .gate-card input::placeholder{letter-spacing:normal;color:#64748b;}
+  .gate-btn{
+    width:100%;padding:13px;
+    background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+    color:#fff;border:none;border-radius:10px;
+    font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;
+    cursor:pointer;transition:opacity .2s;
+  }
+  .gate-btn:hover{opacity:.85;}
+  .gate-err{color:#f87171;font-size:.85rem;margin-top:12px;min-height:20px;}
+
+  /* HERO */
+  .hero{
+    background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 100%);
+    padding:52px 24px 44px;
+    text-align:center;
+    position:relative;overflow:hidden;
+  }
+  .chip{
+    display:inline-block;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.25);
+    border-radius:999px;padding:5px 18px;
+    color:#bfdbfe;font-family:'Space Mono',monospace;
+    font-size:.75rem;letter-spacing:.08em;margin-bottom:18px;
+  }
+  .hero h1{
+    font-size:clamp(1.6rem,4vw,2.4rem);
+    font-weight:900;
+    background:linear-gradient(90deg,#bfdbfe,#ffffff,#bfdbfe);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;line-height:1.2;
+    max-width:680px;margin:0 auto 10px;
+  }
+  .hero-sub{color:#93c5fd;font-size:.95rem;font-weight:600;}
+
+  /* NAME BAR */
+  .name-bar{
+    background:#fff;
+    border-bottom:2px solid #e2e8f0;
+    padding:18px 24px;
+    display:flex;flex-wrap:wrap;gap:16px;
+    max-width:960px;margin:0 auto;
+  }
+  .name-field{
+    display:flex;align-items:center;gap:8px;
+    flex:1;min-width:160px;
+  }
+  .name-field label{
+    font-size:.8rem;font-weight:700;
+    color:#64748b;text-transform:uppercase;
+    letter-spacing:.06em;white-space:nowrap;
+  }
+  .name-field input{
+    flex:1;border:none;border-bottom:2px solid #e2e8f0;
+    background:transparent;padding:4px 6px;
+    font-family:'Nunito',sans-serif;font-size:.95rem;
+    color:var(--dark);outline:none;
+    transition:border-color .2s;
+  }
+  .name-field input:focus{border-bottom-color:var(--blue);}
+
+  /* MAIN */
+  .main{max-width:960px;margin:0 auto;padding:32px 20px 80px;}
+
+  /* REF BOX */
+  .ref-box{
+    background:linear-gradient(135deg,#0f172a,#1e3a5f);
+    border-radius:14px;padding:20px 24px;
+    margin-bottom:32px;
+    display:flex;flex-wrap:wrap;gap:16px;
+    align-items:center;justify-content:center;
+  }
+  .ref-item{
+    text-align:center;
+    padding:10px 20px;
+    background:rgba(255,255,255,.08);
+    border-radius:10px;border:1px solid rgba(255,255,255,.12);
+  }
+  .ref-item .ref-lbl{
+    font-family:'Space Mono',monospace;font-size:.65rem;
+    text-transform:uppercase;letter-spacing:.1em;color:#93c5fd;
+    margin-bottom:6px;
+  }
+  .ref-item .ref-eq{
+    font-family:'Space Mono',monospace;font-size:.95rem;
+    font-weight:700;color:#fff;
+  }
+
+  /* SECTION HEADERS */
+  .sec-head{
+    display:flex;align-items:center;gap:10px;
+    margin:36px 0 16px;
+    padding-bottom:10px;
+    border-bottom:2px solid #e2e8f0;
+  }
+  .sec-badge{
+    background:linear-gradient(135deg,var(--blue),#1d4ed8);
+    color:#fff;border-radius:8px;
+    padding:4px 14px;
+    font-family:'Space Mono',monospace;
+    font-size:.75rem;font-weight:700;
+  }
+  .sec-head h2{font-size:1.1rem;font-weight:800;}
+
+  /* PROBLEM CARDS */
+  .prob-card{
+    background:#fff;
+    border-radius:14px;
+    border:1px solid #e2e8f0;
+    padding:22px 24px;
+    margin-bottom:16px;
+    box-shadow:0 1px 6px rgba(15,23,42,.05);
+  }
+  .prob-num{
+    font-family:'Space Mono',monospace;
+    font-size:.72rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.08em;
+    color:#64748b;margin-bottom:8px;
+  }
+  .prob-text{font-size:.94rem;line-height:1.75;color:#1e293b;}
+
+  /* WORK SPACE */
+  .workspace{
+    margin-top:14px;
+    border:1.5px dashed #cbd5e1;
+    border-radius:8px;
+    min-height:90px;
+    background:repeating-linear-gradient(transparent,transparent 28px,#e2e8f0 28px,#e2e8f0 29px);
+    padding:8px 12px;
+  }
+  .workspace-lbl{
+    font-size:.72rem;color:#94a3b8;font-weight:700;
+    text-transform:uppercase;letter-spacing:.06em;
+  }
+
+  /* GRAPH PLACEHOLDER */
+  .graph-placeholder{
+    margin-top:14px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  .gp-box{
+    border:1.5px dashed #cbd5e1;
+    border-radius:8px;
+    background:#fafafa;
+    min-height:100px;
+    display:flex;align-items:center;justify-content:center;
+    flex-direction:column;gap:6px;
+  }
+  .gp-box svg{display:block;}
+  .gp-label{font-size:.72rem;color:#94a3b8;font-weight:700;text-align:center;}
+
+  /* MULTIPLE CHOICE */
+  .mc-opts{display:flex;flex-direction:column;gap:6px;margin-top:12px;}
+  .mc-opt{
+    display:flex;align-items:flex-start;gap:8px;
+    font-size:.9rem;color:#1e293b;
+    padding:8px 12px;
+    border:1.5px solid #e2e8f0;
+    border-radius:8px;
+    background:#fafafa;
+  }
+  .mc-opt span{flex-shrink:0;font-family:'Space Mono',monospace;font-weight:700;color:#64748b;font-size:.8rem;}
+
+  /* SHORT ANSWER */
+  .sa-line{
+    margin-top:10px;
+    border:none;border-bottom:1.5px solid #cbd5e1;
+    background:transparent;width:100%;padding:6px 4px;
+    font-family:'Nunito',sans-serif;font-size:.93rem;
+    color:var(--dark);outline:none;display:block;
+  }
+  .sa-line:focus{border-bottom-color:var(--blue);}
+
+  /* ANSWER KEY */
+  .ak-toggle{
+    display:flex;align-items:center;justify-content:space-between;
+    cursor:pointer;user-select:none;
+    background:linear-gradient(135deg,#0f172a,#1e3a5f);
+    color:#fff;border-radius:12px;
+    padding:14px 22px;margin-top:40px;
+  }
+  .ak-toggle span{font-weight:800;font-size:1rem;}
+  .ak-toggle .ak-arrow{font-size:1.2rem;transition:transform .3s;}
+  .ak-toggle.open .ak-arrow{transform:rotate(180deg);}
+  .ak-body{
+    display:none;
+    background:#fff;
+    border:1.5px solid #e2e8f0;
+    border-top:none;
+    border-radius:0 0 12px 12px;
+    padding:24px;
+  }
+  .ak-body.visible{display:block;}
+  .ak-item{margin-bottom:18px;}
+  .ak-item h4{
+    font-family:'Space Mono',monospace;font-size:.75rem;
+    text-transform:uppercase;letter-spacing:.08em;
+    color:#64748b;margin-bottom:6px;
+  }
+  .ak-item p{font-size:.9rem;line-height:1.75;color:#1e293b;}
+  .ak-item .ans{
+    display:inline-block;
+    background:#f0fdf4;
+    border:1px solid #bbf7d0;
+    border-radius:6px;
+    padding:2px 10px;
+    font-family:'Space Mono',monospace;
+    font-size:.85rem;font-weight:700;
+    color:#166534;
+    margin-right:6px;
+  }
+  .ak-divider{border:none;border-top:1px solid #e2e8f0;margin:16px 0;}
+
+  /* SVG GRAPH HELPERS */
+  svg.prob-graph{display:block;}
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="gate-card">
+    <h2>Physics Portal</h2>
+    <p>Enter the class password to continue.</p>
+    <input type="password" id="pw-input" placeholder="Enter password" autofocus/>
+    <button class="gate-btn" onclick="checkPW()">Unlock</button>
+    <div class="gate-err" id="pw-err"></div>
+  </div>
+</div>
+<script>
+(function(){
+  const key='pg_ok',encoded=btoa('physics2024');
+  if(localStorage.getItem(key)===encoded) document.getElementById('gate').style.display='none';
+  window.checkPW=function(){
+    const v=document.getElementById('pw-input').value;
+    if(btoa(v)===encoded){localStorage.setItem(key,encoded);document.getElementById('gate').style.display='none';}
+    else document.getElementById('pw-err').textContent='Incorrect password. Try again.';
+  };
+  document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.getElementById('gate').style.display!=='none')checkPW();});
+})();
+</script>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="chip">Kinematics · Unit 10 · Classwork</div>
+  <h1>Translating Kinematics Graphs</h1>
+  <p class="hero-sub">Position, Velocity &amp; Acceleration Graph Conversions</p>
+</header>
+
+<!-- NAME BAR -->
+<div class="name-bar">
+  <div class="name-field">
+    <label>Name</label>
+    <input type="text" placeholder="Your full name"/>
+  </div>
+  <div class="name-field">
+    <label>Date</label>
+    <input type="text" placeholder="MM / DD / YYYY"/>
+  </div>
+  <div class="name-field" style="flex:0 0 120px;">
+    <label>Period</label>
+    <input type="text" placeholder="Period"/>
+  </div>
+</div>
+
+<main class="main">
+
+  <!-- REFERENCE BOX -->
+  <div class="ref-box">
+    <div class="ref-item">
+      <div class="ref-lbl">p vs t</div>
+      <div class="ref-eq">slope = v</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-lbl">v vs t</div>
+      <div class="ref-eq">slope = a &nbsp;|&nbsp; area = Δp</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-lbl">a vs t</div>
+      <div class="ref-eq">area = Δv</div>
+    </div>
+  </div>
+
+  <!-- ===== PART A ===== -->
+  <div class="sec-head">
+    <div class="sec-badge">Part A</div>
+    <h2>Graph Reading &amp; Matching (6 problems)</h2>
+  </div>
+  <p style="font-size:.88rem;color:#475569;margin-bottom:18px;">
+    Read each description carefully. Circle or underline the best answer, and briefly justify your choice.
+  </p>
+
+  <div class="prob-card">
+    <div class="prob-num">Problem A-1</div>
+    <div class="prob-text">
+      A position–time graph shows a straight line that goes from p = 2 m at t = 0 s to p = 10 m at t = 4 s.
+      What is the velocity of the object?
+    </div>
+    <div class="mc-opts">
+      <div class="mc-opt"><span>A)</span> v = 0 m/s — the line is horizontal</div>
+      <div class="mc-opt"><span>B)</span> v = +2 m/s — it is the starting position</div>
+      <div class="mc-opt"><span>C)</span> v = +2 m/s constant — slope = (10−2)/(4−0) = 2 m/s</div>
+      <div class="mc-opt"><span>D)</span> v = −2 m/s — the slope is negative</div>
+    </div>
+    <div class="workspace">
+      <div class="workspace-lbl">Work / Justification</div>
+    </div>
+  </div>
+
+  <div class="prob-card">
+    <div class="prob-num">Problem A-2</div>
+    <div class="prob-text">
+      A position–time graph shows a curve that starts steep and gradually becomes flatter (concave down).
+      Which velocity–time graph matches this motion?
+    </div>
+    <div class="mc-opts">
+      <div class="mc-opt"><span>A)</span> A horizontal line at a positive velocity</div>
+      <div class="mc-opt"><span>B)</span> A line with positive slope (velocity increasing)</div>
+      <div class="mc-opt"><span>C)</span> A line with negative slope starting positive and decreasing toward zero</div>
+      <div class="mc-opt"><span>D)</span> A horizontal line at v = 0</div>
+    </div>
+    <div class="workspace">
+      <div class="workspace-lbl">Work / Justification</div>
+    </div>
+  </div>
+
+  <div class="prob-card">
+    <div class="prob-num">Problem A-3</div>
+    <div class="prob-text">
+      A velocity–time graph shows three horizontal segments: v = +6 m/s from t = 0 to 2 s,
+      v = 0 m/s from t = 2 to 4 s, and v = −4 m/s from t = 4 to 6 s.
+      Describe in words what the corresponding position–time graph looks like.
+    </div>
+    <input class="sa-line" type="text" placeholder="Describe segment 1 (0–2s) ..."/>
+    <input class="sa-line" type="text" placeholder="Describe segment 2 (2–4s) ..."/>
+    <input class="sa-line" type="text" placeholder="Describe segment 3 (4–6s) ..."/>
+  </div>
+
+  <div class="prob-card">
+    <div class="prob-num">Problem A-4</div>
+    <div class="prob-text">
+      The velocity–time graph for a car shows a straight line from v = 20 m/s at t = 0 to v = 0 m/s at t = 5 s.
+      What is the acceleration of the car?
+    </div>
+    <div class="mc-opts">
+      <div class="mc-opt"><span>A)</span> a = +4 m/s²</div>
+      <div class="mc-opt"><span>B)</span> a = −4 m/s²</div>
+      <div class="mc-opt"><span>C)</span> a = +20 m/s²</div>
+      <div class="mc-opt"><span>D)</span> a = 0 m/s²</div>
+    </div>
+    <div class="workspace"><div class="workspace-lbl">Work</div></div>
+  </div>
+
+  <div class="prob-card">
+    <div class="prob-num">Problem A-5</div>
+    <div class="prob-text">
+      An acceleration–time graph shows a constant positive block at a = +3 m/s² from t = 0 to t = 5 s.
+      The object starts from rest (v₀ = 0). What is the final velocity at t = 5 s?
+    </div>
+    <div class="mc-opts">
+      <div class="mc-opt"><span>A)</span> 3 m/s</div>
+      <div class="mc-opt"><span>B)</span> 8 m/s</div>
+      <div class="mc-opt"><span>C)</span> 15 m/s</div>
+      <div class="mc-opt"><span>D)</span> 0 m/s</div>
+    </div>
+    <div class="workspace"><div class="workspace-lbl">Work (area = Δv)</div></div>
+  </div>
+
+  <div class="prob-card">
+    <div class="prob-num">Problem A-6</div>
+    <div class="prob-text">
+      A velocity–time graph shows a triangle: starting at v = 0, rising linearly to v = 8 m/s at t = 4 s,
+      then falling back to v = 0 at t = 8 s. What is the total displacement from t = 0 to t = 8 s?
+    </div>
+    <div class="mc-opts">
+      <div class="mc-opt"><span>A)</span> 8 m</div>
+      <div class="mc-opt"><span>B)</span> 16 m</div>
+      <div class="mc-opt"><span>C)</span> 32 m</div>
+      <div class="mc-opt"><span>D)</span> 64 m</div>
+    </div>
+    <div class="workspace"><div class="workspace-lbl">Work (area of triangle)</div></div>
+  </div>
+
+  <!-- ===== PART B ===== -->
+  <div class="sec-head">
+    <div class="sec-badge">Part B</div>
+    <h2>Full Graph Conversions (4 problems)</h2>
+  </div>
+  <p style="font-size:.88rem;color:#475569;margin-bottom:18px;">
+    Each problem provides a described source graph. Sketch the resulting graph in the blank axes provided,
+    then label key features (slopes, values, intercepts).
+  </p>
+
+  <div class="prob-card">
+    <div class="prob-num">Problem B-1 — PT to VT</div>
+    <div class="prob-text">
+      The position–time graph shows:
+      <br>• Segment 1 (t = 0–3 s): steep positive slope — position increases from 0 to 12 m
+      <br>• Segment 2 (t = 3–6 s): zero slope — position stays at 12 m
+      <br>• Segment 3 (t = 6–9 s): gentle negative slope — position decreases from 12 m to 6 m
+      <br><br>Sketch the corresponding velocity–time graph in the right box. Label the velocity value for each segment.
+    </div>
+    <div class="graph-placeholder">
+      <div class="gp-box">
+        <!-- Source PT graph -->
+        <svg width="160" height="120" viewBox="0 0 160 120">
+          <line x1="15" y1="110" x2="150" y2="110" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="15" y1="10" x2="15" y2="110" stroke="#cbd5e1" stroke-width="1.5"/>
+          <!-- grid lines -->
+          <line x1="55" y1="10" x2="55" y2="110" stroke="#f1f5f9" stroke-width="1"/>
+          <line x1="95" y1="10" x2="95" y2="110" stroke="#f1f5f9" stroke-width="1"/>
+          <line x1="135" y1="10" x2="135" y2="110" stroke="#f1f5f9" stroke-width="1"/>
+          <!-- axis labels -->
+          <text x="82" y="118" text-anchor="middle" font-size="9" fill="#94a3b8">t (s)</text>
+          <text x="9" y="60" text-anchor="middle" font-size="9" fill="#94a3b8" transform="rotate(-90,9,60)">p (m)</text>
+          <text x="55" y="118" text-anchor="middle" font-size="8" fill="#94a3b8">3</text>
+          <text x="95" y="118" text-anchor="middle" font-size="8" fill="#94a3b8">6</text>
+          <text x="135" y="118" text-anchor="middle" font-size="8" fill="#94a3b8">9</text>
+          <!-- p-values -->
+          <text x="12" y="110" text-anchor="end" font-size="8" fill="#94a3b8">0</text>
+          <text x="12" y="60" text-anchor="end" font-size="8" fill="#94a3b8">12</text>
+          <text x="12" y="83" text-anchor="end" font-size="8" fill="#94a3b8">6</text>
+          <!-- graph line -->
+          <polyline points="15,110 55,60 95,60 135,83" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linejoin="round"/>
+        </svg>
+        <div class="gp-label">Given: p vs t</div>
+      </div>
+      <div class="gp-box">
+        <!-- blank VT axes -->
+        <svg width="160" height="120" viewBox="0 0 160 120">
+          <line x1="15" y1="110" x2="150" y2="110" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="15" y1="10" x2="15" y2="110" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="15" y1="60" x2="150" y2="60" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="55" y1="10" x2="55" y2="110" stroke="#f1f5f9" stroke-width="1"/>
+          <line x1="95" y1="10" x2="95" y2="110" stroke="#f1f5f9" stroke-width="1"/>
+          <line x1="135" y1="10" x2="135" y2="110" stroke="#f1f5f9" stroke-width="1"/>
+          <text x="82" y="118" text-anchor="middle" font-size="9" fill="#94a3b8">t (s)</text>
+          <text x="9" y="60" text-anchor="middle" font-size="9" fill="#94a3b8" transform="rotate(-90,9,60)">v (m/s)</text>
+          <text x="55" y="118" text-anchor="middle" font-size="8" fill="#94a3b8">3</text>
+          <text x="95" y="118" text-anchor="middle" font-size="8" fill="#94a3b8">6</text>
+          <text x="135" y="118" text-anchor="middle" font-size="8" fill="#94a3b8">9</text>
+          <text x="12" y="110" text-anchor="end" font-size="8" fill="#94a3b8">0</text>
+        </svg>
+        <div class="gp-label">Draw: v vs t</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-card">
+    <div class="prob-num">Problem B-2 — VT to PT</div>
+    <div class="prob-text">
+      The velocity–time graph shows a constant velocity of v = −3 m/s from t = 0 to t = 6 s.
+      The object starts at position p₀ = 15 m.
+      <br><br>Sketch the position–time graph. Label the starting and ending positions.
+    </div>
+    <div class="graph-placeholder">
+      <div class="gp-box">
+        <svg width="160" height="120" viewBox="0 0 160 120">
+          <line x1="15" y1="110" x2="150" y2="110" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="15" y1="10" x2="15" y2="110" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="15" y1="60" x2="150" y2="60" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+          <text x="82" y="118" text-anchor="middle" font-size="9" fill="#94a3b8">t (s)</text>
+          <text x="9" y="60" text-anchor="middle" font-size="9" fill="#94a3b8" transform="rotate(-90,9,60)">v (m/s)</text>
+          <text x="150" y="118" text-anchor="middle" font-size="8" fill="#94a3b8">6</text>
+          <text x="12" y="60" text-anchor="end" font-size="8" fill="#94a3b8">0</text>
+          <text x="12" y="80" text-anchor="end" font-size="8" fill="#94a3b8">−3</text>
+          <!-- v = -3 line -->
+          <line x1="15" y1="80" x2="150" y2="80" stroke="#22c55e" stroke-width="2.5"/>
+        </svg>
+        <div class="gp-label">Given: v vs t</div>
+      </div>
+      <div class="gp-box">
+        <svg width="160" height="120" viewBox="0 0 160 120">
+          <line x1="15" y1="110" x2="150" y2="110" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="15" y1="10" x2="15" y2="110" stroke="#cbd5e1" stroke-width="1.5"/>
+          <text x="82" y="118" text-anchor="middle" font-size="9" fill="#94a3b8">t (s)</text>
+          <text x="9" y="60" text-anchor="middle" font-size="9" fill="#94a3b8" transform="rotate(-90,9,60)">p (m)</text>
+          <text x="150" y="118" text-anchor="middle" font-size="8" fill="#94a3b8">6</text>
+        </svg>
+        <div class="gp-label">Draw: p vs t</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-card">
+    <div class="prob-num">Problem B-3 — VT to AT</div>
+    <div class="prob-text">
+      The velocity–time graph shows a straight line from v = +12 m/s at t = 0 to v = −6 m/s at t = 6 s.
+      <br><br>a) Calculate the slope (acceleration).
+      <br>b) Sketch the corresponding acceleration–time graph. Label the value on the vertical axis.
+    </div>
+    <div class="workspace"><div class="workspace-lbl">a) Calculate acceleration (slope = Δv / Δt)</div></div>
+    <div class="graph-placeholder">
+      <div class="gp-box">
+        <svg width="160" height="120" viewBox="0 0 160 120">
+          <line x1="15" y1="110" x2="150" y2="110" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="15" y1="10" x2="15" y2="110" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="15" y1="60" x2="150" y2="60" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+          <text x="82" y="118" text-anchor="middle" font-size="9" fill="#94a3b8">t (s)</text>
+          <text x="9" y="60" text-anchor="middle" font-size="9" fill="#94a3b8" transform="rotate(-90,9,60)">v (m/s)</text>
+          <text x="12" y="30" text-anchor="end" font-size="8" fill="#94a3b8">12</text>
+          <text x="12" y="82" text-anchor="end" font-size="8" fill="#94a3b8">−6</text>
+          <text x="150" y="118" text-anchor="middle" font-size="8" fill="#94a3b8">6</text>
+          <line x1="15" y1="28" x2="150" y2="82" stroke="#22c55e" stroke-width="2.5"/>
+        </svg>
+        <div class="gp-label">Given: v vs t</div>
+      </div>
+      <div class="gp-box">
+        <svg width="160" height="120" viewBox="0 0 160 120">
+          <line x1="15" y1="110" x2="150" y2="110" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="15" y1="10" x2="15" y2="110" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="15" y1="60" x2="150" y2="60" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+          <text x="82" y="118" text-anchor="middle" font-size="9" fill="#94a3b8">t (s)</text>
+          <text x="9" y="60" text-anchor="middle" font-size="9" fill="#94a3b8" transform="rotate(-90,9,60)">a (m/s²)</text>
+          <text x="150" y="118" text-anchor="middle" font-size="8" fill="#94a3b8">6</text>
+        </svg>
+        <div class="gp-label">Draw: a vs t</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-card">
+    <div class="prob-num">Problem B-4 — AT to VT</div>
+    <div class="prob-text">
+      An acceleration–time graph shows:
+      <br>• a = +4 m/s² from t = 0 to t = 3 s
+      <br>• a = −2 m/s² from t = 3 to t = 6 s
+      <br>The object starts with v₀ = 2 m/s.
+      <br><br>Sketch the velocity–time graph. Calculate and label the velocity at t = 3 s and t = 6 s.
+    </div>
+    <div class="workspace"><div class="workspace-lbl">Calculate v at t = 3 s and t = 6 s using area = Δv</div></div>
+    <div class="graph-placeholder">
+      <div class="gp-box">
+        <svg width="160" height="120" viewBox="0 0 160 120">
+          <line x1="15" y1="110" x2="150" y2="110" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="15" y1="10" x2="15" y2="110" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="15" y1="60" x2="150" y2="60" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="82" y1="10" x2="82" y2="110" stroke="#f1f5f9" stroke-width="1"/>
+          <text x="82" y="118" text-anchor="middle" font-size="9" fill="#94a3b8">t (s)</text>
+          <text x="9" y="60" text-anchor="middle" font-size="9" fill="#94a3b8" transform="rotate(-90,9,60)">a (m/s²)</text>
+          <text x="82" y="118" text-anchor="middle" font-size="8" fill="#94a3b8">3</text>
+          <text x="150" y="118" text-anchor="middle" font-size="8" fill="#94a3b8">6</text>
+          <text x="12" y="38" text-anchor="end" font-size="8" fill="#94a3b8">+4</text>
+          <text x="12" y="80" text-anchor="end" font-size="8" fill="#94a3b8">−2</text>
+          <!-- +4 block then -2 block -->
+          <polyline points="15,60 15,38 82,38 82,80 150,80 150,60" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+          <rect x="15" y="38" width="67" height="22" fill="#fef3c7" opacity=".4"/>
+          <rect x="82" y="60" width="68" height="20" fill="#fee2e2" opacity=".4"/>
+        </svg>
+        <div class="gp-label">Given: a vs t</div>
+      </div>
+      <div class="gp-box">
+        <svg width="160" height="120" viewBox="0 0 160 120">
+          <line x1="15" y1="110" x2="150" y2="110" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="15" y1="10" x2="15" y2="110" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="15" y1="60" x2="150" y2="60" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+          <text x="82" y="118" text-anchor="middle" font-size="9" fill="#94a3b8">t (s)</text>
+          <text x="9" y="60" text-anchor="middle" font-size="9" fill="#94a3b8" transform="rotate(-90,9,60)">v (m/s)</text>
+          <text x="150" y="118" text-anchor="middle" font-size="8" fill="#94a3b8">6</text>
+        </svg>
+        <div class="gp-label">Draw: v vs t</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PART C ===== -->
+  <div class="sec-head">
+    <div class="sec-badge">Part C</div>
+    <h2>Short Answer (3 problems)</h2>
+  </div>
+
+  <div class="prob-card">
+    <div class="prob-num">Problem C-1</div>
+    <div class="prob-text">
+      Explain in your own words: why does a curved position–time graph correspond to a <em>slanted</em> (non-horizontal) velocity–time graph?
+    </div>
+    <div class="workspace" style="min-height:70px;"><div class="workspace-lbl">Your answer</div></div>
+  </div>
+
+  <div class="prob-card">
+    <div class="prob-num">Problem C-2</div>
+    <div class="prob-text">
+      A velocity–time graph shows a horizontal line at v = −5 m/s. What does this tell you about:
+      <br>a) The direction of motion?
+      <br>b) The acceleration?
+      <br>c) The shape of the position–time graph?
+    </div>
+    <input class="sa-line" type="text" placeholder="a) Direction of motion: ..."/>
+    <input class="sa-line" type="text" placeholder="b) Acceleration: ..."/>
+    <input class="sa-line" type="text" placeholder="c) Shape of p–t graph: ..."/>
+  </div>
+
+  <div class="prob-card">
+    <div class="prob-num">Problem C-3</div>
+    <div class="prob-text">
+      A car accelerates from rest at a = +6 m/s² for 4 seconds, then travels at constant velocity for 3 more seconds.
+      <br>a) Using the a–t graph rules, what is the velocity at the end of the acceleration phase?
+      <br>b) How far does the car travel in total over all 7 seconds? (Hint: use the v–t graph area for displacement.)
+    </div>
+    <div class="workspace" style="min-height:90px;"><div class="workspace-lbl">Work</div></div>
+  </div>
+
+  <!-- ===== ANSWER KEY ===== -->
+  <div class="ak-toggle" id="ak-toggle" onclick="toggleAK()">
+    <span>Answer Key — Click to Reveal</span>
+    <span class="ak-arrow" id="ak-arrow">&#9660;</span>
+  </div>
+  <div class="ak-body" id="ak-body">
+    <div class="ak-item">
+      <h4>A-1</h4>
+      <p><span class="ans">C</span> slope = Δp/Δt = (10 − 2) / (4 − 0) = 8/4 = <strong>+2 m/s</strong>. The positive slope of the p–t line is the constant velocity.</p>
+    </div>
+    <hr class="ak-divider"/>
+    <div class="ak-item">
+      <h4>A-2</h4>
+      <p><span class="ans">C</span> A concave-down p–t curve means the slope is positive but <em>decreasing</em>. The velocity starts positive and decreases toward zero — this is a negatively sloped line on the v–t graph starting above zero and falling.</p>
+    </div>
+    <hr class="ak-divider"/>
+    <div class="ak-item">
+      <h4>A-3</h4>
+      <p>
+        <strong>Segment 1 (0–2 s):</strong> Positive constant slope on p–t → line going up with slope = +6 m/s. (Δp = 6 × 2 = 12 m)<br>
+        <strong>Segment 2 (2–4 s):</strong> Zero slope on p–t → flat horizontal line (no displacement change).<br>
+        <strong>Segment 3 (4–6 s):</strong> Negative constant slope on p–t → line going down with slope = −4 m/s. (Δp = −4 × 2 = −8 m)
+      </p>
+    </div>
+    <hr class="ak-divider"/>
+    <div class="ak-item">
+      <h4>A-4</h4>
+      <p><span class="ans">B</span> a = Δv/Δt = (0 − 20) / (5 − 0) = −20/5 = <strong>−4 m/s²</strong>. The car decelerates (negative acceleration).</p>
+    </div>
+    <hr class="ak-divider"/>
+    <div class="ak-item">
+      <h4>A-5</h4>
+      <p><span class="ans">C</span> Area under a–t = ΔV = 3 m/s² × 5 s = 15 m/s. Starting from rest: v_f = 0 + 15 = <strong>15 m/s</strong>.</p>
+    </div>
+    <hr class="ak-divider"/>
+    <div class="ak-item">
+      <h4>A-6</h4>
+      <p><span class="ans">C</span> Area under v–t = displacement. The v–t graph forms a triangle with base = 8 s, height = 8 m/s.<br>
+      Area = ½ × 8 × 8 = <strong>32 m</strong>.</p>
+    </div>
+    <hr class="ak-divider"/>
+    <div class="ak-item">
+      <h4>B-1</h4>
+      <p>
+        Segment 1: slope = (12 − 0)/(3 − 0) = +4 m/s → horizontal line at v = +4 m/s from t = 0 to 3 s.<br>
+        Segment 2: slope = 0/3 = 0 m/s → horizontal line at v = 0 from t = 3 to 6 s.<br>
+        Segment 3: slope = (6 − 12)/(9 − 6) = −6/3 = −2 m/s → horizontal line at v = −2 m/s from t = 6 to 9 s.<br>
+        The v–t graph is a step function: <strong>+4 → 0 → −2 m/s</strong>.
+      </p>
+    </div>
+    <hr class="ak-divider"/>
+    <div class="ak-item">
+      <h4>B-2</h4>
+      <p>
+        Constant v = −3 m/s → straight negative slope on p–t.<br>
+        p₀ = 15 m. Δp = v × t = −3 × 6 = −18 m.<br>
+        p_f = 15 + (−18) = <strong>−3 m</strong>.<br>
+        The p–t graph is a straight line from (0, 15) to (6, −3).
+      </p>
+    </div>
+    <hr class="ak-divider"/>
+    <div class="ak-item">
+      <h4>B-3</h4>
+      <p>
+        a) Slope = Δv/Δt = (−6 − 12)/(6 − 0) = −18/6 = <strong>−3 m/s²</strong>.<br>
+        b) The a–t graph is a horizontal line at a = −3 m/s² from t = 0 to 6 s (constant negative acceleration).
+      </p>
+    </div>
+    <hr class="ak-divider"/>
+    <div class="ak-item">
+      <h4>B-4</h4>
+      <p>
+        Phase 1 (0 → 3 s): ΔV = area = +4 × 3 = +12 m/s. v at t=3: 2 + 12 = <strong>14 m/s</strong>.<br>
+        Phase 2 (3 → 6 s): ΔV = area = −2 × 3 = −6 m/s. v at t=6: 14 + (−6) = <strong>8 m/s</strong>.<br>
+        The v–t graph: line rising from 2 to 14 (t=0 to 3), then line falling from 14 to 8 (t=3 to 6). Both segments are straight (constant acceleration each phase).
+      </p>
+    </div>
+    <hr class="ak-divider"/>
+    <div class="ak-item">
+      <h4>C-1</h4>
+      <p>A curved p–t graph means the slope (velocity) is <em>changing</em>. On the v–t graph, a changing velocity appears as a slanted line (non-horizontal), because the velocity value itself is not constant — it is increasing or decreasing over time. If the velocity were constant, the p–t graph would be a straight (non-curved) line.</p>
+    </div>
+    <hr class="ak-divider"/>
+    <div class="ak-item">
+      <h4>C-2</h4>
+      <p>
+        a) <strong>Moving in the negative direction</strong> (v is negative).<br>
+        b) <strong>Acceleration = 0</strong> (horizontal v–t line has zero slope).<br>
+        c) The p–t graph is a <strong>straight line with a negative slope</strong> (position decreasing at a constant rate).
+      </p>
+    </div>
+    <hr class="ak-divider"/>
+    <div class="ak-item">
+      <h4>C-3</h4>
+      <p>
+        a) Area under a–t = ΔV = 6 m/s² × 4 s = 24 m/s. Starting from rest: v at end of phase 1 = <strong>24 m/s</strong>.<br>
+        b) Displacement during acceleration phase (triangle on v–t): ½ × 4 × 24 = 48 m.<br>
+        Displacement during constant phase (rectangle): 24 m/s × 3 s = 72 m.<br>
+        Total displacement = 48 + 72 = <strong>120 m</strong>.
+      </p>
+    </div>
+  </div>
+
+</main>
+
+<script>
+function toggleAK(){
+  var body=document.getElementById('ak-body');
+  var toggle=document.getElementById('ak-toggle');
+  var arrow=document.getElementById('ak-arrow');
+  if(body.classList.contains('visible')){
+    body.classList.remove('visible');
+    toggle.classList.remove('open');
+  } else {
+    body.classList.add('visible');
+    toggle.classList.add('open');
+  }
+}
+</script>
+</body>
+</html>

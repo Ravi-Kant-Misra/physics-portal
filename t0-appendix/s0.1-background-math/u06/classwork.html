@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proportional Relationships — Classwork</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:820px;margin:36px auto;padding:0 24px 60px;}
+    .ref-box{background:white;border:2px solid #c7d2fe;border-radius:10px;padding:18px 22px;margin-bottom:28px;}
+    .ref-box h3{color:#312e81;font-size:1rem;margin-bottom:12px;}
+    .ref-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    .ref-item{border-radius:8px;padding:10px 14px;font-size:0.88rem;}
+    .ref-item .sym{font-family:'Space Mono',monospace;font-weight:700;font-size:1rem;}
+    .r-lin{background:#dbeafe;}.r-lin .sym{color:#1d4ed8;}
+    .r-quad{background:#dcfce7;}.r-quad .sym{color:#15803d;}
+    .r-inv{background:#fef3c7;}.r-inv .sym{color:#92400e;}
+    .r-invsq{background:#fee2e2;}.r-invsq .sym{color:#991b1b;}
+    section{margin-bottom:40px;}
+    h2{font-size:1.2rem;font-weight:700;color:#1e1b4b;border-left:5px solid #6366f1;padding-left:12px;margin-bottom:16px;}
+    .instructions{color:#4b5563;font-size:0.9rem;margin-bottom:16px;font-style:italic;}
+    .eq-problem{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .eq-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:6px;}
+    .eq-display{font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;background:#f8fafc;padding:10px 16px;border-radius:8px;margin-bottom:10px;}
+    .eq-task{font-size:0.9rem;color:#374151;margin-bottom:10px;}
+    .field-set{display:flex;flex-direction:column;gap:8px;}
+    .field-row{display:flex;align-items:center;gap:8px;font-size:0.85rem;}
+    .fill-line{border-bottom:2px solid #d1d5db;min-height:24px;flex:1;display:inline-block;}
+    .short-line{border-bottom:2px solid #d1d5db;min-height:24px;width:120px;display:inline-block;}
+    .graph-problem{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .graph-problem .gp-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:6px;}
+    .graph-axes{display:flex;gap:20px;flex-wrap:wrap;}
+    .axis-box{border:2px solid #e2e8f0;border-radius:8px;padding:10px;min-width:120px;}
+    .axis-box svg{display:block;}
+    .short-answer{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .short-answer .q{font-weight:600;margin-bottom:10px;font-size:0.95rem;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#1e1b4b;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #answer-key{display:none;background:#eef2ff;border:2px solid #a5b4fc;border-radius:12px;padding:28px 32px;}
+    #answer-key h2{color:#1e1b4b;border-left-color:#6366f1;margin-bottom:22px;}
+    .key-section{margin-bottom:24px;}
+    .key-section h3{font-size:1rem;font-weight:700;color:#1e1b4b;margin-bottom:12px;}
+    .key-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .key-item{background:white;border-radius:6px;padding:10px 14px;font-size:0.92rem;}
+    .key-item .kq{font-size:0.8rem;color:#6b7280;margin-bottom:2px;}
+    .key-item .kans{color:#312e81;font-weight:700;}
+    .key-item .kexpl{color:#4b5563;font-size:0.8rem;margin-top:2px;}
+    .short-ans-key{background:white;border-radius:6px;padding:12px 16px;font-size:0.92rem;margin-bottom:10px;}
+    .short-ans-key strong{color:#312e81;}
+  </style>
+</head>
+<body>
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+<header>
+  <div class="label">Physics · High School · In-Class Activity</div>
+  <h1>Proportional Relationships — Classwork</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+<main>
+  <div class="ref-box">
+    <h3>Reference — The 4 Relationships</h3>
+    <div class="ref-grid">
+      <div class="ref-item r-lin"><span class="sym">y = cx</span><br>Linear — straight line</div>
+      <div class="ref-item r-quad"><span class="sym">y = cx²</span><br>Quadratic — parabola</div>
+      <div class="ref-item r-inv"><span class="sym">y = c/x</span><br>Inverse — hyperbola</div>
+      <div class="ref-item r-invsq"><span class="sym">y = c/x²</span><br>Inverse Square — steep drop</div>
+    </div>
+  </div>
+
+  <section>
+    <h2>Part A — Identify the Relationship</h2>
+    <p class="instructions">For each equation, hold the stated variables constant. Rearrange if needed. Name the relationship type and describe the graph shape.</p>
+
+    <div class="eq-problem">
+      <div class="eq-num">Question 1</div>
+      <div class="eq-display">p = mv</div>
+      <div class="eq-task">Find the relationship between p (momentum) and v (velocity). Hold m constant.</div>
+      <div class="field-set">
+        <div class="field-row">Rearranged (hold m constant): p = <span class="fill-line"></span></div>
+        <div class="field-row">Relationship type: <span class="short-line"></span></div>
+        <div class="field-row">Graph shape (p vs v): <span class="short-line"></span></div>
+      </div>
+    </div>
+
+    <div class="eq-problem">
+      <div class="eq-num">Question 2</div>
+      <div class="eq-display">Eₖ = ½mv²</div>
+      <div class="eq-task">Find the relationship between Eₖ and v. Hold m constant.</div>
+      <div class="field-set">
+        <div class="field-row">Rearranged: Eₖ = <span class="fill-line"></span></div>
+        <div class="field-row">Relationship type: <span class="short-line"></span></div>
+        <div class="field-row">Graph shape (Eₖ vs v): <span class="short-line"></span></div>
+      </div>
+    </div>
+
+    <div class="eq-problem">
+      <div class="eq-num">Question 3</div>
+      <div class="eq-display">V = IR</div>
+      <div class="eq-task">Find the relationship between V (voltage) and I (current). Hold R constant.</div>
+      <div class="field-set">
+        <div class="field-row">Rearranged: V = <span class="fill-line"></span></div>
+        <div class="field-row">Relationship type: <span class="short-line"></span></div>
+        <div class="field-row">Graph shape (V vs I): <span class="short-line"></span></div>
+      </div>
+    </div>
+
+    <div class="eq-problem">
+      <div class="eq-num">Question 4</div>
+      <div class="eq-display">V = IR</div>
+      <div class="eq-task">Find the relationship between R (resistance) and I (current). Hold V constant.</div>
+      <div class="field-set">
+        <div class="field-row">Rearranged (make R the subject): R = <span class="fill-line"></span></div>
+        <div class="field-row">Relationship type: <span class="short-line"></span></div>
+        <div class="field-row">Graph shape (R vs I): <span class="short-line"></span></div>
+      </div>
+    </div>
+
+    <div class="eq-problem">
+      <div class="eq-num">Question 5</div>
+      <div class="eq-display">g = Gm/r²</div>
+      <div class="eq-task">Find the relationship between g and r. Hold G and m constant.</div>
+      <div class="field-set">
+        <div class="field-row">Hold G,m constant → c = <span class="short-line"></span></div>
+        <div class="field-row">Equation: g = <span class="fill-line"></span></div>
+        <div class="field-row">Relationship type: <span class="short-line"></span></div>
+        <div class="field-row">Graph shape (g vs r): <span class="short-line"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Part B — From Graph to Relationship</h2>
+    <p class="instructions">Look at each graph description and name the proportional relationship it shows.</p>
+    <div class="eq-problem">
+      <div class="eq-num">Question 6</div>
+      <div class="eq-task">A graph of kinetic energy (y-axis) vs velocity² (x-axis) is a straight line through the origin. What is the relationship between Eₖ and v (not v²)?</div>
+      <div class="field-set">
+        <div class="field-row">Relationship (Eₖ vs v²): <span class="short-line"></span></div>
+        <div class="field-row">Therefore (Eₖ vs v): <span class="short-line"></span></div>
+      </div>
+    </div>
+    <div class="eq-problem">
+      <div class="eq-num">Question 7</div>
+      <div class="eq-task">A graph of y vs x is a hyperbola that never touches either axis. The product xy is always constant. What relationship does this show?</div>
+      <div class="field-set">
+        <div class="field-row">Relationship type: <span class="short-line"></span></div>
+        <div class="field-row">Equation form: y = <span class="fill-line"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Part C — Predict What Happens</h2>
+    <p class="instructions">Use your knowledge of proportionality to predict the effect.</p>
+    <div class="eq-problem">
+      <div class="eq-num">Question 8</div>
+      <div class="eq-task">Eₖ = ½mv². If velocity doubles (all else constant), what happens to kinetic energy?</div>
+      <div class="field-set">
+        <div class="field-row">Reasoning: <span class="fill-line"></span></div>
+        <div class="field-row">New Eₖ = <span class="short-line"></span> × original Eₖ</div>
+      </div>
+    </div>
+    <div class="eq-problem">
+      <div class="eq-num">Question 9</div>
+      <div class="eq-task">g = Gm/r². If distance r doubles, what happens to g?</div>
+      <div class="field-set">
+        <div class="field-row">Reasoning: <span class="fill-line"></span></div>
+        <div class="field-row">New g = <span class="short-line"></span> × original g</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Part D — Short Answer</h2>
+    <div class="short-answer">
+      <div class="q">10. What is the difference between an inverse relationship (y ∝ 1/x) and an inverse square relationship (y ∝ 1/x²)? How do their graphs differ?</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+    <div class="short-answer">
+      <div class="q">11. A student says: "If y ∝ x, then doubling x doubles y. But if y ∝ x², doubling x doubles y too, since 2x² = 2x²." Identify the student's error.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <div class="key-btn-wrap"><button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button></div>
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+    <div class="key-section">
+      <h3>Part A — Identify the Relationship</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="kq">Q1: p = mv, p vs v</div><div class="kans">Linear (p ∝ v)</div><div class="kexpl">m = constant c; p = c·v → straight line</div></div>
+        <div class="key-item"><div class="kq">Q2: Eₖ = ½mv², Eₖ vs v</div><div class="kans">Quadratic (Eₖ ∝ v²)</div><div class="kexpl">½m = c; Eₖ = c·v² → parabola</div></div>
+        <div class="key-item"><div class="kq">Q3: V = IR, V vs I</div><div class="kans">Linear (V ∝ I)</div><div class="kexpl">R = constant c; V = c·I → straight line</div></div>
+        <div class="key-item"><div class="kq">Q4: V = IR, R vs I</div><div class="kans">Inverse (R ∝ 1/I)</div><div class="kexpl">R = V/I = c/I → hyperbola</div></div>
+        <div class="key-item" style="grid-column:span 2;"><div class="kq">Q5: g = Gm/r², g vs r</div><div class="kans">Inverse Square (g ∝ 1/r²)</div><div class="kexpl">Hold Gm = c; g = c/r² → steep inverse-square curve</div></div>
+      </div>
+    </div>
+    <div class="key-section">
+      <h3>Part B — Graph to Relationship</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="kq">Q6: Eₖ vs v² is linear</div><div class="kans">Eₖ ∝ v² (Quadratic vs v)</div><div class="kexpl">Linear on Eₖ vs v² plot → quadratic on Eₖ vs v plot</div></div>
+        <div class="key-item"><div class="kq">Q7: xy = const, hyperbola</div><div class="kans">Inverse (y ∝ 1/x, y = c/x)</div><div class="kexpl">Hyperbola shape; product is constant</div></div>
+      </div>
+    </div>
+    <div class="key-section">
+      <h3>Part C — Predictions</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="kq">Q8: v doubles in Eₖ = ½mv²</div><div class="kans">Eₖ becomes 4× larger</div><div class="kexpl">Eₖ ∝ v²; (2v)² = 4v² → Eₖ quadruples</div></div>
+        <div class="key-item"><div class="kq">Q9: r doubles in g = Gm/r²</div><div class="kans">g becomes ¼ as large</div><div class="kexpl">g ∝ 1/r²; (2r)² = 4r² → g = c/4r² = g/4</div></div>
+      </div>
+    </div>
+    <div class="key-section">
+      <h3>Part D — Short Answer</h3>
+      <div class="short-ans-key"><strong>Q10:</strong> Both are decreasing curves (hyperbola-shaped) that never reach zero. The inverse square drops much faster: if you double x, an inverse relationship halves y (÷2), but an inverse square quarters y (÷4). The inverse square graph is steeper near the y-axis and flatter further out.</div>
+      <div class="short-ans-key"><strong>Q11:</strong> The student confused (2x)² with 2x². When x doubles, you substitute 2x into the formula: y = c(2x)² = c·4x² = 4cx² — not 2cx². So doubling x quadruples y in a quadratic relationship. The student incorrectly wrote 2x² instead of (2x)² = 4x².</div>
+    </div>
+  </div>
+</main>
+<script>function toggleKey(){var k=document.getElementById('answer-key');var b=document.getElementById('toggle-key-btn');if(k.style.display==='none'||k.style.display===''){k.style.display='block';b.textContent='Hide Answer Key';}else{k.style.display='none';b.textContent='Show Answer Key';}}</script>
+</body>
+</html>

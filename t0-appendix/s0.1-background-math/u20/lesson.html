@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finding the Angle of a Vector — IB Physics Lesson</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root {
+      --purple:#7c3aed;--violet:#6d28d9;--deep:#4c1d95;
+      --green:#22c55e;--amber:#f59e0b;--red:#ef4444;--blue:#3b82f6;
+      --dark:#0f172a;--bg:#f5f3ff;--card:#ffffff;--muted:#94a3b8;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:17px;line-height:1.75;background-image:radial-gradient(circle,#ddd6fe 1px,transparent 1px);background-size:28px 28px;}
+
+    /* ── LOCK SCREEN ── */
+    #lock-screen{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#4c1d95 0%,#6d28d9 50%,#7c3aed 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
+    #lock-screen .lock-icon{font-size:3.5rem;animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
+    #lock-screen h2{color:white;font-size:1.8rem;font-weight:900;}
+    #lock-screen p{color:rgba(255,255,255,0.75);font-size:1rem;}
+    #lock-screen .pw-box{display:flex;gap:10px;align-items:center;margin-top:8px;}
+    #pw-input{padding:12px 20px;border-radius:12px;border:2px solid rgba(255,255,255,0.4);background:rgba(255,255,255,0.15);color:white;font-size:1.1rem;font-family:'Nunito',sans-serif;font-weight:700;width:220px;outline:none;}
+    #pw-input::placeholder{color:rgba(255,255,255,0.5);}
+    #pw-input:focus{border-color:white;}
+    #pw-btn{padding:12px 24px;border-radius:12px;border:none;background:white;color:var(--deep);font-family:'Nunito',sans-serif;font-weight:900;font-size:1rem;cursor:pointer;transition:transform 0.15s;}
+    #pw-btn:hover{transform:scale(1.05);}
+    #pw-error{color:#fca5a5;font-size:0.9rem;font-weight:700;min-height:20px;}
+
+    /* ── HEADER ── */
+    header{background:linear-gradient(135deg,#4c1d95 0%,#6d28d9 50%,#7c3aed 100%);color:white;padding:52px 60px 48px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(167,139,250,0.35) 0%,transparent 60%),radial-gradient(ellipse at 80% 30%,rgba(196,181,253,0.25) 0%,transparent 55%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.4);}}
+    header .chip{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px;position:relative;}
+    header h1{font-size:3rem;font-weight:900;letter-spacing:-1px;position:relative;margin-bottom:10px;background:linear-gradient(90deg,#c4b5fd,#e9d5ff,#f5d0fe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1.1rem;color:rgba(255,255,255,0.75);position:relative;max-width:560px;margin:0 auto;}
+
+    /* ── LAYOUT ── */
+    main{max-width:900px;margin:48px auto;padding:0 24px 80px;}
+    section{margin-bottom:60px;}
+    .section-label{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+    .section-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    .section-label h2{font-size:1.5rem;font-weight:900;color:var(--dark);}
+
+    /* ── INTRO CARD ── */
+    .intro-card{background:white;border-radius:18px;padding:28px 32px;box-shadow:0 4px 24px rgba(109,40,217,0.12);border:2px solid #ede9fe;margin-bottom:24px;}
+    .intro-card p{color:#374151;margin-bottom:12px;}
+    .intro-card p:last-child{margin-bottom:0;}
+    .highlight{background:#ede9fe;color:#5b21b6;border-radius:6px;padding:2px 8px;font-weight:700;}
+
+    /* ── FORMULA GRID ── */
+    .formula-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+    @media(max-width:640px){.formula-grid{grid-template-columns:1fr;}}
+    .formula-card{border-radius:16px;padding:22px 18px;text-align:center;box-shadow:0 3px 16px rgba(0,0,0,0.07);}
+    .fc-sin{background:linear-gradient(135deg,#fdf4ff,#fae8ff);border:2px solid #e879f9;}
+    .fc-cos{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:2px solid #60a5fa;}
+    .fc-tan{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #4ade80;}
+    .formula-card .fc-label{font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+    .fc-sin .fc-label{color:#a21caf;}
+    .fc-cos .fc-label{color:#1d4ed8;}
+    .fc-tan .fc-label{color:#15803d;}
+    .formula-card .fc-formula{font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:700;line-height:1.6;color:#1e1b4b;}
+    .formula-card .fc-note{font-size:0.78rem;color:#64748b;margin-top:8px;}
+
+    /* ── KEY RULE BANNER ── */
+    .key-banner{background:linear-gradient(135deg,#4c1d95,#7c3aed);border-radius:16px;padding:22px 28px;color:white;margin-bottom:28px;display:flex;align-items:flex-start;gap:18px;}
+    .kb-icon{font-size:2.2rem;flex-shrink:0;margin-top:2px;}
+    .kb-body h3{font-size:1.1rem;font-weight:900;margin-bottom:6px;}
+    .kb-body p{font-size:0.92rem;color:rgba(255,255,255,0.85);margin-bottom:6px;}
+    .kb-body .mono{font-family:'Space Mono',monospace;font-size:1rem;background:rgba(255,255,255,0.15);padding:6px 14px;border-radius:8px;display:inline-block;margin-top:6px;}
+
+    /* ── EXAMPLE CARDS ── */
+    .example-card{background:white;border-radius:18px;margin-bottom:22px;box-shadow:0 4px 20px rgba(0,0,0,0.07);overflow:hidden;}
+    .ex-header{display:flex;align-items:center;gap:14px;padding:16px 24px;border-bottom:2px solid #f1f5f9;}
+    .ex-num{background:var(--dark);color:white;font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:4px 14px;border-radius:20px;}
+    .ex-concept{font-size:0.82rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+    .ex-body{padding:22px 24px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:start;}
+    @media(max-width:620px){.ex-body{grid-template-columns:1fr;}}
+    .ex-text{}
+    .ex-given{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;}
+    .given-chip{background:#f1f5f9;border-radius:8px;padding:4px 12px;font-size:0.85rem;font-weight:700;color:#334155;}
+    .steps{display:flex;flex-direction:column;gap:8px;}
+    .step{display:flex;gap:12px;align-items:flex-start;font-size:0.9rem;color:#374151;}
+    .step-dot{width:24px;height:24px;border-radius:50%;background:#ede9fe;color:#5b21b6;font-weight:800;font-size:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+    .ans-chip{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#4c1d95,#7c3aed);color:white;padding:8px 18px;border-radius:10px;font-weight:900;font-size:1rem;margin-top:12px;}
+    .wrong-box{background:#fef2f2;border:2px solid #fca5a5;border-radius:12px;padding:10px 16px;font-size:0.85rem;color:#7f1d1d;margin-top:8px;}
+    .wrong-box strong{display:block;margin-bottom:4px;}
+
+    /* ── SVG DIAGRAMS ── */
+    .svg-wrap{display:flex;align-items:center;justify-content:center;background:#faf5ff;border-radius:14px;padding:16px;min-width:160px;}
+
+    /* ── RIVER SECTION ── */
+    .river-scene{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px;}
+    @media(max-width:620px){.river-scene{grid-template-columns:1fr;}}
+    .river-card{background:white;border-radius:16px;padding:22px;box-shadow:0 3px 14px rgba(0,0,0,0.07);border:2px solid #e0e7ff;}
+    .river-card h4{font-weight:900;margin-bottom:12px;font-size:1rem;color:var(--dark);}
+    .river-steps{display:flex;flex-direction:column;gap:10px;}
+    .river-step{display:flex;gap:10px;align-items:flex-start;font-size:0.88rem;color:#374151;}
+    .rs-dot{width:22px;height:22px;border-radius:50%;background:#dbeafe;color:#1d4ed8;font-weight:800;font-size:0.72rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+    .river-ans{background:linear-gradient(135deg,#0c4a6e,#0ea5e9);border-radius:12px;padding:14px 20px;color:white;margin-top:14px;}
+    .river-ans p{font-size:0.9rem;margin-bottom:4px;}
+    .river-ans strong{font-size:1.1rem;}
+
+    /* ── QUIZ ── */
+    .quiz-card{background:white;border-radius:18px;padding:26px 28px;box-shadow:0 4px 20px rgba(0,0,0,0.08);margin-bottom:16px;border-left:5px solid var(--purple);}
+    .q-num{font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--purple);margin-bottom:8px;}
+    .q-text{font-size:1rem;color:#1e293b;font-weight:700;margin-bottom:14px;}
+    .q-options{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+    .q-option{padding:10px 16px;border-radius:10px;border:2px solid #e2e8f0;cursor:pointer;font-size:0.92rem;font-weight:600;transition:all 0.15s;}
+    .q-option:hover{border-color:var(--purple);background:#faf5ff;}
+    .q-option.correct{background:#f0fdf4;border-color:#4ade80;color:#15803d;}
+    .q-option.wrong{background:#fef2f2;border-color:#fca5a5;color:#7f1d1d;}
+    .q-feedback{font-size:0.88rem;font-weight:700;padding:10px 16px;border-radius:10px;display:none;}
+    .q-feedback.show-correct{display:block;background:#f0fdf4;color:#15803d;}
+    .q-feedback.show-wrong{display:block;background:#fef2f2;color:#dc2626;}
+
+    /* ── SUMMARY ── */
+    .summary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+    @media(max-width:580px){.summary-grid{grid-template-columns:1fr;}}
+    .sum-card{background:white;border-radius:14px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border-top:4px solid transparent;}
+    .sc-purple{border-top-color:#7c3aed;}.sc-blue{border-top-color:#3b82f6;}.sc-green{border-top-color:#22c55e;}.sc-amber{border-top-color:#f59e0b;}
+    .sum-card h4{font-size:0.9rem;font-weight:800;margin-bottom:8px;color:var(--dark);}
+    .sum-card p{font-size:0.85rem;color:#64748b;}
+    .mono{font-family:'Space Mono',monospace;}
+  </style>
+</head>
+<body>
+
+<!-- LOCK SCREEN -->
+<div id="lock-screen">
+  <div class="lock-icon">&#128274;</div>
+  <h2>IB Physics — Unit 20</h2>
+  <p>Enter the password to access this lesson</p>
+  <div class="pw-box">
+    <input id="pw-input" type="password" placeholder="Password..." autocomplete="off">
+    <button id="pw-btn" onclick="checkPw()">Unlock</button>
+  </div>
+  <div id="pw-error"></div>
+</div>
+
+<!-- MAIN CONTENT (hidden until unlocked) -->
+<div id="content" style="display:none;">
+
+<header>
+  <span class="star" style="width:4px;height:4px;top:12%;left:8%;animation-delay:0s;"></span>
+  <span class="star" style="width:3px;height:3px;top:25%;left:20%;animation-delay:0.5s;"></span>
+  <span class="star" style="width:5px;height:5px;top:18%;left:75%;animation-delay:1s;"></span>
+  <span class="star" style="width:3px;height:3px;top:60%;left:88%;animation-delay:1.5s;"></span>
+  <span class="star" style="width:4px;height:4px;top:70%;left:5%;animation-delay:0.7s;"></span>
+  <div class="chip">IB Physics &nbsp;&#183;&nbsp; Unit 20 &nbsp;&#183;&nbsp; Vectors</div>
+  <h1>Finding the Angle of a Vector</h1>
+  <p class="subtitle">Using inverse trigonometry to find the direction of a resultant vector</p>
+</header>
+
+<main>
+
+  <!-- SECTION 1: WHY WE NEED INVERSE TRIG -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#ede9fe;">&#129300;</div>
+      <h2>Why Inverse Trig?</h2>
+    </div>
+    <div class="intro-card">
+      <p>When two vectors that point up, down, left, or right are added together, the result (the <span class="highlight">resultant</span>) forms the hypotenuse of a right triangle. The two original components are the two legs of that triangle.</p>
+      <p>We already know the <strong>lengths</strong> of the sides (the component magnitudes). What we want now is the <strong>angle</strong> — the direction of the resultant. Because we know the sides and need the angle, we use <span class="highlight">inverse trigonometry</span>: sin&#8315;&#185;, cos&#8315;&#185;, or tan&#8315;&#185;.</p>
+      <p>The angle we report is <strong>always measured from the horizontal</strong> (the x-axis direction). This is the standard convention in IB Physics.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 2: FORMULAS -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#dbeafe;">&#128221;</div>
+      <h2>The Three Inverse Trig Formulas</h2>
+    </div>
+    <div class="formula-grid">
+      <div class="formula-card fc-sin">
+        <div class="fc-label">Inverse Sine</div>
+        <div class="fc-formula">sin&#8315;&#185;( opp / hyp ) = &#952;</div>
+        <div class="fc-note">Use when you know the side opposite &#952; and the hypotenuse</div>
+      </div>
+      <div class="formula-card fc-cos">
+        <div class="fc-label">Inverse Cosine</div>
+        <div class="fc-formula">cos&#8315;&#185;( adj / hyp ) = &#952;</div>
+        <div class="fc-note">Use when you know the adjacent side and the hypotenuse</div>
+      </div>
+      <div class="formula-card fc-tan">
+        <div class="fc-label">Inverse Tangent</div>
+        <div class="fc-formula">tan&#8315;&#185;( opp / adj ) = &#952;</div>
+        <div class="fc-note">Use when you know both legs of the triangle (most common!)</div>
+      </div>
+    </div>
+
+    <div class="key-banner">
+      <div class="kb-icon">&#127775;</div>
+      <div class="kb-body">
+        <h3>The Golden Rule for Direction Problems</h3>
+        <p>Because the angle is measured from horizontal, the <strong>horizontal component = adjacent</strong> side and the <strong>vertical component = opposite</strong> side.</p>
+        <p>This means the most common formula in IB vector problems is:</p>
+        <span class="mono">&#952; = tan&#8315;&#185;( vertical component / horizontal component )</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: DIAGRAMS -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#dcfce7;">&#128207;</div>
+      <h2>Right Triangle Reference</h2>
+    </div>
+    <div class="intro-card" style="display:flex;gap:32px;flex-wrap:wrap;align-items:center;">
+      <svg width="220" height="180" viewBox="0 0 220 180" style="flex-shrink:0;">
+        <!-- triangle -->
+        <polygon points="30,150 190,150 30,30" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.5"/>
+        <!-- right angle marker -->
+        <polyline points="30,130 50,130 50,150" fill="none" stroke="#7c3aed" stroke-width="2"/>
+        <!-- labels -->
+        <text x="108" y="168" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13" fill="#1d4ed8">Adjacent (horizontal)</text>
+        <text x="14" y="90" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13" fill="#dc2626" transform="rotate(-90,14,90)">Opposite (vertical)</text>
+        <text x="122" y="88" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="14" fill="#5b21b6" transform="rotate(-37,122,88)">Hypotenuse (resultant)</text>
+        <!-- angle arc -->
+        <path d="M 190,150 A 28,28 0 0,0 163,121" fill="none" stroke="#f59e0b" stroke-width="2.2"/>
+        <text x="171" y="143" font-family="Nunito" font-weight="900" font-size="16" fill="#d97706">&#952;</text>
+      </svg>
+      <div style="flex:1;min-width:200px;">
+        <p style="margin-bottom:10px;color:#374151;"><strong>Remembering which side is which:</strong></p>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:0.92rem;color:#374151;">
+          <div style="background:#dbeafe;border-radius:8px;padding:8px 14px;"><strong>Adjacent</strong> — the horizontal leg; lies along or beside the angle &#952;</div>
+          <div style="background:#fee2e2;border-radius:8px;padding:8px 14px;"><strong>Opposite</strong> — the vertical leg; faces the angle &#952; from across the triangle</div>
+          <div style="background:#ede9fe;border-radius:8px;padding:8px 14px;"><strong>Hypotenuse</strong> — the longest side; the resultant vector (opposite the 90&#176; corner)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: WORKED EXAMPLES -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#fef3c7;">&#9998;&#65039;</div>
+      <h2>Worked Examples</h2>
+    </div>
+
+    <!-- Example A -->
+    <div class="example-card">
+      <div class="ex-header">
+        <span class="ex-num">Example A</span>
+        <span class="ex-concept">Inverse Sine — careful choice!</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-text">
+          <div class="ex-given">
+            <span class="given-chip">Hypotenuse = 10</span>
+            <span class="given-chip">Opposite (vertical) = 7</span>
+          </div>
+          <div class="steps">
+            <div class="step"><div class="step-dot">1</div><span>We know the hypotenuse and the opposite side, so use sin&#8315;&#185;.</span></div>
+            <div class="step"><div class="step-dot">2</div><span>&#952; = sin&#8315;&#185;(7 / 10)</span></div>
+            <div class="step"><div class="step-dot">3</div><span>&#952; = sin&#8315;&#185;(0.7) = <strong>44.4&#176;</strong></span></div>
+          </div>
+          <div class="ans-chip">&#10003; &#952; = 44.4&#176;</div>
+        </div>
+        <div class="svg-wrap">
+          <svg width="130" height="130" viewBox="0 0 130 130">
+            <polygon points="15,115 115,115 15,25" fill="#fdf4ff" stroke="#a21caf" stroke-width="2"/>
+            <polyline points="15,95 35,95 35,115" fill="none" stroke="#a21caf" stroke-width="1.8"/>
+            <text x="65" y="128" text-anchor="middle" font-family="Space Mono" font-size="11" font-weight="700" fill="#1d4ed8">adj</text>
+            <text x="7" y="72" text-anchor="middle" font-family="Space Mono" font-size="11" font-weight="700" fill="#dc2626" transform="rotate(-90,7,72)">opp=7</text>
+            <text x="72" y="62" text-anchor="middle" font-family="Space Mono" font-size="11" font-weight="700" fill="#a21caf" transform="rotate(-40,72,62)">hyp=10</text>
+            <path d="M 115,115 A 24,24 0 0,0 92,93" fill="none" stroke="#f59e0b" stroke-width="2"/>
+            <text x="102" y="112" font-family="Nunito" font-weight="900" font-size="13" fill="#d97706">&#952;</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Example B -->
+    <div class="example-card">
+      <div class="ex-header">
+        <span class="ex-num">Example B</span>
+        <span class="ex-concept">Inverse Tangent — both legs known</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-text">
+          <div class="ex-given">
+            <span class="given-chip">Opposite (vertical) = 4</span>
+            <span class="given-chip">Adjacent (horizontal) = 5</span>
+          </div>
+          <div class="steps">
+            <div class="step"><div class="step-dot">1</div><span>Both legs are given, so use tan&#8315;&#185;.</span></div>
+            <div class="step"><div class="step-dot">2</div><span>&#952; = tan&#8315;&#185;(4 / 5)</span></div>
+            <div class="step"><div class="step-dot">3</div><span>&#952; = tan&#8315;&#185;(0.8) = <strong>38.7&#176;</strong></span></div>
+          </div>
+          <div class="ans-chip">&#10003; &#952; = 38.7&#176;</div>
+        </div>
+        <div class="svg-wrap">
+          <svg width="130" height="130" viewBox="0 0 130 130">
+            <polygon points="15,115 115,115 15,55" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+            <polyline points="15,95 35,95 35,115" fill="none" stroke="#15803d" stroke-width="1.8"/>
+            <text x="65" y="128" text-anchor="middle" font-family="Space Mono" font-size="11" font-weight="700" fill="#1d4ed8">adj=5</text>
+            <text x="7" y="88" text-anchor="middle" font-family="Space Mono" font-size="11" font-weight="700" fill="#dc2626" transform="rotate(-90,7,88)">opp=4</text>
+            <text x="72" y="78" text-anchor="middle" font-family="Space Mono" font-size="11" font-weight="700" fill="#15803d" transform="rotate(-27,72,78)">hyp</text>
+            <path d="M 115,115 A 24,24 0 0,0 92,95" fill="none" stroke="#f59e0b" stroke-width="2"/>
+            <text x="102" y="112" font-family="Nunito" font-weight="900" font-size="13" fill="#d97706">&#952;</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Example C -->
+    <div class="example-card">
+      <div class="ex-header">
+        <span class="ex-num">Example C</span>
+        <span class="ex-concept">Inverse Cosine — adjacent and hypotenuse</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-text">
+          <div class="ex-given">
+            <span class="given-chip">Adjacent (horizontal) = 3</span>
+            <span class="given-chip">Hypotenuse = 3.5</span>
+          </div>
+          <div class="steps">
+            <div class="step"><div class="step-dot">1</div><span>We know adjacent and hypotenuse, so use cos&#8315;&#185;.</span></div>
+            <div class="step"><div class="step-dot">2</div><span>&#952; = cos&#8315;&#185;(3 / 3.5)</span></div>
+            <div class="step"><div class="step-dot">3</div><span>&#952; = cos&#8315;&#185;(0.857) = <strong>31.0&#176;</strong></span></div>
+          </div>
+          <div class="ans-chip">&#10003; &#952; = 31.0&#176;</div>
+        </div>
+        <div class="svg-wrap">
+          <svg width="130" height="130" viewBox="0 0 130 130">
+            <polygon points="15,115 115,115 15,35" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+            <polyline points="15,95 35,95 35,115" fill="none" stroke="#1d4ed8" stroke-width="1.8"/>
+            <text x="65" y="128" text-anchor="middle" font-family="Space Mono" font-size="11" font-weight="700" fill="#1d4ed8">adj=3</text>
+            <text x="7" y="78" text-anchor="middle" font-family="Space Mono" font-size="11" font-weight="700" fill="#dc2626" transform="rotate(-90,7,78)">opp</text>
+            <text x="72" y="66" text-anchor="middle" font-family="Space Mono" font-size="11" font-weight="700" fill="#1d4ed8" transform="rotate(-38,72,66)">hyp=3.5</text>
+            <path d="M 115,115 A 24,24 0 0,0 91,93" fill="none" stroke="#f59e0b" stroke-width="2"/>
+            <text x="102" y="112" font-family="Nunito" font-weight="900" font-size="13" fill="#d97706">&#952;</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Example D -->
+    <div class="example-card">
+      <div class="ex-header">
+        <span class="ex-num">Example D</span>
+        <span class="ex-concept">Inverse Tangent — steep angle</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-text">
+          <div class="ex-given">
+            <span class="given-chip">Opposite (vertical) = 6</span>
+            <span class="given-chip">Adjacent (horizontal) = 3</span>
+          </div>
+          <div class="steps">
+            <div class="step"><div class="step-dot">1</div><span>Both legs known &#8594; use tan&#8315;&#185;.</span></div>
+            <div class="step"><div class="step-dot">2</div><span>&#952; = tan&#8315;&#185;(6 / 3)</span></div>
+            <div class="step"><div class="step-dot">3</div><span>&#952; = tan&#8315;&#185;(2) = <strong>63.4&#176;</strong></span></div>
+          </div>
+          <div class="ans-chip">&#10003; &#952; = 63.4&#176;</div>
+        </div>
+        <div class="svg-wrap">
+          <svg width="130" height="130" viewBox="0 0 130 130">
+            <polygon points="15,115 65,115 15,15" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+            <polyline points="15,95 35,95 35,115" fill="none" stroke="#d97706" stroke-width="1.8"/>
+            <text x="40" y="128" text-anchor="middle" font-family="Space Mono" font-size="11" font-weight="700" fill="#1d4ed8">adj=3</text>
+            <text x="7" y="65" text-anchor="middle" font-family="Space Mono" font-size="11" font-weight="700" fill="#dc2626" transform="rotate(-90,7,65)">opp=6</text>
+            <text x="45" y="56" text-anchor="middle" font-family="Space Mono" font-size="11" font-weight="700" fill="#d97706" transform="rotate(-63,45,56)">hyp</text>
+            <path d="M 65,115 A 24,24 0 0,0 44,96" fill="none" stroke="#f59e0b" stroke-width="2"/>
+            <text x="54" y="112" font-family="Nunito" font-weight="900" font-size="13" fill="#d97706">&#952;</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: RIVER EXAMPLE -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#e0f2fe;">&#127754;</div>
+      <h2>Real-World Example: The River Problem</h2>
+    </div>
+    <div class="intro-card">
+      <p>A swimmer crosses a river by swimming <strong>straight across at 3 m/s</strong> (horizontal). The river current pushes the swimmer <strong>downstream at 5 m/s</strong> (vertical). What is the magnitude and angle of the resultant velocity?</p>
+    </div>
+    <div class="river-scene">
+      <div style="display:flex;align-items:center;justify-content:center;background:#e0f2fe;border-radius:16px;padding:20px;">
+        <!-- River SVG diagram -->
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <!-- river banks -->
+          <rect x="0" y="0" width="200" height="200" fill="#bae6fd" rx="12"/>
+          <!-- horizontal arrow: swimmer direction -->
+          <defs>
+            <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#1d4ed8"/>
+            </marker>
+            <marker id="arrowRed" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#dc2626"/>
+            </marker>
+            <marker id="arrowPurple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#7c3aed"/>
+            </marker>
+          </defs>
+          <!-- horizontal: 3 m/s across (right) -->
+          <line x1="30" y1="70" x2="130" y2="70" stroke="#1d4ed8" stroke-width="3" marker-end="url(#arrowBlue)"/>
+          <text x="78" y="62" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#1d4ed8">3 m/s</text>
+          <!-- vertical: 5 m/s down (current) -->
+          <line x1="130" y1="70" x2="130" y2="170" stroke="#dc2626" stroke-width="3" marker-end="url(#arrowRed)"/>
+          <text x="152" y="125" text-anchor="start" font-family="Nunito" font-weight="800" font-size="12" fill="#dc2626">5 m/s</text>
+          <!-- resultant -->
+          <line x1="30" y1="70" x2="130" y2="170" stroke="#7c3aed" stroke-width="3" stroke-dasharray="6,3" marker-end="url(#arrowPurple)"/>
+          <text x="60" y="140" text-anchor="start" font-family="Nunito" font-weight="800" font-size="12" fill="#7c3aed">5.8 m/s</text>
+          <!-- right angle marker -->
+          <polyline points="115,70 115,85 130,85" fill="none" stroke="#374151" stroke-width="1.5"/>
+          <!-- angle label -->
+          <path d="M 130,170 A 28,28 0 0,0 105,148" fill="none" stroke="#f59e0b" stroke-width="2"/>
+          <text x="100" y="168" font-family="Nunito" font-weight="900" font-size="14" fill="#d97706">59&#176;</text>
+          <!-- swimmer icon -->
+          <circle cx="30" cy="70" r="8" fill="#1d4ed8" opacity="0.8"/>
+          <text x="30" y="74" text-anchor="middle" font-family="sans-serif" font-size="10" fill="white">&#128694;</text>
+        </svg>
+      </div>
+      <div>
+        <div class="river-card">
+          <h4>Step-by-Step Solution</h4>
+          <div class="river-steps">
+            <div class="river-step"><div class="rs-dot">1</div><span>Identify components: horizontal = 3 m/s, vertical = 5 m/s</span></div>
+            <div class="river-step"><div class="rs-dot">2</div><span>Find magnitude with Pythagoras:<br>R = &#8730;(3&#178; + 5&#178;) = &#8730;(9 + 25) = &#8730;34 &#8776; <strong>5.8 m/s</strong></span></div>
+            <div class="river-step"><div class="rs-dot">3</div><span>Find angle using tan&#8315;&#185;:<br>&#952; = tan&#8315;&#185;(5 / 3) = tan&#8315;&#185;(1.667)</span></div>
+            <div class="river-step"><div class="rs-dot">4</div><span>&#952; = <strong>59&#176;</strong> from horizontal (South of East / downstream)</span></div>
+          </div>
+          <div class="river-ans">
+            <p>Resultant velocity</p>
+            <strong>5.8 m/s at 59&#176; South of East</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: COMMON MISTAKE -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#fef2f2;">&#9888;&#65039;</div>
+      <h2>Common Mistake to Avoid</h2>
+    </div>
+    <div class="intro-card" style="border-color:#fca5a5;">
+      <div class="wrong-box">
+        <strong>&#10060; Wrong approach:</strong>
+        When a vector has components (e.g. horizontal = 17.3, vertical = 10) and you've been given the resultant magnitude (e.g. 20), students sometimes try to use Tan&#8315;&#185;(10/17.3). This can work IF the angle is from horizontal — BUT you must make sure you're putting <em>vertical (opposite) on top</em> and <em>horizontal (adjacent) on the bottom</em>.
+      </div>
+      <p style="margin-top:14px;color:#374151;">The real rule: <strong>always label your triangle first</strong>. Mark which side is opposite, adjacent, and hypotenuse <em>relative to the angle you want</em> (measured from horizontal). Then choose the right formula.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 7: QUICK QUIZ -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#fef3c7;">&#10067;</div>
+      <h2>Quick Check</h2>
+    </div>
+
+    <!-- Q1 -->
+    <div class="quiz-card">
+      <div class="q-num">Question 1</div>
+      <div class="q-text">A vector has a horizontal component of 10 units and a vertical component of 5 units. Which formula gives the angle from horizontal?</div>
+      <div class="q-options">
+        <div class="q-option" onclick="checkQ('q1','A','B')">A) sin&#8315;&#185;(5/10)</div>
+        <div class="q-option" onclick="checkQ('q1','B','B')">B) tan&#8315;&#185;(5/10)</div>
+        <div class="q-option" onclick="checkQ('q1','C','B')">C) cos&#8315;&#185;(5/10)</div>
+        <div class="q-option" onclick="checkQ('q1','D','B')">D) tan&#8315;&#185;(10/5)</div>
+      </div>
+      <div class="q-feedback" id="q1-fb"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-card">
+      <div class="q-num">Question 2</div>
+      <div class="q-text">Using the river problem values (3 m/s across, 5 m/s downstream), what is the angle of the resultant from horizontal?</div>
+      <div class="q-options">
+        <div class="q-option" onclick="checkQ('q2','A','C')">A) 31&#176;</div>
+        <div class="q-option" onclick="checkQ('q2','B','C')">B) 45&#176;</div>
+        <div class="q-option" onclick="checkQ('q2','C','C')">C) 59&#176;</div>
+        <div class="q-option" onclick="checkQ('q2','D','C')">D) 63&#176;</div>
+      </div>
+      <div class="q-feedback" id="q2-fb"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-card">
+      <div class="q-num">Question 3</div>
+      <div class="q-text">You know the hypotenuse = 8 m and the adjacent side = 6 m. Which formula do you use?</div>
+      <div class="q-options">
+        <div class="q-option" onclick="checkQ('q3','A','B')">A) tan&#8315;&#185;(6/8)</div>
+        <div class="q-option" onclick="checkQ('q3','B','B')">B) cos&#8315;&#185;(6/8)</div>
+        <div class="q-option" onclick="checkQ('q3','C','B')">C) sin&#8315;&#185;(6/8)</div>
+        <div class="q-option" onclick="checkQ('q3','D','B')">D) tan&#8315;&#185;(8/6)</div>
+      </div>
+      <div class="q-feedback" id="q3-fb"></div>
+    </div>
+  </section>
+
+  <!-- SECTION 8: SUMMARY -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#ede9fe;">&#128218;</div>
+      <h2>Summary</h2>
+    </div>
+    <div class="summary-grid">
+      <div class="sum-card sc-purple">
+        <h4>When to use tan&#8315;&#185;</h4>
+        <p>Both legs of the triangle are known. <span class="mono" style="font-size:0.82rem;">tan&#8315;&#185;(opp/adj)</span> — most common in IB vector problems.</p>
+      </div>
+      <div class="sum-card sc-blue">
+        <h4>When to use sin&#8315;&#185;</h4>
+        <p>The opposite side and hypotenuse are known. <span class="mono" style="font-size:0.82rem;">sin&#8315;&#185;(opp/hyp)</span></p>
+      </div>
+      <div class="sum-card sc-green">
+        <h4>When to use cos&#8315;&#185;</h4>
+        <p>The adjacent side and hypotenuse are known. <span class="mono" style="font-size:0.82rem;">cos&#8315;&#185;(adj/hyp)</span></p>
+      </div>
+      <div class="sum-card sc-amber">
+        <h4>Direction Convention</h4>
+        <p>Angle is always measured from horizontal. State direction clearly: e.g. "59&#176; South of East" or "26.6&#176; North of East".</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+</div><!-- end #content -->
+
+<script>
+  // Password check
+  function checkPw(){
+    const val = document.getElementById('pw-input').value;
+    if(val === 'physics2024'){
+      document.getElementById('lock-screen').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+    } else {
+      document.getElementById('pw-error').textContent = 'Incorrect password. Please try again.';
+      document.getElementById('pw-input').value = '';
+    }
+  }
+  document.getElementById('pw-input').addEventListener('keydown', function(e){
+    if(e.key === 'Enter') checkPw();
+  });
+
+  // Quiz check
+  const feedbacks = {
+    q1: 'Correct! tan&#8315;&#185;(vertical/horizontal) = tan&#8315;&#185;(5/10) &#8776; 26.6&#176;',
+    q2: 'Correct! tan&#8315;&#185;(5/3) = 59&#176; from horizontal',
+    q3: 'Correct! We know adjacent and hypotenuse, so use cos&#8315;&#185;(adj/hyp) = cos&#8315;&#185;(6/8) = 41.4&#176;'
+  };
+  const wrongFeedbacks = {
+    q1: 'Not quite. The angle is from horizontal, so horizontal = adjacent, vertical = opposite. Use tan&#8315;&#185;(opp/adj) = tan&#8315;&#185;(5/10).',
+    q2: 'Not quite. tan&#8315;&#185;(5/3) = tan&#8315;&#185;(1.667) &#8776; 59&#176;.',
+    q3: 'Not quite. Adjacent and hypotenuse are given &#8594; use cos&#8315;&#185;(adj/hyp) = cos&#8315;&#185;(6/8).'
+  };
+  function checkQ(qid, chosen, correct){
+    const options = document.querySelectorAll(`.quiz-card:nth-of-type(${qid==='q1'?1:qid==='q2'?2:3}) .q-option`);
+    options.forEach(o=>{ o.style.pointerEvents='none'; });
+    const letters=['A','B','C','D'];
+    options.forEach((o,i)=>{
+      if(letters[i]===correct) o.classList.add('correct');
+      else if(letters[i]===chosen && chosen!==correct) o.classList.add('wrong');
+    });
+    const fb = document.getElementById(qid+'-fb');
+    if(chosen===correct){
+      fb.className='q-feedback show-correct';
+      fb.innerHTML='&#10003; '+feedbacks[qid];
+    } else {
+      fb.className='q-feedback show-wrong';
+      fb.innerHTML='&#10007; '+wrongFeedbacks[qid];
+    }
+  }
+</script>
+</body>
+</html>

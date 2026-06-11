@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Absolute, Fractional &amp; Percent Uncertainty — Physics Lesson</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root {
+      --teal:#0d9488;--green:#22c55e;--emerald:#065f46;--amber:#f59e0b;
+      --red:#ef4444;--dark:#0f172a;--card:#ffffff;--bg:#f8faff;--muted:#94a3b8;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:17px;line-height:1.75;background-image:radial-gradient(circle,#99f6e4 1px,transparent 1px);background-size:28px 28px;}
+    header{background:linear-gradient(135deg,#065f46 0%,#0d9488 60%,#0f766e 100%);color:white;padding:52px 60px 48px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(16,185,129,0.35) 0%,transparent 60%),radial-gradient(ellipse at 80% 30%,rgba(13,148,136,0.3) 0%,transparent 55%),radial-gradient(ellipse at 60% 80%,rgba(6,95,70,0.2) 0%,transparent 50%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.4);}}
+    header .chip{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px;position:relative;}
+    header h1{font-size:3.2rem;font-weight:900;letter-spacing:-1px;position:relative;margin-bottom:10px;background:linear-gradient(90deg,#a7f3d0,#6ee7b7,#d1fae5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1.1rem;color:rgba(255,255,255,0.75);position:relative;max-width:560px;margin:0 auto;}
+    main{max-width:920px;margin:48px auto;padding:0 24px 80px;}
+    section{margin-bottom:60px;}
+    .section-label{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+    .section-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    .section-label h2{font-size:1.5rem;font-weight:900;color:var(--dark);}
+    /* intro */
+    .intro-scene{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;}
+    @media(max-width:640px){.intro-scene{grid-template-columns:1fr;}}
+    .intro-text{background:white;border-radius:16px;padding:24px 28px;box-shadow:0 4px 20px rgba(13,148,136,0.1);border:2px solid #ccfbf1;}
+    .intro-text p{margin-bottom:12px;color:#334155;}
+    .analogy-card{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-radius:16px;padding:24px 20px;border:2px solid #6ee7b7;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;}
+    .analogy-card .big-eq{font-family:'Space Mono',monospace;font-size:1.6rem;font-weight:700;color:#065f46;line-height:1.4;}
+    .analogy-card .caption{font-size:0.85rem;color:#047857;font-weight:700;}
+    /* three types */
+    .types-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
+    @media(max-width:640px){.types-grid{grid-template-columns:1fr;}}
+    .type-card{border-radius:16px;padding:22px 20px;text-align:center;box-shadow:0 3px 14px rgba(0,0,0,0.07);}
+    .tc-abs{background:#ecfdf5;border:2px solid #6ee7b7;}
+    .tc-frac{background:#fffbeb;border:2px solid #fde68a;}
+    .tc-pct{background:#fef2f2;border:2px solid #fca5a5;}
+    .type-card .tc-icon{font-size:2.2rem;margin-bottom:8px;}
+    .type-card .tc-title{font-size:1.05rem;font-weight:900;margin-bottom:6px;}
+    .tc-abs .tc-title{color:#065f46;}.tc-frac .tc-title{color:#92400e;}.tc-pct .tc-title{color:#991b1b;}
+    .type-card .tc-symbol{font-family:'Space Mono',monospace;font-size:0.9rem;font-weight:700;margin:8px 0;padding:4px 10px;border-radius:8px;}
+    .tc-abs .tc-symbol{background:#d1fae5;color:#065f46;}.tc-frac .tc-symbol{background:#fef3c7;color:#78350f;}.tc-pct .tc-symbol{background:#fee2e2;color:#991b1b;}
+    .type-card .tc-example{font-family:'Space Mono',monospace;font-size:1.35rem;font-weight:700;margin:10px 0;}
+    .tc-abs .tc-example{color:#065f46;}.tc-frac .tc-example{color:#92400e;}.tc-pct .tc-example{color:#991b1b;}
+    .type-card .tc-def{font-size:0.83rem;color:#475569;}
+    /* relationship banner */
+    .rel-banner{background:linear-gradient(135deg,#1a2e1c,#134e4a);border-radius:18px;padding:26px 32px;color:white;margin-bottom:28px;text-align:center;}
+    .rel-banner h3{font-size:1rem;opacity:0.75;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;}
+    .rel-row{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;}
+    .rel-box{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:12px;padding:10px 20px;font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:700;}
+    .rel-eq{font-size:1.4rem;color:rgba(255,255,255,0.6);}
+    .rel-note{margin-top:14px;font-size:0.85rem;color:rgba(255,255,255,0.65);}
+    /* conversion */
+    .conv-block{background:white;border-radius:18px;margin-bottom:24px;box-shadow:0 4px 20px rgba(0,0,0,0.07);overflow:hidden;}
+    .conv-header{display:flex;align-items:center;gap:16px;padding:18px 24px;border-bottom:2px solid #f1f5f9;}
+    .conv-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+    .conv-title{font-size:1.1rem;font-weight:900;color:var(--dark);}
+    .conv-body{padding:18px 24px;}
+    .conv-formula{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px;}
+    .cf-box{font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:700;padding:8px 16px;border-radius:10px;}
+    .cf-arrow{font-size:1.3rem;color:#94a3b8;}
+    .conv-step{display:flex;gap:10px;align-items:flex-start;font-size:0.9rem;color:#374151;margin-bottom:6px;}
+    .conv-dot{width:22px;height:22px;border-radius:50%;background:#d1fae5;color:#065f46;font-weight:800;font-size:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .conv-expl{font-size:0.88rem;color:#475569;padding:10px 14px;background:#f8fafc;border-radius:8px;border-left:3px solid #cbd5e1;margin-top:8px;}
+    /* rounding */
+    .round-grid{display:grid;gap:14px;}
+    .round-card{background:white;border-radius:14px;padding:20px 24px;box-shadow:0 3px 14px rgba(0,0,0,0.07);border-left:5px solid var(--teal);}
+    .round-card .rc-label{font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;color:#64748b;margin-bottom:8px;}
+    .round-card .rc-rule{font-weight:700;color:var(--dark);margin-bottom:8px;font-size:0.95rem;}
+    .round-example{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:8px;}
+    .re-box{font-family:'Space Mono',monospace;font-size:1.05rem;font-weight:700;padding:6px 12px;border-radius:8px;}
+    .re-before{background:#fef3c7;color:#78350f;}.re-after{background:#d1fae5;color:#065f46;}
+    .re-arrow{font-size:1.2rem;color:#94a3b8;}
+    /* unit rule */
+    .unit-zone{background:linear-gradient(135deg,#ecfdf5,#f0fdfa);border:2px solid #6ee7b7;border-radius:18px;padding:28px 32px;margin-bottom:28px;}
+    .unit-zone h3{font-size:1.1rem;font-weight:900;color:#065f46;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+    .unit-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    @media(max-width:600px){.unit-compare{grid-template-columns:1fr;}}
+    .uc-card{border-radius:12px;padding:18px 20px;}
+    .uc-abs{background:white;border:2px solid #6ee7b7;}.uc-frac{background:white;border:2px solid #fde68a;}
+    .uc-card .uc-label{font-size:0.8rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;}
+    .uc-abs .uc-label{color:#065f46;}.uc-frac .uc-label{color:#92400e;}
+    .uc-card .uc-val{font-family:'Space Mono',monospace;font-size:1.2rem;font-weight:700;margin-bottom:6px;}
+    .uc-card .uc-note{font-size:0.82rem;color:#64748b;}
+    /* worked examples */
+    .example-card{background:white;border-radius:18px;margin-bottom:22px;box-shadow:0 4px 20px rgba(0,0,0,0.07);overflow:hidden;}
+    .ex-header{display:flex;align-items:center;gap:14px;padding:16px 24px;border-bottom:2px solid #f1f5f9;}
+    .ex-num{background:var(--dark);color:white;font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:4px 14px;border-radius:20px;}
+    .ex-concept{font-size:0.82rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+    .ex-body{padding:20px 24px;}
+    .given-row{font-family:'Space Mono',monospace;font-size:1.4rem;font-weight:700;color:#065f46;margin-bottom:14px;}
+    .steps{display:flex;flex-direction:column;gap:8px;}
+    .step{display:flex;gap:12px;align-items:flex-start;font-size:0.9rem;color:#374151;}
+    .step-dot{width:22px;height:22px;border-radius:50%;background:#d1fae5;color:#065f46;font-weight:800;font-size:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step code{font-family:'Space Mono',monospace;background:#f1f5f9;padding:1px 6px;border-radius:4px;font-size:0.88rem;}
+    .result-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:12px;padding:12px 16px;background:#ecfdf5;border-radius:10px;}
+    .res-label{font-size:0.82rem;font-weight:800;color:#065f46;text-transform:uppercase;letter-spacing:0.5px;}
+    .res-val{font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:700;color:#065f46;}
+    .explanation{font-size:0.9rem;color:#475569;line-height:1.65;padding:10px 14px;background:#f8fafc;border-radius:8px;border-left:3px solid #cbd5e1;margin-top:10px;}
+    /* quiz */
+    .quiz-section{background:linear-gradient(135deg,#134e4a,#065f46);border-radius:20px;padding:32px;color:white;}
+    .quiz-section h3{font-size:1.3rem;font-weight:900;margin-bottom:6px;}
+    .quiz-section p{font-size:0.88rem;opacity:0.75;margin-bottom:24px;}
+    .quiz-q{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:18px 22px;margin-bottom:14px;}
+    .quiz-q .qtext{font-size:0.95rem;margin-bottom:14px;font-weight:700;}
+    .quiz-q .qnum{font-family:'Space Mono',monospace;font-size:1.5rem;font-weight:700;margin-bottom:14px;color:#a7f3d0;}
+    .options{display:flex;flex-wrap:wrap;gap:10px;}
+    .opt-btn{background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);color:white;font-family:'Nunito',sans-serif;font-size:0.92rem;font-weight:700;padding:8px 18px;border-radius:30px;cursor:pointer;transition:all 0.2s;}
+    .opt-btn:hover{background:rgba(255,255,255,0.2);transform:scale(1.04);}
+    .opt-btn.correct{background:#22c55e;border-color:#22c55e;animation:popIn 0.3s ease;}
+    .opt-btn.wrong{background:#ef4444;border-color:#ef4444;}
+    .feedback{font-size:0.85rem;margin-top:10px;padding:8px 14px;border-radius:8px;display:none;}
+    .feedback.show{display:block;}
+    .feedback.ok{background:rgba(34,197,94,0.2);color:#bbf7d0;}
+    .feedback.bad{background:rgba(239,68,68,0.2);color:#fecaca;}
+    @keyframes popIn{0%{transform:scale(0.9);}60%{transform:scale(1.1);}100%{transform:scale(1);}}
+    footer{text-align:center;padding:32px 20px;font-size:0.85rem;color:var(--muted);}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="star" style="width:3px;height:3px;top:12%;left:8%;animation-delay:0s"></div>
+  <div class="star" style="width:2px;height:2px;top:25%;left:15%;animation-delay:0.5s"></div>
+  <div class="star" style="width:4px;height:4px;top:10%;left:30%;animation-delay:1s"></div>
+  <div class="star" style="width:3px;height:3px;top:70%;left:20%;animation-delay:0.3s"></div>
+  <div class="star" style="width:2px;height:2px;top:15%;left:75%;animation-delay:0.8s"></div>
+  <div class="star" style="width:4px;height:4px;top:40%;left:88%;animation-delay:1.2s"></div>
+  <div class="star" style="width:5px;height:5px;top:20%;left:55%;animation-delay:0.6s"></div>
+  <div class="chip">⚛️ Physics · High School · Measurement</div>
+  <h1>Absolute, Fractional &amp; Percent Uncertainty</h1>
+  <p class="subtitle">Three ways to express the same uncertainty — and how to convert between them</p>
+</header>
+
+<main>
+
+<!-- SECTION 1: Introduction -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#d1fae5;">🤔</div>
+    <h2>Why Three Types?</h2>
+  </div>
+  <div class="intro-scene">
+    <div class="intro-text">
+      <p>When you report a measurement, you always include an <strong>uncertainty</strong> — a range that captures how precise your instrument is. For example, a ruler might give you <strong>4 ± 1 cm</strong>.</p>
+      <p>That "± 1" can be written in three equivalent ways: as a raw number (<strong>absolute</strong>), as a fraction of the measurement (<strong>fractional</strong>), or as a percentage (<strong>percent</strong>). They all say the same thing — just in different languages.</p>
+      <p>Knowing how to switch between them is essential, because different calculations and reporting conventions require different forms.</p>
+    </div>
+    <div class="analogy-card">
+      <div style="font-size:2rem;margin-bottom:4px;">🔁</div>
+      <div class="big-eq">4 ± 1 cm</div>
+      <div style="font-size:1.3rem;color:#0d9488;margin:4px 0;">= 4 cm ± 0.25</div>
+      <div style="font-size:1.3rem;color:#b45309;margin:4px 0;">= 4 cm ± 25%</div>
+      <div class="caption">All three say the same thing!</div>
+    </div>
+  </div>
+
+  <!-- The three types -->
+  <div class="types-grid">
+    <div class="type-card tc-abs">
+      <div class="tc-icon">📏</div>
+      <div class="tc-title">Absolute Uncertainty</div>
+      <div class="tc-symbol">Δa, Δb, Δc</div>
+      <div class="tc-example">4 ± 1</div>
+      <div class="tc-def">Expressed as a plain number, independent of the original measurement. Same units as the measurement.</div>
+    </div>
+    <div class="type-card tc-frac">
+      <div class="tc-icon">➗</div>
+      <div class="tc-title">Fractional Uncertainty</div>
+      <div class="tc-symbol">Δa/a, Δb/b, Δc/c</div>
+      <div class="tc-example">4 ± 0.25</div>
+      <div class="tc-def">Expressed as the ratio of the absolute uncertainty to the measurement. Dimensionless — no units.</div>
+    </div>
+    <div class="type-card tc-pct">
+      <div class="tc-icon">📊</div>
+      <div class="tc-title">Percent Uncertainty</div>
+      <div class="tc-symbol">(Δa/a)×100%</div>
+      <div class="tc-example">4 ± 25%</div>
+      <div class="tc-def">Expressed as the fractional uncertainty multiplied by 100. Makes the size of the error easy to grasp at a glance.</div>
+    </div>
+  </div>
+
+  <div class="rel-banner">
+    <h3>Key Insight — All Three Are Equivalent</h3>
+    <div class="rel-row">
+      <div class="rel-box">Absolute: 4 ± 1</div>
+      <div class="rel-eq">⟺</div>
+      <div class="rel-box">Fractional: 4 ± 0.25</div>
+      <div class="rel-eq">⟺</div>
+      <div class="rel-box">Percent: 4 ± 25%</div>
+    </div>
+    <div class="rel-note">All three express the same underlying measurement and the same uncertainty — only the notation differs.</div>
+  </div>
+</section>
+
+<!-- SECTION 2: Conversions -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fef3c7;">🔄</div>
+    <h2>Converting Between Forms</h2>
+  </div>
+
+  <div class="conv-block">
+    <div class="conv-header">
+      <div class="conv-icon" style="background:linear-gradient(135deg,#065f46,#0d9488);">➡️</div>
+      <div class="conv-title">Absolute → Fractional: divide by the measurement</div>
+    </div>
+    <div class="conv-body">
+      <div class="conv-formula">
+        <div class="cf-box" style="background:#d1fae5;color:#065f46;">Δa (absolute)</div>
+        <div class="cf-arrow">÷ a →</div>
+        <div class="cf-box" style="background:#fef3c7;color:#78350f;">Δa/a (fractional)</div>
+      </div>
+      <div class="conv-step"><div class="conv-dot">1</div><span>Take the absolute uncertainty and divide by the measured value.</span></div>
+      <div class="conv-step"><div class="conv-dot">2</div><span>Example: absolute = <code>1</code>, measurement = <code>4</code> → fractional = <code>1 ÷ 4 = 0.25</code></span></div>
+      <div class="conv-expl">The fractional uncertainty tells you what fraction of the measurement your uncertainty represents. 0.25 means your uncertainty is 1/4 of the value.</div>
+    </div>
+  </div>
+
+  <div class="conv-block">
+    <div class="conv-header">
+      <div class="conv-icon" style="background:linear-gradient(135deg,#78350f,#d97706);">⬅️</div>
+      <div class="conv-title">Fractional → Absolute: multiply by the measurement</div>
+    </div>
+    <div class="conv-body">
+      <div class="conv-formula">
+        <div class="cf-box" style="background:#fef3c7;color:#78350f;">Δa/a (fractional)</div>
+        <div class="cf-arrow">× a →</div>
+        <div class="cf-box" style="background:#d1fae5;color:#065f46;">Δa (absolute)</div>
+      </div>
+      <div class="conv-step"><div class="conv-dot">1</div><span>Multiply the fractional uncertainty by the measured value.</span></div>
+      <div class="conv-step"><div class="conv-dot">2</div><span>Example: fractional = <code>0.25</code>, measurement = <code>4</code> → absolute = <code>0.25 × 4 = 1</code></span></div>
+      <div class="conv-expl">This reverses the first conversion — you recover the original raw uncertainty with units.</div>
+    </div>
+  </div>
+
+  <div class="conv-block">
+    <div class="conv-header">
+      <div class="conv-icon" style="background:linear-gradient(135deg,#991b1b,#ef4444);">📊</div>
+      <div class="conv-title">Fractional → Percent: multiply by 100</div>
+    </div>
+    <div class="conv-body">
+      <div class="conv-formula">
+        <div class="cf-box" style="background:#fef3c7;color:#78350f;">Δa/a (fractional)</div>
+        <div class="cf-arrow">× 100 →</div>
+        <div class="cf-box" style="background:#fee2e2;color:#991b1b;">% uncertainty</div>
+      </div>
+      <div class="conv-step"><div class="conv-dot">1</div><span>Multiply the fractional uncertainty by 100 to get the percent.</span></div>
+      <div class="conv-step"><div class="conv-dot">2</div><span>Example: fractional = <code>0.25</code> → percent = <code>0.25 × 100 = 25%</code></span></div>
+      <div class="conv-expl">This is the most intuitive form. "25% uncertainty" is easy to visualise — your uncertainty is 25 cents of every dollar measured.</div>
+    </div>
+  </div>
+
+  <div class="conv-block">
+    <div class="conv-header">
+      <div class="conv-icon" style="background:linear-gradient(135deg,#1d4ed8,#6366f1);">🔢</div>
+      <div class="conv-title">Percent → Fractional: divide by 100</div>
+    </div>
+    <div class="conv-body">
+      <div class="conv-formula">
+        <div class="cf-box" style="background:#fee2e2;color:#991b1b;">% uncertainty</div>
+        <div class="cf-arrow">÷ 100 →</div>
+        <div class="cf-box" style="background:#fef3c7;color:#78350f;">Δa/a (fractional)</div>
+      </div>
+      <div class="conv-step"><div class="conv-dot">1</div><span>Divide the percent uncertainty by 100.</span></div>
+      <div class="conv-step"><div class="conv-dot">2</div><span>Example: percent = <code>25%</code> → fractional = <code>25 ÷ 100 = 0.25</code></span></div>
+      <div class="conv-expl">Once you have the fractional form, you can then multiply by the measurement to get the absolute uncertainty if needed.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: Unit Placement Rule -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fef9c3;">🏷️</div>
+    <h2>Unit Placement Rule</h2>
+  </div>
+  <div class="unit-zone">
+    <h3>📌 Where the unit goes tells you which type it is</h3>
+    <div class="unit-compare">
+      <div class="uc-card uc-abs">
+        <div class="uc-label">Absolute Uncertainty</div>
+        <div class="uc-val">4.00 ± 0.25 kg</div>
+        <div class="uc-note">Unit <strong>after the uncertainty</strong>. Both the value and the uncertainty carry the unit.</div>
+        <div style="margin-top:8px;font-size:0.82rem;color:#065f46;font-weight:700;">✅ "4.00 kg, uncertain by 0.25 kg"</div>
+      </div>
+      <div class="uc-card uc-frac">
+        <div class="uc-label">Fractional Uncertainty</div>
+        <div class="uc-val">4.00 kg ± 0.25</div>
+        <div class="uc-note">Unit <strong>after the number only</strong>. The uncertainty has no unit — it is a pure ratio.</div>
+        <div style="margin-top:8px;font-size:0.82rem;color:#92400e;font-weight:700;">✅ "4.00 kg, uncertain by 0.25 of the value"</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: Rounding Rules -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#ede9fe;">✂️</div>
+    <h2>Rounding Rules for Uncertainty</h2>
+  </div>
+  <div class="round-grid">
+    <div class="round-card">
+      <div class="rc-label">Rule 1</div>
+      <div class="rc-rule">If the absolute uncertainty has MORE decimal places than the number → round the NUMBER to match the uncertainty.</div>
+      <div class="round-example">
+        <div class="re-box re-before">7.55 ± 0.4</div>
+        <div class="re-arrow">→</div>
+        <div class="re-box re-after">7.6 ± 0.4</div>
+      </div>
+      <div style="margin-top:10px;font-size:0.83rem;color:#64748b;">The uncertainty is to 1 decimal place, so the number must also be reported to 1 decimal place.</div>
+    </div>
+    <div class="round-card">
+      <div class="rc-label">Rule 1 — Another Example</div>
+      <div class="rc-rule">Round the number to match the decimal places of the uncertainty.</div>
+      <div class="round-example">
+        <div class="re-box re-before">1874 ± 40</div>
+        <div class="re-arrow">→</div>
+        <div class="re-box re-after">1870 ± 40</div>
+      </div>
+      <div style="margin-top:10px;font-size:0.83rem;color:#64748b;">Uncertainty is to the tens place, so the number is rounded to the tens place.</div>
+    </div>
+    <div class="round-card">
+      <div class="rc-label">Rule 2</div>
+      <div class="rc-rule">If the absolute uncertainty has FEWER decimal places than the number → round the UNCERTAINTY to match the number.</div>
+      <div class="round-example">
+        <div class="re-box re-before">3.2574 ± 0.1</div>
+        <div class="re-arrow">→</div>
+        <div class="re-box re-after">3.3 ± 0.1</div>
+      </div>
+      <div style="margin-top:10px;font-size:0.83rem;color:#64748b;">The uncertainty is only to 1 decimal place; report the number to 1 decimal place.</div>
+    </div>
+    <div class="round-card">
+      <div class="rc-label">Rule 2 — Another Example</div>
+      <div class="rc-rule">Always match the precision of number and uncertainty.</div>
+      <div class="round-example">
+        <div class="re-box re-before">3.25 ± 0.0435</div>
+        <div class="re-arrow">→</div>
+        <div class="re-box re-after">3.25 ± 0.04</div>
+      </div>
+      <div style="margin-top:10px;font-size:0.83rem;color:#64748b;">The number has 2 decimal places, so the uncertainty is rounded to 2 decimal places.</div>
+    </div>
+    <div class="round-card" style="border-left-color:#ef4444;">
+      <div class="rc-label" style="color:#dc2626;">Warning — Extreme Case</div>
+      <div class="rc-rule">When the uncertainty is larger than the number's precision, the number effectively becomes zero at that decimal place.</div>
+      <div class="round-example">
+        <div class="re-box re-before">0.042 ± 0.5</div>
+        <div class="re-arrow">→</div>
+        <div class="re-box" style="background:#fee2e2;color:#991b1b;">0.0 ± 0.5</div>
+      </div>
+      <div style="margin-top:10px;font-size:0.83rem;color:#64748b;">The uncertainty (±0.5) is so large relative to 0.042 that the number rounds to 0.0. This signals the measurement has very poor precision.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: Worked Examples -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#dcfce7;">🔬</div>
+    <h2>Worked Examples</h2>
+  </div>
+
+  <div class="example-card">
+    <div class="ex-header"><div class="ex-num">Example 1</div><div class="ex-concept">Absolute → Fractional → Percent</div></div>
+    <div class="ex-body">
+      <div class="given-row">5 m ± 3</div>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Fractional = absolute ÷ measurement = <code>3 ÷ 5 = 0.6</code></span></div>
+        <div class="step"><div class="step-dot">2</div><span>Percent = fractional × 100 = <code>0.6 × 100 = 60%</code></span></div>
+      </div>
+      <div class="result-row">
+        <span class="res-label">Absolute:</span><span class="res-val">5 m ± 3</span>
+        <span class="res-label" style="margin-left:10px;">Fractional:</span><span class="res-val">5 m ± 0.6</span>
+        <span class="res-label" style="margin-left:10px;">Percent:</span><span class="res-val">5 m ± 60%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="example-card">
+    <div class="ex-header"><div class="ex-num">Example 2</div><div class="ex-concept">Voltage — Absolute → Percent</div></div>
+    <div class="ex-body">
+      <div class="given-row">20 V ± 2</div>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Fractional = <code>2 ÷ 20 = 0.1</code></span></div>
+        <div class="step"><div class="step-dot">2</div><span>Percent = <code>0.1 × 100 = 10%</code></span></div>
+      </div>
+      <div class="result-row">
+        <span class="res-label">Absolute:</span><span class="res-val">20 V ± 2</span>
+        <span class="res-label" style="margin-left:10px;">Percent:</span><span class="res-val">20 V ± 10%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="example-card">
+    <div class="ex-header"><div class="ex-num">Example 3</div><div class="ex-concept">Current — Percent Uncertainty</div></div>
+    <div class="ex-body">
+      <div class="given-row">9 A ± 0.35</div>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Fractional = <code>0.35 ÷ 9 = 0.0389…</code></span></div>
+        <div class="step"><div class="step-dot">2</div><span>Percent = <code>0.0389 × 100 ≈ 3.9% → round to 4%</code></span></div>
+      </div>
+      <div class="result-row">
+        <span class="res-label">Absolute:</span><span class="res-val">9 A ± 0.35</span>
+        <span class="res-label" style="margin-left:10px;">Percent:</span><span class="res-val">9 A ± 4%</span>
+      </div>
+      <div class="explanation">Note: the percent was rounded to a sensible number of significant figures (1 s.f. for a rough uncertainty). Keeping 3.89% would imply more precision in the uncertainty than the measurement warrants.</div>
+    </div>
+  </div>
+
+  <div class="example-card">
+    <div class="ex-header"><div class="ex-num">Example 4</div><div class="ex-concept">Rounding — Match decimal places</div></div>
+    <div class="ex-body">
+      <div class="given-row">3.25 ± 0.0435</div>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>The number (3.25) has 2 decimal places.</span></div>
+        <div class="step"><div class="step-dot">2</div><span>Round uncertainty to 2 d.p.: <code>0.0435 → 0.04</code></span></div>
+      </div>
+      <div class="result-row">
+        <span class="res-label">Correctly written:</span><span class="res-val">3.25 ± 0.04</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="example-card">
+    <div class="ex-header"><div class="ex-num">Example 5</div><div class="ex-concept">Rounding — Number must match uncertainty</div></div>
+    <div class="ex-body">
+      <div class="given-row">3.2574 ± 0.1</div>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>The uncertainty (0.1) has 1 decimal place.</span></div>
+        <div class="step"><div class="step-dot">2</div><span>Round the number to 1 d.p.: <code>3.2574 → 3.3</code></span></div>
+      </div>
+      <div class="result-row">
+        <span class="res-label">Correctly written:</span><span class="res-val">3.3 ± 0.1</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: Quiz -->
+<section>
+  <div class="quiz-section">
+    <h3>⚡ Quick Check — Test Yourself!</h3>
+    <p>Select the correct answer for each question.</p>
+
+    <div class="quiz-q" id="q1">
+      <div class="qtext">Convert 12 m ± 3 to percent uncertainty. What is the percent?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q1',false,'4%','Close — but 3/12 = 0.25, not 0.04. Multiply 0.25 × 100 = 25%.')">4%</button>
+        <button class="opt-btn" onclick="check(this,'q1',false,'3%','You divided the wrong way. Fractional = 3÷12 = 0.25, percent = 25%.')">3%</button>
+        <button class="opt-btn" onclick="check(this,'q1',true,'25%','Correct! Fractional = 3÷12 = 0.25. Percent = 0.25 × 100 = 25%.')">25%</button>
+        <button class="opt-btn" onclick="check(this,'q1',false,'36%','Not quite. Fractional = 3÷12 = 0.25, percent = 25%.')">36%</button>
+      </div>
+      <div class="feedback" id="q1-fb"></div>
+    </div>
+
+    <div class="quiz-q" id="q2">
+      <div class="qtext">A measurement is written as 50 kg ± 0.1. What type of uncertainty is 0.1?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q2',false,'Absolute','Look at where the unit is. The unit (kg) is after 50, not after 0.1. So 0.1 has no unit — it is fractional.')">Absolute</button>
+        <button class="opt-btn" onclick="check(this,'q2',true,'Fractional','Correct! The unit kg comes after the number 50, not after the uncertainty 0.1 — so 0.1 is a fractional (dimensionless) uncertainty.')">Fractional</button>
+        <button class="opt-btn" onclick="check(this,'q2',false,'Percent','Percent uncertainties are written with a % symbol. There is no % here.')">Percent</button>
+      </div>
+      <div class="feedback" id="q2-fb"></div>
+    </div>
+
+    <div class="quiz-q" id="q3">
+      <div class="qtext">Round 7.55 ± 0.4 correctly.</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q3',false,'7.55 ± 0.4','The uncertainty has 1 d.p. but the number has 2 d.p. — they must match. Round the number to 1 d.p.')">7.55 ± 0.4</button>
+        <button class="opt-btn" onclick="check(this,'q3',true,'7.6 ± 0.4','Correct! The uncertainty (0.4) is to 1 d.p., so round the number to 1 d.p.: 7.55 → 7.6.')">7.6 ± 0.4</button>
+        <button class="opt-btn" onclick="check(this,'q3',false,'7.5 ± 0.4','Close — but 7.55 rounds up to 7.6, not down to 7.5.')">7.5 ± 0.4</button>
+        <button class="opt-btn" onclick="check(this,'q3',false,'8 ± 0.4','Too aggressive a round. 0.4 is to 1 d.p., not to the ones place.')">8 ± 0.4</button>
+      </div>
+      <div class="feedback" id="q3-fb"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer>Physics · High School &nbsp;·&nbsp; Unit 8: Absolute, Fractional &amp; Percent Uncertainty</footer>
+<script>
+function check(btn,qid,correct,label,msg){
+  var q=document.getElementById(qid);
+  var fb=document.getElementById(qid+'-fb');
+  q.querySelectorAll('.opt-btn').forEach(function(b){b.disabled=true;b.style.opacity='0.55';b.style.cursor='default';});
+  btn.style.opacity='1';
+  btn.classList.add(correct?'correct':'wrong');
+  var correctLabels={q1:'25%',q2:'Fractional',q3:'7.6 ± 0.4'};
+  if(!correct){q.querySelectorAll('.opt-btn').forEach(function(b){if(b.textContent.trim()===correctLabels[qid]){b.classList.add('correct');b.style.opacity='1';}});}
+  fb.textContent=(correct?'✅ ':'❌ ')+msg;
+  fb.className='feedback show '+(correct?'ok':'bad');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kinematic Equations — Physics Lesson</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root{--blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);font-size:17px;line-height:1.75;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;}
+    header{background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 60%,#1e40af 100%);color:white;padding:52px 60px 48px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 50%,rgba(99,102,241,0.3) 0%,transparent 60%),radial-gradient(ellipse at 75% 30%,rgba(59,130,246,0.25) 0%,transparent 55%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.4);}}
+    header .chip{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px;position:relative;}
+    header h1{font-size:2.9rem;font-weight:900;letter-spacing:-1px;position:relative;margin-bottom:10px;background:linear-gradient(90deg,#bfdbfe,#e0e7ff,#bfdbfe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1.05rem;color:rgba(255,255,255,0.8);position:relative;max-width:540px;margin:0 auto;}
+    main{max-width:920px;margin:48px auto;padding:0 24px 80px;}
+    section{margin-bottom:60px;}
+    .section-label{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+    .section-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    .section-label h2{font-size:1.5rem;font-weight:900;color:var(--dark);}
+
+    /* definition card */
+    .def-card{background:white;border-radius:18px;padding:28px 32px;box-shadow:0 4px 20px rgba(0,0,0,0.07);margin-bottom:24px;}
+    .def-card h3{font-size:1.1rem;font-weight:900;color:#1e3a5f;margin-bottom:12px;}
+    .def-card p{font-size:0.97rem;color:#374151;line-height:1.75;}
+
+    /* tip */
+    .tip-box{background:#fffbeb;border:2px solid #fde68a;border-radius:14px;padding:18px 24px;margin-bottom:24px;}
+    .tip-box h4{font-size:0.95rem;font-weight:800;color:#92400e;margin-bottom:8px;}
+    .tip-box p{font-size:0.9rem;color:#78350f;line-height:1.65;}
+
+    /* key insight */
+    .insight-hero{background:linear-gradient(135deg,#1e3a5f,#1d4ed8);border-radius:20px;padding:32px 36px;color:white;margin-bottom:28px;}
+    .insight-hero h3{font-size:0.85rem;text-transform:uppercase;letter-spacing:1.5px;opacity:0.7;margin-bottom:16px;}
+    .insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    @media(max-width:600px){.insight-grid{grid-template-columns:1fr;}}
+    .insight-item{background:rgba(255,255,255,0.1);border-radius:12px;padding:16px 20px;}
+    .insight-item .ihead{font-size:0.88rem;font-weight:800;opacity:0.85;margin-bottom:6px;}
+    .insight-item .ibody{font-size:0.85rem;opacity:0.75;line-height:1.5;}
+
+    /* SUVAT table */
+    .suvat-wrap{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;}
+    @media(max-width:640px){.suvat-wrap{grid-template-columns:1fr;}}
+    .suvat-panel{background:white;border-radius:18px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,0.07);}
+    .suvat-panel h3{font-size:1rem;font-weight:900;color:#1e3a5f;margin-bottom:16px;border-bottom:2px solid #e2e8f0;padding-bottom:8px;}
+    table.suvat-tbl{width:100%;border-collapse:collapse;}
+    table.suvat-tbl th{font-size:0.75rem;font-weight:800;text-transform:uppercase;color:#6b7280;padding:7px 10px;text-align:left;background:#f8faff;}
+    table.suvat-tbl td{padding:9px 10px;font-size:0.92rem;border-bottom:1px solid #f0f4f8;}
+    table.suvat-tbl td:nth-child(2){font-family:'Space Mono',monospace;font-weight:700;font-size:1rem;color:#1d4ed8;}
+    table.suvat-tbl td:nth-child(3){font-family:'Space Mono',monospace;font-size:0.88rem;color:#6b7280;}
+    .eq-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:4px;}
+    .eq-list li{background:#eff6ff;border-radius:10px;padding:12px 16px;font-family:'Space Mono',monospace;font-size:1.05rem;font-weight:700;color:#1d4ed8;border-left:4px solid #3b82f6;}
+    .eq-num{display:inline-block;background:#1d4ed8;color:white;border-radius:50%;width:22px;height:22px;font-size:0.72rem;font-weight:900;line-height:22px;text-align:center;margin-right:8px;font-family:'Nunito',sans-serif;}
+    .unit-note{background:#fef2f2;border:2px solid #fca5a5;border-radius:12px;padding:14px 18px;margin-top:18px;font-size:0.9rem;color:#b91c1c;font-weight:600;}
+
+    /* steps */
+    .steps-card{background:white;border-radius:18px;padding:28px 32px;box-shadow:0 4px 20px rgba(0,0,0,0.07);margin-bottom:24px;}
+    .step-item{display:flex;gap:18px;margin-bottom:22px;align-items:flex-start;}
+    .step-item:last-child{margin-bottom:0;}
+    .step-num{background:linear-gradient(135deg,#1d4ed8,#6366f1);color:white;font-size:1.1rem;font-weight:900;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+    .step-content h4{font-size:1rem;font-weight:900;color:#1e3a5f;margin-bottom:6px;}
+    .step-content p{font-size:0.92rem;color:#374151;line-height:1.65;}
+
+    /* worked example */
+    .example-card{background:white;border-radius:18px;padding:28px 32px;box-shadow:0 4px 20px rgba(0,0,0,0.07);margin-bottom:28px;}
+    .example-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;}
+    .ex-badge{background:linear-gradient(135deg,#1d4ed8,#6366f1);color:white;font-size:0.78rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;padding:5px 14px;border-radius:20px;}
+    .example-card h3{font-size:1.05rem;font-weight:900;color:#1e3a5f;}
+    .problem-text{background:#f8faff;border-radius:12px;padding:16px 20px;margin-bottom:18px;font-size:0.95rem;color:#1e3a5f;font-weight:600;border-left:4px solid #3b82f6;}
+    .suvat-fill{width:100%;border-collapse:collapse;margin-bottom:18px;}
+    .suvat-fill th{background:#1e3a5f;color:white;font-family:'Space Mono',monospace;font-size:0.9rem;padding:8px 14px;text-align:center;}
+    .suvat-fill td{background:#eff6ff;text-align:center;padding:9px 14px;font-family:'Space Mono',monospace;font-size:0.95rem;font-weight:700;color:#1d4ed8;border:2px solid white;}
+    .suvat-fill td.unknown{background:#fef9c3;color:#92400e;}
+    .suvat-fill td.blank{background:#f1f5f9;color:#94a3b8;font-style:italic;font-size:0.8rem;}
+    .working-block{background:#f8faff;border-radius:12px;padding:16px 20px;margin-bottom:14px;}
+    .working-block h5{font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#6b7280;margin-bottom:10px;}
+    .working-step{font-family:'Space Mono',monospace;font-size:0.9rem;color:#374151;margin-bottom:6px;}
+    .answer-box{background:linear-gradient(135deg,#fef2f2,#fff);border:3px solid #ef4444;border-radius:12px;padding:14px 20px;text-align:center;}
+    .answer-box .alabel{font-size:0.75rem;font-weight:800;text-transform:uppercase;color:#ef4444;margin-bottom:4px;}
+    .answer-box .aval{font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;color:#ef4444;}
+    .direction-note{background:#f0fdf4;border:2px solid #86efac;border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:0.9rem;color:#15803d;font-weight:600;}
+
+    /* multi-phase */
+    .phase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
+    @media(max-width:640px){.phase-grid{grid-template-columns:1fr;}}
+    .phase-card{border-radius:14px;padding:18px;text-align:center;}
+    .phase-card.p1{background:linear-gradient(135deg,#dbeafe,#eff6ff);border:2px solid #93c5fd;}
+    .phase-card.p2{background:linear-gradient(135deg,#dcfce7,#f0fdf4);border:2px solid #86efac;}
+    .phase-card.p3{background:linear-gradient(135deg,#fef3c7,#fffbeb);border:2px solid #fcd34d;}
+    .phase-card h4{font-size:0.82rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+    .phase-card.p1 h4{color:#1d4ed8;}
+    .phase-card.p2 h4{color:#15803d;}
+    .phase-card.p3 h4{color:#b45309;}
+    .phase-tbl{width:100%;border-collapse:collapse;margin-bottom:10px;}
+    .phase-tbl th{font-size:0.68rem;padding:4px 6px;font-family:'Space Mono',monospace;color:#6b7280;}
+    .phase-tbl td{font-size:0.8rem;padding:4px 6px;font-family:'Space Mono',monospace;font-weight:700;text-align:center;}
+    .phase-tbl td.ph-ans{color:#ef4444;}
+    .phase-disp{font-size:1.1rem;font-weight:900;font-family:'Space Mono',monospace;}
+    .phase-card.p1 .phase-disp{color:#1d4ed8;}
+    .phase-card.p2 .phase-disp{color:#15803d;}
+    .phase-card.p3 .phase-disp{color:#b45309;}
+    .total-banner{background:linear-gradient(135deg,#1e3a5f,#1d4ed8);color:white;border-radius:14px;padding:20px 28px;text-align:center;margin-top:4px;}
+    .total-banner .tl{font-size:0.82rem;text-transform:uppercase;letter-spacing:1px;opacity:0.7;margin-bottom:4px;}
+    .total-banner .tv{font-family:'Space Mono',monospace;font-size:2rem;font-weight:700;}
+    .total-banner .breakdown{font-size:0.82rem;opacity:0.6;margin-top:4px;}
+
+    /* quiz */
+    .quiz-section{background:linear-gradient(135deg,#1e3a5f,#1d4ed8);border-radius:20px;padding:32px;color:white;}
+    .quiz-section h3{font-size:1.3rem;font-weight:900;margin-bottom:6px;}
+    .quiz-section p{font-size:0.88rem;opacity:0.75;margin-bottom:24px;}
+    .quiz-q{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:18px 22px;margin-bottom:14px;}
+    .quiz-q .qtext{font-size:0.95rem;margin-bottom:14px;font-weight:700;}
+    .options{display:flex;flex-wrap:wrap;gap:10px;}
+    .opt-btn{background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);color:white;font-family:'Nunito',sans-serif;font-size:0.88rem;font-weight:700;padding:8px 16px;border-radius:30px;cursor:pointer;transition:all 0.2s;}
+    .opt-btn:hover{background:rgba(255,255,255,0.2);transform:scale(1.04);}
+    .opt-btn.correct{background:#22c55e;border-color:#22c55e;animation:popIn 0.3s ease;}
+    .opt-btn.wrong{background:#ef4444;border-color:#ef4444;}
+    .feedback{font-size:0.85rem;margin-top:10px;padding:8px 14px;border-radius:8px;display:none;}
+    .feedback.show{display:block;}
+    .feedback.ok{background:rgba(34,197,94,0.2);color:#bbf7d0;}
+    .feedback.bad{background:rgba(239,68,68,0.2);color:#fecaca;}
+    @keyframes popIn{0%{transform:scale(0.9);}60%{transform:scale(1.1);}100%{transform:scale(1);}}
+    footer{text-align:center;padding:32px 20px;font-size:0.85rem;color:var(--muted);}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">&#128274;</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="star" style="width:3px;height:3px;top:12%;left:8%;animation-delay:0s;"></div>
+  <div class="star" style="width:2px;height:2px;top:30%;left:15%;animation-delay:0.5s;"></div>
+  <div class="star" style="width:4px;height:4px;top:20%;left:80%;animation-delay:1s;"></div>
+  <div class="star" style="width:2px;height:2px;top:60%;left:88%;animation-delay:1.5s;"></div>
+  <div class="star" style="width:3px;height:3px;top:75%;left:5%;animation-delay:2s;"></div>
+  <div class="star" style="width:2px;height:2px;top:45%;left:92%;animation-delay:2.5s;"></div>
+  <div class="star" style="width:3px;height:3px;top:85%;left:70%;animation-delay:0.8s;"></div>
+  <div class="chip">Kinematics &middot; Unit 11</div>
+  <h1>The Kinematic Equations</h1>
+  <p class="subtitle">Predicting motion using algebra — displacement, velocity, acceleration, and time</p>
+</header>
+
+<main>
+
+  <!-- SECTION 1: Definition -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#dbeafe;">&#128216;</div>
+      <h2>What is Kinematics?</h2>
+    </div>
+    <div class="def-card">
+      <h3>Definition</h3>
+      <p style="font-size:1.05rem;font-weight:700;color:#1e3a5f;margin-bottom:14px;">"The branch of physics concerned with the motion of objects without reference to the forces which cause the motion."</p>
+      <p>Kinematics is the way we <strong>predict different parts of the motion</strong> of an object using only other parts of the motion. We don't need to know anything about what type of object it is or what forces are acting on it to predict its motion. We just need those other parts.</p>
+    </div>
+    <div class="tip-box">
+      <h4>What this means in practice</h4>
+      <p>If you know how fast something is going, how quickly it is accelerating, and how long it has been moving — the kinematic equations can tell you exactly where it ended up and how fast it is now going. No knowledge of mass, friction, or forces required.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 2: Variables and Equations -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#dcfce7;">&#128200;</div>
+      <h2>SUVAT Variables &amp; Equations</h2>
+    </div>
+    <div class="suvat-wrap">
+      <div class="suvat-panel">
+        <h3>The Kinematic Variables (SUVAT)</h3>
+        <table class="suvat-tbl">
+          <thead>
+            <tr><th>Quantity</th><th>Variable</th><th>Unit</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Displacement</td><td>s</td><td>m</td></tr>
+            <tr><td>Initial Velocity</td><td>u</td><td>ms&#8315;&#185;</td></tr>
+            <tr><td>Final Velocity</td><td>v</td><td>ms&#8315;&#185;</td></tr>
+            <tr><td>Acceleration</td><td>a</td><td>ms&#8315;&#178;</td></tr>
+            <tr><td>Time</td><td>t</td><td>s</td></tr>
+          </tbody>
+        </table>
+        <div class="unit-note">Note: If any values are given in units other than those listed above, you must convert them back to SI units before using the equations.</div>
+      </div>
+      <div class="suvat-panel">
+        <h3>The 4 Kinematic Equations</h3>
+        <ul class="eq-list">
+          <li><span class="eq-num">1</span>v = u + at</li>
+          <li><span class="eq-num">2</span>s = ut + &frac12;at&#178;</li>
+          <li><span class="eq-num">3</span>v&#178; = u&#178; + 2as</li>
+          <li><span class="eq-num">4</span>s = (u + v)t / 2</li>
+        </ul>
+        <div style="margin-top:16px;background:#f8faff;border-radius:10px;padding:12px 16px;">
+          <p style="font-size:0.85rem;color:#374151;font-weight:600;">Each equation uses 4 of the 5 SUVAT variables. If you know 3 variables, you can solve for a 4th using the equation that does not need the 5th.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visual: which variable is missing from each equation -->
+    <div class="insight-hero">
+      <h3>Which equation to use? — Find the missing variable</h3>
+      <div class="insight-grid">
+        <div class="insight-item">
+          <div class="ihead">v = u + at &nbsp;&nbsp; (no s)</div>
+          <div class="ibody">Use this when displacement (s) is unknown or irrelevant. Connects initial &amp; final velocity, acceleration, and time.</div>
+        </div>
+        <div class="insight-item">
+          <div class="ihead">s = ut + &frac12;at&#178; &nbsp;&nbsp; (no v)</div>
+          <div class="ibody">Use when final velocity (v) is not needed. Links displacement to initial velocity, acceleration, and time.</div>
+        </div>
+        <div class="insight-item">
+          <div class="ihead">v&#178; = u&#178; + 2as &nbsp;&nbsp; (no t)</div>
+          <div class="ibody">Use when time (t) is unknown or not required. Connects velocities, acceleration, and displacement.</div>
+        </div>
+        <div class="insight-item">
+          <div class="ihead">s = (u + v)t / 2 &nbsp;&nbsp; (no a)</div>
+          <div class="ibody">Use when acceleration (a) is unknown or not required. Works when you know both velocities and time.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: Problem-Solving Method -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#fef9c3;">&#129514;</div>
+      <h2>3-Step Problem-Solving Method</h2>
+    </div>
+    <div class="steps-card">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Define Positive and Negative Directions</h4>
+          <p>Choose one direction as positive (+) and the opposite as negative (&minus;). It does not matter which you choose, but you <strong>must remain consistent</strong> throughout the entire problem. Any velocity, displacement, or acceleration in the negative direction must be written with a minus sign.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Check for Constant Acceleration</h4>
+          <p>The kinematic equations only work if the acceleration is <strong>constant</strong> throughout the motion being analysed. If the object accelerates at different rates at different times, <strong>split the problem into multiple phases</strong> — one SUVAT table per constant-acceleration phase. The final velocity of one phase becomes the initial velocity of the next.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Use a SUVAT Table and the GUESS Method</h4>
+          <p>List all known and unknown SUVAT variables in a table. Use the <strong>GUESS</strong> method to solve: <strong>G</strong>iven (list knowns), <strong>U</strong>nknown (identify what you need), <strong>E</strong>quation (pick the equation with your 3 knowns &amp; 1 unknown), <strong>S</strong>ubstitute (put numbers in), <strong>S</strong>olve (rearrange and calculate). If you have 3 kinematic variables, you can always solve for the 4th.</p>
+        </div>
+      </div>
+    </div>
+    <div class="tip-box">
+      <h4>Sign Convention is Critical</h4>
+      <p>When an object reverses direction (e.g. goes up then comes back down, or rolls uphill then downhill), the final velocity has the <strong>opposite sign</strong> to the initial velocity. If you defined "up the slope" as positive, then a velocity "down the slope" must be written as negative. The same applies to deceleration — if it opposes the positive direction, it carries a minus sign.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 4: Worked Example 1 -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#fce7f3;">&#128021;</div>
+      <h2>Worked Example 1 — Running Dog</h2>
+    </div>
+    <div class="example-card">
+      <div class="example-header">
+        <span class="ex-badge">Example 1</span>
+        <h3>Find Initial Velocity</h3>
+      </div>
+      <div class="problem-text">"A dog is running, and starts to get faster at 2 ms&#8315;&#178; for 3 s. If the dog covers 20 m over this time, what velocity did it start with?"</div>
+
+      <p style="font-size:0.9rem;font-weight:700;color:#6b7280;margin-bottom:10px;">Step 1 &mdash; Define direction: forward = positive.</p>
+      <p style="font-size:0.9rem;font-weight:700;color:#6b7280;margin-bottom:14px;">Step 2 &mdash; Acceleration is constant throughout, so no splitting needed.</p>
+      <p style="font-size:0.9rem;font-weight:700;color:#6b7280;margin-bottom:10px;">Step 3 &mdash; Fill SUVAT table:</p>
+
+      <table class="suvat-fill" style="margin-bottom:20px;">
+        <thead><tr><th>s</th><th>u</th><th>v</th><th>a</th><th>t</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>20 m</td>
+            <td class="unknown">?</td>
+            <td class="blank">not given</td>
+            <td>2 ms&#8315;&#178;</td>
+            <td>3 s</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="working-block">
+        <h5>Equation Selection (E)</h5>
+        <div class="working-step">Known: s, a, t &nbsp;&nbsp;&rarr;&nbsp;&nbsp; Need: u &nbsp;&nbsp;&rarr;&nbsp;&nbsp; Missing from equation: v</div>
+        <div class="working-step" style="color:#1d4ed8;font-weight:700;">Selected: s = ut + &frac12;at&#178;</div>
+      </div>
+      <div class="working-block">
+        <h5>Rearrangement and Substitution (S)</h5>
+        <div class="working-step">s = ut + &frac12;at&#178;</div>
+        <div class="working-step">s &minus; &frac12;at&#178; = ut</div>
+        <div class="working-step">s/t &minus; &frac12;at = u</div>
+        <div class="working-step" style="margin-top:8px;color:#374151;">20/3 &minus; &frac12; &times; 2 &times; 3 = u</div>
+        <div class="working-step">6.667 &minus; 3 = u</div>
+      </div>
+      <div class="answer-box">
+        <div class="alabel">Answer</div>
+        <div class="aval">u = 3.7 ms&#8315;&#185;</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: Worked Example 2 -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#fce7f3;">&#9917;</div>
+      <h2>Worked Example 2 — Ball Rolling Up a Hill</h2>
+    </div>
+    <div class="example-card">
+      <div class="example-header">
+        <span class="ex-badge">Example 2</span>
+        <h3>Direction Convention &amp; Negative Values</h3>
+      </div>
+      <div class="problem-text">"A ball is rolling up a hill at 10 ms&#8315;&#185; but gravity is causing it to slow at a rate of 1.5 ms&#8315;&#178;. The ball is accelerated by gravity until it is moving at 5 ms&#8315;&#185; down the hill. How much time did this take?"</div>
+
+      <!-- Direction SVG diagram -->
+      <div style="background:#f8faff;border-radius:12px;padding:18px 22px;margin-bottom:18px;text-align:center;">
+        <svg width="320" height="100" viewBox="0 0 320 100" style="max-width:100%;">
+          <!-- hill slope line -->
+          <line x1="30" y1="85" x2="290" y2="25" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+          <!-- positive direction arrow (up slope) -->
+          <defs>
+            <marker id="arrowUp" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#22c55e"/>
+            </marker>
+            <marker id="arrowDown" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#ef4444"/>
+            </marker>
+          </defs>
+          <line x1="120" y1="68" x2="220" y2="38" stroke="#22c55e" stroke-width="2.5" marker-end="url(#arrowUp)"/>
+          <text x="140" y="58" fill="#22c55e" font-size="12" font-weight="700" font-family="Nunito,sans-serif">(+) up slope</text>
+          <line x1="200" y1="40" x2="100" y2="70" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrowDown)"/>
+          <text x="90" y="85" fill="#ef4444" font-size="12" font-weight="700" font-family="Nunito,sans-serif">(-) down slope</text>
+        </svg>
+        <p style="font-size:0.82rem;color:#6b7280;margin-top:4px;">Direction convention: up the slope = positive (+)</p>
+      </div>
+
+      <div class="direction-note">Sign reasoning: initial velocity is up the slope (+10 ms&#8315;&#185;). Final velocity is <em>down</em> the slope, so v = &minus;5 ms&#8315;&#185;. Gravity decelerates the ball (opposes upward motion), so a = &minus;1.5 ms&#8315;&#178;.</div>
+
+      <p style="font-size:0.9rem;font-weight:700;color:#6b7280;margin-bottom:10px;">SUVAT Table:</p>
+      <table class="suvat-fill" style="margin-bottom:20px;">
+        <thead><tr><th>s</th><th>u</th><th>v</th><th>a</th><th>t</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="blank">not given</td>
+            <td>+10 ms&#8315;&#185;</td>
+            <td>&minus;5 ms&#8315;&#185;</td>
+            <td>&minus;1.5 ms&#8315;&#178;</td>
+            <td class="unknown">?</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="working-block">
+        <h5>Equation Selection (E)</h5>
+        <div class="working-step">Known: u, v, a &nbsp;&nbsp;&rarr;&nbsp;&nbsp; Need: t &nbsp;&nbsp;&rarr;&nbsp;&nbsp; Missing from equation: s</div>
+        <div class="working-step" style="color:#1d4ed8;font-weight:700;">Selected: v = u + at</div>
+      </div>
+      <div class="working-block">
+        <h5>Rearrangement and Substitution (S)</h5>
+        <div class="working-step">v = u + at</div>
+        <div class="working-step">v &minus; u = at</div>
+        <div class="working-step">(v &minus; u) / a = t</div>
+        <div class="working-step" style="margin-top:8px;color:#374151;">(&minus;5 &minus; 10) / (&minus;1.5) = t</div>
+        <div class="working-step">(&minus;15) / (&minus;1.5) = t</div>
+      </div>
+      <div class="answer-box">
+        <div class="alabel">Answer</div>
+        <div class="aval">t = 10 s</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: Worked Example 3 -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#fef9c3;">&#128664;</div>
+      <h2>Worked Example 3 — Multi-Phase Car Problem</h2>
+    </div>
+    <div class="example-card">
+      <div class="example-header">
+        <span class="ex-badge">Example 3</span>
+        <h3>Splitting Into Multiple Phases</h3>
+      </div>
+      <div class="problem-text">"A car is accelerating from rest at 5 ms&#8315;&#178;. It does this for 10 seconds before it stops accelerating and drives at a constant velocity for 4 seconds. It then slows to a stop at a constant acceleration in 6 seconds. What total displacement did it cover?"</div>
+
+      <div class="tip-box" style="margin-bottom:20px;">
+        <h4>Step 2 in action — Split into 3 phases</h4>
+        <p>The car has three different accelerations (5 ms&#8315;&#178;, 0 ms&#8315;&#178;, then some negative value), so we treat each phase as a separate SUVAT problem. The final velocity from one phase becomes the initial velocity of the next.</p>
+      </div>
+
+      <div class="phase-grid">
+        <!-- Phase 1 -->
+        <div class="phase-card p1">
+          <h4>Phase 1 &mdash; Speeding Up</h4>
+          <table class="phase-tbl">
+            <tr><th>s</th><th>u</th><th>v</th><th>a</th><th>t</th></tr>
+            <tr><td class="ph-ans">250 m</td><td>0</td><td>50 ms&#8315;&#185;</td><td>5 ms&#8315;&#178;</td><td>10 s</td></tr>
+          </table>
+          <div style="font-size:0.78rem;color:#6b7280;margin-bottom:8px;">s = ut + &frac12;at&#178; = 0 + &frac12;(5)(10)&#178; = 250 m<br>v = 0 + 5(10) = 50 ms&#8315;&#185;</div>
+          <div class="phase-disp">s&#8321; = 250 m</div>
+        </div>
+        <!-- Phase 2 -->
+        <div class="phase-card p2">
+          <h4>Phase 2 &mdash; Constant Velocity</h4>
+          <table class="phase-tbl">
+            <tr><th>s</th><th>u</th><th>v</th><th>a</th><th>t</th></tr>
+            <tr><td class="ph-ans">200 m</td><td>50 ms&#8315;&#185;</td><td>50 ms&#8315;&#185;</td><td>0</td><td>4 s</td></tr>
+          </table>
+          <div style="font-size:0.78rem;color:#6b7280;margin-bottom:8px;">s = ut = 50 &times; 4 = 200 m<br>(a = 0, velocity unchanged)</div>
+          <div class="phase-disp">s&#8322; = 200 m</div>
+        </div>
+        <!-- Phase 3 -->
+        <div class="phase-card p3">
+          <h4>Phase 3 &mdash; Slowing Down</h4>
+          <table class="phase-tbl">
+            <tr><th>s</th><th>u</th><th>v</th><th>a</th><th>t</th></tr>
+            <tr><td class="ph-ans">150 m</td><td>50 ms&#8315;&#185;</td><td>0</td><td>&mdash;</td><td>6 s</td></tr>
+          </table>
+          <div style="font-size:0.78rem;color:#6b7280;margin-bottom:8px;">s = (u + v)t/2 = (50 + 0)(6)/2 = 150 m<br>(equation 4: no a needed)</div>
+          <div class="phase-disp">s&#8323; = 150 m</div>
+        </div>
+      </div>
+
+      <div class="total-banner">
+        <div class="tl">Total Displacement</div>
+        <div class="tv">S<sub>total</sub> = 600 m</div>
+        <div class="breakdown">250 m + 200 m + 150 m = 600 m</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 7: Summary -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#e0e7ff;">&#128203;</div>
+      <h2>Key Insight Summary</h2>
+    </div>
+    <div class="insight-hero">
+      <h3>What you need to remember</h3>
+      <div class="insight-grid">
+        <div class="insight-item">
+          <div class="ihead">5 SUVAT Variables</div>
+          <div class="ibody">s (m), u (ms&#8315;&#185;), v (ms&#8315;&#185;), a (ms&#8315;&#178;), t (s). Know 3 &rarr; find the 4th.</div>
+        </div>
+        <div class="insight-item">
+          <div class="ihead">4 Equations</div>
+          <div class="ibody">v = u + at &nbsp;|&nbsp; s = ut + &frac12;at&#178; &nbsp;|&nbsp; v&#178; = u&#178; + 2as &nbsp;|&nbsp; s = (u+v)t/2. Each omits one variable.</div>
+        </div>
+        <div class="insight-item">
+          <div class="ihead">Sign Convention</div>
+          <div class="ibody">Pick + and &minus; directions first. Reverse direction = opposite sign. Stay consistent throughout every phase.</div>
+        </div>
+        <div class="insight-item">
+          <div class="ihead">Multiple Phases</div>
+          <div class="ibody">Different acceleration = different phase. Use one SUVAT table per phase. Add displacements at the end.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 8: Quiz -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#dcfce7;">&#129488;</div>
+      <h2>Quick Check Quiz</h2>
+    </div>
+    <div class="quiz-section">
+      <h3>Test Your Understanding</h3>
+      <p>Select the correct answer for each question. Immediate feedback provided.</p>
+
+      <!-- Q1 -->
+      <div class="quiz-q">
+        <div class="qtext">Q1. A car starts from rest and accelerates at 4 ms&#8315;&#178; for 5 seconds. Using v = u + at, what is its final velocity?</div>
+        <div class="options">
+          <button class="opt-btn" onclick="quizAnswer(this,false,'v = 0 + 4(5) = 20 ms&#8315;&#185;')">10 ms&#8315;&#185;</button>
+          <button class="opt-btn" onclick="quizAnswer(this,true,'v = u + at = 0 + 4(5) = 20 ms&#8315;&#185;')">20 ms&#8315;&#185;</button>
+          <button class="opt-btn" onclick="quizAnswer(this,false,'v = 0 + 4(5) = 20 ms&#8315;&#185;, not 25')">25 ms&#8315;&#185;</button>
+          <button class="opt-btn" onclick="quizAnswer(this,false,'v = 0 + 4(5) = 20 ms&#8315;&#185;, not 4')">4 ms&#8315;&#185;</button>
+        </div>
+        <div class="feedback"></div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-q">
+        <div class="qtext">Q2. Which kinematic equation should you use when you know s, u, and t — but NOT v?</div>
+        <div class="options">
+          <button class="opt-btn" onclick="quizAnswer(this,false,'v = u + at requires knowing v or being the unknown alongside a. Here v is absent entirely.')">v = u + at</button>
+          <button class="opt-btn" onclick="quizAnswer(this,true,'s = ut + &frac12;at&#178; does not contain v — perfect when v is unknown/irrelevant.')">s = ut + &frac12;at&#178;</button>
+          <button class="opt-btn" onclick="quizAnswer(this,false,'v&#178; = u&#178; + 2as does not contain t, but here t is known, not the issue.')">v&#178; = u&#178; + 2as</button>
+          <button class="opt-btn" onclick="quizAnswer(this,false,'s = (u+v)t/2 requires v, which is not known here.')">s = (u+v)t / 2</button>
+        </div>
+        <div class="feedback"></div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-q">
+        <div class="qtext">Q3. A ball rolling up a slope has initial velocity +8 ms&#8315;&#185;. It decelerates at 2 ms&#8315;&#178; due to gravity (opposing motion). What sign should the acceleration be given?</div>
+        <div class="options">
+          <button class="opt-btn" onclick="quizAnswer(this,false,'Gravity opposes the positive (up-slope) direction, so it must be negative.')">+2 ms&#8315;&#178; (positive)</button>
+          <button class="opt-btn" onclick="quizAnswer(this,true,'Deceleration opposes the positive direction, so a = &minus;2 ms&#8315;&#178;.')">-2 ms&#8315;&#178; (negative)</button>
+          <button class="opt-btn" onclick="quizAnswer(this,false,'Zero only if there is no acceleration.')">0 ms&#8315;&#178;</button>
+          <button class="opt-btn" onclick="quizAnswer(this,false,'The sign of a depends on your defined positive direction, not on the sign of u.')">Same sign as u</button>
+        </div>
+        <div class="feedback"></div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-q">
+        <div class="qtext">Q4. In the three-phase car problem, the total displacement was 600 m. Which phase contributed the smallest displacement?</div>
+        <div class="options">
+          <button class="opt-btn" onclick="quizAnswer(this,false,'Phase 1 gives 250 m, which is the largest.')">Phase 1 (speeding up)</button>
+          <button class="opt-btn" onclick="quizAnswer(this,false,'Phase 2 gives 200 m, the middle value.')">Phase 2 (constant velocity)</button>
+          <button class="opt-btn" onclick="quizAnswer(this,true,'Phase 3 gives 150 m, which is the smallest of 250+200+150.')">Phase 3 (slowing down)</button>
+          <button class="opt-btn" onclick="quizAnswer(this,false,'All phases contribute non-zero displacement.')">All phases equal</button>
+        </div>
+        <div class="feedback"></div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>Kinematics &middot; Unit 11 &middot; The Kinematic Equations</footer>
+
+<script>
+function quizAnswer(btn, correct, explanation){
+  var q = btn.closest('.quiz-q');
+  if(q.dataset.answered) return;
+  q.dataset.answered = 'true';
+  var allBtns = q.querySelectorAll('.opt-btn');
+  allBtns.forEach(function(b){ b.disabled = true; });
+  var fb = q.querySelector('.feedback');
+  if(correct){
+    btn.classList.add('correct');
+    fb.className = 'feedback show ok';
+    fb.textContent = 'Correct! ' + explanation;
+  } else {
+    btn.classList.add('wrong');
+    fb.className = 'feedback show bad';
+    fb.textContent = 'Not quite. ' + explanation;
+  }
+}
+</script>
+</body>
+</html>

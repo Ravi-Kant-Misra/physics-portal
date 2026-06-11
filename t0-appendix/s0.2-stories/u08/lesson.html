@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chapter 8 – Schrödinger's Cat | IB Physics Stories</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',Arial,sans-serif;background:#f1f5f9;color:#1f2937;line-height:1.7;}
+  .hero{background:linear-gradient(135deg,#3b0764,#6d28d9,#7c3aed);color:white;padding:64px 24px 52px;text-align:center;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 30%,rgba(221,214,254,.3) 0%,transparent 55%);pointer-events:none;}
+  .hero-chip{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:5px 18px;font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;}
+  .hero h1{font-size:2.8rem;font-weight:900;letter-spacing:-1px;margin-bottom:10px;}
+  .hero .hook{font-size:1.2rem;color:rgba(255,255,255,.88);max-width:700px;margin:0 auto;font-style:italic;}
+  .wrap{max-width:1100px;margin:0 auto;padding:40px 24px 80px;}
+  .card{background:white;border-radius:18px;padding:28px 26px;margin:24px 0;box-shadow:0 6px 20px rgba(0,0,0,.07);}
+  .grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:28px;align-items:start;}
+  h2{font-size:1.55rem;font-weight:900;color:#6d28d9;margin-bottom:14px;}
+  h3{font-size:1.1rem;font-weight:800;color:#7c3aed;margin:16px 0 8px;}
+  p{margin-bottom:12px;}
+  ul,ol{padding-left:22px;margin-bottom:12px;}
+  li{margin-bottom:7px;}
+  img{max-width:100%;border-radius:14px;display:block;}
+  .img-cap{font-size:.8rem;color:#6b7280;margin-top:7px;font-style:italic;text-align:center;}
+  .timeline{list-style:none;padding:0;border-left:3px solid #ddd6fe;margin:16px 0;}
+  .timeline li{padding:8px 0 8px 24px;position:relative;}
+  .timeline li::before{content:'';width:12px;height:12px;border-radius:50%;background:#7c3aed;border:3px solid white;box-shadow:0 0 0 2px #7c3aed;position:absolute;left:-7.5px;top:14px;}
+  .timeline .yr{font-weight:900;color:#6d28d9;margin-right:8px;}
+  .ib-box{background:#f5f3ff;border-left:5px solid #7c3aed;border-radius:12px;padding:18px 20px;margin:20px 0;}
+  .ib-box-label{font-size:.72rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#6d28d9;margin-bottom:8px;}
+  .quote{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-left:5px solid #7c3aed;border-radius:12px;padding:20px 22px;margin:20px 0;}
+  .quote p{font-size:1.05rem;font-style:italic;color:#6d28d9;margin:0;}
+  .quote span{display:block;font-size:.83rem;font-weight:700;color:#7c3aed;margin-top:7px;}
+  .moral{background:linear-gradient(135deg,#fef9ec,#fff8f0);border:2px solid #f59e0b;border-radius:16px;padding:26px;margin:26px 0;}
+  .moral-label{font-size:.72rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#b45309;margin-bottom:10px;}
+  .moral p{font-size:1.08rem;color:#78350f;margin:0;font-weight:600;}
+  .tag{display:inline-block;background:#ede9fe;color:#6d28d9;padding:5px 14px;border-radius:999px;font-size:.8rem;font-weight:700;margin-right:6px;}
+  /* CAT BOX */
+  .cat-box{background:#f5f3ff;border:3px solid #7c3aed;border-radius:18px;padding:26px;margin:22px 0;text-align:center;}
+  .cat-box .box-label{font-weight:900;color:#6d28d9;font-size:.9rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;}
+  .cat-items{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin:14px 0;}
+  .cat-item{background:white;border-radius:12px;padding:12px 16px;font-size:.9rem;font-weight:700;border:2px solid #ddd6fe;min-width:110px;}
+  .states{display:flex;gap:20px;justify-content:center;margin:16px 0;}
+  .state{border-radius:12px;padding:16px 24px;font-weight:800;font-size:.95rem;}
+  .alive{background:#f0fdf4;border:2px solid #86efac;color:#166534;}
+  .dead{background:#fff1f2;border:2px solid #fca5a5;color:#991b1b;}
+  .plus{font-size:1.5rem;font-weight:900;color:#7c3aed;display:flex;align-items:center;}
+  .page-nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:40px;}
+  .nav-btn{background:#6d28d9;color:white;text-decoration:none;border-radius:10px;padding:10px 22px;font-weight:800;font-size:.92rem;}
+  footer{text-align:center;padding:26px;color:#6b7280;font-size:.87rem;background:white;border-top:1px solid #e2e8f0;}
+  @media(max-width:700px){.grid{grid-template-columns:1fr;}.hero h1{font-size:2rem;}.states{flex-direction:column;align-items:center;}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-chip">Chapter 8 · Quantum Physics</div>
+  <h1>Schrödinger's Cat</h1>
+  <p class="hook">"Before you open the box, the cat is neither alive nor dead — it is somehow both. Schrödinger invented this story not to describe a real cat, but to show that quantum physics leads to absurdity when applied naively to large objects."</p>
+</header>
+
+<main class="wrap">
+
+  <div style="margin-bottom:20px;">
+    <span class="tag">Erwin Schrödinger: 1887–1961</span>
+    <span class="tag">Quantum Mechanics</span>
+    <span class="tag">IB Theme 5</span>
+    <span class="tag">Austria</span>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+      <div>
+        <h2>Who Was Erwin Schrödinger?</h2>
+        <p>Erwin Schrödinger was born in Vienna in 1887, the son of a botanist and amateur painter. He grew up in a cultured, intellectually rich environment, learned multiple languages as a child, and studied physics at the University of Vienna. He was a broad thinker — as comfortable with philosophy and biology as with mathematics and physics.</p>
+        <p>In 1926, he published the equation that now bears his name: the <strong>Schrödinger equation</strong>. This is the fundamental equation of quantum mechanics — it describes how the quantum state (the wave function) of a physical system changes over time. It is to quantum mechanics what Newton's second law is to classical mechanics.</p>
+        <p>He shared the 1933 Nobel Prize in Physics with Paul Dirac for their contributions to quantum theory.</p>
+        <h3>A Life of Exile</h3>
+        <p>When the Nazis came to power, Schrödinger left Germany in protest (he was not Jewish, but was opposed to the regime on principle). He eventually settled in Dublin at the invitation of Éamon de Valera, who wanted to establish a world-class institute of advanced study. His 1944 book <em>What is Life?</em> — a physicist's attempt to understand biology — directly inspired Watson and Crick to look for the molecular basis of heredity, which led to the discovery of DNA structure.</p>
+      </div>
+      <div>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Erwin_Schrödinger_%281933%29.jpg/400px-Erwin_Schrödinger_%281933%29.jpg" alt="Erwin Schrödinger" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Erwin_Schrodinger.jpg/400px-Erwin_Schrodinger.jpg'"/>
+        <p class="img-cap">Erwin Schrödinger around 1933, the year he won the Nobel Prize.</p>
+        <div class="ib-box" style="margin-top:18px;">
+          <div class="ib-box-label">IB Physics Connection</div>
+          <p style="margin:0;font-size:.92rem;"><strong>Theme 5 — Quantum Physics:</strong> Quantum superposition, wave functions, the probabilistic nature of quantum measurement, and the de Broglie wavelength are core IB HL content. Schrödinger's equation underlies the entire framework.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>The Thought Experiment</h2>
+    <p>In 1935, Schrödinger published his famous thought experiment — not to celebrate quantum mechanics, but as a <em>critique</em> of how it was being interpreted. He wanted to show that a naïve reading of quantum mechanics leads to absurd conclusions.</p>
+
+    <div class="cat-box">
+      <div class="box-label">Inside the sealed box</div>
+      <div class="cat-items">
+        <div class="cat-item">🐱 One cat</div>
+        <div class="cat-item">☢️ Radioactive atom</div>
+        <div class="cat-item">📡 Radiation detector</div>
+        <div class="cat-item">🔨 Hammer + vial of poison</div>
+      </div>
+      <p style="font-size:.92rem;color:#4b5563;max-width:600px;margin:0 auto 12px;">If the atom decays, the detector triggers the hammer, breaking the vial, and the cat dies. If the atom does not decay, the cat lives. The box is sealed — no information gets out.</p>
+      <p style="font-size:.92rem;color:#4b5563;max-width:600px;margin:0 auto 12px;">According to quantum mechanics, the atom is in a <strong>superposition</strong> of "decayed" and "not decayed" until it is measured. If we take this literally, then the cat (which is entangled with the atom) is also in a superposition:</p>
+      <div class="states">
+        <div class="state alive">Cat ALIVE</div>
+        <div class="plus">+</div>
+        <div class="state dead">Cat DEAD</div>
+      </div>
+      <p style="font-size:.92rem;color:#6d28d9;font-weight:700;margin:0;">...at the same time, until you open the box and look.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>What Schrödinger Was Really Saying</h2>
+    <p>Schrödinger was NOT saying: "I believe cats can be alive and dead at the same time." He was saying the opposite. He was arguing that the Copenhagen interpretation of quantum mechanics — which says that quantum systems exist in superposition until observed — cannot be the complete story, because when scaled up to everyday objects it produces nonsense. No one has ever observed a cat in two states at once.</p>
+    <p>His thought experiment was a form of <em>reductio ad absurdum</em> — a philosophical argument that shows a theory leads to impossible conclusions when applied beyond its intended domain. He was challenging the physics community to do better: to find an interpretation that makes sense at both the quantum and macroscopic scales.</p>
+    <div class="quote">
+      <p>"I don't like it, and I'm sorry I ever had anything to do with it."</p>
+      <span>— Erwin Schrödinger, referring to quantum mechanics</span>
+    </div>
+    <p>The irony is delicious: Schrödinger created the equation that is quantum mechanics, and he also hated the philosophical implications of quantum mechanics most passionately. He was not alone — Einstein felt the same way. "God does not play dice," Einstein famously said.</p>
+  </div>
+
+  <div class="card">
+    <h2>Why the Question Matters</h2>
+    <p>The cat problem is still unresolved in the deepest sense. There are several competing <em>interpretations</em> of quantum mechanics — and they all make the same experimental predictions, which means experiments cannot currently distinguish between them:</p>
+    <ul>
+      <li><strong>Copenhagen interpretation:</strong> The wave function collapses when measured. Before measurement, there is no fact of the matter about the cat's state.</li>
+      <li><strong>Many-worlds interpretation:</strong> When the box is opened, the universe <em>branches</em>. In one branch, the cat is alive. In another, it is dead. Both branches are real.</li>
+      <li><strong>Decoherence theory:</strong> Quantum superposition is real at the microscopic scale, but interactions with the macroscopic environment destroy superposition almost instantaneously for large objects. You never observe macro-superpositions because they decohere before you can see them.</li>
+    </ul>
+    <p>The question of what quantum mechanics <em>means</em> — not just what it predicts — is still genuinely open. This is not a failure of physics; it is evidence that we are still, after a century, working on the deepest questions about the nature of reality.</p>
+    <div class="ib-box">
+      <div class="ib-box-label">Key IB Concept: Superposition</div>
+      <p style="margin:0;font-size:.92rem;">Quantum superposition means a particle can exist in multiple states simultaneously until a measurement forces it into one definite state. This is not just a quirk of small particles — it is the foundation of quantum computing, quantum cryptography, and MRI machines.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Timeline</h2>
+    <ul class="timeline">
+      <li><span class="yr">1887</span> Born in Vienna, Austria.</li>
+      <li><span class="yr">1906–10</span> Studies physics at the University of Vienna under Franz Exner.</li>
+      <li><span class="yr">1926</span> Publishes the Schrödinger equation — the cornerstone of wave mechanics.</li>
+      <li><span class="yr">1927</span> Succeeds Max Planck as professor at the University of Berlin.</li>
+      <li><span class="yr">1933</span> Awarded Nobel Prize in Physics (with Paul Dirac). Leaves Germany in protest of Nazi rise.</li>
+      <li><span class="yr">1935</span> Publishes the Schrödinger's cat thought experiment.</li>
+      <li><span class="yr">1940</span> Moves to Dublin; helps found the Dublin Institute for Advanced Studies at Éamon de Valera's invitation.</li>
+      <li><span class="yr">1944</span> Publishes <em>What is Life?</em> — inspires Watson and Crick.</li>
+      <li><span class="yr">1961</span> Dies in Vienna, age 73.</li>
+    </ul>
+  </div>
+
+  <div class="moral">
+    <div class="moral-label">Moral of the Story</div>
+    <p>Schrödinger created one of the most powerful tools in physics and spent the rest of his life questioning what it actually meant. His cat reminds us that knowing <em>how</em> to use a theory and understanding <em>what it is saying about the world</em> are two very different things — and that the most honest scientists are the ones who admit that gap. <strong>Comfort with uncertainty is not ignorance — it is the hallmark of a genuine thinker. The questions you cannot yet answer are the most important ones to keep asking.</strong></p>
+  </div>
+
+  <div class="page-nav">
+    <a href="07-einstein-chauffeur.html" class="nav-btn">← Chapter 7: Einstein's Chauffeur</a>
+    <a href="09-lise-meitner.html" class="nav-btn">Next: Lise Meitner →</a>
+  </div>
+
+</main>
+
+<footer>IB Physics Storytelling Series &nbsp;|&nbsp; Chapter 8: Schrödinger's Cat</footer>
+</body>
+</html>

@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Unit 9 – A-T Graphs | Classwork</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --blue:#3b82f6;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+    --dark:#0f172a;--bg:#f8faff;--card:#ffffff;--border:#e2e8f0;
+    --text:#1e293b;--muted:#64748b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
+    background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);
+    background-size:28px 28px;min-height:100vh;
+  }
+
+  /* GATE */
+  #gate{
+    position:fixed;inset:0;z-index:9999;
+    background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 100%);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .gate-box{
+    background:rgba(255,255,255,.09);backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,.2);border-radius:20px;
+    padding:48px 40px;text-align:center;width:min(380px,90vw);
+  }
+  .gate-box .lock{font-size:3rem;margin-bottom:12px;}
+  .gate-box h2{color:#fff;font-size:1.6rem;font-weight:800;margin-bottom:6px;}
+  .gate-box p{color:#bfdbfe;margin-bottom:24px;font-size:.95rem;}
+  .gate-box input{
+    width:100%;padding:12px 16px;border-radius:10px;
+    border:2px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);
+    color:#fff;font-family:'Space Mono',monospace;font-size:1rem;
+    outline:none;text-align:center;letter-spacing:3px;margin-bottom:14px;
+  }
+  .gate-box input::placeholder{color:rgba(255,255,255,.45);letter-spacing:1px;}
+  .gate-box input:focus{border-color:#93c5fd;}
+  .gate-btn{
+    width:100%;padding:13px;border-radius:10px;border:none;cursor:pointer;
+    background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+    color:#fff;font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:700;
+    transition:opacity .2s;
+  }
+  .gate-btn:hover{opacity:.9;}
+  .gate-err{color:#fca5a5;font-size:.9rem;margin-top:10px;display:none;}
+
+  /* HEADER */
+  header{
+    background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 100%);
+    padding:40px 24px 36px;color:#fff;
+  }
+  .header-inner{max-width:900px;margin:0 auto;}
+  .chip{
+    display:inline-block;background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.3);color:#e0f2fe;
+    padding:5px 14px;border-radius:999px;font-size:.78rem;font-weight:700;
+    letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;
+  }
+  header h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;margin-bottom:10px;}
+  header p.sub{color:#bfdbfe;font-size:.95rem;margin-bottom:18px;}
+  /* name/date/period row */
+  .info-row{
+    display:flex;flex-wrap:wrap;gap:16px;margin-top:16px;
+  }
+  .info-field{
+    display:flex;align-items:center;gap:8px;
+    background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+    border-radius:8px;padding:8px 14px;flex:1;min-width:160px;
+  }
+  .info-field label{font-size:.78rem;color:#93c5fd;font-weight:700;white-space:nowrap;}
+  .info-field input{
+    border:none;background:transparent;outline:none;color:#fff;
+    font-family:'Nunito',sans-serif;font-size:.93rem;flex:1;min-width:80px;
+  }
+  .info-field input::placeholder{color:rgba(255,255,255,.4);}
+
+  /* LAYOUT */
+  main{max-width:900px;margin:0 auto;padding:36px 20px 60px;}
+
+  /* REF BOX */
+  .ref-box{
+    background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;
+    padding:16px 20px;margin-bottom:28px;
+  }
+  .ref-box .rh{font-weight:800;color:#1d4ed8;font-size:.95rem;margin-bottom:8px;}
+  .ref-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;}
+  .ref-item{
+    background:#fff;border:1px solid #bfdbfe;border-radius:8px;
+    padding:8px 12px;text-align:center;
+  }
+  .ref-item .rf{font-family:'Space Mono',monospace;font-size:1rem;color:#1e3a5f;font-weight:700;}
+  .ref-item .rl{font-size:.78rem;color:var(--muted);margin-top:3px;}
+
+  /* SECTION CARDS */
+  .card{
+    background:var(--card);border:1px solid var(--border);border-radius:16px;
+    padding:24px 24px 20px;margin-bottom:24px;box-shadow:0 2px 12px rgba(0,0,0,.05);
+  }
+  .section-title{
+    font-size:1.1rem;font-weight:800;margin-bottom:18px;
+    padding-bottom:10px;border-bottom:2px solid var(--border);
+    display:flex;align-items:center;gap:10px;
+  }
+  .part-badge{
+    display:inline-flex;align-items:center;justify-content:center;
+    background:var(--blue);color:#fff;border-radius:8px;
+    font-size:.82rem;font-weight:800;padding:3px 10px;
+  }
+  .part-badge.green{background:var(--green);}
+  .part-badge.amber{background:var(--amber);}
+
+  /* PROBLEM BLOCKS */
+  .problem{
+    background:#f8faff;border:1px solid var(--border);border-radius:10px;
+    padding:16px 18px;margin-bottom:16px;
+  }
+  .problem .pnum{
+    font-weight:800;color:var(--blue);font-size:.88rem;
+    text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;
+  }
+  .problem p{font-size:.93rem;line-height:1.6;margin-bottom:10px;}
+  .work-box{
+    background:#fff;border:1px dashed #cbd5e1;border-radius:8px;
+    padding:10px 14px;min-height:60px;
+    font-size:.85rem;color:#94a3b8;font-style:italic;
+  }
+  .ans-line{
+    display:flex;align-items:center;gap:8px;margin-top:10px;
+  }
+  .ans-line label{font-size:.88rem;font-weight:700;color:#334155;white-space:nowrap;}
+  .ans-line .ans-blank{
+    flex:1;border-bottom:2px solid #94a3b8;
+    padding:2px 6px;font-family:'Space Mono',monospace;
+    font-size:.93rem;min-height:24px;background:transparent;outline:none;border-top:none;border-left:none;border-right:none;
+  }
+
+  /* GRAPH WRAP */
+  .graph-wrap{
+    background:#fff;border:1px solid var(--border);border-radius:10px;
+    padding:12px;margin:10px 0;overflow-x:auto;
+  }
+  svg text{font-family:'Nunito',sans-serif;}
+
+  /* T/F GRID */
+  .tf-grid{display:grid;grid-template-columns:1fr;gap:12px;}
+  .tf-item{
+    background:#f8faff;border:1px solid var(--border);border-radius:10px;
+    padding:14px 16px;display:flex;flex-direction:column;gap:8px;
+  }
+  .tf-item p{font-size:.93rem;line-height:1.55;}
+  .tf-choice{display:flex;gap:12px;}
+  .tf-choice label{
+    display:flex;align-items:center;gap:6px;font-size:.9rem;
+    font-weight:700;cursor:pointer;padding:5px 14px;
+    border-radius:6px;border:2px solid var(--border);background:#fff;
+    transition:all .15s;
+  }
+  .tf-choice input{accent-color:var(--blue);}
+  .tf-choice label:has(input:checked){border-color:var(--blue);background:#eff6ff;color:#1d4ed8;}
+
+  /* ANSWER KEY */
+  #answer-key{display:none;margin-top:32px;}
+  .ak-card{
+    background:linear-gradient(135deg,#f0fdf4,#dcfce7);
+    border:2px solid #86efac;border-radius:14px;padding:24px;
+  }
+  .ak-card h3{
+    color:#15803d;font-size:1.1rem;font-weight:800;
+    margin-bottom:16px;display:flex;align-items:center;gap:8px;
+  }
+  .ak-section{margin-bottom:18px;}
+  .ak-section h4{color:#166534;font-size:.9rem;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em;}
+  .ak-item{
+    display:flex;align-items:flex-start;gap:10px;
+    background:#fff;border:1px solid #bbf7d0;border-radius:8px;
+    padding:10px 14px;margin-bottom:8px;
+  }
+  .ak-num{
+    background:#22c55e;color:#fff;border-radius:5px;
+    font-size:.78rem;font-weight:700;padding:2px 7px;flex-shrink:0;
+  }
+  .ak-text{font-size:.88rem;line-height:1.55;}
+  .ak-text .ans{font-family:'Space Mono',monospace;color:#166534;font-weight:700;}
+
+  .show-key-btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:#15803d;color:#fff;border:none;border-radius:10px;
+    padding:12px 22px;font-family:'Nunito',sans-serif;font-size:.95rem;
+    font-weight:700;cursor:pointer;margin-top:20px;transition:opacity .2s;
+  }
+  .show-key-btn:hover{opacity:.88;}
+
+  .divider{border:none;border-top:2px dashed #e2e8f0;margin:28px 0;}
+
+  /* CONVERT GRID */
+  .cvt-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0;}
+  @media(max-width:580px){.cvt-grid{grid-template-columns:1fr;}}
+  .cvt-panel{background:#f8faff;border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;}
+  .cvt-panel .cl{font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+
+  /* DV TABLE */
+  table.dv{width:100%;border-collapse:collapse;margin:10px 0;}
+  table.dv th{background:#1e3a5f;color:#e0f2fe;padding:7px 10px;font-size:.82rem;text-align:left;}
+  table.dv td{padding:7px 10px;border-bottom:1px solid #e2e8f0;font-size:.85rem;}
+  table.dv tr:nth-child(even) td{background:#f1f5f9;}
+  table.dv tr.total td{background:#dbeafe;font-weight:700;font-family:'Space Mono',monospace;}
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="lock">🔒</div>
+    <h2>Physics Portal</h2>
+    <p>Enter the class password to continue</p>
+    <input type="password" id="pw-input" placeholder="password" onkeydown="if(event.key==='Enter')checkPw()"/>
+    <button class="gate-btn" onclick="checkPw()">Unlock</button>
+    <div class="gate-err" id="pw-err">Incorrect password — try again.</div>
+  </div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <div class="chip">Kinematics · Unit 9</div>
+    <h1>Acceleration-Time Graphs — Classwork</h1>
+    <p class="sub">Work through all parts. Show full working where required.</p>
+    <div class="info-row">
+      <div class="info-field">
+        <label>NAME</label>
+        <input type="text" placeholder="Your name"/>
+      </div>
+      <div class="info-field">
+        <label>DATE</label>
+        <input type="text" placeholder="dd / mm / yyyy"/>
+      </div>
+      <div class="info-field">
+        <label>PERIOD</label>
+        <input type="text" placeholder="e.g. 3"/>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- REF BOX -->
+  <div class="ref-box">
+    <div class="rh">Reference Formulae</div>
+    <div class="ref-grid">
+      <div class="ref-item">
+        <div class="rf">ΔV = a × t</div>
+        <div class="rl">Area under A-T graph = change in velocity</div>
+      </div>
+      <div class="ref-item">
+        <div class="rf">a = ΔV / Δt</div>
+        <div class="rl">Slope of V-T graph = acceleration</div>
+      </div>
+      <div class="ref-item">
+        <div class="rf">v = u + at</div>
+        <div class="rl">Final velocity from initial + change</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART A -->
+  <div class="card">
+    <div class="section-title">
+      <span class="part-badge">Part A</span>
+      Area Calculations from A-T Graphs
+    </div>
+    <p style="font-size:.9rem;color:var(--muted);margin-bottom:18px;">For each problem, calculate the area under each section of the A-T graph and find the total change in velocity. Show your working.</p>
+
+    <!-- A1 -->
+    <div class="problem">
+      <div class="pnum">Question A1</div>
+      <p>An A-T graph shows a constant acceleration of <strong>a = +4 ms⁻²</strong> from t = 0 s to t = 5 s, then <strong>a = −2 ms⁻²</strong> from t = 5 s to t = 8 s.</p>
+      <div class="graph-wrap">
+        <svg width="400" height="150" viewBox="0 0 400 150">
+          <line x1="50" y1="10" x2="50" y2="130" stroke="#334155" stroke-width="1.5"/>
+          <line x1="45" y1="80" x2="380" y2="80" stroke="#334155" stroke-width="1.5"/>
+          <text x="42" y="84" text-anchor="end" font-size="10" fill="#64748b">0</text>
+          <line x1="47" y1="40" x2="53" y2="40" stroke="#334155" stroke-width="1"/>
+          <text x="42" y="44" text-anchor="end" font-size="10" fill="#64748b">4</text>
+          <line x1="47" y1="120" x2="53" y2="120" stroke="#334155" stroke-width="1"/>
+          <text x="42" y="124" text-anchor="end" font-size="10" fill="#64748b">−2</text>
+          <!-- t axis: 1s=30px; 0→50,5→200,8→290 -->
+          <line x1="200" y1="77" x2="200" y2="83" stroke="#334155" stroke-width="1"/>
+          <text x="200" y="95" text-anchor="middle" font-size="10" fill="#64748b">5</text>
+          <line x1="290" y1="77" x2="290" y2="83" stroke="#334155" stroke-width="1"/>
+          <text x="290" y="95" text-anchor="middle" font-size="10" fill="#64748b">8</text>
+          <text x="375" y="95" font-size="10" fill="#334155" font-weight="700">t / s</text>
+          <!-- Sec1: a=4, y=80-4*10=40 -->
+          <rect x="50" y="40" width="150" height="40" fill="#3b82f618"/>
+          <line x1="50" y1="40" x2="200" y2="40" stroke="#3b82f6" stroke-width="2.5"/>
+          <line x1="200" y1="40" x2="200" y2="80" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <text x="120" y="62" text-anchor="middle" font-size="10" fill="#1d4ed8" font-weight="700">a = +4</text>
+          <!-- Sec2: a=-2, y=80+2*10=100 -->
+          <rect x="200" y="80" width="90" height="40" fill="#ef444418"/>
+          <line x1="200" y1="120" x2="290" y2="120" stroke="#ef4444" stroke-width="2.5"/>
+          <line x1="290" y1="80" x2="290" y2="120" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <text x="245" y="108" text-anchor="middle" font-size="10" fill="#b91c1c" font-weight="700">a = −2</text>
+        </svg>
+      </div>
+      <div class="work-box">Working space — show a × t for each section</div>
+      <div class="ans-line">
+        <label>Total ΔV =</label>
+        <input class="ans-blank" type="text" placeholder="ms⁻¹"/>
+      </div>
+    </div>
+
+    <!-- A2 -->
+    <div class="problem">
+      <div class="pnum">Question A2</div>
+      <p>An A-T graph shows: <strong>a = +6 ms⁻²</strong> from t = 0–2 s; <strong>a = 0</strong> from t = 2–5 s; <strong>a = −3 ms⁻²</strong> from t = 5–7 s.</p>
+      <div class="graph-wrap">
+        <svg width="400" height="150" viewBox="0 0 400 150">
+          <line x1="50" y1="10" x2="50" y2="130" stroke="#334155" stroke-width="1.5"/>
+          <line x1="45" y1="80" x2="380" y2="80" stroke="#334155" stroke-width="1.5"/>
+          <text x="42" y="84" text-anchor="end" font-size="10" fill="#64748b">0</text>
+          <line x1="47" y1="20" x2="53" y2="20" stroke="#334155" stroke-width="1"/>
+          <text x="42" y="24" text-anchor="end" font-size="10" fill="#64748b">6</text>
+          <line x1="47" y1="110" x2="53" y2="110" stroke="#334155" stroke-width="1"/>
+          <text x="42" y="114" text-anchor="end" font-size="10" fill="#64748b">−3</text>
+          <!-- x: 1s=40px; 0→50,2→130,5→250,7→330 -->
+          <line x1="130" y1="77" x2="130" y2="83" stroke="#334155" stroke-width="1"/>
+          <text x="130" y="95" text-anchor="middle" font-size="10" fill="#64748b">2</text>
+          <line x1="250" y1="77" x2="250" y2="83" stroke="#334155" stroke-width="1"/>
+          <text x="250" y="95" text-anchor="middle" font-size="10" fill="#64748b">5</text>
+          <line x1="330" y1="77" x2="330" y2="83" stroke="#334155" stroke-width="1"/>
+          <text x="330" y="95" text-anchor="middle" font-size="10" fill="#64748b">7</text>
+          <text x="375" y="95" font-size="10" fill="#334155" font-weight="700">t / s</text>
+          <!-- Sec1: a=6, y=20 -->
+          <rect x="50" y="20" width="80" height="60" fill="#3b82f618"/>
+          <line x1="50" y1="20" x2="130" y2="20" stroke="#3b82f6" stroke-width="2.5"/>
+          <line x1="130" y1="20" x2="130" y2="80" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <text x="90" y="52" text-anchor="middle" font-size="10" fill="#1d4ed8" font-weight="700">a = +6</text>
+          <!-- Sec2: a=0 (on axis) -->
+          <line x1="130" y1="80" x2="250" y2="80" stroke="#64748b" stroke-width="2.5"/>
+          <text x="190" y="72" text-anchor="middle" font-size="10" fill="#64748b">a = 0</text>
+          <!-- Sec3: a=-3, y=110 -->
+          <rect x="250" y="80" width="80" height="30" fill="#ef444418"/>
+          <line x1="250" y1="110" x2="330" y2="110" stroke="#ef4444" stroke-width="2.5"/>
+          <line x1="250" y1="80" x2="250" y2="110" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <line x1="330" y1="80" x2="330" y2="110" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <text x="290" y="100" text-anchor="middle" font-size="10" fill="#b91c1c" font-weight="700">a = −3</text>
+        </svg>
+      </div>
+      <div class="work-box">Working space</div>
+      <div class="ans-line">
+        <label>Total ΔV =</label>
+        <input class="ans-blank" type="text" placeholder="ms⁻¹"/>
+      </div>
+    </div>
+
+    <!-- A3 -->
+    <div class="problem">
+      <div class="pnum">Question A3</div>
+      <p>An object starts at v = 10 ms⁻¹. Its A-T graph shows: <strong>a = +2 ms⁻²</strong> (t = 0–4 s); <strong>a = −5 ms⁻²</strong> (t = 4–6 s). Find the final velocity at t = 6 s.</p>
+      <div class="work-box">Working space</div>
+      <div class="ans-line">
+        <label>v at t = 6 s =</label>
+        <input class="ans-blank" type="text" placeholder="ms⁻¹"/>
+      </div>
+    </div>
+
+    <!-- A4 -->
+    <div class="problem">
+      <div class="pnum">Question A4</div>
+      <p>An A-T graph has four sections: <strong>a = +5</strong> (0–2 s); <strong>a = +2</strong> (2–5 s); <strong>a = 0</strong> (5–7 s); <strong>a = −4</strong> (7–9 s). Starting from v = 0, find the velocity at the end of each section and the final velocity.</p>
+      <div class="work-box">Working space — use a table</div>
+      <div class="ans-line">
+        <label>v at t = 2 s =</label>
+        <input class="ans-blank" type="text" placeholder="ms⁻¹"/>
+      </div>
+      <div class="ans-line" style="margin-top:6px;">
+        <label>v at t = 5 s =</label>
+        <input class="ans-blank" type="text" placeholder="ms⁻¹"/>
+      </div>
+      <div class="ans-line" style="margin-top:6px;">
+        <label>v at t = 9 s =</label>
+        <input class="ans-blank" type="text" placeholder="ms⁻¹"/>
+      </div>
+    </div>
+
+    <!-- A5 -->
+    <div class="problem">
+      <div class="pnum">Question A5</div>
+      <p>Calculate the <strong>total distance</strong> represented by the following A-T scenario (hint: first find v at each stage): a = +3 ms⁻² for 4 s, starting from rest. What is the displacement? (Use s = ut + ½at²)</p>
+      <div class="work-box">Working space</div>
+      <div class="ans-line">
+        <label>Displacement =</label>
+        <input class="ans-blank" type="text" placeholder="m"/>
+      </div>
+    </div>
+
+    <!-- A6 -->
+    <div class="problem">
+      <div class="pnum">Question A6</div>
+      <p>An A-T graph shows <strong>a = +10 ms⁻²</strong> from t = 0–3 s, then <strong>a = −5 ms⁻²</strong> from t = 3–7 s, then <strong>a = 0</strong> from t = 7–10 s. Starting velocity = 5 ms⁻¹. What is the velocity at t = 10 s?</p>
+      <div class="work-box">Working space</div>
+      <div class="ans-line">
+        <label>v at t = 10 s =</label>
+        <input class="ans-blank" type="text" placeholder="ms⁻¹"/>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- PART B -->
+  <div class="card">
+    <div class="section-title">
+      <span class="part-badge green">Part B</span>
+      A-T ↔ V-T Graph Conversions
+    </div>
+    <p style="font-size:.9rem;color:var(--muted);margin-bottom:18px;">For each problem, either convert the described V-T graph to an A-T graph (by finding slopes) or convert the described A-T graph to a V-T graph (by finding areas). Sketch your answer graph and label key values.</p>
+
+    <!-- B1 -->
+    <div class="problem">
+      <div class="pnum">Question B1 — V-T to A-T</div>
+      <p>A V-T graph shows: velocity rises from 0 to 8 ms⁻¹ in 4 s, then stays constant at 8 ms⁻¹ for 3 s, then falls from 8 ms⁻¹ to 2 ms⁻¹ in 3 s. Determine the acceleration in each section and describe what the A-T graph looks like.</p>
+      <div class="work-box" style="min-height:80px;">Working: find slope = ΔV/Δt for each section</div>
+      <div class="ans-line"><label>a₁ (0–4 s) =</label><input class="ans-blank" type="text" placeholder="ms⁻²"/></div>
+      <div class="ans-line" style="margin-top:6px;"><label>a₂ (4–7 s) =</label><input class="ans-blank" type="text" placeholder="ms⁻²"/></div>
+      <div class="ans-line" style="margin-top:6px;"><label>a₃ (7–10 s) =</label><input class="ans-blank" type="text" placeholder="ms⁻²"/></div>
+    </div>
+
+    <!-- B2 -->
+    <div class="problem">
+      <div class="pnum">Question B2 — A-T to V-T</div>
+      <p>An A-T graph shows: <strong>a = +4 ms⁻²</strong> (t = 0–3 s); <strong>a = −2 ms⁻²</strong> (t = 3–8 s); <strong>a = 0</strong> (t = 8–10 s). Starting velocity = 0 ms⁻¹. Fill in the table and describe the V-T graph.</p>
+      <table class="dv">
+        <tr><th>Section</th><th>a (ms⁻²)</th><th>Δt (s)</th><th>ΔV (ms⁻¹)</th><th>v at end (ms⁻¹)</th></tr>
+        <tr><td>0 → 3 s</td><td>+4</td><td>3</td><td></td><td></td></tr>
+        <tr><td>3 → 8 s</td><td>−2</td><td>5</td><td></td><td></td></tr>
+        <tr><td>8 → 10 s</td><td>0</td><td>2</td><td></td><td></td></tr>
+      </table>
+    </div>
+
+    <!-- B3 -->
+    <div class="problem">
+      <div class="pnum">Question B3 — V-T to A-T</div>
+      <p>A V-T graph shows velocity changing as follows: 0 ms⁻¹ at t = 0, rising to 15 ms⁻¹ at t = 5 s (linear), then falling to −5 ms⁻¹ at t = 10 s (linear), then constant at −5 ms⁻¹ until t = 14 s. Find the acceleration in each section.</p>
+      <div class="work-box" style="min-height:80px;">Working space</div>
+      <div class="ans-line"><label>a₁ (0–5 s) =</label><input class="ans-blank" type="text" placeholder="ms⁻²"/></div>
+      <div class="ans-line" style="margin-top:6px;"><label>a₂ (5–10 s) =</label><input class="ans-blank" type="text" placeholder="ms⁻²"/></div>
+      <div class="ans-line" style="margin-top:6px;"><label>a₃ (10–14 s) =</label><input class="ans-blank" type="text" placeholder="ms⁻²"/></div>
+    </div>
+
+    <!-- B4 -->
+    <div class="problem">
+      <div class="pnum">Question B4 — A-T to V-T</div>
+      <p>Starting at v = 6 ms⁻¹, an A-T graph shows: <strong>a = −3 ms⁻²</strong> (t = 0–4 s); <strong>a = +5 ms⁻²</strong> (t = 4–6 s); <strong>a = −2 ms⁻²</strong> (t = 6–9 s). Find the velocity at t = 4 s, t = 6 s, and t = 9 s.</p>
+      <div class="work-box">Working space</div>
+      <div class="ans-line"><label>v at t = 4 s =</label><input class="ans-blank" type="text" placeholder="ms⁻¹"/></div>
+      <div class="ans-line" style="margin-top:6px;"><label>v at t = 6 s =</label><input class="ans-blank" type="text" placeholder="ms⁻¹"/></div>
+      <div class="ans-line" style="margin-top:6px;"><label>v at t = 9 s =</label><input class="ans-blank" type="text" placeholder="ms⁻¹"/></div>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- PART C -->
+  <div class="card">
+    <div class="section-title">
+      <span class="part-badge amber">Part C</span>
+      Short Answer Questions
+    </div>
+
+    <!-- C1 -->
+    <div class="problem">
+      <div class="pnum">Question C1</div>
+      <p>Explain in your own words why a <em>horizontal line</em> on an A-T graph always represents <em>constant acceleration</em>.</p>
+      <div class="work-box" style="min-height:70px;"></div>
+    </div>
+
+    <!-- C2 -->
+    <div class="problem">
+      <div class="pnum">Question C2</div>
+      <p>A student says "the area under an A-T graph tells me how far the object has travelled." Is the student correct? Explain why or why not, and state what the area actually represents.</p>
+      <div class="work-box" style="min-height:70px;"></div>
+    </div>
+
+    <!-- C3 -->
+    <div class="problem">
+      <div class="pnum">Question C3</div>
+      <p>An A-T graph shows a section with negative area (below the x-axis). What does this tell you about the object's motion? Give a real-world example.</p>
+      <div class="work-box" style="min-height:70px;"></div>
+    </div>
+  </div>
+
+  <!-- SHOW ANSWER KEY -->
+  <button class="show-key-btn" onclick="toggleKey()">
+    <span id="key-btn-icon">&#128274;</span>
+    <span id="key-btn-text">Show Answer Key</span>
+  </button>
+
+  <!-- ANSWER KEY -->
+  <div id="answer-key">
+    <div class="ak-card">
+      <h3>&#9989; Answer Key — Classwork</h3>
+
+      <div class="ak-section">
+        <h4>Part A — Area Calculations</h4>
+        <div class="ak-item"><span class="ak-num">A1</span><span class="ak-text">
+          Section 1: ΔV = +4 × 5 = +20 ms⁻¹. Section 2: ΔV = −2 × 3 = −6 ms⁻¹.
+          <br><span class="ans">Total ΔV = +20 + (−6) = +14 ms⁻¹</span>
+        </span></div>
+        <div class="ak-item"><span class="ak-num">A2</span><span class="ak-text">
+          Section 1: ΔV = +6 × 2 = +12 ms⁻¹. Section 2: ΔV = 0 × 3 = 0. Section 3: ΔV = −3 × 2 = −6 ms⁻¹.
+          <br><span class="ans">Total ΔV = 12 + 0 − 6 = +6 ms⁻¹</span>
+        </span></div>
+        <div class="ak-item"><span class="ak-num">A3</span><span class="ak-text">
+          ΔV₁ = +2 × 4 = +8 ms⁻¹. ΔV₂ = −5 × 2 = −10 ms⁻¹. Total ΔV = +8 − 10 = −2 ms⁻¹.
+          Starting at 10 ms⁻¹: <span class="ans">v = 10 + (−2) = 8 ms⁻¹</span>
+        </span></div>
+        <div class="ak-item"><span class="ak-num">A4</span><span class="ak-text">
+          ΔV at 2s: +5×2 = +10 → <span class="ans">v = 10 ms⁻¹</span><br>
+          ΔV at 5s: +2×3 = +6 → <span class="ans">v = 16 ms⁻¹</span><br>
+          ΔV 5–7s: 0 → v = 16. ΔV 7–9s: −4×2 = −8 → <span class="ans">v at 9s = 8 ms⁻¹</span>
+        </span></div>
+        <div class="ak-item"><span class="ak-num">A5</span><span class="ak-text">
+          u = 0, a = +3 ms⁻², t = 4 s. s = ut + ½at² = 0 + ½ × 3 × 16 = 24 m.<br>
+          <span class="ans">Displacement = 24 m</span>
+        </span></div>
+        <div class="ak-item"><span class="ak-num">A6</span><span class="ak-text">
+          Start v = 5 ms⁻¹. ΔV₁ = +10×3 = +30 → v = 35. ΔV₂ = −5×4 = −20 → v = 15. ΔV₃ = 0 → v = 15.
+          <br><span class="ans">v at t = 10 s = 15 ms⁻¹</span>
+        </span></div>
+      </div>
+
+      <div class="ak-section">
+        <h4>Part B — Conversions</h4>
+        <div class="ak-item"><span class="ak-num">B1</span><span class="ak-text">
+          a₁ = (8−0)/4 = <span class="ans">+2 ms⁻²</span>.
+          a₂ = 0/3 = <span class="ans">0 ms⁻²</span>.
+          a₃ = (2−8)/3 = <span class="ans">−2 ms⁻²</span>.
+          A-T graph: horizontal line at +2 (0–4s), on x-axis (4–7s), line at −2 (7–10s).
+        </span></div>
+        <div class="ak-item"><span class="ak-num">B2</span><span class="ak-text">
+          0→3s: ΔV = +12, v = 12. &nbsp; 3→8s: ΔV = −10, v = 2. &nbsp; 8→10s: ΔV = 0, v = 2.<br>
+          <span class="ans">V-T graph: rises steeply to 12 ms⁻¹ at t=3s, falls to 2 ms⁻¹ at t=8s, flat at 2 ms⁻¹ to t=10s.</span>
+        </span></div>
+        <div class="ak-item"><span class="ak-num">B3</span><span class="ak-text">
+          a₁ = 15/5 = <span class="ans">+3 ms⁻²</span>.
+          a₂ = (−5−15)/5 = −20/5 = <span class="ans">−4 ms⁻²</span>.
+          a₃ = 0/4 = <span class="ans">0 ms⁻²</span>.
+        </span></div>
+        <div class="ak-item"><span class="ak-num">B4</span><span class="ak-text">
+          v₀ = 6. ΔV₁ = −3×4 = −12 → <span class="ans">v at 4s = −6 ms⁻¹</span>.
+          ΔV₂ = +5×2 = +10 → <span class="ans">v at 6s = 4 ms⁻¹</span>.
+          ΔV₃ = −2×3 = −6 → <span class="ans">v at 9s = −2 ms⁻¹</span>.
+        </span></div>
+      </div>
+
+      <div class="ak-section">
+        <h4>Part C — Short Answer</h4>
+        <div class="ak-item"><span class="ak-num">C1</span><span class="ak-text">
+          A horizontal line means the acceleration value stays the same for the entire time interval — it does not increase or decrease. This is the definition of constant acceleration.
+        </span></div>
+        <div class="ak-item"><span class="ak-num">C2</span><span class="ak-text">
+          The student is <strong>incorrect</strong>. The area under an A-T graph equals the <span class="ans">change in velocity (ΔV)</span>, not displacement. Displacement is the area under a V-T graph.
+        </span></div>
+        <div class="ak-item"><span class="ak-num">C3</span><span class="ak-text">
+          Negative area means ΔV is negative — the object is <span class="ans">decelerating</span> (losing speed in the positive direction) or accelerating in the negative direction. Example: a car braking to a stop.
+        </span></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+/* GATE */
+(function(){
+  const KEY='pg_ok',PWD=btoa('physics2024');
+  if(localStorage.getItem(KEY)===PWD){document.getElementById('gate').style.display='none';}
+})();
+function checkPw(){
+  const v=document.getElementById('pw-input').value.trim();
+  const KEY='pg_ok',PWD=btoa('physics2024');
+  if(btoa(v)===PWD){
+    localStorage.setItem(KEY,PWD);
+    document.getElementById('gate').style.display='none';
+  } else {
+    document.getElementById('pw-err').style.display='block';
+  }
+}
+/* KEY TOGGLE */
+let keyVisible=false;
+function toggleKey(){
+  keyVisible=!keyVisible;
+  document.getElementById('answer-key').style.display=keyVisible?'block':'none';
+  document.getElementById('key-btn-icon').textContent=keyVisible?'🔓':'🔒';
+  document.getElementById('key-btn-text').textContent=keyVisible?'Hide Answer Key':'Show Answer Key';
+}
+</script>
+</body>
+</html>

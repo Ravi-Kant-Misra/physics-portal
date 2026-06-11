@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review of Trig — Finding Missing Sides: Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0fdf4;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#14532d 0%,#15803d 50%,#16a34a 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:840px;margin:36px auto;padding:0 24px 60px;}
+
+    /* reference box */
+    .ref-box{background:white;border:2px solid #86efac;border-radius:12px;padding:20px 24px;margin-bottom:36px;}
+    .ref-box h3{color:#14532d;font-size:1rem;font-weight:800;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px;}
+    .ref-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    @media(max-width:620px){.ref-grid{grid-template-columns:1fr;}}
+    .ref-tile{background:#f0fdf4;border-radius:8px;padding:12px 14px;border-left:4px solid #16a34a;text-align:center;}
+    .ref-tile .rt-name{font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;color:#14532d;margin-bottom:4px;}
+    .ref-tile .rt-base{font-family:'Space Mono',monospace;font-size:0.82rem;color:#374151;margin-bottom:6px;}
+    .ref-tile .rt-forms{font-size:0.78rem;color:#64748b;}
+    .ref-tile .rt-forms span{display:block;font-family:'Space Mono',monospace;font-size:0.8rem;font-weight:700;color:#15803d;margin-top:2px;}
+
+    section{margin-bottom:44px;}
+    h2{font-size:1.2rem;font-weight:800;color:#14532d;border-left:5px solid #16a34a;padding-left:12px;margin-bottom:18px;}
+    .instructions{color:#4b5563;font-size:0.9rem;margin-bottom:18px;font-style:italic;}
+
+    /* problem cards */
+    .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+    @media(max-width:580px){.problem-grid{grid-template-columns:1fr;}}
+    .problem-card{background:white;border-radius:10px;padding:18px 20px;box-shadow:0 2px 8px rgba(20,83,45,0.08);border-top:3px solid #86efac;}
+    .problem-num{font-size:0.72rem;font-weight:800;text-transform:uppercase;color:#15803d;margin-bottom:8px;letter-spacing:0.5px;}
+    .given-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+    .given-pill{background:#dcfce7;color:#15803d;font-family:'Space Mono',monospace;font-size:0.85rem;font-weight:700;padding:4px 11px;border-radius:14px;}
+    .find-pill{background:#fef3c7;color:#92400e;font-family:'Space Mono',monospace;font-size:0.85rem;font-weight:700;padding:4px 11px;border-radius:14px;}
+    .answer-block{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
+    .answer-row{display:flex;align-items:center;gap:10px;font-size:0.88rem;color:#374151;}
+    .answer-label{font-family:'Space Mono',monospace;font-weight:700;min-width:28px;color:#15803d;}
+    .answer-line{border-bottom:2px solid #d1d5db;flex:1;min-height:22px;}
+    .work-area{border:2px dashed #86efac;border-radius:8px;min-height:64px;margin-top:8px;padding:6px 10px;}
+    .work-label{font-size:0.7rem;font-weight:800;color:#15803d;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;}
+
+    /* wide problem */
+    .problem-wide{background:white;border-radius:10px;padding:20px 22px;box-shadow:0 2px 8px rgba(20,83,45,0.08);border-top:3px solid #86efac;margin-bottom:14px;}
+    .problem-wide .problem-num{font-size:0.72rem;font-weight:800;text-transform:uppercase;color:#15803d;margin-bottom:10px;letter-spacing:0.5px;}
+
+    /* short answer */
+    .short-answer{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:14px;}
+    .short-answer .q{font-weight:700;margin-bottom:10px;font-size:0.95rem;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+
+    /* multi-step */
+    .multi-card{background:white;border-radius:12px;padding:22px 26px;box-shadow:0 3px 12px rgba(20,83,45,0.09);border:2px solid #bbf7d0;margin-bottom:16px;}
+    .multi-card .mc-title{font-size:0.78rem;font-weight:800;text-transform:uppercase;color:#15803d;letter-spacing:0.5px;margin-bottom:10px;}
+    .sub-steps{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
+    .sub-step{display:flex;gap:10px;align-items:flex-start;}
+    .ss-label{font-size:0.8rem;font-weight:800;color:#15803d;min-width:60px;padding-top:2px;}
+    .ss-line{border-bottom:2px solid #d1d5db;flex:1;min-height:26px;}
+
+    /* answer key */
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#15803d;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #toggle-key-btn:hover{background:#14532d;}
+    #answer-key{display:none;background:#f0fdf4;border:2px solid #86efac;border-radius:14px;padding:28px 32px;}
+    #answer-key h2{color:#14532d;border-left-color:#16a34a;margin-bottom:22px;}
+    .key-section{margin-bottom:28px;}
+    .key-section h3{font-size:0.95rem;font-weight:800;color:#14532d;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;}
+    .key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    @media(max-width:560px){.key-grid{grid-template-columns:1fr;}}
+    .key-item{background:white;border-radius:8px;padding:12px 16px;font-size:0.9rem;border-left:3px solid #16a34a;}
+    .key-item .knum{font-size:0.72rem;font-weight:800;color:#15803d;text-transform:uppercase;margin-bottom:4px;}
+    .key-item .kans{font-family:'Space Mono',monospace;font-weight:700;color:#14532d;font-size:0.95rem;}
+    .key-item .kexpl{color:#64748b;font-size:0.8rem;margin-top:3px;}
+    .key-note{background:white;border-radius:8px;padding:14px 18px;font-size:0.92rem;color:#374151;margin-bottom:10px;border-left:3px solid #16a34a;}
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">&#128274;</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">&#10060; Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#15803d,#16a34a);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class &#8594;</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">IB Physics &middot; Vectors Unit &middot; Homework Assignment</div>
+  <h1>Review of Trig: Finding Missing Sides — Homework</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____ &nbsp;&nbsp; Due: _____________</div>
+</header>
+
+<main>
+
+  <!-- Reference Box -->
+  <div class="ref-box">
+    <h3>Formula Reference — All 6 Rearrangement Forms</h3>
+    <div class="ref-grid">
+      <div class="ref-tile">
+        <div class="rt-name">Sin(&#952;) = O/H</div>
+        <div class="rt-base">Use: O &amp; H involved</div>
+        <div class="rt-forms">
+          <span>O = H &middot; Sin(&#952;)</span>
+          <span>H = O / Sin(&#952;)</span>
+        </div>
+      </div>
+      <div class="ref-tile">
+        <div class="rt-name">Cos(&#952;) = A/H</div>
+        <div class="rt-base">Use: A &amp; H involved</div>
+        <div class="rt-forms">
+          <span>A = H &middot; Cos(&#952;)</span>
+          <span>H = A / Cos(&#952;)</span>
+        </div>
+      </div>
+      <div class="ref-tile">
+        <div class="rt-name">Tan(&#952;) = O/A</div>
+        <div class="rt-base">Use: O &amp; A involved</div>
+        <div class="rt-forms">
+          <span>O = A &middot; Tan(&#952;)</span>
+          <span>A = O / Tan(&#952;)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART A: All 6 Forms Practice -->
+  <section>
+    <h2>Part A — Practice All 6 Forms (2 points each)</h2>
+    <p class="instructions">Each problem uses a different rearrangement form. State the identity, write the rearranged formula, then calculate.</p>
+
+    <div class="problem-grid">
+      <!-- A1 — O = H·Sin -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 1 — Form: O = H·Sin(&#952;)</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 28&deg;</span>
+          <span class="given-pill">H = 45</span>
+          <span class="find-pill">Find: O</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Identity:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">Rearranged:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">O =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+
+      <!-- A2 — H = O/Sin -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 2 — Form: H = O/Sin(&#952;)</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 42&deg;</span>
+          <span class="given-pill">O = 11</span>
+          <span class="find-pill">Find: H</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Identity:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">Rearranged:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">H =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+
+      <!-- A3 — A = H·Cos -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 3 — Form: A = H·Cos(&#952;)</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 60&deg;</span>
+          <span class="given-pill">H = 20</span>
+          <span class="find-pill">Find: A</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Identity:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">Rearranged:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">A =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+
+      <!-- A4 — H = A/Cos -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 4 — Form: H = A/Cos(&#952;)</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 37&deg;</span>
+          <span class="given-pill">A = 16</span>
+          <span class="find-pill">Find: H</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Identity:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">Rearranged:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">H =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+
+      <!-- A5 — O = A·Tan -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 5 — Form: O = A·Tan(&#952;)</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 52&deg;</span>
+          <span class="given-pill">A = 9</span>
+          <span class="find-pill">Find: O</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Identity:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">Rearranged:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">O =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+
+      <!-- A6 — A = O/Tan -->
+      <div class="problem-card">
+        <div class="problem-num">Problem 6 — Form: A = O/Tan(&#952;)</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 18&deg;</span>
+          <span class="given-pill">O = 4</span>
+          <span class="find-pill">Find: A</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Identity:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">Rearranged:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">A =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART B: Applied Physics Problems -->
+  <section>
+    <h2>Part B — Applied Physics Problems (3 points each)</h2>
+    <p class="instructions">Read the scenario, draw a sketch if helpful, label O/A/H, and solve with full 3-step method. Include units in your final answer.</p>
+
+    <!-- B1 -->
+    <div class="problem-wide">
+      <div class="problem-num">Problem 7 — Ski Slope</div>
+      <p style="font-size:0.92rem;color:#374151;margin-bottom:10px;">A ski slope makes a 25&deg; angle with the horizontal ground. The slope (hypotenuse) is 200 m long. What is the vertical height gained (opposite)?</p>
+      <div class="given-row">
+        <span class="given-pill">&#952; = 25&deg;</span>
+        <span class="given-pill">H = 200 m</span>
+        <span class="find-pill">Find: O (height)</span>
+      </div>
+      <div class="sub-steps">
+        <div class="sub-step"><div class="ss-label">Step 1</div><div class="ss-line"></div></div>
+        <div class="sub-step"><div class="ss-label">Step 2</div><div class="ss-line"></div></div>
+        <div class="sub-step"><div class="ss-label">Step 3</div><div class="ss-line"></div></div>
+      </div>
+    </div>
+
+    <!-- B2 -->
+    <div class="problem-wide">
+      <div class="problem-num">Problem 8 — Ladder Safety</div>
+      <p style="font-size:0.92rem;color:#374151;margin-bottom:10px;">A ladder leans against a wall. For safety, the angle between the ladder and the ground must be 75&deg;. The base of the ladder is placed 1.2 m from the wall (adjacent). How long must the ladder be (hypotenuse)?</p>
+      <div class="given-row">
+        <span class="given-pill">&#952; = 75&deg;</span>
+        <span class="given-pill">A = 1.2 m</span>
+        <span class="find-pill">Find: H (ladder length)</span>
+      </div>
+      <div class="sub-steps">
+        <div class="sub-step"><div class="ss-label">Step 1</div><div class="ss-line"></div></div>
+        <div class="sub-step"><div class="ss-label">Step 2</div><div class="ss-line"></div></div>
+        <div class="sub-step"><div class="ss-label">Step 3</div><div class="ss-line"></div></div>
+      </div>
+    </div>
+
+    <!-- B3 -->
+    <div class="problem-wide">
+      <div class="problem-num">Problem 9 — River Crossing</div>
+      <p style="font-size:0.92rem;color:#374151;margin-bottom:10px;">A boat travels at 30&deg; to the bank of a river. After travelling 80 m along its path (hypotenuse), what distance has it moved perpendicular to the bank (opposite = directly across the river)?</p>
+      <div class="given-row">
+        <span class="given-pill">&#952; = 30&deg;</span>
+        <span class="given-pill">H = 80 m</span>
+        <span class="find-pill">Find: O</span>
+      </div>
+      <div class="sub-steps">
+        <div class="sub-step"><div class="ss-label">Step 1</div><div class="ss-line"></div></div>
+        <div class="sub-step"><div class="ss-label">Step 2</div><div class="ss-line"></div></div>
+        <div class="sub-step"><div class="ss-label">Step 3</div><div class="ss-line"></div></div>
+      </div>
+    </div>
+
+    <!-- B4 -->
+    <div class="problem-wide">
+      <div class="problem-num">Problem 10 — Force at an Angle</div>
+      <p style="font-size:0.92rem;color:#374151;margin-bottom:10px;">A force is applied at 35&deg; above horizontal. The horizontal component (adjacent) of the force is 40 N. What is the magnitude of the total force (hypotenuse)?</p>
+      <div class="given-row">
+        <span class="given-pill">&#952; = 35&deg;</span>
+        <span class="given-pill">A = 40 N</span>
+        <span class="find-pill">Find: H (total force)</span>
+      </div>
+      <div class="sub-steps">
+        <div class="sub-step"><div class="ss-label">Step 1</div><div class="ss-line"></div></div>
+        <div class="sub-step"><div class="ss-label">Step 2</div><div class="ss-line"></div></div>
+        <div class="sub-step"><div class="ss-label">Step 3</div><div class="ss-line"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART C: Choose Your Own Method -->
+  <section>
+    <h2>Part C — Mixed: Choose Your Method (2 points each)</h2>
+    <p class="instructions">No hints about which formula to use. Apply the 3-step method independently.</p>
+
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-num">Problem 11</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 15&deg;</span>
+          <span class="given-pill">H = 100</span>
+          <span class="find-pill">Find: O</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Use:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">O =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 12</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 58&deg;</span>
+          <span class="given-pill">O = 30</span>
+          <span class="find-pill">Find: H</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Use:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">H =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 13</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 72&deg;</span>
+          <span class="given-pill">A = 5</span>
+          <span class="find-pill">Find: O</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Use:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">O =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 14</div>
+        <div class="given-row">
+          <span class="given-pill">&#952; = 44&deg;</span>
+          <span class="given-pill">H = 22</span>
+          <span class="find-pill">Find: A</span>
+        </div>
+        <div class="answer-block">
+          <div class="answer-row"><span class="answer-label">Use:</span><div class="answer-line"></div></div>
+          <div class="answer-row"><span class="answer-label">A =</span><div class="answer-line"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART D: Analysis Questions -->
+  <section>
+    <h2>Part D — Analysis Questions (3 points each)</h2>
+
+    <div class="short-answer">
+      <div class="q">15. A student solves for H using Sin(&theta;) = O/H and gets H = O &times; Sin(&theta;). Identify the algebra error and write the correct rearrangement.</div>
+      <div class="write-lines">
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+
+    <div class="short-answer">
+      <div class="q">16. A right triangle has &theta; = 30&deg; and H = 10. Without a calculator, give the exact value of the opposite side. Explain which trig value you are using and why Sin(30&deg;) gives an exact result.</div>
+      <div class="write-lines">
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+
+    <div class="short-answer">
+      <div class="q">17. As angle &theta; increases from 0&deg; toward 90&deg; (with a fixed hypotenuse), describe what happens to the opposite side and the adjacent side. Explain using the Sin and Cos formulas.</div>
+      <div class="write-lines">
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANSWER KEY TOGGLE -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+  </div>
+
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A — All 6 Forms</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="knum">Problem 1 — O = H·Sin(&theta;)</div>
+          <div class="kans">O = 45 &middot; Sin(28&deg;) = 45 &times; 0.469 = 21.1</div>
+          <div class="kexpl">Sin(28&deg;) &approx; 0.469</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 2 — H = O/Sin(&theta;)</div>
+          <div class="kans">H = 11 / Sin(42&deg;) = 11 / 0.669 = 16.4</div>
+          <div class="kexpl">Sin(42&deg;) &approx; 0.669</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 3 — A = H·Cos(&theta;)</div>
+          <div class="kans">A = 20 &middot; Cos(60&deg;) = 20 &times; 0.500 = 10.0</div>
+          <div class="kexpl">Cos(60&deg;) = 0.500 exactly</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 4 — H = A/Cos(&theta;)</div>
+          <div class="kans">H = 16 / Cos(37&deg;) = 16 / 0.799 = 20.0</div>
+          <div class="kexpl">Cos(37&deg;) &approx; 0.799</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 5 — O = A·Tan(&theta;)</div>
+          <div class="kans">O = 9 &middot; Tan(52&deg;) = 9 &times; 1.280 = 11.5</div>
+          <div class="kexpl">Tan(52&deg;) &approx; 1.280</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 6 — A = O/Tan(&theta;)</div>
+          <div class="kans">A = 4 / Tan(18&deg;) = 4 / 0.325 = 12.3</div>
+          <div class="kexpl">Tan(18&deg;) &approx; 0.325</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B — Applied Physics Problems</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="knum">Problem 7 — Ski Slope</div>
+          <div class="kans">O = 200 &middot; Sin(25&deg;) = 200 &times; 0.423 = 84.5 m</div>
+          <div class="kexpl">O &amp; H &rarr; Sin; O = H&middot;Sin(&theta;)</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 8 — Ladder Safety</div>
+          <div class="kans">H = 1.2 / Cos(75&deg;) = 1.2 / 0.259 = 4.6 m</div>
+          <div class="kexpl">A &amp; H &rarr; Cos; H = A/Cos(&theta;)</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 9 — River Crossing</div>
+          <div class="kans">O = 80 &middot; Sin(30&deg;) = 80 &times; 0.500 = 40.0 m</div>
+          <div class="kexpl">O &amp; H &rarr; Sin; O = H&middot;Sin(&theta;)</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 10 — Force at Angle</div>
+          <div class="kans">H = 40 / Cos(35&deg;) = 40 / 0.819 = 48.8 N</div>
+          <div class="kexpl">A &amp; H &rarr; Cos; H = A/Cos(&theta;)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C — Mixed</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="knum">Problem 11</div>
+          <div class="kans">O = 100 &middot; Sin(15&deg;) = 100 &times; 0.259 = 25.9</div>
+          <div class="kexpl">O &amp; H &rarr; Sin</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 12</div>
+          <div class="kans">H = 30 / Sin(58&deg;) = 30 / 0.848 = 35.4</div>
+          <div class="kexpl">O &amp; H &rarr; Sin; divide</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 13</div>
+          <div class="kans">O = 5 &middot; Tan(72&deg;) = 5 &times; 3.078 = 15.4</div>
+          <div class="kexpl">O &amp; A &rarr; Tan</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 14</div>
+          <div class="kans">A = 22 &middot; Cos(44&deg;) = 22 &times; 0.719 = 15.8</div>
+          <div class="kexpl">A &amp; H &rarr; Cos</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part D — Analysis</h3>
+      <div class="key-note">
+        <strong>15.</strong> The student multiplied both sides by H but forgot to then divide by Sin(&theta;). The correct rearrangement from Sin(&theta;) = O/H is: multiply both sides by H to get H&middot;Sin(&theta;) = O, then divide both sides by Sin(&theta;) to get H = O/Sin(&theta;). <strong>Never multiply by H and multiply by Sin — that gives H = O&times;Sin, which is wrong.</strong>
+      </div>
+      <div class="key-note">
+        <strong>16.</strong> O = H&middot;Sin(30&deg;) = 10 &times; 0.5 = <strong>5</strong>. Sin(30&deg;) = 0.5 exactly because in an equilateral triangle split in half, the short side is exactly half the hypotenuse — no rounding needed.
+      </div>
+      <div class="key-note">
+        <strong>17.</strong> As &theta; increases toward 90&deg;, Sin(&theta;) increases toward 1, so O = H&middot;Sin(&theta;) increases toward H (the opposite side grows). Meanwhile Cos(&theta;) decreases toward 0, so A = H&middot;Cos(&theta;) decreases toward 0 (the adjacent side shrinks). At 90&deg; the triangle would be a vertical line — no adjacent side at all.
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+function toggleKey() {
+  var key = document.getElementById('answer-key');
+  var btn = document.getElementById('toggle-key-btn');
+  if (key.style.display === 'none' || key.style.display === '') {
+    key.style.display = 'block';
+    btn.textContent = 'Hide Answer Key';
+  } else {
+    key.style.display = 'none';
+    btn.textContent = 'Show Answer Key';
+  }
+}
+</script>
+</body>
+</html>

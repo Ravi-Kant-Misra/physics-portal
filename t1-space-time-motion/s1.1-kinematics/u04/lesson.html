@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Kinematics Unit 4 — Average vs. Instantaneous Velocity</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --blue:#3b82f6;
+  --indigo:#6366f1;
+  --green:#22c55e;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --dark:#0f172a;
+  --bg:#f8faff;
+  --muted:#94a3b8;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+
+/* dot background */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:radial-gradient(circle,#cbd5e1 1px,transparent 1px);
+  background-size:28px 28px;
+  opacity:0.45;z-index:0;pointer-events:none;
+}
+
+/* PASSWORD GATE */
+#gate{position:fixed;inset:0;background:linear-gradient(135deg,#0f172a,#1e3a5f);display:flex;align-items:center;justify-content:center;z-index:9999;}
+#gate-box{background:#1e293b;border:1px solid #334155;border-radius:16px;padding:2.5rem 2rem;max-width:380px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+#gate-box h2{color:#fff;font-size:1.4rem;margin-bottom:.5rem;}
+#gate-box p{color:var(--muted);font-size:.9rem;margin-bottom:1.5rem;}
+#gate-box input{width:100%;padding:.75rem 1rem;border-radius:8px;border:1px solid #475569;background:#0f172a;color:#fff;font-family:'Nunito',sans-serif;font-size:1rem;outline:none;margin-bottom:1rem;}
+#gate-box input:focus{border-color:var(--blue);}
+#gate-box button{width:100%;padding:.75rem;background:linear-gradient(135deg,var(--blue),var(--indigo));color:#fff;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;}
+#gate-box button:hover{opacity:.9;}
+#gate-error{color:var(--red);font-size:.85rem;margin-top:.75rem;display:none;}
+
+/* MAIN CONTENT */
+#main{display:none;position:relative;z-index:1;}
+
+/* HEADER */
+header{
+  background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 60%,#1e40af 100%);
+  padding:3rem 1.5rem 2.5rem;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.stars{position:absolute;inset:0;pointer-events:none;}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 2s infinite alternate;}
+@keyframes twinkle{0%{opacity:.2;transform:scale(1);}100%{opacity:1;transform:scale(1.4);}}
+.chip{display:inline-block;background:rgba(255,255,255,.15);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.25);color:#e0e7ff;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:.3rem .9rem;margin-bottom:1rem;}
+header h1{font-size:clamp(1.8rem,5vw,2.8rem);font-weight:900;background:linear-gradient(135deg,#fff 30%,#bfdbfe 70%,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.15;margin-bottom:.75rem;}
+header p.subtitle{color:#bfdbfe;font-size:1.05rem;max-width:600px;margin:0 auto;}
+
+/* CONTENT WRAPPER */
+.content{max-width:860px;margin:0 auto;padding:2.5rem 1.25rem 4rem;}
+
+/* SECTION TITLES */
+.section-title{font-size:1.3rem;font-weight:800;color:var(--dark);margin:2.5rem 0 1rem;display:flex;align-items:center;gap:.55rem;}
+.section-title::before{content:'';display:inline-block;width:4px;height:1.3em;background:linear-gradient(180deg,var(--blue),var(--indigo));border-radius:2px;}
+
+/* CARDS */
+.card{background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:1.5rem 1.75rem;margin-bottom:1.25rem;box-shadow:0 2px 12px rgba(59,130,246,.06);}
+.card h3{font-size:1.05rem;font-weight:800;margin-bottom:.6rem;}
+.blue-head{color:var(--blue);}
+.indigo-head{color:var(--indigo);}
+.green-head{color:var(--green);}
+.card p,.card li{font-size:.97rem;line-height:1.65;color:#334155;}
+.card ul{padding-left:1.2rem;margin-top:.4rem;}
+.card ul li{margin-bottom:.3rem;}
+
+/* FORMULA BOX */
+.formula-box{background:linear-gradient(135deg,#eff6ff,#eef2ff);border:1.5px solid #bfdbfe;border-radius:12px;padding:1rem 1.5rem;margin:1rem 0;font-family:'Space Mono',monospace;font-size:1.05rem;text-align:center;color:#1e40af;font-weight:700;}
+
+/* KEY INSIGHT */
+.insight{background:linear-gradient(135deg,#fefce8,#fef9c3);border-left:4px solid var(--amber);border-radius:8px;padding:.9rem 1.2rem;margin:.75rem 0;font-size:.93rem;color:#78350f;}
+.insight strong{color:#92400e;}
+
+/* TIP BOX */
+.tip{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-left:4px solid var(--green);border-radius:8px;padding:.9rem 1.2rem;margin:.75rem 0;font-size:.93rem;color:#14532d;}
+.tip strong{color:#166534;}
+
+/* WARNING BOX */
+.warn{background:linear-gradient(135deg,#fff1f2,#ffe4e6);border-left:4px solid var(--red);border-radius:8px;padding:.9rem 1.2rem;margin:.75rem 0;font-size:.93rem;color:#7f1d1d;}
+
+/* TWO-COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+@media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+/* SVG GRAPHS */
+.graph-wrap{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:1.25rem;box-shadow:0 2px 12px rgba(59,130,246,.06);margin-bottom:1.25rem;}
+.graph-wrap h4{font-size:.95rem;font-weight:800;color:var(--dark);margin-bottom:.75rem;text-align:center;}
+.graph-wrap p.caption{font-size:.82rem;color:var(--muted);text-align:center;margin-top:.6rem;}
+svg text{font-family:'Nunito',sans-serif;}
+
+/* WORKED EXAMPLE */
+.worked{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:1.5px solid #7dd3fc;border-radius:12px;padding:1.25rem 1.5rem;margin:1rem 0;}
+.worked h4{color:#0369a1;font-weight:800;margin-bottom:.5rem;}
+.worked p,.worked li{font-size:.94rem;color:#0c4a6e;line-height:1.65;}
+.worked ul{padding-left:1.2rem;margin-top:.3rem;}
+.worked .step{font-family:'Space Mono',monospace;font-size:.9rem;background:rgba(255,255,255,.7);border-radius:6px;padding:.5rem .75rem;margin:.35rem 0;}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;margin:.75rem 0;font-size:.9rem;}
+th{background:linear-gradient(135deg,#1e3a5f,#1d4ed8);color:#fff;padding:.6rem .9rem;text-align:left;}
+td{padding:.55rem .9rem;border-bottom:1px solid #e2e8f0;color:#334155;}
+tr:nth-child(even) td{background:#f8faff;}
+
+/* QUIZ */
+.quiz-section{background:#fff;border-radius:16px;border:2px solid var(--indigo);padding:1.75rem;margin-top:2rem;box-shadow:0 4px 20px rgba(99,102,241,.1);}
+.quiz-section h2{font-size:1.2rem;font-weight:800;color:var(--indigo);margin-bottom:1.25rem;}
+.q-block{margin-bottom:1.5rem;}
+.q-block p{font-weight:700;margin-bottom:.6rem;font-size:.96rem;}
+.q-block label{display:flex;align-items:flex-start;gap:.55rem;cursor:pointer;padding:.45rem .6rem;border-radius:8px;font-size:.93rem;border:1.5px solid transparent;transition:all .15s;margin-bottom:.3rem;}
+.q-block label:hover{background:#f1f5f9;}
+.q-block input[type=radio]{margin-top:.15rem;accent-color:var(--indigo);flex-shrink:0;}
+.q-block label.correct{background:#dcfce7;border-color:var(--green);color:#14532d;}
+.q-block label.wrong{background:#fee2e2;border-color:var(--red);color:#7f1d1d;}
+.q-feedback{font-size:.85rem;margin-top:.4rem;padding:.4rem .7rem;border-radius:6px;display:none;}
+.q-feedback.show{display:block;}
+.q-feedback.ok{background:#dcfce7;color:#166534;}
+.q-feedback.bad{background:#fee2e2;color:#991b1b;}
+.quiz-btn{background:linear-gradient(135deg,var(--indigo),var(--blue));color:#fff;border:none;border-radius:8px;padding:.65rem 1.75rem;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;margin-top:.5rem;}
+.quiz-btn:hover{opacity:.9;}
+#quiz-result{margin-top:1rem;font-weight:800;font-size:1rem;display:none;}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div id="gate-box">
+    <h2>🔒 Password Required</h2>
+    <p>Enter the class password to access this lesson.</p>
+    <input type="password" id="pwd-input" placeholder="Enter password…" onkeydown="if(event.key==='Enter')checkPwd()"/>
+    <button onclick="checkPwd()">Unlock</button>
+    <div id="gate-error">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main">
+
+<!-- HEADER -->
+<header>
+  <div class="stars" id="stars-container"></div>
+  <div class="chip">Kinematics · Unit 4</div>
+  <h1>Average vs. Instantaneous Velocity</h1>
+  <p class="subtitle">Understanding how motion differs between an entire journey and a single frozen moment in time.</p>
+</header>
+
+<div class="content">
+
+  <!-- SECTION 1: DEFINITIONS -->
+  <div class="section-title">Core Definitions</div>
+
+  <div class="two-col">
+    <div class="card">
+      <h3 class="blue-head">Average Speed / Velocity</h3>
+      <p>The <strong>total distance</strong> (or displacement) divided by the <strong>total time</strong> traveled.</p>
+      <div class="formula-box">v&#818; = &Delta;d / &Delta;t</div>
+      <p>This value describes the <em>overall</em> motion across an entire trip — it does <em>not</em> tell you what was happening at any specific moment.</p>
+    </div>
+    <div class="card">
+      <h3 class="blue-head">Instantaneous Speed / Velocity</h3>
+      <p>The speed or velocity at one <strong>specific instant</strong> in time. It does <em>not</em> depend on any movement outside that instant.</p>
+      <div class="formula-box">v = slope at a single point</div>
+      <p>Think of the reading on a car's speedometer — that is always the instantaneous speed.</p>
+    </div>
+  </div>
+
+  <!-- REAL WORLD EXAMPLE -->
+  <div class="card">
+    <h3 class="indigo-head">Real-World Car Example</h3>
+    <p>Imagine a car driving for exactly <strong>1 hour</strong> and covering <strong>65 km</strong>. The car did not drive at a perfectly constant speed — it slowed for traffic, sped up on the highway, etc. At one specific moment during the trip the speedometer reads <strong>80 km/h</strong>.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem;">
+      <div class="tip"><strong>Average speed</strong><br>65 km ÷ 1 h = <strong>65 km/h</strong><br><span style="font-size:.85rem;">Calculated from the whole trip.</span></div>
+      <div class="insight"><strong>Instantaneous speed</strong><br>Speedometer reads <strong>80 km/h</strong><br><span style="font-size:.85rem;">Only valid at that exact moment.</span></div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: AVERAGE ON P-T GRAPH -->
+  <div class="section-title">Average Velocity on a Position–Time Graph</div>
+
+  <div class="card">
+    <h3 class="blue-head">Rule for Average Velocity on a P–T Graph</h3>
+    <p>To find the <strong>average velocity</strong> between two points on a position–time graph:</p>
+    <ul>
+      <li>Draw a straight <strong>secant line</strong> connecting the two points.</li>
+      <li>Calculate the <strong>slope</strong> of that line: rise ÷ run = &Delta;x / &Delta;t.</li>
+    </ul>
+    <div class="formula-box">v&#818; = (x&#8322; &minus; x&#8321;) / (t&#8322; &minus; t&#8321;) = &Delta;x / &Delta;t</div>
+    <p style="margin-top:.5rem;">For <strong>average speed</strong>, find the <em>total distance</em> traveled along the curve (not just the straight-line displacement) and divide by the total time.</p>
+  </div>
+
+  <!-- SVG: Average Velocity graph -->
+  <div class="graph-wrap">
+    <h4>P–T Graph: Average Velocity (Secant Line)</h4>
+    <svg viewBox="0 0 420 300" width="100%" style="max-width:420px;display:block;margin:0 auto;">
+      <!-- axes -->
+      <line x1="50" y1="250" x2="390" y2="250" stroke="#475569" stroke-width="2"/>
+      <line x1="50" y1="250" x2="50" y2="20" stroke="#475569" stroke-width="2"/>
+      <!-- axis labels -->
+      <text x="215" y="285" text-anchor="middle" font-size="13" fill="#475569">Time (s)</text>
+      <text x="15" y="135" text-anchor="middle" font-size="13" fill="#475569" transform="rotate(-90,15,135)">Position (m)</text>
+      <!-- x ticks -->
+      <line x1="84" y1="250" x2="84" y2="255" stroke="#94a3b8" stroke-width="1"/>
+      <text x="84" y="267" text-anchor="middle" font-size="11" fill="#94a3b8">1</text>
+      <line x1="118" y1="250" x2="118" y2="255" stroke="#94a3b8" stroke-width="1"/>
+      <text x="118" y="267" text-anchor="middle" font-size="11" fill="#94a3b8">2</text>
+      <line x1="152" y1="250" x2="152" y2="255" stroke="#94a3b8" stroke-width="1"/>
+      <text x="152" y="267" text-anchor="middle" font-size="11" fill="#94a3b8">3</text>
+      <line x1="186" y1="250" x2="186" y2="255" stroke="#94a3b8" stroke-width="1"/>
+      <text x="186" y="267" text-anchor="middle" font-size="11" fill="#94a3b8">4</text>
+      <line x1="220" y1="250" x2="220" y2="255" stroke="#94a3b8" stroke-width="1"/>
+      <text x="220" y="267" text-anchor="middle" font-size="11" fill="#94a3b8">5</text>
+      <line x1="254" y1="250" x2="254" y2="255" stroke="#94a3b8" stroke-width="1"/>
+      <text x="254" y="267" text-anchor="middle" font-size="11" fill="#94a3b8">6</text>
+      <line x1="288" y1="250" x2="288" y2="255" stroke="#94a3b8" stroke-width="1"/>
+      <text x="288" y="267" text-anchor="middle" font-size="11" fill="#94a3b8">7</text>
+      <line x1="322" y1="250" x2="322" y2="255" stroke="#94a3b8" stroke-width="1"/>
+      <text x="322" y="267" text-anchor="middle" font-size="11" fill="#94a3b8">8</text>
+      <line x1="356" y1="250" x2="356" y2="255" stroke="#94a3b8" stroke-width="1"/>
+      <text x="356" y="267" text-anchor="middle" font-size="11" fill="#94a3b8">9</text>
+      <!-- y ticks -->
+      <line x1="45" y1="228" x2="50" y2="228" stroke="#94a3b8" stroke-width="1"/>
+      <text x="40" y="232" text-anchor="end" font-size="11" fill="#94a3b8">1</text>
+      <line x1="45" y1="206" x2="50" y2="206" stroke="#94a3b8" stroke-width="1"/>
+      <text x="40" y="210" text-anchor="end" font-size="11" fill="#94a3b8">2</text>
+      <line x1="45" y1="184" x2="50" y2="184" stroke="#94a3b8" stroke-width="1"/>
+      <text x="40" y="188" text-anchor="end" font-size="11" fill="#94a3b8">3</text>
+      <line x1="45" y1="162" x2="50" y2="162" stroke="#94a3b8" stroke-width="1"/>
+      <text x="40" y="166" text-anchor="end" font-size="11" fill="#94a3b8">4</text>
+      <line x1="45" y1="140" x2="50" y2="140" stroke="#94a3b8" stroke-width="1"/>
+      <text x="40" y="144" text-anchor="end" font-size="11" fill="#94a3b8">5</text>
+      <line x1="45" y1="118" x2="50" y2="118" stroke="#94a3b8" stroke-width="1"/>
+      <text x="40" y="122" text-anchor="end" font-size="11" fill="#94a3b8">6</text>
+      <line x1="45" y1="96" x2="50" y2="96" stroke="#94a3b8" stroke-width="1"/>
+      <text x="40" y="100" text-anchor="end" font-size="11" fill="#94a3b8">7</text>
+      <line x1="45" y1="74" x2="50" y2="74" stroke="#94a3b8" stroke-width="1"/>
+      <text x="40" y="78" text-anchor="end" font-size="11" fill="#94a3b8">8</text>
+      <line x1="45" y1="52" x2="50" y2="52" stroke="#94a3b8" stroke-width="1"/>
+      <text x="40" y="56" text-anchor="end" font-size="11" fill="#94a3b8">9</text>
+      <!-- Red curved path: bell/parabolic shape from ~(0,40) up to peak ~(5,40) then down; -->
+      <!-- pixel mapping: x = 50 + t*34; y = 250 - pos*22 -->
+      <!-- curve goes up then comes back down: t=0,pos=0 → t=1,pos=4 → t=5,pos=9 → t=9,pos=7 -->
+      <path d="M50,250 C60,165 75,100 84,162 C110,60 135,35 220,46 C280,52 320,90 356,96 C370,100 385,100 390,118"
+            fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Blue secant line from (1s,4m) to (9s,7m) -->
+      <!-- (1s,4m) → x=84, y=250-4*22=162 -->
+      <!-- (9s,7m) → x=356, y=250-7*22=96 -->
+      <line x1="84" y1="162" x2="356" y2="96" stroke="#3b82f6" stroke-width="2" stroke-dasharray="6,3"/>
+      <!-- green dots -->
+      <circle cx="84" cy="162" r="6" fill="#22c55e" stroke="#fff" stroke-width="2"/>
+      <circle cx="356" cy="96" r="6" fill="#22c55e" stroke="#fff" stroke-width="2"/>
+      <!-- labels -->
+      <text x="90" y="155" font-size="11" fill="#15803d" font-weight="700">(1 s, 4 m)</text>
+      <text x="300" y="88" font-size="11" fill="#15803d" font-weight="700">(9 s, 7 m)</text>
+      <text x="175" y="105" font-size="11" fill="#2563eb" font-weight="700" transform="rotate(-14,175,105)">avg v = 0.375 m/s</text>
+    </svg>
+    <p class="caption">The blue dashed line is the <strong>secant line</strong> — its slope equals the average velocity.</p>
+  </div>
+
+  <!-- WORKED EXAMPLE: average velocity -->
+  <div class="worked">
+    <h4>Worked Example — Average Velocity from Graph</h4>
+    <p>Two points on the curve are identified:</p>
+    <ul>
+      <li>Point 1: t = 1 s, x = 4 m</li>
+      <li>Point 2: t = 9 s, x = 7 m</li>
+    </ul>
+    <p>Draw the secant line and calculate its slope:</p>
+    <div class="step">v&#818; = &Delta;x / &Delta;t = (7 m &minus; 4 m) / (9 s &minus; 1 s) = 3 m / 8 s ≈ 0.375 m/s</div>
+    <p>The average velocity over this interval is approximately <strong>0.375 m/s</strong> (the PPT reads ~0.3 m/s as an approximate graph-read value).</p>
+  </div>
+
+  <!-- SECTION 3: INSTANTANEOUS ON P-T GRAPH -->
+  <div class="section-title">Instantaneous Velocity on a Position–Time Graph</div>
+
+  <div class="card">
+    <h3 class="blue-head">Rule for Instantaneous Velocity on a P–T Graph</h3>
+    <p>The instantaneous velocity at any point on a P–T curve is equal to the <strong>slope of the tangent line</strong> drawn at that exact point.</p>
+    <div class="formula-box">v&#7522;&#8345;&#8347;&#8348; = slope of the tangent line at that point</div>
+    <div class="warn"><strong>Key rule:</strong> Instantaneous <em>speed</em> is <em>always positive</em> (it is the magnitude of velocity). Instantaneous <em>velocity</em> can be positive, negative, or zero.</div>
+  </div>
+
+  <!-- FIVE EXAMPLES TABLE -->
+  <div class="card">
+    <h3 class="indigo-head">Five Examples at a Glance</h3>
+    <table>
+      <tr><th>Location on curve</th><th>Tangent slope</th><th>Inst. Velocity</th><th>Inst. Speed</th></tr>
+      <tr><td>Steep rising section (~t = 1 s)</td><td>+2</td><td>+2 m/s</td><td>2 m/s</td></tr>
+      <tr><td>Flat plateau (~t = 4 s)</td><td>0</td><td>0 m/s</td><td>0 m/s</td></tr>
+      <tr><td>Steep falling section (~t = 6 s)</td><td>&minus;1</td><td>&minus;1 m/s</td><td>1 m/s</td></tr>
+      <tr><td>Gentle rising section (~t = 2 s)</td><td>+3/4</td><td>+0.75 m/s</td><td>0.75 m/s</td></tr>
+      <tr><td>Peak of curve (~t = 6 s)</td><td>0</td><td>0 m/s</td><td>0 m/s</td></tr>
+    </table>
+  </div>
+
+  <!-- FIVE SVG GRAPHS FOR INSTANTANEOUS EXAMPLES -->
+
+  <!-- Example 1: steep rising, slope = +2 -->
+  <div class="graph-wrap">
+    <h4>Example 1 — Steep Rising Section: Slope = +2 m/s</h4>
+    <svg viewBox="0 0 380 260" width="100%" style="max-width:380px;display:block;margin:0 auto;">
+      <line x1="45" y1="225" x2="365" y2="225" stroke="#475569" stroke-width="2"/>
+      <line x1="45" y1="225" x2="45" y2="20" stroke="#475569" stroke-width="2"/>
+      <text x="200" y="250" text-anchor="middle" font-size="12" fill="#475569">Time (s)</text>
+      <text x="12" y="123" text-anchor="middle" font-size="12" fill="#475569" transform="rotate(-90,12,123)">Position (m)</text>
+      <!-- ticks: x: 0–10, step=32; y: 0–10, step=20 -->
+      <!-- curve: steep rise t=0→2, flat t=2→5, steep fall t=5→9 -->
+      <!-- x pixel: 45 + t*32; y pixel: 225 - pos*20 -->
+      <!-- curve points: (0,30)→(45,165), (1s,5m)→(77,125)→steep, (2s,8m)→(109,65), flat to (5s,8m)→(205,65), fall (9s,1m)→(333,205) -->
+      <path d="M45,205 C55,170 68,130 77,125 C88,118 100,68 109,65 C145,62 170,62 205,65 C230,67 255,90 269,120 C293,160 315,190 333,205"
+            fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- green dot at t=1s, pos≈5m → (77,125) -->
+      <circle cx="77" cy="125" r="6" fill="#22c55e" stroke="#fff" stroke-width="2"/>
+      <!-- tangent line: slope=+2, through (77,125); in px: dy/dx = -2*20/32 = -1.25 per px; draw ±30px -->
+      <line x1="47" y1="150" x2="107" y2="75" stroke="#22c55e" stroke-width="2"/>
+      <text x="40" y="67" font-size="11" fill="#22c55e" font-weight="700">Slope = +2</text>
+      <text x="40" y="82" font-size="10" fill="#475569">v = +2 m/s; speed = 2 m/s</text>
+    </svg>
+    <p class="caption">Steep upward slope → large positive instantaneous velocity.</p>
+  </div>
+
+  <!-- Example 2: flat, slope = 0 -->
+  <div class="graph-wrap">
+    <h4>Example 2 — Flat Plateau: Slope = 0</h4>
+    <svg viewBox="0 0 380 260" width="100%" style="max-width:380px;display:block;margin:0 auto;">
+      <line x1="45" y1="225" x2="365" y2="225" stroke="#475569" stroke-width="2"/>
+      <line x1="45" y1="225" x2="45" y2="20" stroke="#475569" stroke-width="2"/>
+      <text x="200" y="250" text-anchor="middle" font-size="12" fill="#475569">Time (s)</text>
+      <text x="12" y="123" text-anchor="middle" font-size="12" fill="#475569" transform="rotate(-90,12,123)">Position (m)</text>
+      <path d="M45,205 C55,170 68,130 77,125 C88,118 100,68 109,65 C145,62 170,62 205,65 C230,67 255,90 269,120 C293,160 315,190 333,205"
+            fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- green dot at t=4s, pos≈8m flat section → x=45+4*32=173, y=225-8*20=65 -->
+      <circle cx="173" cy="65" r="6" fill="#22c55e" stroke="#fff" stroke-width="2"/>
+      <!-- tangent line: horizontal -->
+      <line x1="143" y1="65" x2="203" y2="65" stroke="#22c55e" stroke-width="2"/>
+      <text x="110" y="50" font-size="11" fill="#22c55e" font-weight="700">Slope = 0</text>
+      <text x="110" y="63" font-size="10" fill="#475569">v = 0 m/s; speed = 0 m/s</text>
+    </svg>
+    <p class="caption">Horizontal (flat) curve → zero slope → object not changing position at that instant.</p>
+  </div>
+
+  <!-- Example 3: steep falling, slope = -1 -->
+  <div class="graph-wrap">
+    <h4>Example 3 — Steep Falling Section: Slope = &minus;1 m/s</h4>
+    <svg viewBox="0 0 380 260" width="100%" style="max-width:380px;display:block;margin:0 auto;">
+      <line x1="45" y1="225" x2="365" y2="225" stroke="#475569" stroke-width="2"/>
+      <line x1="45" y1="225" x2="45" y2="20" stroke="#475569" stroke-width="2"/>
+      <text x="200" y="250" text-anchor="middle" font-size="12" fill="#475569">Time (s)</text>
+      <text x="12" y="123" text-anchor="middle" font-size="12" fill="#475569" transform="rotate(-90,12,123)">Position (m)</text>
+      <path d="M45,205 C55,170 68,130 77,125 C88,118 100,68 109,65 C145,62 170,62 205,65 C230,67 255,90 269,120 C293,160 315,190 333,205"
+            fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- green dot at t=6s, pos≈6m → x=45+6*32=237, y=225-6*20=105 -->
+      <circle cx="237" cy="105" r="6" fill="#22c55e" stroke="#fff" stroke-width="2"/>
+      <!-- tangent slope=-1 → dy/dx=-1*(20/32)=-0.625 per px; draw ±36px -->
+      <line x1="207" y1="86" x2="267" y2="124" stroke="#22c55e" stroke-width="2"/>
+      <text x="160" y="78" font-size="11" fill="#22c55e" font-weight="700">Slope = &minus;1</text>
+      <text x="160" y="91" font-size="10" fill="#475569">v = &minus;1 m/s; speed = 1 m/s</text>
+    </svg>
+    <p class="caption">Downward slope → negative instantaneous velocity; speed is the magnitude (positive).</p>
+  </div>
+
+  <!-- Example 4: gentle rising, slope = 3/4 -->
+  <div class="graph-wrap">
+    <h4>Example 4 — Gentle Rising Section: Slope = 3/4 = 0.75 m/s</h4>
+    <svg viewBox="0 0 380 260" width="100%" style="max-width:380px;display:block;margin:0 auto;">
+      <line x1="45" y1="225" x2="365" y2="225" stroke="#475569" stroke-width="2"/>
+      <line x1="45" y1="225" x2="45" y2="20" stroke="#475569" stroke-width="2"/>
+      <text x="200" y="250" text-anchor="middle" font-size="12" fill="#475569">Time (s)</text>
+      <text x="12" y="123" text-anchor="middle" font-size="12" fill="#475569" transform="rotate(-90,12,123)">Position (m)</text>
+      <!-- Smooth bell curve: peak ~t=5s, pos~8m -->
+      <!-- x=45+t*32; y=225-pos*20 -->
+      <path d="M45,225 C65,210 85,155 109,105 C135,65 165,50 205,48 C245,46 275,65 300,100 C320,130 340,175 360,220"
+            fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- green dot at t=2s, pos≈5m → x=45+2*32=109, y=225-5*20=125 -->
+      <circle cx="109" cy="125" r="6" fill="#22c55e" stroke="#fff" stroke-width="2"/>
+      <!-- tangent slope=0.75 → dy/dx=-0.75*(20/32)=-0.469; draw ±40px -->
+      <line x1="69" y1="144" x2="149" y2="106" stroke="#22c55e" stroke-width="2"/>
+      <text x="55" y="97" font-size="11" fill="#22c55e" font-weight="700">Slope = 3/4</text>
+      <text x="55" y="110" font-size="10" fill="#475569">v = +0.75 m/s; speed = 0.75 m/s</text>
+    </svg>
+    <p class="caption">Shallow upward slope → small positive velocity.</p>
+  </div>
+
+  <!-- Example 5: peak, slope = 0 -->
+  <div class="graph-wrap">
+    <h4>Example 5 — Peak of Curve: Slope = 0</h4>
+    <svg viewBox="0 0 380 260" width="100%" style="max-width:380px;display:block;margin:0 auto;">
+      <line x1="45" y1="225" x2="365" y2="225" stroke="#475569" stroke-width="2"/>
+      <line x1="45" y1="225" x2="45" y2="20" stroke="#475569" stroke-width="2"/>
+      <text x="200" y="250" text-anchor="middle" font-size="12" fill="#475569">Time (s)</text>
+      <text x="12" y="123" text-anchor="middle" font-size="12" fill="#475569" transform="rotate(-90,12,123)">Position (m)</text>
+      <path d="M45,225 C65,210 85,155 109,105 C135,65 165,50 205,48 C245,46 275,65 300,100 C320,130 340,175 360,220"
+            fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- green dot at peak t≈5s, pos≈9m → x=205, y=225-9*20=45 → approx y=48 -->
+      <circle cx="205" cy="48" r="6" fill="#22c55e" stroke="#fff" stroke-width="2"/>
+      <!-- tangent: horizontal -->
+      <line x1="165" y1="48" x2="245" y2="48" stroke="#22c55e" stroke-width="2"/>
+      <text x="215" y="40" font-size="11" fill="#22c55e" font-weight="700">Slope = 0</text>
+      <text x="160" y="25" font-size="10" fill="#475569">v = 0 m/s at the peak</text>
+    </svg>
+    <p class="caption">At the <strong>peak of a P–T curve</strong> the tangent is always horizontal — the object is momentarily stationary before reversing direction.</p>
+  </div>
+
+  <!-- KEY INSIGHTS SECTION -->
+  <div class="section-title">Key Rules to Remember</div>
+
+  <div class="card">
+    <h3 class="green-head">Summary of All Rules</h3>
+    <ol style="padding-left:1.3rem;">
+      <li style="margin-bottom:.5rem;"><strong>Average velocity</strong> = slope of the <em>secant</em> line (straight line connecting two points on the curve).</li>
+      <li style="margin-bottom:.5rem;"><strong>Instantaneous velocity</strong> = slope of the <em>tangent</em> line (line touching the curve at exactly one point).</li>
+      <li style="margin-bottom:.5rem;"><strong>Instantaneous speed is always &ge; 0</strong> — it is the magnitude (absolute value) of instantaneous velocity.</li>
+      <li style="margin-bottom:.5rem;"><strong>Instantaneous velocity can be negative</strong> — a downward slope on a P–T graph means the object is moving in the negative direction.</li>
+      <li style="margin-bottom:.5rem;">A <strong>flat (horizontal) section</strong> of a P–T graph means slope = 0 → instantaneous velocity = 0 → the object is at rest at that instant.</li>
+      <li style="margin-bottom:.5rem;">At the <strong>peak</strong> of a P–T curve, instantaneous velocity = 0 (object momentarily stopped before reversing).</li>
+      <li style="margin-bottom:.5rem;"><strong>Steeper upward slope</strong> = faster positive velocity; <strong>steeper downward slope</strong> = faster negative velocity (higher speed).</li>
+    </ol>
+  </div>
+
+  <div class="insight">
+    <strong>Secant vs. Tangent:</strong> A <em>secant</em> line cuts through the curve at two points (average). A <em>tangent</em> line just barely touches the curve at one point (instantaneous).
+  </div>
+
+  <!-- INTERACTIVE QUIZ -->
+  <div class="quiz-section">
+    <h2>Quick Check — 4 Questions</h2>
+
+    <!-- Q1 -->
+    <div class="q-block" id="q1">
+      <p>1. A car travels 120 km in 2 hours. What is its average speed?</p>
+      <label><input type="radio" name="q1" value="a"/> 50 km/h</label>
+      <label><input type="radio" name="q1" value="b"/> 60 km/h</label>
+      <label><input type="radio" name="q1" value="c"/> 80 km/h</label>
+      <label><input type="radio" name="q1" value="d"/> 240 km/h</label>
+      <div class="q-feedback" id="f1"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q-block" id="q2">
+      <p>2. On a position–time graph, how do you find the average velocity between two points?</p>
+      <label><input type="radio" name="q2" value="a"/> Draw a tangent line at one point and find its slope</label>
+      <label><input type="radio" name="q2" value="b"/> Draw a secant line connecting the two points and find its slope</label>
+      <label><input type="radio" name="q2" value="c"/> Read the y-value at the midpoint between the two times</label>
+      <label><input type="radio" name="q2" value="d"/> Multiply the two position values together</label>
+      <div class="q-feedback" id="f2"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q-block" id="q3">
+      <p>3. At the exact peak (maximum) of a position–time curve, what is the instantaneous velocity?</p>
+      <label><input type="radio" name="q3" value="a"/> Maximum positive value</label>
+      <label><input type="radio" name="q3" value="b"/> Maximum negative value</label>
+      <label><input type="radio" name="q3" value="c"/> Zero</label>
+      <label><input type="radio" name="q3" value="d"/> Equal to the average velocity</label>
+      <div class="q-feedback" id="f3"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q-block" id="q4">
+      <p>4. A point on a P–T graph has a tangent line with slope = &minus;3 m/s. What is the instantaneous speed at that point?</p>
+      <label><input type="radio" name="q4" value="a"/> &minus;3 m/s</label>
+      <label><input type="radio" name="q4" value="b"/> 0 m/s</label>
+      <label><input type="radio" name="q4" value="c"/> 3 m/s</label>
+      <label><input type="radio" name="q4" value="d"/> 9 m/s</label>
+      <div class="q-feedback" id="f4"></div>
+    </div>
+
+    <button class="quiz-btn" onclick="gradeQuiz()">Submit Answers</button>
+    <div id="quiz-result"></div>
+  </div>
+
+</div><!-- end .content -->
+</div><!-- end #main -->
+
+<script>
+// ---- PASSWORD ----
+(function(){
+  var KEY='kinematics_auth';
+  var HASH=btoa('physics2024');
+  if(localStorage.getItem(KEY)===HASH){unlock();}
+  function unlock(){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('main').style.display='block';
+    makeStars();
+  }
+  window.checkPwd=function(){
+    var v=document.getElementById('pwd-input').value;
+    if(btoa(v)===HASH){localStorage.setItem(KEY,HASH);unlock();}
+    else{document.getElementById('gate-error').style.display='block';}
+  };
+})();
+
+// ---- STARS ----
+function makeStars(){
+  var c=document.getElementById('stars-container');
+  if(!c)return;
+  for(var i=0;i<55;i++){
+    var s=document.createElement('div');
+    s.className='star';
+    var sz=(Math.random()*2.5+1).toFixed(1);
+    s.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;animation-delay:'+Math.random()*3+'s;animation-duration:'+(1.5+Math.random()*2)+'s;';
+    c.appendChild(s);
+  }
+}
+
+// ---- QUIZ ----
+var ANSWERS={q1:'b',q2:'b',q3:'c',q4:'c'};
+var EXPLANATIONS={
+  q1:'Average speed = total distance / total time = 120 km / 2 h = 60 km/h.',
+  q2:'The average velocity between two points equals the slope of the secant line — a straight line drawn between the two points.',
+  q3:'At the peak of a P–T curve the tangent is horizontal (slope = 0), so instantaneous velocity = 0. The object is momentarily at rest before reversing.',
+  q4:'Instantaneous speed is the magnitude (absolute value) of instantaneous velocity. |−3 m/s| = 3 m/s.'
+};
+function gradeQuiz(){
+  var score=0;
+  ['q1','q2','q3','q4'].forEach(function(q,i){
+    var sel=document.querySelector('input[name="'+q+'"]:checked');
+    var fb=document.getElementById('f'+(i+1));
+    var labels=document.querySelectorAll('#'+q+' label');
+    labels.forEach(function(l){l.className='';});
+    if(!sel){fb.textContent='Please select an answer.';fb.className='q-feedback show bad';return;}
+    var chosen=sel.value;
+    var correct=ANSWERS[q];
+    sel.parentElement.className=(chosen===correct)?'correct':'wrong';
+    if(chosen===correct){
+      score++;
+      fb.textContent='✓ Correct! '+EXPLANATIONS[q];
+      fb.className='q-feedback show ok';
+    }else{
+      fb.textContent='✗ Not quite. '+EXPLANATIONS[q];
+      fb.className='q-feedback show bad';
+      // highlight correct
+      document.querySelector('input[name="'+q+'"][value="'+correct+'"]').parentElement.className='correct';
+    }
+  });
+  var r=document.getElementById('quiz-result');
+  r.style.display='block';
+  r.style.color=score>=3?'#166534':'#991b1b';
+  r.textContent='You scored '+score+' / 4. '+(score===4?'Perfect!':score>=3?'Great work!':score>=2?'Keep reviewing!':'Review the lesson and try again.');
+}
+</script>
+</body>
+</html>

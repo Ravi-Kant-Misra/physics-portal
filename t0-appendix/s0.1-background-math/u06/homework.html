@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proportional Relationships — Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#312e81 0%,#4338ca 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:820px;margin:36px auto;padding:0 24px 60px;}
+    .ref-box{background:white;border:2px solid #c7d2fe;border-radius:10px;padding:18px 22px;margin-bottom:28px;}
+    .ref-box h3{color:#312e81;font-size:1rem;margin-bottom:10px;}
+    .ref-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+    .ref-item{border-radius:8px;padding:8px 12px;font-size:0.85rem;}
+    .ref-item .sym{font-family:'Space Mono',monospace;font-weight:700;}
+    .r-lin{background:#dbeafe;}.r-lin .sym{color:#1d4ed8;}
+    .r-quad{background:#dcfce7;}.r-quad .sym{color:#15803d;}
+    .r-inv{background:#fef3c7;}.r-inv .sym{color:#92400e;}
+    .r-invsq{background:#fee2e2;}.r-invsq .sym{color:#991b1b;}
+    .ref-tip{margin-top:10px;padding:10px 14px;background:#eef2ff;border-left:4px solid #6366f1;border-radius:4px;font-size:0.86rem;color:#312e81;}
+    section{margin-bottom:40px;}
+    h2{font-size:1.2rem;font-weight:700;color:#312e81;border-left:5px solid #6366f1;padding-left:12px;margin-bottom:16px;}
+    .instructions{color:#4b5563;font-size:0.9rem;margin-bottom:16px;font-style:italic;}
+    .eq-problem{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .eq-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:6px;}
+    .eq-display{font-family:'Space Mono',monospace;font-size:1.2rem;font-weight:700;background:#f8fafc;padding:10px 16px;border-radius:8px;margin-bottom:10px;}
+    .eq-task{font-size:0.9rem;color:#374151;margin-bottom:10px;}
+    .field-set{display:flex;flex-direction:column;gap:8px;}
+    .field-row{display:flex;align-items:center;gap:8px;font-size:0.85rem;}
+    .fill-line{border-bottom:2px solid #d1d5db;min-height:24px;flex:1;}
+    .short-line{border-bottom:2px solid #d1d5db;min-height:24px;width:130px;display:inline-block;}
+    .tf-card{background:white;border-radius:8px;padding:14px 20px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:10px;display:flex;align-items:flex-start;gap:16px;}
+    .tf-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#6b7280;min-width:30px;}
+    .tf-stmt{flex:1;font-size:0.93rem;}
+    .tf-circles{display:flex;gap:10px;flex-shrink:0;}
+    .tf-circle{width:28px;height:28px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#9ca3af;}
+    .short-answer{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .short-answer .q{font-weight:600;margin-bottom:10px;font-size:0.95rem;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#312e81;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #answer-key{display:none;background:#eef2ff;border:2px solid #a5b4fc;border-radius:12px;padding:28px 32px;}
+    #answer-key h2{color:#312e81;border-left-color:#6366f1;margin-bottom:22px;}
+    .key-section{margin-bottom:24px;}
+    .key-section h3{font-size:1rem;font-weight:700;color:#312e81;margin-bottom:12px;}
+    .key-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .key-item{background:white;border-radius:6px;padding:10px 14px;font-size:0.92rem;}
+    .key-item .kq{font-size:0.8rem;color:#6b7280;margin-bottom:2px;}
+    .key-item .kans{color:#312e81;font-weight:700;}
+    .key-item .kexpl{color:#4b5563;font-size:0.8rem;margin-top:2px;}
+    .short-ans-key{background:white;border-radius:6px;padding:12px 16px;font-size:0.92rem;margin-bottom:10px;}
+    .short-ans-key strong{color:#312e81;}
+  </style>
+</head>
+<body>
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+<header>
+  <div class="label">Physics · High School · Homework</div>
+  <h1>Proportional Relationships — Homework</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+<main>
+  <div class="ref-box">
+    <h3>Quick Reference</h3>
+    <div class="ref-grid">
+      <div class="ref-item r-lin"><span class="sym">y = cx</span> — Linear</div>
+      <div class="ref-item r-quad"><span class="sym">y = cx²</span> — Quadratic</div>
+      <div class="ref-item r-inv"><span class="sym">y = c/x</span> — Inverse</div>
+      <div class="ref-item r-invsq"><span class="sym">y = c/x²</span> — Inv. Square</div>
+    </div>
+    <div class="ref-tip">Method: hold all other variables constant → rearrange → match to one of the 4 forms above.</div>
+  </div>
+
+  <section>
+    <h2>Part A — Identify Relationships</h2>
+    <p class="instructions">For each equation, identify the relationship between the two stated variables. Show your rearrangement.</p>
+
+    <div class="eq-problem">
+      <div class="eq-num">Q1</div>
+      <div class="eq-display">W = Fd (Work = Force × distance)</div>
+      <div class="eq-task">Relationship between W and d? (Hold F constant)</div>
+      <div class="field-set">
+        <div class="field-row">W = <span class="fill-line"></span></div>
+        <div class="field-row">Relationship: <span class="short-line"></span> &nbsp; Graph shape: <span class="short-line"></span></div>
+      </div>
+    </div>
+
+    <div class="eq-problem">
+      <div class="eq-num">Q2</div>
+      <div class="eq-display">P = F²/2m (Power via momentum, hold m constant)</div>
+      <div class="eq-task">Relationship between P and F?</div>
+      <div class="field-set">
+        <div class="field-row">P = <span class="fill-line"></span></div>
+        <div class="field-row">Relationship: <span class="short-line"></span> &nbsp; Graph shape: <span class="short-line"></span></div>
+      </div>
+    </div>
+
+    <div class="eq-problem">
+      <div class="eq-num">Q3</div>
+      <div class="eq-display">T = 2π√(L/g) (Period of a pendulum)</div>
+      <div class="eq-task">What is the relationship between T (period) and L (length)? Hold g constant. (Hint: T² is simpler — what does T ∝ √L mean?)</div>
+      <div class="field-set">
+        <div class="field-row">Square both sides: T² = <span class="fill-line"></span></div>
+        <div class="field-row">T² vs L relationship: <span class="short-line"></span></div>
+        <div class="field-row">T vs L relationship: <span class="short-line"></span></div>
+      </div>
+    </div>
+
+    <div class="eq-problem">
+      <div class="eq-num">Q4</div>
+      <div class="eq-display">F = kq₁q₂/r² (Coulomb's Law)</div>
+      <div class="eq-task">Relationship between F and r? (Hold k, q₁, q₂ constant)</div>
+      <div class="field-set">
+        <div class="field-row">F = <span class="fill-line"></span></div>
+        <div class="field-row">Relationship: <span class="short-line"></span> &nbsp; Graph shape: <span class="short-line"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Part B — Predict the Effect</h2>
+    <p class="instructions">Use proportionality reasoning. Show your work.</p>
+
+    <div class="eq-problem">
+      <div class="eq-num">Q5</div>
+      <div class="eq-task">Eₖ = ½mv². The velocity is tripled. By what factor does Eₖ change?</div>
+      <div class="field-set">
+        <div class="field-row">Working: <span class="fill-line"></span></div>
+        <div class="field-row">Eₖ changes by factor: <span class="short-line"></span></div>
+      </div>
+    </div>
+
+    <div class="eq-problem">
+      <div class="eq-num">Q6</div>
+      <div class="eq-task">g = Gm/r². The distance r is halved. By what factor does g change?</div>
+      <div class="field-set">
+        <div class="field-row">Working: <span class="fill-line"></span></div>
+        <div class="field-row">g changes by factor: <span class="short-line"></span></div>
+      </div>
+    </div>
+
+    <div class="eq-problem">
+      <div class="eq-num">Q7</div>
+      <div class="eq-task">F = kq₁q₂/r². Both charges q₁ and q₂ are doubled AND the distance r is also doubled. What is the net change in F?</div>
+      <div class="field-set">
+        <div class="field-row">Charges effect: <span class="fill-line"></span></div>
+        <div class="field-row">Distance effect: <span class="fill-line"></span></div>
+        <div class="field-row">Net change: <span class="short-line"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Part C — True / False</h2>
+    <p class="instructions">Circle T or F. If false, write the correct statement.</p>
+    <div class="tf-card"><div class="tf-num">8.</div><div><div class="tf-stmt">A straight-line graph through the origin always shows a linear (y ∝ x) relationship.</div><div style="margin-top:6px;font-size:0.85rem;color:#6b7280;">If false: <span style="border-bottom:2px solid #d1d5db;display:inline-block;width:280px;"></span></div></div><div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div></div>
+    <div class="tf-card"><div class="tf-num">9.</div><div><div class="tf-stmt">If y ∝ x², tripling x triples y.</div><div style="margin-top:6px;font-size:0.85rem;color:#6b7280;">If false: <span style="border-bottom:2px solid #d1d5db;display:inline-block;width:280px;"></span></div></div><div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div></div>
+    <div class="tf-card"><div class="tf-num">10.</div><div><div class="tf-stmt">In an inverse square relationship, the product xy² is always constant.</div><div style="margin-top:6px;font-size:0.85rem;color:#6b7280;">If false: <span style="border-bottom:2px solid #d1d5db;display:inline-block;width:280px;"></span></div></div><div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div></div>
+  </section>
+
+  <section>
+    <h2>Part D — Extended Response</h2>
+    <div class="short-answer">
+      <div class="q">11. For Newton's Law of Gravitation F = GMm/r²:<br>(a) What is the relationship between F and M (hold everything else constant)?<br>(b) What is the relationship between F and r?<br>(c) If M triples and r doubles simultaneously, what is the net effect on F? Show working.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+    <div class="short-answer">
+      <div class="q">12. A physics student plots Current (I) on the x-axis and Resistance (R) on the y-axis (voltage V held constant). Describe the graph they will see and explain the physics behind it.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <div class="key-btn-wrap"><button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button></div>
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+    <div class="key-section">
+      <h3>Part A — Relationships</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="kq">Q1: W = Fd, W vs d</div><div class="kans">Linear (W ∝ d)</div><div class="kexpl">F = c; W = c·d → straight line</div></div>
+        <div class="key-item"><div class="kq">Q2: P = F²/2m, P vs F</div><div class="kans">Quadratic (P ∝ F²)</div><div class="kexpl">1/2m = c; P = c·F² → parabola</div></div>
+        <div class="key-item"><div class="kq">Q3: T vs L (pendulum)</div><div class="kans">T² ∝ L (linear); T ∝ √L</div><div class="kexpl">T² = (4π²/g)·L → T² vs L is linear; T vs L is a square-root curve</div></div>
+        <div class="key-item"><div class="kq">Q4: F = kq₁q₂/r², F vs r</div><div class="kans">Inverse Square (F ∝ 1/r²)</div><div class="kexpl">kq₁q₂ = c; F = c/r² → steep drop</div></div>
+      </div>
+    </div>
+    <div class="key-section">
+      <h3>Part B — Predictions</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="kq">Q5: v tripled in Eₖ = ½mv²</div><div class="kans">Eₖ × 9</div><div class="kexpl">Eₖ ∝ v²; (3v)² = 9v² → Eₖ multiplies by 9</div></div>
+        <div class="key-item"><div class="kq">Q6: r halved in g = Gm/r²</div><div class="kans">g × 4</div><div class="kexpl">g ∝ 1/r²; (r/2)² = r²/4 → g = c/(r²/4) = 4c/r² → g quadruples</div></div>
+        <div class="key-item" style="grid-column:span 2;"><div class="kq">Q7: q₁,q₂ doubled AND r doubled</div><div class="kans">Net: F × 1 (unchanged)</div><div class="kexpl">Charges: (2q₁)(2q₂) = 4q₁q₂ → F×4. Distance: (2r)² = 4r² → F÷4. Net: 4/4 = 1 → no change.</div></div>
+      </div>
+    </div>
+    <div class="key-section">
+      <h3>Part C — True/False</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="kq">Q8</div><div class="kans">TRUE</div><div class="kexpl">A straight line through origin ↔ y = cx ↔ y ∝ x ✓</div></div>
+        <div class="key-item"><div class="kq">Q9</div><div class="kans">FALSE</div><div class="kexpl">Correction: (3x)² = 9x² → y becomes 9× larger, not 3×</div></div>
+        <div class="key-item"><div class="kq">Q10</div><div class="kans">TRUE</div><div class="kexpl">y = c/x² → yx² = c = constant ✓</div></div>
+      </div>
+    </div>
+    <div class="key-section">
+      <h3>Part D — Extended</h3>
+      <div class="short-ans-key"><strong>Q11:</strong> (a) F ∝ M — linear (straight line on F vs M graph). (b) F ∝ 1/r² — inverse square. (c) If M triples: F × 3. If r doubles: F ÷ 4. Net effect: F × 3/4 = 0.75× original F (F decreases by 25%).</div>
+      <div class="short-ans-key"><strong>Q12:</strong> From V = IR → R = V/I = c/I (V held constant). This is an inverse relationship (R ∝ 1/I). The graph will be a hyperbola — as current increases, resistance decreases proportionally, and the curve will never touch either axis. The physics: with fixed voltage, more resistance = less current flowing (and vice versa).</div>
+    </div>
+  </div>
+</main>
+<script>function toggleKey(){var k=document.getElementById('answer-key');var b=document.getElementById('toggle-key-btn');if(k.style.display==='none'||k.style.display===''){k.style.display='block';b.textContent='Hide Answer Key';}else{k.style.display='none';b.textContent='Show Answer Key';}}</script>
+</body>
+</html>

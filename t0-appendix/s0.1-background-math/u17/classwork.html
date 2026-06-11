@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vectors vs. Scalars — Classwork</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#bfdbfe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#1e3a8a 0%,#1d4ed8 50%,#3b82f6 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:820px;margin:36px auto;padding:0 24px 60px;}
+
+    .rules-box{background:white;border:2px solid #bfdbfe;border-radius:10px;padding:18px 22px;margin-bottom:36px;}
+    .rules-box h3{color:#1e3a8a;font-size:1rem;margin-bottom:10px;}
+    .rules-box .rule-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:6px;font-size:0.92rem;color:#374151;}
+    .rule-dot{width:22px;height:22px;background:#1d4ed8;color:white;border-radius:50%;font-size:0.75rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+
+    section{margin-bottom:44px;}
+    h2{font-size:1.2rem;font-weight:800;color:#1e3a8a;border-left:5px solid #3b82f6;padding-left:12px;margin-bottom:16px;}
+    .instructions{color:#4b5563;font-size:0.92rem;margin-bottom:18px;font-style:italic;}
+
+    /* Part A — classify grid */
+    .classify-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    @media(max-width:600px){.classify-grid{grid-template-columns:1fr;}}
+    .classify-card{background:white;border-radius:10px;padding:16px 20px;box-shadow:0 1px 6px rgba(0,0,0,0.07);display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .classify-card .qty{font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;color:#1e3a8a;}
+    .classify-card .check-boxes{display:flex;gap:10px;font-size:0.88rem;font-weight:700;}
+    .cbox{display:flex;align-items:center;gap:5px;}
+    .cbox-sq{width:18px;height:18px;border:2px solid #94a3b8;border-radius:4px;display:inline-block;flex-shrink:0;}
+
+    /* Part B — draw vectors */
+    .draw-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    @media(max-width:580px){.draw-grid{grid-template-columns:1fr;}}
+    .draw-card{background:white;border-radius:10px;padding:16px 20px;box-shadow:0 1px 6px rgba(0,0,0,0.07);}
+    .draw-card .prob-num{font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:6px;}
+    .draw-card .draw-prompt{font-size:0.92rem;font-weight:700;color:#1e3a8a;margin-bottom:8px;}
+    .draw-card .draw-info{font-size:0.82rem;color:#4b5563;margin-bottom:10px;}
+    .draw-box{border:2px dashed #93c5fd;border-radius:8px;height:90px;background:#f0f9ff;display:flex;align-items:center;justify-content:center;}
+    .draw-box-label{font-size:0.78rem;color:#94a3b8;font-style:italic;}
+
+    /* Part C — short answer */
+    .short-answer{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 1px 6px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .short-answer .q{font-weight:700;margin-bottom:10px;font-size:0.95rem;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:26px;width:100%;}
+
+    /* Part D — sentence completion */
+    .fill-card{background:white;border-radius:10px;padding:16px 20px;box-shadow:0 1px 6px rgba(0,0,0,0.07);margin-bottom:12px;}
+    .fill-card .q{font-size:0.95rem;color:#1e293b;line-height:1.9;}
+    .fill-line{display:inline-block;border-bottom:2px solid #1d4ed8;min-width:120px;margin:0 6px;}
+
+    /* answer key */
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#1e3a8a;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #toggle-key-btn:hover{background:#1d4ed8;}
+    #answer-key{display:none;background:#eff6ff;border:2px solid #93c5fd;border-radius:12px;padding:28px 32px;margin-top:10px;}
+    #answer-key h2{color:#1e3a8a;border-left-color:#1d4ed8;margin-bottom:22px;}
+    .key-section{margin-bottom:28px;}
+    .key-section h3{font-size:1rem;font-weight:800;color:#1e3a8a;margin-bottom:12px;}
+    .key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    .key-item{background:white;border-radius:8px;padding:10px 14px;font-size:0.92rem;}
+    .key-item .kqty{font-family:'Space Mono',monospace;font-weight:700;font-size:0.95rem;color:#1e293b;}
+    .key-item .kans{font-weight:800;}
+    .kv{color:#1d4ed8;}.ks{color:#15803d;}
+    .key-item .kexpl{color:#4b5563;font-size:0.82rem;margin-top:2px;}
+    .short-ans-key{background:white;border-radius:8px;padding:14px 18px;font-size:0.92rem;margin-bottom:10px;}
+    .short-ans-key strong{color:#1e3a8a;}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#1e3a8a,#1d4ed8,#3b82f6);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:rgba(255,255,255,0.18);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;border:2px solid rgba(255,255,255,0.3);">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">Physics · IB High School · In-Class Activity</div>
+  <h1>Vectors vs. Scalars — Classwork</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+
+  <div class="rules-box">
+    <h3>Key Reminders</h3>
+    <div class="rule-row"><div class="rule-dot">V</div><span><strong>Vector</strong> — has magnitude AND direction. Drawn as an arrow. Examples: displacement, force, velocity, acceleration, momentum.</span></div>
+    <div class="rule-row"><div class="rule-dot">S</div><span><strong>Scalar</strong> — has magnitude ONLY. No direction needed. Examples: length, area, mass, temperature, energy.</span></div>
+    <div class="rule-row"><div class="rule-dot">!</div><span>The <strong>arrow length</strong> represents magnitude. If magnitude doubles, the arrow doubles. The arrowhead shows direction.</span></div>
+  </div>
+
+  <!-- PART A -->
+  <section>
+    <h2>Part A — Classify Each Quantity</h2>
+    <p class="instructions">Tick ONE box for each quantity: Vector or Scalar.</p>
+    <div class="classify-grid">
+      <div class="classify-card"><span class="qty">Displacement</span><div class="check-boxes"><div class="cbox"><div class="cbox-sq"></div> Vector</div><div class="cbox"><div class="cbox-sq"></div> Scalar</div></div></div>
+      <div class="classify-card"><span class="qty">Mass</span><div class="check-boxes"><div class="cbox"><div class="cbox-sq"></div> Vector</div><div class="cbox"><div class="cbox-sq"></div> Scalar</div></div></div>
+      <div class="classify-card"><span class="qty">Velocity</span><div class="check-boxes"><div class="cbox"><div class="cbox-sq"></div> Vector</div><div class="cbox"><div class="cbox-sq"></div> Scalar</div></div></div>
+      <div class="classify-card"><span class="qty">Temperature</span><div class="check-boxes"><div class="cbox"><div class="cbox-sq"></div> Vector</div><div class="cbox"><div class="cbox-sq"></div> Scalar</div></div></div>
+      <div class="classify-card"><span class="qty">Force</span><div class="check-boxes"><div class="cbox"><div class="cbox-sq"></div> Vector</div><div class="cbox"><div class="cbox-sq"></div> Scalar</div></div></div>
+      <div class="classify-card"><span class="qty">Area</span><div class="check-boxes"><div class="cbox"><div class="cbox-sq"></div> Vector</div><div class="cbox"><div class="cbox-sq"></div> Scalar</div></div></div>
+      <div class="classify-card"><span class="qty">Acceleration</span><div class="check-boxes"><div class="cbox"><div class="cbox-sq"></div> Vector</div><div class="cbox"><div class="cbox-sq"></div> Scalar</div></div></div>
+      <div class="classify-card"><span class="qty">Speed</span><div class="check-boxes"><div class="cbox"><div class="cbox-sq"></div> Vector</div><div class="cbox"><div class="cbox-sq"></div> Scalar</div></div></div>
+      <div class="classify-card"><span class="qty">Momentum</span><div class="check-boxes"><div class="cbox"><div class="cbox-sq"></div> Vector</div><div class="cbox"><div class="cbox-sq"></div> Scalar</div></div></div>
+      <div class="classify-card"><span class="qty">Energy</span><div class="check-boxes"><div class="cbox"><div class="cbox-sq"></div> Vector</div><div class="cbox"><div class="cbox-sq"></div> Scalar</div></div></div>
+    </div>
+  </section>
+
+  <!-- PART B -->
+  <section>
+    <h2>Part B — Draw the Vector Arrows</h2>
+    <p class="instructions">In each box, draw an arrow that correctly represents the given vector. Use the grid as a guide — each small square = 1 unit.</p>
+    <div class="draw-grid">
+      <div class="draw-card">
+        <div class="prob-num">Problem 1</div>
+        <div class="draw-prompt">Force: 4 N to the right</div>
+        <div class="draw-info">Draw a horizontal arrow pointing right. Length = 4 units.</div>
+        <div class="draw-box">
+          <svg viewBox="0 0 260 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:80px;">
+            <defs><pattern id="g1" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20,0 L0,0 L0,20" fill="none" stroke="#e0e7ff" stroke-width="0.8"/></pattern></defs>
+            <rect width="260" height="80" fill="url(#g1)"/>
+            <!-- origin dot -->
+            <circle cx="20" cy="40" r="3" fill="#94a3b8"/>
+          </svg>
+        </div>
+      </div>
+      <div class="draw-card">
+        <div class="prob-num">Problem 2</div>
+        <div class="draw-prompt">Force: 8 N to the right</div>
+        <div class="draw-info">Draw a horizontal arrow pointing right. Length = 8 units (double Problem 1).</div>
+        <div class="draw-box">
+          <svg viewBox="0 0 260 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:80px;">
+            <defs><pattern id="g2" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20,0 L0,0 L0,20" fill="none" stroke="#e0e7ff" stroke-width="0.8"/></pattern></defs>
+            <rect width="260" height="80" fill="url(#g2)"/>
+            <circle cx="20" cy="40" r="3" fill="#94a3b8"/>
+          </svg>
+        </div>
+      </div>
+      <div class="draw-card">
+        <div class="prob-num">Problem 3</div>
+        <div class="draw-prompt">Velocity: 5 m/s upward</div>
+        <div class="draw-info">Draw a vertical arrow pointing up. Length = 5 units.</div>
+        <div class="draw-box">
+          <svg viewBox="0 0 260 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:80px;">
+            <defs><pattern id="g3" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20,0 L0,0 L0,20" fill="none" stroke="#e0e7ff" stroke-width="0.8"/></pattern></defs>
+            <rect width="260" height="80" fill="url(#g3)"/>
+            <circle cx="130" cy="70" r="3" fill="#94a3b8"/>
+          </svg>
+        </div>
+      </div>
+      <div class="draw-card">
+        <div class="prob-num">Problem 4</div>
+        <div class="draw-prompt">Weight: 6 N downward</div>
+        <div class="draw-info">Draw a vertical arrow pointing down. Length = 6 units.</div>
+        <div class="draw-box">
+          <svg viewBox="0 0 260 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:80px;">
+            <defs><pattern id="g4" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20,0 L0,0 L0,20" fill="none" stroke="#e0e7ff" stroke-width="0.8"/></pattern></defs>
+            <rect width="260" height="80" fill="url(#g4)"/>
+            <circle cx="130" cy="8" r="3" fill="#94a3b8"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:0.82rem;color:#64748b;margin-top:10px;font-style:italic;">Note: Compare Problems 1 and 2 — the doubled force has a doubled arrow length. This is the vector diagram rule.</p>
+  </section>
+
+  <!-- PART C -->
+  <section>
+    <h2>Part C — Short Answer</h2>
+
+    <div class="short-answer">
+      <div class="q">1. What two things does a vector quantity have that a scalar does not?</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="short-answer">
+      <div class="q">2. A friend says "velocity and speed are the same thing." Do you agree? Explain the difference using the words vector and scalar.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="short-answer">
+      <div class="q">3. Three forces act on a box: 20 N right, 10 N left, and 5 N upward. Why is it important to state the direction of each force when solving a physics problem?</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <!-- PART D -->
+  <section>
+    <h2>Part D — Complete the Sentence</h2>
+    <p class="instructions">Fill in each blank with the correct word or phrase.</p>
+
+    <div class="fill-card"><div class="q">1. Displacement is a <span class="fill-line"></span> quantity because it has both magnitude and <span class="fill-line"></span>.</div></div>
+    <div class="fill-card"><div class="q">2. Mass is a <span class="fill-line"></span> quantity — it has magnitude only and no <span class="fill-line"></span>.</div></div>
+    <div class="fill-card"><div class="q">3. When drawing a vector, the length of the <span class="fill-line"></span> represents the <span class="fill-line"></span>, and the arrowhead shows the <span class="fill-line"></span>.</div></div>
+    <div class="fill-card"><div class="q">4. If you double the magnitude of a force vector, the arrow in the diagram becomes <span class="fill-line"></span> as long.</div></div>
+    <div class="fill-card"><div class="q">5. Speed is a <span class="fill-line"></span>, but velocity is a <span class="fill-line"></span> because it includes direction.</div></div>
+  </section>
+
+  <!-- Answer Key -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+  </div>
+
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A — Classification</h3>
+      <div class="key-grid">
+        <div class="key-item"><span class="kqty">Displacement</span> → <span class="kans kv">Vector</span><div class="kexpl">Has magnitude and direction (e.g. 5 m north)</div></div>
+        <div class="key-item"><span class="kqty">Mass</span> → <span class="kans ks">Scalar</span><div class="kexpl">Amount of matter — no direction</div></div>
+        <div class="key-item"><span class="kqty">Velocity</span> → <span class="kans kv">Vector</span><div class="kexpl">Speed + direction (e.g. 20 m/s east)</div></div>
+        <div class="key-item"><span class="kqty">Temperature</span> → <span class="kans ks">Scalar</span><div class="kexpl">Just a size — no direction</div></div>
+        <div class="key-item"><span class="kqty">Force</span> → <span class="kans kv">Vector</span><div class="kexpl">Push or pull — direction always matters</div></div>
+        <div class="key-item"><span class="kqty">Area</span> → <span class="kans ks">Scalar</span><div class="kexpl">Surface measurement — no direction</div></div>
+        <div class="key-item"><span class="kqty">Acceleration</span> → <span class="kans kv">Vector</span><div class="kexpl">Rate of change of velocity — directional</div></div>
+        <div class="key-item"><span class="kqty">Speed</span> → <span class="kans ks">Scalar</span><div class="kexpl">How fast — no direction specified</div></div>
+        <div class="key-item"><span class="kqty">Momentum</span> → <span class="kans kv">Vector</span><div class="kexpl">Same direction as velocity</div></div>
+        <div class="key-item"><span class="kqty">Energy</span> → <span class="kans ks">Scalar</span><div class="kexpl">Amount of energy — not directional</div></div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B — Drawing Vectors (expected)</h3>
+      <div style="font-size:0.92rem;color:#374151;line-height:1.9;">
+        <p><strong>Problem 1:</strong> Arrow pointing right, 4 units long.</p>
+        <p><strong>Problem 2:</strong> Arrow pointing right, 8 units long (exactly twice the length of P1).</p>
+        <p><strong>Problem 3:</strong> Arrow pointing upward, 5 units long.</p>
+        <p><strong>Problem 4:</strong> Arrow pointing downward, 6 units long.</p>
+        <p style="font-style:italic;color:#64748b;margin-top:8px;">Key observation: P1 and P2 have the same direction but P2 is twice as long because the force is doubled.</p>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C — Short Answers</h3>
+      <div class="short-ans-key"><strong>1.</strong> A vector has both <strong>magnitude</strong> (size) and <strong>direction</strong>. A scalar has magnitude only.</div>
+      <div class="short-ans-key"><strong>2.</strong> No — they are not the same. <strong>Speed</strong> is a scalar: it tells how fast an object is moving (e.g. 30 m/s) but says nothing about direction. <strong>Velocity</strong> is a vector: it includes both speed and direction (e.g. 30 m/s north). This matters when two cars travel at 30 m/s but in opposite directions — their velocities are different even though their speeds are equal.</div>
+      <div class="short-ans-key"><strong>3.</strong> Forces are vectors, so they can cancel or add depending on direction. Without knowing direction, you cannot determine the net force. A 20 N right and 10 N left partially cancel (net = 10 N right); but if both pointed right the net would be 30 N. Direction is essential to find the correct result.</div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part D — Sentence Completion</h3>
+      <div style="font-size:0.92rem;color:#374151;line-height:2;">
+        <p>1. Displacement is a <strong>vector</strong> quantity because it has both magnitude and <strong>direction</strong>.</p>
+        <p>2. Mass is a <strong>scalar</strong> quantity — it has magnitude only and no <strong>direction</strong>.</p>
+        <p>3. When drawing a vector, the length of the <strong>arrow</strong> represents the <strong>magnitude</strong>, and the arrowhead shows the <strong>direction</strong>.</p>
+        <p>4. If you double the magnitude of a force vector, the arrow in the diagram becomes <strong>twice</strong> as long.</p>
+        <p>5. Speed is a <strong>scalar</strong>, but velocity is a <strong>vector</strong> because it includes direction.</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>Physics · IB High School &nbsp;·&nbsp; Unit 17: Vectors vs. Scalars — Classwork &nbsp;·&nbsp; Vector = arrow | Scalar = number only</footer>
+
+<script>
+function toggleKey(){
+  var k=document.getElementById('answer-key');
+  var b=document.getElementById('toggle-key-btn');
+  if(k.style.display==='none'||k.style.display===''){
+    k.style.display='block';b.textContent='Hide Answer Key';
+  }else{
+    k.style.display='none';b.textContent='Show Answer Key';
+  }
+}
+</script>
+</body>
+</html>

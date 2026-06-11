@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motion Maps — Classwork</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root{--blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);font-size:16px;line-height:1.7;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;}
+    header{background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 100%);color:white;padding:44px 60px 40px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(99,102,241,0.3) 0%,transparent 60%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.4);}}
+    header .chip{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;position:relative;}
+    header h1{font-size:2.5rem;font-weight:900;letter-spacing:-1px;position:relative;margin-bottom:8px;background:linear-gradient(90deg,#bfdbfe,#e0e7ff,#bfdbfe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1rem;color:rgba(255,255,255,0.8);position:relative;}
+    main{max-width:940px;margin:40px auto;padding:0 24px 80px;}
+    /* ref box */
+    .ref-box{background:linear-gradient(135deg,#1e3a5f,#1d4ed8);color:white;border-radius:18px;padding:24px 30px;margin-bottom:32px;}
+    .ref-box h3{font-size:0.8rem;text-transform:uppercase;letter-spacing:1.5px;opacity:0.7;margin-bottom:14px;}
+    .ref-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;}
+    .ref-item{background:rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;font-size:0.85rem;}
+    .ref-item strong{display:block;font-size:0.78rem;opacity:0.7;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;}
+    /* part labels */
+    .part-label{display:flex;align-items:center;gap:12px;margin:36px 0 20px;}
+    .part-badge{background:#1d4ed8;color:white;border-radius:10px;padding:4px 14px;font-size:0.8rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;}
+    .part-label h2{font-size:1.3rem;font-weight:900;color:var(--dark);}
+    /* problem grid */
+    .prob-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:8px;}
+    @media(max-width:640px){.prob-grid{grid-template-columns:1fr;}}
+    .prob-card{background:white;border-radius:16px;padding:22px 24px;box-shadow:0 3px 14px rgba(0,0,0,0.07);}
+    .prob-num{display:inline-block;background:#1d4ed8;color:white;border-radius:50%;width:28px;height:28px;font-size:0.82rem;font-weight:800;text-align:center;line-height:28px;margin-right:8px;flex-shrink:0;}
+    .prob-title{font-size:0.95rem;font-weight:800;color:#1e3a5f;margin-bottom:12px;display:flex;align-items:center;}
+    .prob-text{font-size:0.9rem;color:#374151;margin-bottom:14px;}
+    /* answer line */
+    .ans-line{border:none;border-bottom:2px dashed #cbd5e1;width:100%;margin-top:8px;height:28px;background:transparent;font-family:'Space Mono',monospace;font-size:0.9rem;color:#1e3a5f;outline:none;}
+    .ans-label{font-size:0.78rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
+    /* motion map drawing box */
+    .mm-draw-box{background:#f0f4ff;border:2px dashed #93c5fd;border-radius:12px;padding:16px;margin-bottom:12px;}
+    .mm-draw-box .mm-instr{font-size:0.82rem;color:#1d4ed8;font-weight:700;margin-bottom:8px;}
+    /* Part B: full-width problems -->
+    .full-prob{background:white;border-radius:16px;padding:24px 28px;box-shadow:0 3px 14px rgba(0,0,0,0.07);margin-bottom:18px;}
+    .full-prob .prob-title{font-size:0.95rem;font-weight:800;color:#1e3a5f;margin-bottom:10px;}
+    /* Part C */
+    .sa-box{background:white;border-radius:16px;padding:22px 26px;box-shadow:0 3px 14px rgba(0,0,0,0.07);margin-bottom:16px;}
+    .sa-box textarea{width:100%;min-height:72px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px 14px;font-family:'Nunito',sans-serif;font-size:0.9rem;color:#1e293b;resize:vertical;outline:none;background:#f8faff;}
+    /* answer key */
+    .key-btn-wrap{text-align:center;margin-top:40px;}
+    #toggle-key-btn{background:linear-gradient(135deg,#1e3a5f,#1d4ed8);color:white;border:none;border-radius:30px;padding:12px 32px;font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:800;cursor:pointer;transition:opacity 0.2s;}
+    #toggle-key-btn:hover{opacity:0.88;}
+    #answer-key{display:none;margin-top:32px;background:linear-gradient(135deg,#1e3a5f,#1d4ed8);border-radius:20px;padding:32px;color:white;}
+    #answer-key h3{font-size:1.2rem;font-weight:900;margin-bottom:20px;opacity:0.95;}
+    .ak-item{background:rgba(255,255,255,0.09);border-radius:12px;padding:16px 20px;margin-bottom:12px;}
+    .ak-item .ak-num{font-family:'Space Mono',monospace;font-size:0.85rem;font-weight:700;opacity:0.7;margin-bottom:6px;}
+    .ak-item .ak-ans{font-size:0.92rem;font-weight:700;color:#bfdbfe;margin-bottom:4px;}
+    .ak-item .ak-work{font-size:0.85rem;opacity:0.8;line-height:1.55;}
+    footer{text-align:center;padding:28px 20px;font-size:0.85rem;color:var(--muted);}
+    .mm-wrap{background:#f0f4ff;border-radius:12px;padding:16px;margin:10px 0;overflow-x:auto;}
+    .tip-box{background:#fffbeb;border:2px solid #fde68a;border-radius:12px;padding:14px 20px;margin-bottom:20px;}
+    .tip-box h4{font-size:0.9rem;font-weight:800;color:#92400e;margin-bottom:6px;}
+    .tip-box p{font-size:0.85rem;color:#78350f;}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">&#x1F512;</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="star" style="width:3px;height:3px;top:15%;left:10%;animation-delay:0s;"></div>
+  <div class="star" style="width:2px;height:2px;top:35%;left:18%;animation-delay:0.7s;"></div>
+  <div class="star" style="width:4px;height:4px;top:20%;left:82%;animation-delay:1.2s;"></div>
+  <div class="star" style="width:2px;height:2px;top:55%;left:90%;animation-delay:1.8s;"></div>
+  <div class="star" style="width:3px;height:3px;top:70%;left:6%;animation-delay:2.2s;"></div>
+  <div class="chip">Kinematics &middot; Unit 16</div>
+  <h1>Motion Maps — Classwork</h1>
+  <p class="subtitle">13 problems: interpreting, drawing, and analyzing motion maps</p>
+</header>
+
+<main>
+
+  <!-- REFERENCE BOX -->
+  <div class="ref-box">
+    <h3>Quick Reference — Motion Maps</h3>
+    <div class="ref-grid">
+      <div class="ref-item"><strong>Dots</strong>Object position at each second (t = 0s, 1s, 2s ...)</div>
+      <div class="ref-item"><strong>Arrow length = speed</strong>Because time interval = 1s, displacement/1s = velocity</div>
+      <div class="ref-item"><strong>Equal spacing</strong>Constant velocity</div>
+      <div class="ref-item"><strong>Increasing spacing</strong>Speeding up (positive acceleration)</div>
+      <div class="ref-item"><strong>Decreasing spacing</strong>Slowing down (negative acceleration)</div>
+      <div class="ref-item"><strong>Dots stacked, no arrows</strong>Object at rest (v = 0)</div>
+      <div class="ref-item"><strong>Red arrow same direction</strong>Positive acceleration (speeding up)</div>
+      <div class="ref-item"><strong>Red arrow opposite direction</strong>Negative acceleration (slowing down)</div>
+    </div>
+  </div>
+
+  <!-- PART A -->
+  <div class="part-label">
+    <span class="part-badge">Part A</span>
+    <h2>Interpreting Motion Maps (6 problems)</h2>
+  </div>
+
+  <div class="prob-grid">
+
+    <!-- A1 -->
+    <div class="prob-card">
+      <div class="prob-title"><span class="prob-num">1</span>Constant Velocity</div>
+      <p class="prob-text">A motion map shows 5 evenly spaced dots (t = 0s to t = 4s) with arrows of equal length (each 3 cm on the diagram, representing 3 m of displacement per second). Describe the motion: is the object speeding up, slowing down, or moving at constant velocity? What is the speed?</p>
+      <div class="ans-label">Speed:</div>
+      <input class="ans-line" type="text" placeholder="speed = _____ m/s"/>
+      <div class="ans-label" style="margin-top:10px;">Motion type:</div>
+      <input class="ans-line" type="text" placeholder="constant / speeding up / slowing down"/>
+    </div>
+
+    <!-- A2 -->
+    <div class="prob-card">
+      <div class="prob-title"><span class="prob-num">2</span>Speeding Up</div>
+      <p class="prob-text">A motion map shows dots at positions 0 m, 2 m, 6 m, 12 m at t = 0s, 1s, 2s, 3s respectively. The dots are moving in the positive direction. Is the object accelerating? If so, is the acceleration positive or negative?</p>
+      <div class="ans-label">Accelerating? (yes/no):</div>
+      <input class="ans-line" type="text" placeholder="yes / no"/>
+      <div class="ans-label" style="margin-top:10px;">Direction of acceleration:</div>
+      <input class="ans-line" type="text" placeholder="positive / negative / zero"/>
+    </div>
+
+    <!-- A3 -->
+    <div class="prob-card">
+      <div class="prob-title"><span class="prob-num">3</span>At Rest</div>
+      <p class="prob-text">A motion map shows 4 dots all stacked at the same position (x = 5 m) with no velocity arrows. What is the velocity of the object? What does the absence of velocity arrows tell you?</p>
+      <div class="ans-label">Velocity:</div>
+      <input class="ans-line" type="text" placeholder="v = _____ m/s"/>
+      <div class="ans-label" style="margin-top:10px;">Explanation:</div>
+      <input class="ans-line" type="text" placeholder="write your explanation"/>
+    </div>
+
+    <!-- A4 -->
+    <div class="prob-card">
+      <div class="prob-title"><span class="prob-num">4</span>Slowing Down</div>
+      <p class="prob-text">A motion map shows dots at x = 0 m, 8 m, 14 m, 18 m, 20 m at t = 0s, 1s, 2s, 3s, 4s. The object is moving in the positive direction. Describe the acceleration. What are the displacements per second in order?</p>
+      <div class="ans-label">Displacements (m/s): t=0&rarr;1, t=1&rarr;2, t=2&rarr;3, t=3&rarr;4</div>
+      <input class="ans-line" type="text" placeholder="___m, ___m, ___m, ___m"/>
+      <div class="ans-label" style="margin-top:10px;">Acceleration direction:</div>
+      <input class="ans-line" type="text" placeholder="positive / negative"/>
+    </div>
+
+    <!-- A5 -->
+    <div class="prob-card">
+      <div class="prob-title"><span class="prob-num">5</span>Reading Arrow Direction</div>
+      <p class="prob-text">A motion map has red acceleration arrows pointing to the LEFT. The object's velocity arrows point to the RIGHT. Is the object speeding up or slowing down? Explain why the direction of the red arrow matters.</p>
+      <div class="ans-label">Speeding up or slowing down?</div>
+      <input class="ans-line" type="text" placeholder="speeding up / slowing down"/>
+      <div class="ans-label" style="margin-top:10px;">Why direction matters:</div>
+      <input class="ans-line" type="text" placeholder="explanation"/>
+    </div>
+
+    <!-- A6 -->
+    <div class="prob-card">
+      <div class="prob-title"><span class="prob-num">6</span>Velocity from Arrow Length</div>
+      <p class="prob-text">On a motion map, consecutive dots are separated by 7 m of position each second. What is the velocity of the object? State the reasoning that connects arrow length to velocity on a motion map.</p>
+      <div class="ans-label">Velocity:</div>
+      <input class="ans-line" type="text" placeholder="v = _____ m/s"/>
+      <div class="ans-label" style="margin-top:10px;">Reasoning:</div>
+      <input class="ans-line" type="text" placeholder="because..."/>
+    </div>
+
+  </div>
+
+  <!-- PART B -->
+  <div class="part-label">
+    <span class="part-badge">Part B</span>
+    <h2>Drawing Motion Maps (4 problems)</h2>
+  </div>
+
+  <!-- B1 -->
+  <div class="full-prob">
+    <div class="prob-title"><span class="prob-num">7</span>Draw: Constant Velocity at 4 m/s</div>
+    <p class="prob-text" style="margin-bottom:12px;">An object moves at a constant velocity of 4 m/s in the positive direction starting from x = 0 m. Draw a motion map showing t = 0s to t = 4s. Mark the origin, positive direction arrow, all five dot positions (calculate x for each second), and draw equal-length velocity arrows.</p>
+    <div class="tip-box">
+      <h4>Hint</h4>
+      <p>At 4 m/s constant velocity: each second the object moves 4 m. Positions: 0, 4, 8, 12, 16 m. All arrows should be the same length.</p>
+    </div>
+    <div class="mm-draw-box">
+      <div class="mm-instr">Draw your motion map here (use the SVG reference line below as a guide):</div>
+      <svg width="100%" viewBox="0 0 520 50" style="max-width:520px;display:block;margin:0 auto;">
+        <line x1="20" y1="30" x2="500" y2="30" stroke="#3b82f6" stroke-width="2.5" stroke-dasharray="none"/>
+        <circle cx="20" cy="30" r="7" fill="#3b82f6"/>
+        <polygon points="490,23 508,30 490,37" fill="#3b82f6"/>
+        <text x="512" y="34" font-family="Space Mono, monospace" font-size="12" fill="#1d4ed8" font-weight="700">+</text>
+        <!-- tick marks at 4m intervals, scaled -->
+        <line x1="20" y1="24" x2="20" y2="36" stroke="#94a3b8" stroke-width="1"/>
+        <line x1="114" y1="24" x2="114" y2="36" stroke="#94a3b8" stroke-width="1"/>
+        <line x1="208" y1="24" x2="208" y2="36" stroke="#94a3b8" stroke-width="1"/>
+        <line x1="302" y1="24" x2="302" y2="36" stroke="#94a3b8" stroke-width="1"/>
+        <line x1="396" y1="24" x2="396" y2="36" stroke="#94a3b8" stroke-width="1"/>
+        <line x1="490" y1="24" x2="490" y2="36" stroke="#94a3b8" stroke-width="1"/>
+        <text x="20" y="46" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">0m</text>
+        <text x="114" y="46" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">4m</text>
+        <text x="208" y="46" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">8m</text>
+        <text x="302" y="46" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">12m</text>
+        <text x="396" y="46" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">16m</text>
+        <text x="490" y="46" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">20m</text>
+      </svg>
+      <p style="font-size:0.82rem;color:#6b7280;margin-top:8px;">Mark the five dot positions (t = 0s, 1s, 2s, 3s, 4s) and draw equal velocity arrows above each dot.</p>
+    </div>
+    <div class="ans-label">Dot positions (x in metres):</div>
+    <input class="ans-line" type="text" placeholder="t=0: ___ m, t=1: ___ m, t=2: ___ m, t=3: ___ m, t=4: ___ m"/>
+  </div>
+
+  <!-- B2 -->
+  <div class="full-prob">
+    <div class="prob-title"><span class="prob-num">8</span>Draw: Speeding Up from Rest</div>
+    <p class="prob-text" style="margin-bottom:12px;">An object starts from rest (v = 0 m/s) at x = 0 m. It accelerates uniformly in the positive direction. After each second, its velocity increases by 2 m/s (so v = 0 at t=0, v = 2 at t=1, v = 4 at t=2, v = 6 at t=3 m/s). Calculate the dot positions and draw the motion map from t = 0s to t = 3s. Include red acceleration arrows pointing right.</p>
+    <div class="tip-box">
+      <h4>Hint — Finding Positions</h4>
+      <p>Displacement in each interval = average velocity x 1s. From t=0&rarr;1: avg = (0+2)/2 = 1 m. From t=1&rarr;2: avg = (2+4)/2 = 3 m. From t=2&rarr;3: avg = (4+6)/2 = 5 m. So positions: 0, 1, 4, 9 m.</p>
+    </div>
+    <div class="mm-draw-box">
+      <div class="mm-instr">Draw your motion map here:</div>
+      <svg width="100%" viewBox="0 0 520 50" style="max-width:520px;display:block;margin:0 auto;">
+        <line x1="20" y1="30" x2="500" y2="30" stroke="#3b82f6" stroke-width="2.5"/>
+        <circle cx="20" cy="30" r="7" fill="#3b82f6"/>
+        <polygon points="490,23 508,30 490,37" fill="#3b82f6"/>
+        <text x="512" y="34" font-family="Space Mono,monospace" font-size="12" fill="#1d4ed8" font-weight="700">+</text>
+        <line x1="20" y1="24" x2="20" y2="36" stroke="#94a3b8" stroke-width="1"/>
+        <line x1="76" y1="24" x2="76" y2="36" stroke="#94a3b8" stroke-width="1"/>
+        <line x1="243" y1="24" x2="243" y2="36" stroke="#94a3b8" stroke-width="1"/>
+        <line x1="520" y1="24" x2="520" y2="36" stroke="#94a3b8" stroke-width="1"/>
+        <text x="20" y="46" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">0m</text>
+        <text x="76" y="46" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">1m</text>
+        <text x="243" y="46" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">4m</text>
+        <text x="490" y="46" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">9m</text>
+      </svg>
+      <p style="font-size:0.82rem;color:#6b7280;margin-top:8px;">Velocity arrows should get longer each second. Red acceleration arrows point right.</p>
+    </div>
+    <div class="ans-label">Dot positions: t=0, 1, 2, 3 s</div>
+    <input class="ans-line" type="text" placeholder="0 m, 1 m, 4 m, 9 m"/>
+  </div>
+
+  <!-- B3 -->
+  <div class="full-prob">
+    <div class="prob-title"><span class="prob-num">9</span>Draw: Slowing Down</div>
+    <p class="prob-text" style="margin-bottom:12px;">An object moves in the positive direction and decelerates. Its velocity at each second is: v = 6 m/s at t=0, v = 4 m/s at t=1, v = 2 m/s at t=2, v = 0 m/s at t=3 (it comes to rest). Starting from x = 0 m, calculate positions and draw the motion map including red deceleration arrows pointing LEFT.</p>
+    <div class="tip-box">
+      <h4>Hint</h4>
+      <p>Displacement each interval = average v x 1s. Interval 0&rarr;1: (6+4)/2 = 5 m. Interval 1&rarr;2: (4+2)/2 = 3 m. Interval 2&rarr;3: (2+0)/2 = 1 m. Positions: 0, 5, 8, 9 m.</p>
+    </div>
+    <div class="mm-draw-box">
+      <div class="mm-instr">Draw your motion map here (decreasing spacing, red arrows LEFT):</div>
+      <svg width="100%" viewBox="0 0 520 50" style="max-width:520px;display:block;margin:0 auto;">
+        <line x1="20" y1="30" x2="500" y2="30" stroke="#3b82f6" stroke-width="2.5"/>
+        <circle cx="20" cy="30" r="7" fill="#3b82f6"/>
+        <polygon points="490,23 508,30 490,37" fill="#3b82f6"/>
+        <text x="512" y="34" font-family="Space Mono,monospace" font-size="12" fill="#1d4ed8" font-weight="700">+</text>
+        <text x="20" y="46" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">0m</text>
+        <text x="291" y="46" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">5m</text>
+        <text x="457" y="46" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">8m</text>
+        <text x="511" y="46" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">9m</text>
+      </svg>
+      <p style="font-size:0.82rem;color:#6b7280;margin-top:8px;">Velocity arrows get shorter. Red acceleration arrows point LEFT (opposite to motion).</p>
+    </div>
+    <div class="ans-label">Dot positions: t=0, 1, 2, 3 s</div>
+    <input class="ans-line" type="text" placeholder="0 m, 5 m, 8 m, 9 m"/>
+  </div>
+
+  <!-- B4 -->
+  <div class="full-prob">
+    <div class="prob-title"><span class="prob-num">10</span>Identify the Motion Type from a Map</div>
+    <p class="prob-text" style="margin-bottom:12px;">Look at the two motion maps described below and identify the type of motion for each:</p>
+    <p class="prob-text" style="margin-bottom:8px;"><strong>Map X:</strong> Dots at x = 0, 5, 10, 15, 20 m (t = 0s to 4s). Black velocity arrows are all the same length.</p>
+    <p class="prob-text" style="margin-bottom:12px;"><strong>Map Y:</strong> Dots at x = 0, 1, 3, 6, 10 m (t = 0s to 4s). Black velocity arrows get progressively longer. Red arrows point in the positive direction.</p>
+    <div class="ans-label">Map X — Type of motion:</div>
+    <input class="ans-line" type="text" placeholder="constant velocity / speeding up / slowing down / at rest"/>
+    <div class="ans-label" style="margin-top:10px;">Map X — Speed:</div>
+    <input class="ans-line" type="text" placeholder="v = _____ m/s"/>
+    <div class="ans-label" style="margin-top:10px;">Map Y — Type of motion:</div>
+    <input class="ans-line" type="text" placeholder="constant velocity / speeding up / slowing down / at rest"/>
+    <div class="ans-label" style="margin-top:10px;">Map Y — Acceleration direction:</div>
+    <input class="ans-line" type="text" placeholder="positive / negative"/>
+  </div>
+
+  <!-- PART C -->
+  <div class="part-label">
+    <span class="part-badge">Part C</span>
+    <h2>Short Answer (3 problems)</h2>
+  </div>
+
+  <!-- C1 -->
+  <div class="sa-box">
+    <div class="prob-title"><span class="prob-num">11</span>Velocity from a Motion Map</div>
+    <p class="prob-text" style="margin-bottom:12px;">Explain in your own words why the length of a velocity arrow on a motion map equals the speed of the object. Use the definition v = displacement / time in your answer.</p>
+    <textarea placeholder="Your explanation here..."></textarea>
+  </div>
+
+  <!-- C2 -->
+  <div class="sa-box">
+    <div class="prob-title"><span class="prob-num">12</span>Comparing Two Objects</div>
+    <p class="prob-text" style="margin-bottom:12px;">Object A has a motion map with dot spacing of 2 m per second. Object B has dot spacing of 8 m per second. Both are moving in the positive direction at constant velocity. (a) Which object is faster? (b) How many times faster is it? (c) What would the ratio of their arrow lengths be on the motion map?</p>
+    <div class="ans-label">Faster object:</div>
+    <input class="ans-line" type="text" placeholder="Object A / Object B"/>
+    <div class="ans-label" style="margin-top:10px;">How many times faster:</div>
+    <input class="ans-line" type="text" placeholder="___ times faster"/>
+    <div class="ans-label" style="margin-top:10px;">Arrow length ratio (A : B):</div>
+    <input class="ans-line" type="text" placeholder="___ : ___"/>
+  </div>
+
+  <!-- C3 -->
+  <div class="sa-box">
+    <div class="prob-title"><span class="prob-num">13</span>Acceleration Vectors on a Motion Map</div>
+    <p class="prob-text" style="margin-bottom:12px;">An object's motion map shows velocity arrows of length 10, 8, 6, 4 cm at t = 0s, 1s, 2s, 3s. Each centimetre represents 1 m/s. (a) Is the object speeding up or slowing down? (b) What is the change in velocity per second (acceleration)? (c) In which direction would the red acceleration arrows point?</p>
+    <div class="ans-label">(a) Speeding up or slowing down?</div>
+    <input class="ans-line" type="text" placeholder="speeding up / slowing down"/>
+    <div class="ans-label" style="margin-top:10px;">(b) Change in velocity per second (acceleration):</div>
+    <input class="ans-line" type="text" placeholder="a = _____ m/s per second"/>
+    <div class="ans-label" style="margin-top:10px;">(c) Direction of red acceleration arrows:</div>
+    <input class="ans-line" type="text" placeholder="same as motion / opposite to motion"/>
+  </div>
+
+  <!-- ANSWER KEY -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+  </div>
+
+  <div id="answer-key">
+    <h3>Answer Key — Classwork Unit 16: Motion Maps</h3>
+
+    <div class="ak-item">
+      <div class="ak-num">A1 — Constant Velocity</div>
+      <div class="ak-ans">Speed = 3 m/s &nbsp;|&nbsp; Motion type: Constant velocity</div>
+      <div class="ak-work">Arrow length = 3 cm = 3 m displacement per 1 second interval. Therefore v = 3 m / 1 s = 3 m/s. All arrows are equal length, confirming constant (uniform) velocity. No acceleration is present.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">A2 — Speeding Up</div>
+      <div class="ak-ans">Yes, accelerating &nbsp;|&nbsp; Acceleration is positive</div>
+      <div class="ak-work">Displacements per second: t=0&rarr;1: 2m, t=1&rarr;2: 4m, t=2&rarr;3: 6m. Dot spacing is increasing, meaning the object covers more distance each second. This is positive acceleration (speeding up in the positive direction). Red arrows would point to the right.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">A3 — At Rest</div>
+      <div class="ak-ans">v = 0 m/s</div>
+      <div class="ak-work">No velocity arrows are drawn because displacement = 0 m each second. v = 0/1 = 0 m/s. All dots are at the same position x = 5 m for all four time steps. The object is completely stationary.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">A4 — Slowing Down</div>
+      <div class="ak-ans">Displacements: 8 m, 6 m, 4 m, 2 m &nbsp;|&nbsp; Acceleration: negative</div>
+      <div class="ak-work">t=0&rarr;1: 8-0=8m; t=1&rarr;2: 14-8=6m; t=2&rarr;3: 18-14=4m; t=3&rarr;4: 20-18=2m. Dot spacing decreases each second — the object is slowing down. Change in velocity per second = -2 m/s per second. Acceleration is negative (opposite to motion direction). Red arrows would point to the LEFT.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">A5 — Arrow Direction</div>
+      <div class="ak-ans">Slowing down</div>
+      <div class="ak-work">Red acceleration arrows pointing LEFT (negative direction) while velocity arrows point RIGHT (positive direction) means acceleration is opposite to velocity. This causes the velocity to decrease each second — the object is decelerating. Acceleration direction determines whether velocity grows or shrinks.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">A6 — Velocity from Arrow Length</div>
+      <div class="ak-ans">v = 7 m/s</div>
+      <div class="ak-work">Arrow length = 7 m (displacement per second). v = displacement / time = 7 m / 1 s = 7 m/s. On a motion map, the time interval between dots is always 1 second, so arrow length (= displacement) numerically equals the velocity in m/s. No division is needed because the denominator is always 1.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">B7 — Draw: Constant Velocity 4 m/s</div>
+      <div class="ak-ans">Dot positions: 0 m, 4 m, 8 m, 12 m, 16 m</div>
+      <div class="ak-work">At v = 4 m/s constant: position = v x t. t=0: 0m; t=1: 4m; t=2: 8m; t=3: 12m; t=4: 16m. All five velocity arrows should be the same length (4 units each). Equal spacing confirms constant velocity. No red acceleration arrows needed.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">B8 — Draw: Speeding Up from Rest</div>
+      <div class="ak-ans">Dot positions: 0 m, 1 m, 4 m, 9 m</div>
+      <div class="ak-work">Using kinematics with a = 2 m/s&sup2;: x = &frac12;at&sup2;. t=0: 0m; t=1: &frac12;(2)(1)=1m; t=2: &frac12;(2)(4)=4m; t=3: &frac12;(2)(9)=9m. Alternatively, displacement each interval = avg v &times; 1s: 1m, 3m, 5m (cumulative: 0, 1, 4, 9). Velocity arrows get longer (2, 4, 6 units). Red arrows point RIGHT.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">B9 — Draw: Slowing Down</div>
+      <div class="ak-ans">Dot positions: 0 m, 5 m, 8 m, 9 m</div>
+      <div class="ak-work">Displacement each interval = avg v &times; 1s. 0&rarr;1: (6+4)/2=5m; 1&rarr;2: (4+2)/2=3m; 2&rarr;3: (2+0)/2=1m. Positions: 0, 5, 8, 9 m. Dot spacing decreases (5, 3, 1 m per second). Velocity arrows shrink in length (proportional to 6, 4, 2 m/s). Red acceleration arrows point LEFT (negative direction, opposing motion).</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">B10 — Identify Motion Type</div>
+      <div class="ak-ans">Map X: Constant velocity, v = 5 m/s &nbsp;|&nbsp; Map Y: Speeding up, positive acceleration</div>
+      <div class="ak-work">Map X: Spacings are all 5 m per second (5, 5, 5, 5 m). Equal spacing = constant velocity. v = 5 m/1s = 5 m/s. Map Y: Spacings are 1, 2, 3, 4 m per second (increasing). Increasing spacing = speeding up. Acceleration = positive (arrows point rightward in direction of motion).</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">C11 — Velocity from Map (Short Answer)</div>
+      <div class="ak-ans">Arrow length = speed because time = 1 second per interval</div>
+      <div class="ak-work">Expected answer: v = displacement / time. On a motion map, each time interval = 1 second. So v = displacement / 1 s = displacement (numerically). The arrow connects two dot positions 1 second apart, so its length equals the displacement covered in 1 second, which equals the velocity magnitude. This is why we can "read off" speed directly from arrow length.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">C12 — Comparing Two Objects</div>
+      <div class="ak-ans">Object B is faster &nbsp;|&nbsp; 4 times faster &nbsp;|&nbsp; Arrow ratio A:B = 1:4</div>
+      <div class="ak-work">(a) Object B: 8 m/s vs 2 m/s — B is faster. (b) 8/2 = 4 times faster. (c) Arrow lengths are proportional to speed: A has arrows of length 2 units, B has length 8 units. Ratio A:B = 2:8 = 1:4.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">C13 — Acceleration Vectors</div>
+      <div class="ak-ans">(a) Slowing down &nbsp;|&nbsp; (b) -2 m/s per second &nbsp;|&nbsp; (c) Opposite to direction of motion (pointing left)</div>
+      <div class="ak-work">(a) Arrow lengths decrease: 10, 8, 6, 4 cm = 10, 8, 6, 4 m/s — velocity is decreasing each second — slowing down. (b) Change per second: 8-10 = -2 m/s per second. The acceleration = -2 m/s&sup2;. (c) Since acceleration is negative (opposing the rightward motion), red acceleration arrows point to the LEFT — opposite to the direction of motion.</div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  <p>Kinematics &middot; Unit 16 &mdash; Motion Maps &nbsp;&bull;&nbsp; Classwork</p>
+</footer>
+
+<script>
+function toggleKey() {
+  var key = document.getElementById('answer-key');
+  var btn = document.getElementById('toggle-key-btn');
+  if (key.style.display === 'none' || key.style.display === '') {
+    key.style.display = 'block';
+    btn.textContent = 'Hide Answer Key';
+  } else {
+    key.style.display = 'none';
+    btn.textContent = 'Show Answer Key';
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Significant Figures — Classwork</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#065f46 0%,#10b981 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:820px;margin:36px auto;padding:0 24px 60px;}
+    .rules-box{background:white;border:2px solid #d1fae5;border-radius:10px;padding:18px 22px;margin-bottom:36px;}
+    .rules-box h3{color:#065f46;font-size:1rem;margin-bottom:10px;}
+    .rules-box ol{padding-left:22px;}.rules-box li{margin-bottom:4px;font-size:0.92rem;color:#374151;}
+    section{margin-bottom:44px;}
+    h2{font-size:1.25rem;font-weight:700;color:#065f46;border-left:5px solid #10b981;padding-left:12px;margin-bottom:18px;}
+    .instructions{color:#4b5563;font-size:0.92rem;margin-bottom:18px;font-style:italic;}
+    .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    @media(max-width:600px){.problem-grid{grid-template-columns:1fr;}}
+    .problem-card{background:white;border-radius:8px;padding:16px 20px;box-shadow:0 1px 5px rgba(0,0,0,0.07);}
+    .problem-num{font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:4px;}
+    .number-display{font-family:'Space Mono',monospace;font-size:1.8rem;font-weight:700;color:#1a1a2e;margin-bottom:8px;}
+    .answer-line{border-bottom:2px solid #d1d5db;min-height:28px;width:120px;display:inline-block;}
+    .answer-label{font-size:0.82rem;color:#6b7280;margin-right:8px;}
+    .problem-card-wide{background:white;border-radius:8px;padding:16px 20px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .two-lines{display:flex;gap:40px;flex-wrap:wrap;margin-top:8px;}
+    .line-field{display:flex;align-items:center;gap:8px;font-size:0.88rem;}
+    .short-line{border-bottom:2px solid #d1d5db;min-height:24px;width:80px;display:inline-block;}
+    .short-answer{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .short-answer .q{font-weight:600;margin-bottom:10px;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#065f46;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #toggle-key-btn:hover{background:#047857;}
+    #answer-key{display:none;background:#f0fdf4;border:2px solid #6ee7b7;border-radius:12px;padding:28px 32px;}
+    #answer-key h2{color:#065f46;border-left-color:#059669;margin-bottom:22px;}
+    .key-section{margin-bottom:28px;}
+    .key-section h3{font-size:1rem;font-weight:700;color:#065f46;margin-bottom:12px;}
+    .key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    .key-item{background:white;border-radius:6px;padding:10px 14px;font-size:0.92rem;}
+    .key-item .knum{font-family:'Space Mono',monospace;font-weight:700;font-size:1rem;}
+    .key-item .kans{color:#065f46;font-weight:700;}
+    .key-item .kexpl{color:#4b5563;font-size:0.82rem;margin-top:2px;}
+    .short-ans-key{background:white;border-radius:6px;padding:12px 16px;font-size:0.92rem;}
+    .short-ans-key strong{color:#065f46;}
+  </style>
+</head>
+<body>
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">Physics · High School · In-Class Activity</div>
+  <h1>Significant Figures — Classwork</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+<main>
+  <div class="rules-box">
+    <h3>Rules Reminder</h3>
+    <ol>
+      <li>The farthest-left non-zero digit is the <strong>most significant figure</strong>.</li>
+      <li>No decimal point → farthest-right non-zero digit is the <strong>least significant figure</strong>.</li>
+      <li>Decimal point present → farthest-right digit is least significant — <strong>even if it is zero</strong>.</li>
+      <li>All digits between most and least significant are <strong>significant</strong>.</li>
+    </ol>
+  </div>
+
+  <section>
+    <h2>Part A — Count the Significant Figures</h2>
+    <p class="instructions">For each number, write the number of significant figures on the line provided.</p>
+    <div class="problem-grid">
+      <div class="problem-card"><div class="problem-num">Problem 1</div><div class="number-display">305</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 2</div><div class="number-display">0.0720</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 3</div><div class="number-display">4200</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 4</div><div class="number-display">4200.</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 5</div><div class="number-display">0.00300</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 6</div><div class="number-display">1.006</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 7</div><div class="number-display">9.10 &times; 10³</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 8</div><div class="number-display">70000</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 9</div><div class="number-display">70000.0</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+      <div class="problem-card"><div class="problem-num">Problem 10</div><div class="number-display">0.5</div><span class="answer-label">Sig figs:</span><span class="answer-line"></span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Part B — Most &amp; Least Significant Digit</h2>
+    <p class="instructions">For each number, write the most and least significant digit on the lines.</p>
+    <div class="problem-card-wide"><div class="problem-num">Problem 11</div><div class="number-display">5030</div><div class="two-lines"><div class="line-field">Most significant digit: <span class="short-line"></span></div><div class="line-field">Least significant digit: <span class="short-line"></span></div></div></div>
+    <div class="problem-card-wide"><div class="problem-num">Problem 12</div><div class="number-display">0.0602</div><div class="two-lines"><div class="line-field">Most significant digit: <span class="short-line"></span></div><div class="line-field">Least significant digit: <span class="short-line"></span></div></div></div>
+    <div class="problem-card-wide"><div class="problem-num">Problem 13</div><div class="number-display">8500.</div><div class="two-lines"><div class="line-field">Most significant digit: <span class="short-line"></span></div><div class="line-field">Least significant digit: <span class="short-line"></span></div></div></div>
+    <div class="problem-card-wide"><div class="problem-num">Problem 14</div><div class="number-display">2.050</div><div class="two-lines"><div class="line-field">Most significant digit: <span class="short-line"></span></div><div class="line-field">Least significant digit: <span class="short-line"></span></div></div></div>
+    <div class="problem-card-wide"><div class="problem-num">Problem 15</div><div class="number-display">3.7 &times; 10⁶</div><div class="two-lines"><div class="line-field">Most significant digit: <span class="short-line"></span></div><div class="line-field">Least significant digit: <span class="short-line"></span></div></div></div>
+  </section>
+
+  <section>
+    <h2>Part C — Short Answer</h2>
+    <p class="instructions">Answer in complete sentences.</p>
+    <div class="short-answer">
+      <div class="q">Question 16. The numbers <strong>500</strong> and <strong>500.</strong> look almost the same but have a different number of significant figures. Explain why, and what the decimal point signals to a scientist.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+    <div class="short-answer">
+      <div class="q">Question 17. A student measures the length of a desk and writes down <strong>1.20 m</strong>. Another student writes <strong>1.2 m</strong>. Do these two measurements mean the same thing? Explain the difference in terms of significant figures.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <div class="key-btn-wrap"><button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key (Teacher Use)</button></div>
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+    <div class="key-section">
+      <h3>Part A</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="knum">1. 305</div><div class="kans">3 sig figs</div><div class="kexpl">3, 0, 5 — zero is sandwiched</div></div>
+        <div class="key-item"><div class="knum">2. 0.0720</div><div class="kans">3 sig figs</div><div class="kexpl">Leading zeros not significant; 7, 2, 0 count (decimal, Rule 3)</div></div>
+        <div class="key-item"><div class="knum">3. 4200</div><div class="kans">2 sig figs</div><div class="kexpl">No decimal; rightmost non-zero is 2; trailing zeros not counted</div></div>
+        <div class="key-item"><div class="knum">4. 4200.</div><div class="kans">4 sig figs</div><div class="kexpl">Decimal present; 4, 2, 0, 0 all count</div></div>
+        <div class="key-item"><div class="knum">5. 0.00300</div><div class="kans">3 sig figs</div><div class="kexpl">Leading zeros not significant; 3, 0, 0 count (decimal)</div></div>
+        <div class="key-item"><div class="knum">6. 1.006</div><div class="kans">4 sig figs</div><div class="kexpl">Decimal; 1, 0, 0, 6 — both zeros sandwiched</div></div>
+        <div class="key-item"><div class="knum">7. 9.10 × 10³</div><div class="kans">3 sig figs</div><div class="kexpl">Coefficient only: 9, 1, 0 (decimal, Rule 3)</div></div>
+        <div class="key-item"><div class="knum">8. 70000</div><div class="kans">1 sig fig</div><div class="kexpl">No decimal; rightmost non-zero is 7; trailing zeros not counted</div></div>
+        <div class="key-item"><div class="knum">9. 70000.0</div><div class="kans">6 sig figs</div><div class="kexpl">Decimal present; all 6 digits count</div></div>
+        <div class="key-item"><div class="knum">10. 0.5</div><div class="kans">1 sig fig</div><div class="kexpl">Leading zero not significant; only 5</div></div>
+      </div>
+    </div>
+    <div class="key-section">
+      <h3>Part B</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="knum">11. 5030</div><div class="kans">Most: 5 | Least: 3</div><div class="kexpl">No decimal; trailing 0 not significant</div></div>
+        <div class="key-item"><div class="knum">12. 0.0602</div><div class="kans">Most: 6 | Least: 2</div><div class="kexpl">Leading zeros never count; decimal present</div></div>
+        <div class="key-item"><div class="knum">13. 8500.</div><div class="kans">Most: 8 | Least: last 0</div><div class="kexpl">Decimal present; rightmost digit is least significant</div></div>
+        <div class="key-item"><div class="knum">14. 2.050</div><div class="kans">Most: 2 | Least: last 0</div><div class="kexpl">Decimal; trailing zero counts; 4 sf total</div></div>
+        <div class="key-item"><div class="knum">15. 3.7 × 10⁶</div><div class="kans">Most: 3 | Least: 7</div><div class="kexpl">Coefficient only; 2 sig figs total</div></div>
+      </div>
+    </div>
+    <div class="key-section">
+      <h3>Part C</h3>
+      <div class="short-ans-key"><strong>Q16.</strong> 500 has no decimal point so only the 5 is significant (1 sig fig). 500. has a decimal point which signals the zeros were actually measured — giving 3 sig figs. The decimal point is a deliberate mark of precision.</div>
+      <br>
+      <div class="short-ans-key"><strong>Q17.</strong> No, they are not the same. 1.20 m has 3 sig figs — the trailing zero shows measurement to the nearest cm. 1.2 m has 2 sig figs — only to the nearest 10 cm. The extra zero carries real information about precision.</div>
+    </div>
+  </div>
+</main>
+<script>function toggleKey(){var k=document.getElementById('answer-key');var b=document.getElementById('toggle-key-btn');if(k.style.display==='none'||k.style.display===''){k.style.display='block';b.textContent='Hide Answer Key';}else{k.style.display='none';b.textContent='Show Answer Key (Teacher Use)';}}</script>
+</body>
+</html>

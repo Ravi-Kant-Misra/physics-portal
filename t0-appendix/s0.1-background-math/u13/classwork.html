@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Measurement Uncertainty — Classwork</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0fafa;background-image:radial-gradient(circle,#99f6e4 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.75;}
+    header{background:linear-gradient(135deg,#134e4a 0%,#0f766e 50%,#0d9488 100%);color:white;padding:36px 60px 30px;position:relative;overflow:hidden;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(20,184,166,0.3) 0%,transparent 60%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.4);}}
+    header .label{font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:8px;position:relative;}
+    header h1{font-size:2.1rem;font-weight:900;margin-bottom:6px;position:relative;}
+    header .meta{opacity:0.85;font-size:0.9rem;position:relative;}
+    main{max-width:840px;margin:36px auto;padding:0 24px 60px;}
+    .rules-box{background:white;border:2px solid #ccfbf1;border-radius:12px;padding:20px 26px;margin-bottom:36px;box-shadow:0 2px 10px rgba(13,148,136,0.08);}
+    .rules-box h3{color:#0f766e;font-size:1rem;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+    .rules-box .rule-row{display:flex;gap:12px;margin-bottom:8px;font-size:0.9rem;color:#374151;}
+    .rules-box .rn{background:#ccfbf1;color:#0f766e;font-weight:800;font-size:0.8rem;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    section{margin-bottom:48px;}
+    h2{font-size:1.2rem;font-weight:800;color:#0f766e;border-left:5px solid #0d9488;padding-left:12px;margin-bottom:18px;}
+    .instructions{color:#4b5563;font-size:0.9rem;margin-bottom:18px;font-style:italic;}
+    /* instrument cards for Part A */
+    .instrument-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    @media(max-width:620px){.instrument-grid{grid-template-columns:1fr;}}
+    .instrument-card{background:white;border-radius:12px;padding:20px 22px;box-shadow:0 2px 10px rgba(0,0,0,0.06);border-top:4px solid #0d9488;}
+    .instrument-card.digital{border-top-color:#6366f1;}
+    .ic-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#64748b;margin-bottom:6px;}
+    .ic-name{font-weight:800;color:#0f172a;font-size:0.95rem;margin-bottom:12px;}
+    .ic-reading-box{background:#f0fdfa;border-radius:8px;padding:10px 14px;margin-bottom:14px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;}
+    .ic-reading-box.d{background:#eff6ff;}
+    .ic-reading-label{font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#64748b;}
+    .ic-reading-val{font-family:'Space Mono',monospace;font-size:1.15rem;font-weight:700;color:#0f172a;}
+    .work-box{background:#fafafa;border-radius:8px;border:1px dashed #cbd5e1;padding:12px 14px;margin-bottom:10px;}
+    .work-box-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;}
+    .work-line{border-bottom:1.5px solid #e2e8f0;min-height:22px;width:100%;margin-bottom:8px;}
+    .ans-line-row{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:0.88rem;color:#334155;}
+    .ans-line{border-bottom:2px solid #0d9488;min-height:24px;flex:1;display:inline-block;}
+    .ans-line.d{border-bottom-color:#6366f1;}
+    .ans-unit{font-weight:700;color:#64748b;}
+    /* Part B short answer */
+    .short-answer-card{background:white;border-radius:12px;padding:20px 24px;box-shadow:0 2px 10px rgba(0,0,0,0.06);margin-bottom:16px;}
+    .q-text{font-weight:700;color:#0f172a;font-size:0.95rem;margin-bottom:12px;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:1.5px solid #d1d5db;min-height:26px;width:100%;}
+    /* Part C table */
+    .data-table{width:100%;border-collapse:collapse;font-size:0.88rem;}
+    .data-table thead tr{background:#134e4a;color:white;}
+    .data-table th{padding:10px 14px;font-weight:700;text-align:left;font-size:0.82rem;letter-spacing:0.3px;}
+    .data-table td{padding:10px 14px;border-bottom:1px solid #e2e8f0;color:#374151;vertical-align:middle;}
+    .data-table tr:nth-child(even) td{background:#f8fffe;}
+    .data-table td.mono{font-family:'Space Mono',monospace;font-size:0.95rem;font-weight:700;}
+    .fill-cell{border-bottom:2px solid #0d9488 !important;min-width:100px;color:#0f766e;}
+    /* answer key */
+    .key-btn-wrap{text-align:center;margin:44px 0 20px;}
+    #toggle-key-btn{background:linear-gradient(135deg,#134e4a,#0d9488);color:white;border:none;padding:13px 36px;font-size:1rem;font-weight:800;border-radius:10px;cursor:pointer;font-family:inherit;letter-spacing:0.3px;}
+    #toggle-key-btn:hover{opacity:0.9;}
+    #answer-key{display:none;background:#f0fdfa;border:2px solid #5eead4;border-radius:16px;padding:30px 36px;margin-top:4px;}
+    #answer-key h2{color:#0f766e;border-left-color:#0d9488;margin-bottom:24px;}
+    .key-section{margin-bottom:30px;}
+    .key-section h3{font-size:1rem;font-weight:800;color:#0f766e;margin-bottom:14px;}
+    .key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    @media(max-width:540px){.key-grid{grid-template-columns:1fr;}}
+    .key-item{background:white;border-radius:8px;padding:12px 16px;font-size:0.9rem;border-left:3px solid #0d9488;}
+    .key-item.d{border-left-color:#6366f1;}
+    .ki-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#64748b;margin-bottom:4px;}
+    .ki-val{font-family:'Space Mono',monospace;font-weight:700;color:#0f766e;font-size:1rem;}
+    .ki-val.d{color:#4338ca;}
+    .ki-expl{color:#4b5563;font-size:0.82rem;margin-top:4px;}
+    .key-text{background:white;border-radius:8px;padding:14px 18px;font-size:0.9rem;color:#374151;margin-bottom:10px;border-left:3px solid #0d9488;}
+    .key-text strong{color:#0f766e;}
+    .key-table{width:100%;border-collapse:collapse;font-size:0.85rem;}
+    .key-table th{background:#134e4a;color:white;padding:8px 12px;text-align:left;}
+    .key-table td{padding:8px 12px;border-bottom:1px solid #d1fae5;color:#374151;}
+    .key-table tr:nth-child(even) td{background:#f0fdfa;}
+    .key-table td.mono{font-family:'Space Mono',monospace;font-weight:700;color:#0f766e;}
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#134e4a,#0f766e,#0d9488);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#0d9488,#0f766e);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="star" style="width:3px;height:3px;top:14%;left:6%;animation-delay:0s"></div>
+  <div class="star" style="width:2px;height:2px;top:60%;left:14%;animation-delay:0.7s"></div>
+  <div class="star" style="width:4px;height:4px;top:20%;left:80%;animation-delay:1.1s"></div>
+  <div class="star" style="width:2px;height:2px;top:70%;left:88%;animation-delay:0.4s"></div>
+  <div class="label">Physics · High School · In-Class Activity</div>
+  <h1>Measurement Uncertainty — Classwork</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+
+  <div class="rules-box">
+    <h3>📌 Rules Reminder</h3>
+    <div class="rule-row"><div class="rn">1</div><div><strong>Analogue instruments:</strong> Uncertainty = (½ × smallest increment) × number of measurements taken</div></div>
+    <div class="rule-row"><div class="rn">2</div><div><strong>Digital instruments:</strong> Uncertainty = ±1 digit of the last significant figure displayed</div></div>
+    <div class="rule-row"><div class="rn">!</div><div><strong>Always report the LARGER</strong> of the instrument limit (Option 1) and your justified experimental estimate (Option 2)</div></div>
+  </div>
+
+  <!-- PART A: Instrument Identification -->
+  <section>
+    <h2>Part A — Identify the Measurement Uncertainty</h2>
+    <p class="instructions">For each instrument below, show your working and write the uncertainty with its units. Identify whether each instrument is analogue or digital.</p>
+    <div class="instrument-grid">
+
+      <!-- 1. Ruler 1mm -->
+      <div class="instrument-card">
+        <div class="ic-num">Problem 1</div>
+        <div class="ic-name">Metric Ruler</div>
+        <div class="ic-reading-box">
+          <div>
+            <div class="ic-reading-label">Smallest increment</div>
+            <div class="ic-reading-val">1 mm (0.1 cm)</div>
+          </div>
+          <div>
+            <div class="ic-reading-label">Measurements needed</div>
+            <div class="ic-reading-val">2 (start + end)</div>
+          </div>
+        </div>
+        <div class="work-box">
+          <div class="work-box-label">Working</div>
+          <div class="work-line"></div>
+          <div class="work-line"></div>
+        </div>
+        <div class="ans-line-row">Uncertainty = <span class="ans-line"></span> <span class="ans-unit">cm</span></div>
+      </div>
+
+      <!-- 2. Thermometer 0.5°C -->
+      <div class="instrument-card">
+        <div class="ic-num">Problem 2</div>
+        <div class="ic-name">Analogue Thermometer</div>
+        <div class="ic-reading-box">
+          <div>
+            <div class="ic-reading-label">Smallest increment</div>
+            <div class="ic-reading-val">0.5 °C</div>
+          </div>
+          <div>
+            <div class="ic-reading-label">Measurements needed</div>
+            <div class="ic-reading-val">1 (single reading)</div>
+          </div>
+        </div>
+        <div class="work-box">
+          <div class="work-box-label">Working</div>
+          <div class="work-line"></div>
+          <div class="work-line"></div>
+        </div>
+        <div class="ans-line-row">Uncertainty = <span class="ans-line"></span> <span class="ans-unit">°C</span></div>
+      </div>
+
+      <!-- 3. Spring balance 0.2 N -->
+      <div class="instrument-card">
+        <div class="ic-num">Problem 3</div>
+        <div class="ic-name">Spring Balance (Newton-meter)</div>
+        <div class="ic-reading-box">
+          <div>
+            <div class="ic-reading-label">Smallest increment</div>
+            <div class="ic-reading-val">0.2 N</div>
+          </div>
+          <div>
+            <div class="ic-reading-label">Measurements needed</div>
+            <div class="ic-reading-val">1 (single reading)</div>
+          </div>
+        </div>
+        <div class="work-box">
+          <div class="work-box-label">Working</div>
+          <div class="work-line"></div>
+          <div class="work-line"></div>
+        </div>
+        <div class="ans-line-row">Uncertainty = <span class="ans-line"></span> <span class="ans-unit">N</span></div>
+      </div>
+
+      <!-- 4. Analogue voltmeter 0.5V -->
+      <div class="instrument-card">
+        <div class="ic-num">Problem 4</div>
+        <div class="ic-name">Analogue Voltmeter (needle)</div>
+        <div class="ic-reading-box">
+          <div>
+            <div class="ic-reading-label">Smallest increment</div>
+            <div class="ic-reading-val">0.5 V</div>
+          </div>
+          <div>
+            <div class="ic-reading-label">Measurements needed</div>
+            <div class="ic-reading-val">2 (before + after)</div>
+          </div>
+        </div>
+        <div class="work-box">
+          <div class="work-box-label">Working</div>
+          <div class="work-line"></div>
+          <div class="work-line"></div>
+        </div>
+        <div class="ans-line-row">Uncertainty = <span class="ans-line"></span> <span class="ans-unit">V</span></div>
+      </div>
+
+      <!-- 5. Digital balance 0.01g -->
+      <div class="instrument-card digital">
+        <div class="ic-num">Problem 5</div>
+        <div class="ic-name">Digital Balance</div>
+        <div class="ic-reading-box d">
+          <div>
+            <div class="ic-reading-label">Display reading</div>
+            <div class="ic-reading-val">45.67 g</div>
+          </div>
+          <div>
+            <div class="ic-reading-label">Type</div>
+            <div class="ic-reading-val">Digital</div>
+          </div>
+        </div>
+        <div class="work-box">
+          <div class="work-box-label">Working</div>
+          <div class="work-line"></div>
+          <div class="work-line"></div>
+        </div>
+        <div class="ans-line-row">Uncertainty = <span class="ans-line d"></span> <span class="ans-unit">g</span></div>
+      </div>
+
+      <!-- 6. Digital stopwatch 0.01s -->
+      <div class="instrument-card digital">
+        <div class="ic-num">Problem 6</div>
+        <div class="ic-name">Digital Stopwatch</div>
+        <div class="ic-reading-box d">
+          <div>
+            <div class="ic-reading-label">Display reading</div>
+            <div class="ic-reading-val">12.34 s</div>
+          </div>
+          <div>
+            <div class="ic-reading-label">Type</div>
+            <div class="ic-reading-val">Digital</div>
+          </div>
+        </div>
+        <div class="work-box">
+          <div class="work-box-label">Working</div>
+          <div class="work-line"></div>
+          <div class="work-line"></div>
+        </div>
+        <div class="ans-line-row">Uncertainty = <span class="ans-line d"></span> <span class="ans-unit">s</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PART B: Writing the Measurement -->
+  <section>
+    <h2>Part B — Write the Full Measurement with Uncertainty</h2>
+    <p class="instructions">Use your answers from Part A to write each measurement in the correct format: <strong>value ± uncertainty unit</strong></p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Instrument</th>
+          <th>Reading</th>
+          <th>Uncertainty</th>
+          <th>Full measurement (value ± uncertainty)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Metric Ruler</td>
+          <td class="mono">14.2 cm</td>
+          <td class="fill-cell"></td>
+          <td class="fill-cell"></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Analogue Thermometer</td>
+          <td class="mono">36.5 °C</td>
+          <td class="fill-cell"></td>
+          <td class="fill-cell"></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Spring Balance</td>
+          <td class="mono">4.8 N</td>
+          <td class="fill-cell"></td>
+          <td class="fill-cell"></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Analogue Voltmeter</td>
+          <td class="mono">6.5 V</td>
+          <td class="fill-cell"></td>
+          <td class="fill-cell"></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Digital Balance</td>
+          <td class="mono">45.67 g</td>
+          <td class="fill-cell"></td>
+          <td class="fill-cell"></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Digital Stopwatch</td>
+          <td class="mono">12.34 s</td>
+          <td class="fill-cell"></td>
+          <td class="fill-cell"></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- PART C: Choosing Between Two Options -->
+  <section>
+    <h2>Part C — Which Uncertainty Is Larger?</h2>
+    <p class="instructions">In each scenario, you have been given both an instrument uncertainty (Option 1) and an experimenter's estimate (Option 2). Circle or write which one to report, and explain why.</p>
+
+    <div class="short-answer-card">
+      <div class="q-text">Problem 7 &nbsp;|&nbsp; You measure the height of a beaker with a ruler (smallest increment 0.1 cm, 2 measurements → instrument uncertainty = 0.1 cm). However, the beaker rocks slightly and you estimate an additional ±0.4 cm from the wobble.<br><br>Option 1: ±0.1 cm &nbsp;&nbsp; Option 2: ±0.4 cm &nbsp;&nbsp; Report: ___________</div>
+      <div class="write-lines">
+        <div style="font-size:0.82rem;color:#64748b;margin-bottom:4px;">Explain your choice:</div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+
+    <div class="short-answer-card">
+      <div class="q-text">Problem 8 &nbsp;|&nbsp; You use an analogue ammeter (smallest increment 0.02 A, 1 measurement → instrument uncertainty = 0.01 A). The pointer is steady and your reading angle is perfect. Your experimental estimate is ±0.01 A.<br><br>Option 1: ±0.01 A &nbsp;&nbsp; Option 2: ±0.01 A &nbsp;&nbsp; Report: ___________</div>
+      <div class="write-lines">
+        <div style="font-size:0.82rem;color:#64748b;margin-bottom:4px;">Explain your choice:</div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+
+    <div class="short-answer-card">
+      <div class="q-text">Problem 9 &nbsp;|&nbsp; A digital thermometer reads 98.6 °F (instrument uncertainty = ±0.1 °F). You are measuring a fever in an impatient patient who keeps moving. You estimate the variation at ±0.5 °F.<br><br>Option 1: ±0.1 °F &nbsp;&nbsp; Option 2: ±0.5 °F &nbsp;&nbsp; Report: ___________</div>
+      <div class="write-lines">
+        <div style="font-size:0.82rem;color:#64748b;margin-bottom:4px;">Explain your choice:</div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART D: Short Answer — Lab Reports -->
+  <section>
+    <h2>Part D — Short Answer: Lab Reports</h2>
+    <p class="instructions">Answer the following questions in complete sentences.</p>
+
+    <div class="short-answer-card">
+      <div class="q-text">Problem 10 &nbsp;|&nbsp; In your own words, explain why it is not enough to just report the instrument's physical limit as your measurement uncertainty.</div>
+      <div class="write-lines">
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+
+    <div class="short-answer-card">
+      <div class="q-text">Problem 11 &nbsp;|&nbsp; You are writing a lab report and measuring the length of a spring using a ruler. Write ONE sentence you could include in your IV/DV section to describe your measurement uncertainty, including the actual value and justification.</div>
+      <div class="write-lines">
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+
+    <div class="short-answer-card">
+      <div class="q-text">Problem 12 &nbsp;|&nbsp; A student reports a mass as "250 grams" with no uncertainty. What is wrong with this report? How should they fix it if they used a digital balance reading 250.0 g?</div>
+      <div class="write-lines">
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANSWER KEY TOGGLE -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+  </div>
+
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A &amp; B — Instrument Uncertainties &amp; Full Measurements</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="ki-label">Problem 1 — Metric Ruler (1 mm increments, 2 measurements)</div>
+          <div class="ki-val">± 0.1 cm &nbsp;→&nbsp; 14.2 ± 0.1 cm</div>
+          <div class="ki-expl">½ × 0.1 cm = 0.05 cm × 2 = 0.1 cm</div>
+        </div>
+        <div class="key-item">
+          <div class="ki-label">Problem 2 — Analogue Thermometer (0.5 °C, 1 measurement)</div>
+          <div class="ki-val">± 0.25 °C &nbsp;→&nbsp; 36.5 ± 0.25 °C</div>
+          <div class="ki-expl">½ × 0.5 °C = 0.25 °C × 1 = 0.25 °C</div>
+        </div>
+        <div class="key-item">
+          <div class="ki-label">Problem 3 — Spring Balance (0.2 N, 1 measurement)</div>
+          <div class="ki-val">± 0.1 N &nbsp;→&nbsp; 4.8 ± 0.1 N</div>
+          <div class="ki-expl">½ × 0.2 N = 0.1 N × 1 = 0.1 N</div>
+        </div>
+        <div class="key-item">
+          <div class="ki-label">Problem 4 — Analogue Voltmeter (0.5 V, 2 measurements)</div>
+          <div class="ki-val">± 0.5 V &nbsp;→&nbsp; 6.5 ± 0.5 V</div>
+          <div class="ki-expl">½ × 0.5 V = 0.25 V × 2 = 0.5 V</div>
+        </div>
+        <div class="key-item d">
+          <div class="ki-label">Problem 5 — Digital Balance (reads 45.67 g)</div>
+          <div class="ki-val d">± 0.01 g &nbsp;→&nbsp; 45.67 ± 0.01 g</div>
+          <div class="ki-expl">Last digit in hundredths place → ±0.01 g</div>
+        </div>
+        <div class="key-item d">
+          <div class="ki-label">Problem 6 — Digital Stopwatch (reads 12.34 s)</div>
+          <div class="ki-val d">± 0.01 s &nbsp;→&nbsp; 12.34 ± 0.01 s</div>
+          <div class="ki-expl">Last digit in hundredths place → ±0.01 s</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C — Choosing the Larger Uncertainty</h3>
+      <div class="key-text"><strong>Problem 7:</strong> Report <strong>±0.4 cm</strong> (Option 2). The wobbling beaker introduces more uncertainty than the ruler's resolution. The experimenter's justified estimate is larger and must be reported.</div>
+      <div class="key-text"><strong>Problem 8:</strong> Report <strong>±0.01 A</strong>. Both options give the same value. Either can be reported — the experimenter confirmed the procedure introduced no additional uncertainty beyond the instrument limit.</div>
+      <div class="key-text"><strong>Problem 9:</strong> Report <strong>±0.5 °F</strong> (Option 2). The patient's movement creates genuine variability that exceeds the digital instrument's resolution. The larger, justified estimate is more honest.</div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part D — Short Answer Guidance</h3>
+      <div class="key-text"><strong>Problem 10:</strong> Sample answer — The instrument limit only accounts for the physical resolution of the device. Real experiments also have procedural limitations (parallax, vibration, reaction time, technique variation) that can make the actual uncertainty much larger than the instrument alone suggests. Reporting only the instrument limit could give a false sense of precision.</div>
+      <div class="key-text"><strong>Problem 11:</strong> Sample answer — "The measurement uncertainty for the spring length is ±0.1 cm because the ruler had a smallest increment of 0.1 cm, giving an instrument limit of 0.05 cm per reading; with two measurements (start and end), the instrument uncertainty is 0.1 cm, which is larger than my estimated procedural uncertainty of ±0.05 cm due to the spring being nearly stationary."</div>
+      <div class="key-text"><strong>Problem 12:</strong> The student fails to report any uncertainty, which makes the measurement appear perfectly precise. They should write <strong>250.0 ± 0.1 g</strong>, since the last digit on the digital display is in the tenths place, giving an uncertainty of ±0.1 g.</div>
+    </div>
+  </div>
+
+</main>
+
+<footer style="text-align:center;padding:28px 20px;font-size:0.82rem;color:#94a3b8;">Physics · Measurement Uncertainty · Classwork &nbsp;|&nbsp; Unit 13</footer>
+
+<script>
+function toggleKey() {
+  var k = document.getElementById('answer-key');
+  var b = document.getElementById('toggle-key-btn');
+  if (k.style.display === 'none' || k.style.display === '') {
+    k.style.display = 'block';
+    b.textContent = 'Hide Answer Key';
+  } else {
+    k.style.display = 'none';
+    b.textContent = 'Show Answer Key';
+  }
+}
+</script>
+
+</body>
+</html>

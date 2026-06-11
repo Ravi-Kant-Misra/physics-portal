@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IB Physics Portal</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+    :root {
+      --blue: #1d4ed8; --indigo: #4f46e5; --dark: #0f172a;
+      --bg: #f8faff; --muted: #64748b; --card: #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      background-image: radial-gradient(circle, #c7d2fe 1px, transparent 1px);
+      background-size: 28px 28px;
+      color: var(--dark);
+    }
+    header {
+      background: linear-gradient(135deg, #1e3a5f 0%, #1d4ed8 60%, #1e40af 100%);
+      color: white;
+      padding: 56px 40px 48px;
+      text-align: center;
+    }
+    header .chip {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    header h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+      background: linear-gradient(90deg, #bfdbfe, #e0e7ff, #bfdbfe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+    header p {
+      color: rgba(255,255,255,0.8);
+      font-size: 1.05rem;
+      max-width: 520px;
+      margin: 0 auto 28px;
+    }
+    .cta {
+      display: inline-block;
+      background: white;
+      color: var(--blue);
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 14px 32px;
+      border-radius: 12px;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      transition: transform 0.15s;
+    }
+    .cta:hover { transform: translateY(-2px); }
+    main { max-width: 960px; margin: 0 auto; padding: 52px 24px 80px; }
+    .section-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .topics { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 52px; }
+    .topic-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      border: 2px solid transparent;
+      transition: border-color 0.15s, transform 0.15s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .topic-card:hover { border-color: #93c5fd; transform: translateY(-2px); }
+    .topic-card.coming-soon { opacity: 0.45; pointer-events: none; }
+    .topic-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .topic-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; flex-shrink: 0;
+    }
+    .topic-num { font-size: 0.7rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+    .topic-name { font-size: 1.05rem; font-weight: 800; color: var(--dark); }
+    .topic-meta { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-top: 10px;
+    }
+    .badge.ready { background: #dcfce7; color: #15803d; }
+    .badge.soon  { background: #f1f5f9; color: #94a3b8; }
+    .how { background: white; border-radius: 20px; padding: 36px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); margin-bottom: 52px; }
+    .how h2 { font-size: 1.3rem; font-weight: 900; margin-bottom: 24px; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+    .step { text-align: center; padding: 16px 8px; }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #1d4ed8, #4f46e5);
+      color: white; font-weight: 800; font-size: 0.9rem;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 10px;
+    }
+    .step p { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+    .step strong { display: block; font-size: 0.92rem; color: var(--dark); margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="chip">IB Physics · Diploma Programme</div>
+  <h1>Physics Learning Portal</h1>
+  <p>A guided, step-by-step journey through IB Physics. Complete each unit, submit your homework, and unlock the next chapter.</p>
+  <a href="#topics" class="cta">Browse Topics →</a>
+</header>
+
+<main>
+
+  <div class="how">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <strong>Read the Lesson</strong>
+        <p>Study the concept page for your current unit</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <strong>Complete Classwork</strong>
+        <p>Work through the classwork exercises</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <strong>Submit Homework</strong>
+        <p>Upload a photo of your completed homework via the portal</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <strong>Parent Review</strong>
+        <p>Your parent reviews your work against the answer key</p>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <strong>Next Chapter</strong>
+        <p>Once approved, your next unit unlocks automatically</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-title" id="topics">Topics</p>
+  <div class="topics">
+
+    <a href="t0-appendix/s0.1-background-math/u01/lesson.html" class="topic-card">
+      <div class="topic-header">
+        <div class="topic-icon" style="background:#eff6ff;">🔢</div>
+        <div>
+          <div class="topic-num">Topic 0.1</div>
+          <div class="topic-name">Background Math</div>
+        </div>
+      </div>
+      <div class="topic-meta">27 units · Significant figures, vectors, trigonometry</div>
+      <span class="badge ready">Ready</span>
+    </a>
+
+    <a href="t0-appendix/s0.2-stories/u00/lesson.html" class="topic-card">
+      <div class="topic-header">
+        <div class="topic-icon" style="background:#fdf4ff;">📖</div>
+        <div>
+          <div class="topic-num">Topic 0.2</div>
+          <div class="topic-name">Stories of Science</div>
+        </div>
+      </div>
+      <div class="topic-meta">11 stories · Galileo, Newton, Einstein, Curie &amp; more</div>
+      <span class="badge ready">Ready</span>
+    </a>
+
+    <a href="t1-space-time-motion/s1.1-kinematics/u01/lesson.html" class="topic-card">
+      <div class="topic-header">
+        <div class="topic-icon" style="background:#f0fdf4;">🚀</div>
+        <div>
+          <div class="topic-num">Topic 1.1</div>
+          <div class="topic-name">Kinematics</div>
+        </div>
+      </div>
+      <div class="topic-meta">16 units · Motion, graphs, free fall, projectiles</div>
+      <span class="badge ready">Ready</span>
+    </a>
+
+    <div class="topic-card coming-soon">
+      <div class="topic-header">
+        <div class="topic-icon" style="background:#fff7ed;">⚡</div>
+        <div>
+          <div class="topic-num">Topic 1.2</div>
+          <div class="topic-name">Forces &amp; Momentum</div>
+        </div>
+      </div>
+      <div class="topic-meta">17 units</div>
+      <span class="badge soon">Coming Soon</span>
+    </div>
+
+    <div class="topic-card coming-soon">
+      <div class="topic-header">
+        <div class="topic-icon" style="background:#fefce8;">🔋</div>
+        <div>
+          <div class="topic-num">Topic 1.3</div>
+          <div class="topic-name">Work, Energy &amp; Power</div>
+        </div>
+      </div>
+      <div class="topic-meta">12 units</div>
+      <span class="badge soon">Coming Soon</span>
+    </div>
+
+    <div class="topic-card coming-soon">
+      <div class="topic-header">
+        <div class="topic-icon" style="background:#fdf4ff;">🌡️</div>
+        <div>
+          <div class="topic-num">Topic 2</div>
+          <div class="topic-name">Particulate Matter</div>
+        </div>
+      </div>
+      <div class="topic-meta">22 units · Thermal, gas laws, circuits</div>
+      <span class="badge soon">Coming Soon</span>
+    </div>
+
+    <div class="topic-card coming-soon">
+      <div class="topic-header">
+        <div class="topic-icon" style="background:#f0f9ff;">〰️</div>
+        <div>
+          <div class="topic-num">Topic 3</div>
+          <div class="topic-name">Wave Behavior</div>
+        </div>
+      </div>
+      <div class="topic-meta">20 units · SHM, wave model, resonance</div>
+      <span class="badge soon">Coming Soon</span>
+    </div>
+
+    <div class="topic-card coming-soon">
+      <div class="topic-header">
+        <div class="topic-icon" style="background:#fff1f2;">🧲</div>
+        <div>
+          <div class="topic-num">Topic 4</div>
+          <div class="topic-name">Fields</div>
+        </div>
+      </div>
+      <div class="topic-meta">9 units · Gravitational, electric &amp; magnetic</div>
+      <span class="badge soon">Coming Soon</span>
+    </div>
+
+    <div class="topic-card coming-soon">
+      <div class="topic-header">
+        <div class="topic-icon" style="background:#f0fdf4;">⚛️</div>
+        <div>
+          <div class="topic-num">Topic 5</div>
+          <div class="topic-name">Nuclear &amp; Quantum</div>
+        </div>
+      </div>
+      <div class="topic-meta">17 units · Atomic structure, fission, fusion</div>
+      <span class="badge soon">Coming Soon</span>
+    </div>
+
+  </div>
+
+</main>
+
+</body>
+</html>

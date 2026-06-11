@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Unit 15 – Air Resistance on Projectiles</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+    --dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+
+  /* DOT PATTERN */
+  body::before{
+    content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:radial-gradient(circle,#cbd5e1 1px,transparent 1px);
+    background-size:28px 28px;opacity:.55;
+  }
+
+  /* PASSWORD GATE */
+  #gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#1e3a5f,#1d4ed8);}
+  #gate .box{background:#fff;border-radius:20px;padding:2.5rem 2rem;max-width:360px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35);}
+  #gate h2{font-size:1.5rem;font-weight:800;margin-bottom:.4rem;color:var(--dark);}
+  #gate p{color:var(--muted);font-size:.9rem;margin-bottom:1.2rem;}
+  #gate input{width:100%;padding:.75rem 1rem;border:2px solid #e2e8f0;border-radius:10px;font-family:'Nunito',sans-serif;font-size:1rem;outline:none;transition:border .2s;}
+  #gate input:focus{border-color:var(--blue);}
+  #gate button{margin-top:1rem;width:100%;padding:.8rem;background:linear-gradient(135deg,#1d4ed8,#6366f1);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s;}
+  #gate button:hover{opacity:.88;}
+  #gate .err{color:var(--red);font-size:.85rem;margin-top:.6rem;min-height:1.1rem;}
+
+  /* MAIN CONTENT */
+  #main{display:none;position:relative;z-index:1;}
+
+  /* HEADER */
+  header{
+    background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 60%,#1e40af 100%);
+    padding:3rem 1.5rem 2.5rem;text-align:center;position:relative;overflow:hidden;
+  }
+  header .stars{position:absolute;inset:0;pointer-events:none;}
+  header .stars span{position:absolute;border-radius:50%;background:#fff;animation:twinkle 3s infinite;}
+  @keyframes twinkle{0%,100%{opacity:.15;transform:scale(1);}50%{opacity:.9;transform:scale(1.4);}}
+  .chip{display:inline-block;background:rgba(255,255,255,.18);color:#e0eaff;font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.1em;padding:.3rem .9rem;border-radius:99px;border:1px solid rgba(255,255,255,.25);margin-bottom:.9rem;}
+  header h1{font-size:clamp(1.8rem,5vw,3rem);font-weight:900;
+    background:linear-gradient(90deg,#93c5fd,#fff 50%,#c7d2fe);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    line-height:1.15;margin-bottom:.5rem;}
+  header p.sub{color:rgba(255,255,255,.7);font-size:1.05rem;max-width:560px;margin:0 auto;}
+
+  /* CONTENT WRAPPER */
+  .wrap{max-width:900px;margin:0 auto;padding:2.5rem 1.2rem 4rem;}
+
+  /* SECTION LABEL */
+  .sec-label{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:.6rem;}
+
+  /* CARDS */
+  .card{background:#fff;border-radius:16px;padding:1.8rem;margin-bottom:1.6rem;box-shadow:0 2px 16px rgba(59,130,246,.07);border:1px solid #e8edf8;}
+  .card h2{font-size:1.25rem;font-weight:800;color:var(--dark);margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem;}
+  .card h2 .icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+  .card p{color:#374151;line-height:1.7;margin-bottom:.75rem;}
+  .card p:last-child{margin-bottom:0;}
+
+  /* DEFINITION BOX */
+  .def-box{background:linear-gradient(135deg,#eff6ff,#eef2ff);border-left:4px solid var(--blue);border-radius:0 12px 12px 0;padding:1.1rem 1.3rem;margin-bottom:1rem;}
+  .def-box strong{color:var(--indigo);font-size:1rem;}
+  .def-box p{margin-bottom:0;color:#1e3a5f;}
+
+  /* KEY INSIGHT / TIP */
+  .insight{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-left:4px solid var(--green);border-radius:0 12px 12px 0;padding:1rem 1.2rem;margin:1rem 0;}
+  .insight strong{color:#065f46;}
+  .tip{background:linear-gradient(135deg,#fffbeb,#fef3c7);border-left:4px solid var(--amber);border-radius:0 12px 12px 0;padding:1rem 1.2rem;margin:1rem 0;}
+  .tip strong{color:#92400e;}
+
+  /* FORMULA BOX */
+  .formula{background:#0f172a;color:#93c5fd;font-family:'Space Mono',monospace;font-size:1rem;padding:1rem 1.4rem;border-radius:12px;margin:.8rem 0;letter-spacing:.05em;}
+  .formula span{color:#c7d2fe;}
+
+  /* WORKED EXAMPLE */
+  .example{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:1.5px solid #bae6fd;border-radius:14px;padding:1.5rem;margin:1rem 0;}
+  .example h3{font-size:.95rem;font-weight:800;color:#0369a1;margin-bottom:.8rem;font-family:'Space Mono',monospace;letter-spacing:.04em;}
+  .example .step{display:flex;gap:.7rem;align-items:flex-start;margin-bottom:.5rem;}
+  .example .step .n{background:#0369a1;color:#fff;border-radius:50%;width:22px;height:22px;min-width:22px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;margin-top:2px;}
+  .example .step p{margin:0;color:#0c4a6e;line-height:1.6;}
+
+  /* TWO-COL */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:1rem 0;}
+  @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+  /* SVG DIAGRAMS */
+  .diagram-wrap{display:flex;justify-content:center;margin:1.2rem 0;}
+  svg text{font-family:'Nunito',sans-serif;}
+
+  /* QUIZ */
+  .quiz-wrap{background:#fff;border-radius:16px;padding:1.8rem;box-shadow:0 2px 16px rgba(99,102,241,.08);border:1px solid #e0e7ff;margin-bottom:2rem;}
+  .quiz-wrap h2{font-size:1.25rem;font-weight:800;color:var(--indigo);margin-bottom:1.4rem;}
+  .q-block{margin-bottom:1.4rem;}
+  .q-block p{font-weight:700;color:var(--dark);margin-bottom:.6rem;}
+  .q-opts label{display:flex;align-items:center;gap:.6rem;padding:.5rem .7rem;border-radius:8px;cursor:pointer;transition:background .15s;font-size:.95rem;}
+  .q-opts label:hover{background:#f1f5f9;}
+  .q-opts input[type=radio]{accent-color:var(--indigo);}
+  .q-feedback{font-size:.85rem;font-weight:700;margin-top:.4rem;padding:.4rem .8rem;border-radius:8px;display:none;}
+  .q-feedback.correct{background:#dcfce7;color:#166534;display:block;}
+  .q-feedback.wrong{background:#fee2e2;color:#991b1b;display:block;}
+  .quiz-btn{background:linear-gradient(135deg,var(--indigo),var(--blue));color:#fff;border:none;padding:.75rem 2rem;border-radius:10px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s;}
+  .quiz-btn:hover{opacity:.88;}
+  #quiz-result{margin-top:1rem;font-size:1rem;font-weight:700;color:var(--indigo);}
+
+  /* GRAPH LEGEND */
+  .legend{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.5rem;}
+  .legend-item{display:flex;align-items:center;gap:.4rem;font-size:.82rem;color:#374151;}
+  .legend-dot{width:28px;height:4px;border-radius:2px;}
+
+  table{width:100%;border-collapse:collapse;margin:.8rem 0;font-size:.9rem;}
+  th{background:var(--indigo);color:#fff;padding:.55rem .8rem;text-align:left;}
+  td{padding:.5rem .8rem;border-bottom:1px solid #e8edf8;}
+  tr:nth-child(even) td{background:#f8faff;}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="box">
+    <h2>Physics Portal</h2>
+    <p>Enter the password to access this lesson.</p>
+    <input type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPW()"/>
+    <button onclick="checkPW()">Unlock</button>
+    <div class="err" id="pw-err"></div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main">
+
+<!-- HEADER STARS -->
+<header>
+  <div class="stars" id="stars-container"></div>
+  <div class="chip">Kinematics · Unit 15</div>
+  <h1>Air Resistance on Projectiles</h1>
+  <p class="sub">How air drag changes velocity, acceleration, and trajectory — including terminal velocity and the parachute effect.</p>
+</header>
+
+<div class="wrap">
+
+  <!-- SECTION 1: DEFINITION -->
+  <div class="sec-label">Section 1 — Definition</div>
+  <div class="card">
+    <h2><span class="icon" style="background:#eff6ff;">💨</span>What is Air Resistance?</h2>
+    <div class="def-box">
+      <strong>Definition:</strong>
+      <p>Air resistance is the force of air on objects moving through it. The more velocity an object has, the more air pushes back against the object's velocity.</p>
+    </div>
+    <p>Air resistance (F<sub>air</sub>) always acts <strong>opposite to the direction of motion</strong> — it opposes the velocity vector at every instant. For a projectile, this means it reduces both the horizontal and vertical components of velocity continuously.</p>
+
+    <!-- SVG: Baseball horizontal forces -->
+    <div class="diagram-wrap">
+      <svg width="420" height="130" viewBox="0 0 420 130">
+        <!-- Baseball -->
+        <circle cx="210" cy="65" r="22" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+        <text x="210" y="70" text-anchor="middle" fill="#374151" font-size="12" font-weight="700">ball</text>
+        <!-- V arrow right -->
+        <defs>
+          <marker id="arrowR" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#3b82f6"/>
+          </marker>
+          <marker id="arrowL" markerWidth="8" markerHeight="8" refX="2" refY="3" orient="auto">
+            <path d="M8,0 L8,6 L0,3 z" fill="#ef4444"/>
+          </marker>
+          <marker id="arrowD" markerWidth="8" markerHeight="8" refX="3" refY="6" orient="auto">
+            <path d="M0,0 L6,0 L3,8 z" fill="#f59e0b"/>
+          </marker>
+        </defs>
+        <line x1="232" y1="65" x2="360" y2="65" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arrowR)"/>
+        <text x="295" y="56" text-anchor="middle" fill="#1d4ed8" font-size="13" font-weight="700">V (velocity)</text>
+        <!-- F_air arrow left -->
+        <line x1="188" y1="65" x2="60" y2="65" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrowL)"/>
+        <text x="124" y="56" text-anchor="middle" fill="#b91c1c" font-size="13" font-weight="700">F_air</text>
+        <!-- F_g arrow down -->
+        <line x1="210" y1="87" x2="210" y2="118" stroke="#f59e0b" stroke-width="2.5" marker-end="url(#arrowD)"/>
+        <text x="230" y="112" fill="#b45309" font-size="12" font-weight="700">F_g</text>
+      </svg>
+    </div>
+
+    <div class="insight">
+      <strong>Key Rule:</strong> F<sub>air</sub> is always opposite to the direction of the velocity vector. Gravity (F<sub>g</sub>) always points straight down regardless of motion direction.
+    </div>
+  </div>
+
+  <!-- SECTION 2: DECELERATION PATTERN -->
+  <div class="sec-label">Section 2 — The Deceleration Pattern</div>
+  <div class="card">
+    <h2><span class="icon" style="background:#fef3c7;">⚡</span>Newton's 2nd Law &amp; Self-Diminishing Deceleration</h2>
+    <p>Applying Newton's 2nd Law in the horizontal direction for a ball moving through air:</p>
+    <div class="formula">
+      ΣF<sub>x</sub> = m · a<sub>x</sub><br/>
+      <span>F_air = m · a_x &nbsp;(deceleration, opposing motion)</span>
+    </div>
+    <p>The key insight is that the deceleration pattern is <strong>self-diminishing</strong>:</p>
+    <div class="tip">
+      <strong>Pattern:</strong> The faster an object moves, the greater F<sub>air</sub>, so the greater the deceleration. But as the object slows down, F<sub>air</sub> decreases — so the deceleration rate itself slows down. This creates an <em>exponential-style decay</em> in speed, not a linear one.
+    </div>
+
+    <!-- SVG: horizontal deceleration diagram -->
+    <div class="diagram-wrap">
+      <svg width="400" height="110" viewBox="0 0 400 110">
+        <defs>
+          <marker id="aR2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#3b82f6"/>
+          </marker>
+          <marker id="aL2" markerWidth="8" markerHeight="8" refX="2" refY="3" orient="auto">
+            <path d="M8,0 L8,6 L0,3 z" fill="#ef4444"/>
+          </marker>
+          <marker id="aLa" markerWidth="8" markerHeight="8" refX="2" refY="3" orient="auto">
+            <path d="M8,0 L8,6 L0,3 z" fill="#6366f1"/>
+          </marker>
+        </defs>
+        <circle cx="200" cy="55" r="22" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+        <text x="200" y="60" text-anchor="middle" fill="#374151" font-size="12" font-weight="700">ball</text>
+        <!-- V_x right -->
+        <line x1="222" y1="55" x2="370" y2="55" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#aR2)"/>
+        <text x="298" y="45" text-anchor="middle" fill="#1d4ed8" font-size="12" font-weight="700">V_x →</text>
+        <!-- F_air and a_x left -->
+        <line x1="178" y1="47" x2="50" y2="47" stroke="#ef4444" stroke-width="2.5" marker-end="url(#aL2)"/>
+        <text x="114" y="38" text-anchor="middle" fill="#b91c1c" font-size="11" font-weight="700">F_air = ΣF_x</text>
+        <line x1="178" y1="63" x2="50" y2="63" stroke="#6366f1" stroke-width="2.5" marker-end="url(#aLa)"/>
+        <text x="114" y="82" text-anchor="middle" fill="#4338ca" font-size="11" font-weight="700">a_x (deceleration)</text>
+      </svg>
+    </div>
+
+    <p>As V<sub>x</sub> decreases, F<sub>air</sub> decreases, so a<sub>x</sub> decreases — the ball slows down at a diminishing rate.</p>
+  </div>
+
+  <!-- SECTION 3: TRAJECTORY -->
+  <div class="sec-label">Section 3 — Effect on Projectile Trajectory</div>
+  <div class="card">
+    <h2><span class="icon" style="background:#f0fdf4;">🎯</span>Trajectory Comparison: With vs Without Air Resistance</h2>
+    <p>Air resistance "takes away" from the velocity in <em>both</em> the x and y directions, fundamentally changing the shape of a projectile's path.</p>
+
+    <!-- SVG: Trajectory comparison -->
+    <div class="diagram-wrap">
+      <svg width="520" height="220" viewBox="0 0 520 220">
+        <defs>
+          <marker id="vR" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L7,3 z" fill="#64748b"/>
+          </marker>
+          <marker id="vB" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L7,3 z" fill="#3b82f6"/>
+          </marker>
+        </defs>
+        <!-- Ground line -->
+        <line x1="30" y1="185" x2="490" y2="185" stroke="#94a3b8" stroke-width="1.5"/>
+        <!-- WITHOUT AIR RESISTANCE — red symmetric parabola -->
+        <path d="M40,185 Q260,20 480,185" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="8,4"/>
+        <!-- WITH AIR RESISTANCE — blue asymmetric parabola (lower, shorter, steeper descent) -->
+        <path d="M40,185 Q200,50 340,185" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-dasharray="6,3"/>
+        <!-- Labels -->
+        <text x="290" y="35" fill="#b91c1c" font-size="11" font-weight="700">Without Air Resistance</text>
+        <text x="200" y="85" fill="#1d4ed8" font-size="11" font-weight="700">With Air Resistance</text>
+        <!-- Symmetry arrows for no-resistance -->
+        <line x1="40" y1="196" x2="258" y2="196" stroke="#ef4444" stroke-width="1.5" marker-end="url(#vR)"/>
+        <line x1="480" y1="196" x2="262" y2="196" stroke="#ef4444" stroke-width="1.5" marker-end="url(#vR)"/>
+        <text x="149" y="210" text-anchor="middle" fill="#b91c1c" font-size="10">S_x First Half</text>
+        <text x="369" y="210" text-anchor="middle" fill="#b91c1c" font-size="10">S_x Second Half</text>
+        <!-- Peak labels -->
+        <text x="260" y="18" text-anchor="middle" fill="#dc2626" font-size="10">V_y=0, V_x present</text>
+        <!-- V vectors at launch (no resistance) -->
+        <line x1="40" y1="185" x2="70" y2="155" stroke="#64748b" stroke-width="1.5" marker-end="url(#vR)"/>
+        <text x="73" y="145" fill="#374151" font-size="9">V₀</text>
+        <!-- V vectors at landing (no resistance) — same magnitude -->
+        <line x1="455" y1="158" x2="480" y2="185" stroke="#64748b" stroke-width="1.5" marker-end="url(#vR)"/>
+        <!-- with resistance — smaller V_x arrows along path -->
+        <line x1="100" y1="155" x2="125" y2="155" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#vB)"/>
+        <text x="110" y="147" fill="#1d4ed8" font-size="8">V_x</text>
+        <line x1="190" y1="105" x2="210" y2="105" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#vB)"/>
+        <text x="196" y="97" fill="#1d4ed8" font-size="8">V_x↓</text>
+        <line x1="275" y1="110" x2="288" y2="110" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#vB)"/>
+        <text x="278" y="103" fill="#1d4ed8" font-size="8">V_x↓↓</text>
+      </svg>
+    </div>
+
+    <div class="two-col">
+      <div style="background:#fff5f5;border-radius:12px;padding:1rem;border:1.5px solid #fecaca;">
+        <p style="font-weight:800;color:#b91c1c;margin-bottom:.5rem;">Without Air Resistance</p>
+        <ul style="color:#374151;padding-left:1.2rem;line-height:1.8;">
+          <li>Symmetric parabolic arc</li>
+          <li>S<sub>x</sub> first half = S<sub>x</sub> second half</li>
+          <li>V<sub>x</sub> constant throughout</li>
+          <li>Landing speed = launch speed</li>
+        </ul>
+      </div>
+      <div style="background:#eff6ff;border-radius:12px;padding:1rem;border:1.5px solid #bfdbfe;">
+        <p style="font-weight:800;color:#1d4ed8;margin-bottom:.5rem;">With Air Resistance</p>
+        <ul style="color:#374151;padding-left:1.2rem;line-height:1.8;">
+          <li>Lower peak height</li>
+          <li>Shorter horizontal range</li>
+          <li>Asymmetric — steeper descent</li>
+          <li>V<sub>x</sub> continuously decreasing</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="insight">
+      <strong>Asymmetry explained:</strong> Because V<sub>x</sub> is continuously reduced by air resistance, the second half of the trajectory covers less horizontal distance than the first half. The descent is steeper than the ascent.
+    </div>
+  </div>
+
+  <!-- SECTION 4: VERTICAL MOTION GRAPHS -->
+  <div class="sec-label">Section 4 — Vertical Motion with Air Resistance</div>
+  <div class="card">
+    <h2><span class="icon" style="background:#fef9c3;">📊</span>Graphs of Vertical Motion (Falling Object)</h2>
+    <div class="tip">
+      <strong>Convention used throughout:</strong> Down is positive for vertical motion graphs.
+    </div>
+    <p>For a ball dropped from rest, consider the forces acting on it: gravity (F<sub>g</sub>) pulls it down, and as it gains speed, air resistance (F<sub>air</sub>) pushes upward (opposing downward motion).</p>
+
+    <!-- SVG: Forces on falling ball -->
+    <div class="diagram-wrap">
+      <svg width="180" height="180" viewBox="0 0 180 180">
+        <defs>
+          <marker id="aD3" markerWidth="8" markerHeight="8" refX="3" refY="6" orient="auto">
+            <path d="M0,0 L6,0 L3,8 z" fill="#f59e0b"/>
+          </marker>
+          <marker id="aU3" markerWidth="8" markerHeight="8" refX="3" refY="2" orient="auto">
+            <path d="M0,8 L6,8 L3,0 z" fill="#3b82f6"/>
+          </marker>
+        </defs>
+        <circle cx="90" cy="90" r="26" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+        <text x="90" y="95" text-anchor="middle" fill="#374151" font-size="11" font-weight="700">ball</text>
+        <!-- F_g down -->
+        <line x1="90" y1="116" x2="90" y2="162" stroke="#f59e0b" stroke-width="3" marker-end="url(#aD3)"/>
+        <text x="110" y="148" fill="#b45309" font-size="12" font-weight="700">F_g</text>
+        <!-- F_air up -->
+        <line x1="90" y1="64" x2="90" y2="22" stroke="#3b82f6" stroke-width="3" marker-end="url(#aU3)"/>
+        <text x="100" y="38" fill="#1d4ed8" font-size="12" font-weight="700">F_air</text>
+        <!-- ΣF label -->
+        <text x="10" y="98" fill="#6366f1" font-size="11" font-weight="700">ΣF_y ↓</text>
+      </svg>
+    </div>
+
+    <!-- a_y vs t graph -->
+    <p style="font-weight:800;color:#374151;margin-bottom:.4rem;">Graph 1: Acceleration (a<sub>y</sub>) vs Time</p>
+    <div class="diagram-wrap">
+      <svg width="420" height="200" viewBox="0 0 420 200">
+        <!-- Axes -->
+        <line x1="60" y1="20" x2="60" y2="170" stroke="#374151" stroke-width="2"/>
+        <line x1="60" y1="170" x2="390" y2="170" stroke="#374151" stroke-width="2"/>
+        <!-- Axis labels -->
+        <text x="30" y="100" fill="#374151" font-size="12" font-weight="700" transform="rotate(-90,30,100)">a_y (m/s²)</text>
+        <text x="225" y="192" fill="#374151" font-size="12" font-weight="700" text-anchor="middle">time (s)</text>
+        <!-- 9.81 label -->
+        <line x1="55" y1="30" x2="65" y2="30" stroke="#374151" stroke-width="1.5"/>
+        <text x="52" y="34" fill="#374151" font-size="10" text-anchor="end">9.81</text>
+        <!-- Decay curve from 9.81 toward lower asymptote -->
+        <path d="M60,30 C100,32 150,60 200,100 S310,145 390,160" fill="none" stroke="#ef4444" stroke-width="2.5"/>
+        <!-- Start dot -->
+        <circle cx="60" cy="30" r="5" fill="#ef4444"/>
+        <!-- Annotation -->
+        <text x="68" y="25" fill="#b91c1c" font-size="10" font-weight="700">starts at 9.81 m/s²</text>
+        <text x="300" y="148" fill="#b91c1c" font-size="10" font-weight="700">→ decreasing</text>
+        <text x="300" y="160" fill="#b91c1c" font-size="10">(as F_air ↑)</text>
+      </svg>
+    </div>
+    <p><strong>Reasoning:</strong> At t = 0, the ball is not moving, so F<sub>air</sub> ≈ 0 and a<sub>y</sub> = g = 9.81 m/s². As the ball speeds up, F<sub>air</sub> increases (opposing downward motion), reducing the net downward force. So a<sub>y</sub> decreases over time.</p>
+
+    <!-- V_y vs t graph with terminal velocity -->
+    <p style="font-weight:800;color:#374151;margin:.8rem 0 .4rem;">Graph 2: Velocity (V<sub>y</sub>) vs Time — showing terminal velocity</p>
+    <div class="diagram-wrap">
+      <svg width="420" height="220" viewBox="0 0 420 220">
+        <defs>
+          <marker id="vDwn" markerWidth="7" markerHeight="7" refX="3" refY="6" orient="auto">
+            <path d="M0,0 L6,0 L3,7 z" fill="#6366f1"/>
+          </marker>
+        </defs>
+        <!-- Axes -->
+        <line x1="60" y1="20" x2="60" y2="185" stroke="#374151" stroke-width="2"/>
+        <line x1="60" y1="185" x2="390" y2="185" stroke="#374151" stroke-width="2"/>
+        <text x="30" y="110" fill="#374151" font-size="12" font-weight="700" transform="rotate(-90,30,110)">V_y</text>
+        <text x="225" y="205" fill="#374151" font-size="12" font-weight="700" text-anchor="middle">time (s)</text>
+        <!-- 0 at start -->
+        <circle cx="60" cy="185" r="5" fill="#ef4444"/>
+        <text x="48" y="188" fill="#374151" font-size="10" text-anchor="end">0</text>
+        <!-- Terminal velocity dashed line -->
+        <line x1="60" y1="60" x2="390" y2="60" stroke="#6366f1" stroke-width="2" stroke-dasharray="8,4"/>
+        <text x="250" y="52" fill="#6366f1" font-size="10" font-weight="700">← Terminal velocity of the object</text>
+        <!-- V_y curve: concave down, asymptoting to terminal velocity -->
+        <path d="M60,185 C90,150 130,100 180,75 S290,62 390,61" fill="none" stroke="#ef4444" stroke-width="2.5"/>
+        <!-- Slope annotation -->
+        <line x1="100" y1="155" x2="135" y2="128" stroke="#374151" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="140" y="126" fill="#374151" font-size="9">slope = acceleration</text>
+        <!-- Convention note -->
+        <text x="62" y="200" fill="#94a3b8" font-size="9">(down is positive)</text>
+        <!-- End dot approaching terminal velocity -->
+        <circle cx="390" cy="61" r="5" fill="#6366f1"/>
+      </svg>
+    </div>
+    <div class="insight">
+      <strong>Terminal Velocity:</strong> Reached when ΣF = 0 N (F<sub>air</sub> = F<sub>g</sub>). At this point, a = 0 m/s² and velocity is constant (maximum falling speed). On the V<sub>y</sub> vs t graph, the curve flattens to a horizontal asymptote — its slope (= acceleration) approaches zero.
+    </div>
+    <div class="formula">
+      Terminal velocity condition: &nbsp; ΣF = 0 N &nbsp; → &nbsp; F_air = F_g &nbsp; → &nbsp; a = 0 m/s²
+    </div>
+  </div>
+
+  <!-- SECTION 5: TWO-MEDIUM SCENARIOS -->
+  <div class="sec-label">Section 5 — Two-Medium &amp; Parachute Scenarios</div>
+  <div class="card">
+    <h2><span class="icon" style="background:#f0fdf4;">🌊</span>Ball Entering Water / Skydiver Opening Parachute</h2>
+    <p>When an object encounters a sudden <em>increase</em> in resistive force (entering water, or deploying a parachute), a new, <strong>lower terminal velocity</strong> is established. The graphs have a characteristic shape in both scenarios.</p>
+
+    <!-- SVG: Two-medium a_y and V_y graphs side by side -->
+    <div class="diagram-wrap">
+      <svg width="520" height="260" viewBox="0 0 520 260">
+        <!-- LEFT: a_y vs t -->
+        <!-- Axes -->
+        <line x1="40" y1="20" x2="40" y2="220" stroke="#374151" stroke-width="2"/>
+        <line x1="40" y1="220" x2="240" y2="220" stroke="#374151" stroke-width="2"/>
+        <text x="15" y="125" fill="#374151" font-size="11" font-weight="700" transform="rotate(-90,15,125)">a_y</text>
+        <text x="140" y="240" fill="#374151" font-size="11" text-anchor="middle">t</text>
+        <!-- 9.81 -->
+        <text x="36" y="32" fill="#374151" font-size="9" text-anchor="end">9.81</text>
+        <line x1="36" y1="30" x2="44" y2="30" stroke="#374151" stroke-width="1.5"/>
+        <!-- zero line reference -->
+        <line x1="36" y1="140" x2="44" y2="140" stroke="#374151" stroke-width="1.5"/>
+        <text x="34" y="144" fill="#374151" font-size="9" text-anchor="end">0</text>
+        <!-- Phase 1: decay from 9.81 to 0 in air -->
+        <path d="M40,30 C70,33 100,70 130,130 S150,139 175,140" fill="none" stroke="#ef4444" stroke-width="2"/>
+        <!-- Vertical dashed: terminal velocity in air -->
+        <line x1="175" y1="20" x2="175" y2="225" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <text x="165" y="15" fill="#6366f1" font-size="8" text-anchor="middle">TV₁</text>
+        <!-- Phase 2: hits water — spike negative -->
+        <path d="M175,140 L185,200 L195,100 S215,141 235,140" fill="none" stroke="#3b82f6" stroke-width="2"/>
+        <!-- Negative region shading label -->
+        <text x="185" y="215" fill="#1d4ed8" font-size="8" text-anchor="middle">hits water</text>
+        <!-- zero ref line dashes -->
+        <line x1="40" y1="140" x2="240" y2="140" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="42" y="245" fill="#b91c1c" font-size="8">a_y vs t</text>
+
+        <!-- RIGHT: V_y vs t -->
+        <!-- Axes -->
+        <line x1="290" y1="20" x2="290" y2="220" stroke="#374151" stroke-width="2"/>
+        <line x1="290" y1="220" x2="500" y2="220" stroke="#374151" stroke-width="2"/>
+        <text x="268" y="125" fill="#374151" font-size="11" font-weight="700" transform="rotate(-90,268,125)">V_y</text>
+        <text x="395" y="240" fill="#374151" font-size="11" text-anchor="middle">t</text>
+        <!-- TV in air line -->
+        <line x1="290" y1="75" x2="500" y2="75" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <text x="380" y="68" fill="#b91c1c" font-size="8" text-anchor="middle">Terminal velocity in air</text>
+        <!-- TV in water line -->
+        <line x1="290" y1="145" x2="500" y2="145" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <text x="380" y="138" fill="#1d4ed8" font-size="8" text-anchor="middle">Terminal velocity in water</text>
+        <!-- Phase 1: rise to TV in air -->
+        <path d="M290,220 C310,180 340,120 375,80 S415,76 425,76" fill="none" stroke="#ef4444" stroke-width="2"/>
+        <!-- Flat at TV in air -->
+        <line x1="425" y1="76" x2="445" y2="76" stroke="#ef4444" stroke-width="2"/>
+        <!-- Vertical dashed: hits water -->
+        <line x1="445" y1="20" x2="445" y2="225" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <text x="445" y="15" fill="#6366f1" font-size="8" text-anchor="middle">water</text>
+        <!-- Phase 2: drop then rise to TV in water -->
+        <path d="M445,76 L450,120 C455,140 465,145 490,145" fill="none" stroke="#3b82f6" stroke-width="2"/>
+        <text x="292" y="245" fill="#b91c1c" font-size="8">V_y vs t</text>
+        <!-- 0 -->
+        <circle cx="290" cy="220" r="4" fill="#374151"/>
+        <text x="285" y="223" fill="#374151" font-size="8" text-anchor="end">0</text>
+      </svg>
+    </div>
+
+    <div class="two-col">
+      <div style="background:#f0fdf4;border-radius:12px;padding:1rem;border:1.5px solid #bbf7d0;">
+        <p style="font-weight:800;color:#065f46;margin-bottom:.5rem;">Ball Hitting Water</p>
+        <ul style="color:#374151;padding-left:1.2rem;line-height:1.8;font-size:.9rem;">
+          <li>Water provides far greater drag + buoyancy than air</li>
+          <li>Terminal velocity in water is <strong>lower</strong> than in air</li>
+          <li>V<sub>y</sub> drops sharply upon water entry</li>
+          <li>a<sub>y</sub> spikes negative (large deceleration), then returns to 0</li>
+        </ul>
+      </div>
+      <div style="background:#faf5ff;border-radius:12px;padding:1rem;border:1.5px solid #e9d5ff;">
+        <p style="font-weight:800;color:#5b21b6;margin-bottom:.5rem;">Skydiver Opening Parachute</p>
+        <ul style="color:#374151;padding-left:1.2rem;line-height:1.8;font-size:.9rem;">
+          <li>Parachute massively increases F<sub>air</sub></li>
+          <li>Terminal velocity with parachute is <strong>lower</strong></li>
+          <li>V<sub>y</sub> drops sharply when chute opens</li>
+          <li>Graph shape is <em>identical</em> to ball-in-water scenario</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="insight">
+      <strong>Structural parallel:</strong> Both the ball-hitting-water and the parachute-opening scenarios produce the same graph shape — a sudden spike in negative acceleration followed by a rapid approach to a new, lower terminal velocity.
+    </div>
+  </div>
+
+  <!-- SECTION 6: SUMMARY TABLE -->
+  <div class="sec-label">Section 6 — Master Concept Summary</div>
+  <div class="card">
+    <h2><span class="icon" style="background:#eef2ff;">📋</span>Summary Table</h2>
+    <table>
+      <tr><th>Concept</th><th>Detail</th></tr>
+      <tr><td>Air resistance definition</td><td>Force of air opposing object's velocity through it</td></tr>
+      <tr><td>F<sub>air</sub> direction</td><td>Always opposite to velocity vector</td></tr>
+      <tr><td>Deceleration pattern</td><td>Self-diminishing: faster → more F<sub>air</sub> → more decel; slowing → less F<sub>air</sub> → less decel</td></tr>
+      <tr><td>Trajectory with air resistance</td><td>Lower peak, shorter range, asymmetric (steeper descent)</td></tr>
+      <tr><td>Convention</td><td>Down is positive (for vertical graphs)</td></tr>
+      <tr><td>Initial a<sub>y</sub> (drop from rest)</td><td>9.81 m/s² (F<sub>air</sub> = 0 at t=0)</td></tr>
+      <tr><td>Terminal velocity condition</td><td>ΣF = 0 N → F<sub>air</sub> = F<sub>g</sub> → a = 0 m/s²</td></tr>
+      <tr><td>V<sub>y</sub> vs t shape</td><td>Starts at 0, concave-down curve, asymptotes to terminal velocity</td></tr>
+      <tr><td>a<sub>y</sub> vs t shape</td><td>Starts at 9.81 m/s², decays asymptotically toward 0</td></tr>
+      <tr><td>Slope of V<sub>y</sub> vs t</td><td>Equals instantaneous acceleration</td></tr>
+      <tr><td>Two-medium / parachute</td><td>New resistive force → sharp drop in V<sub>y</sub> → new lower terminal velocity; a<sub>y</sub> spikes negative then → 0</td></tr>
+      <tr><td>Terminal velocity: water vs air</td><td>Water TV is lower (greater drag + buoyancy)</td></tr>
+      <tr><td>Terminal velocity: chute vs no chute</td><td>Chute TV is lower (much greater F<sub>air</sub>)</td></tr>
+    </table>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="sec-label">Check Your Understanding</div>
+  <div class="quiz-wrap">
+    <h2>Quick Quiz — Air Resistance</h2>
+
+    <div class="q-block" id="q1">
+      <p>1. A ball is thrown horizontally. Air resistance acts on the ball. In which direction does F<sub>air</sub> act?</p>
+      <div class="q-opts">
+        <label><input type="radio" name="q1" value="a"/> Downward (same as gravity)</label>
+        <label><input type="radio" name="q1" value="b"/> Opposite to the velocity vector</label>
+        <label><input type="radio" name="q1" value="c"/> Perpendicular to the velocity vector</label>
+        <label><input type="radio" name="q1" value="d"/> Upward always</label>
+      </div>
+      <div class="q-feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block" id="q2">
+      <p>2. A projectile is launched with air resistance. Compared to a trajectory without air resistance, the trajectory with air resistance is:</p>
+      <div class="q-opts">
+        <label><input type="radio" name="q2" value="a"/> Higher and longer with symmetric shape</label>
+        <label><input type="radio" name="q2" value="b"/> Lower, shorter range, and steeper on descent</label>
+        <label><input type="radio" name="q2" value="c"/> Same height but shorter range</label>
+        <label><input type="radio" name="q2" value="d"/> Lower, but perfectly symmetric</label>
+      </div>
+      <div class="q-feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block" id="q3">
+      <p>3. A falling ball reaches terminal velocity. What is true at that moment?</p>
+      <div class="q-opts">
+        <label><input type="radio" name="q3" value="a"/> Velocity = 0 m/s</label>
+        <label><input type="radio" name="q3" value="b"/> Acceleration = 9.81 m/s²</label>
+        <label><input type="radio" name="q3" value="c"/> ΣF = 0 N, so acceleration = 0 m/s²</label>
+        <label><input type="radio" name="q3" value="d"/> F<sub>air</sub> = 0 N</label>
+      </div>
+      <div class="q-feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block" id="q4">
+      <p>4. A skydiver is falling at terminal velocity and then opens their parachute. What happens to the acceleration immediately after the parachute opens?</p>
+      <div class="q-opts">
+        <label><input type="radio" name="q4" value="a"/> Acceleration increases to 9.81 m/s² downward</label>
+        <label><input type="radio" name="q4" value="b"/> Acceleration spikes in the negative direction (large upward net force), then returns to 0</label>
+        <label><input type="radio" name="q4" value="c"/> Acceleration stays at 0 m/s² (already at terminal velocity)</label>
+        <label><input type="radio" name="q4" value="d"/> Acceleration becomes constant at some positive value</label>
+      </div>
+      <div class="q-feedback" id="fb4"></div>
+    </div>
+
+    <button class="quiz-btn" onclick="checkQuiz()">Submit Answers</button>
+    <div id="quiz-result"></div>
+  </div>
+
+</div><!-- end .wrap -->
+</div><!-- end #main -->
+
+<script>
+// PASSWORD
+const CORRECT = btoa('physics2024');
+function checkPW(){
+  const v = document.getElementById('pw-input').value;
+  if(btoa(v)===CORRECT){
+    localStorage.setItem('portal_auth',CORRECT);
+    document.getElementById('gate').style.display='none';
+    document.getElementById('main').style.display='block';
+  } else {
+    document.getElementById('pw-err').textContent='Incorrect password. Try again.';
+  }
+}
+(function(){
+  if(localStorage.getItem('portal_auth')===CORRECT){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('main').style.display='block';
+  }
+})();
+
+// STARS
+(function(){
+  const c=document.getElementById('stars-container');
+  for(let i=0;i<55;i++){
+    const s=document.createElement('span');
+    const sz=Math.random()*3+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*3}s;`;
+    c.appendChild(s);
+  }
+})();
+
+// QUIZ
+const answers={q1:'b',q2:'b',q3:'c',q4:'b'};
+const explanations={
+  q1:'F_air always opposes the velocity vector — it acts in the direction opposite to the way the object is moving.',
+  q2:'With air resistance, the projectile has a lower peak, shorter range, and is asymmetric — the descent is steeper than the ascent because V_x is continuously reduced.',
+  q3:'At terminal velocity, F_air = F_g so ΣF = 0 N, which means acceleration = 0 m/s². The velocity is constant at its maximum.',
+  q4:'Opening the parachute suddenly creates a very large F_air (upward), so the net force spikes upward (negative direction in our convention). This large deceleration rapidly brings the skydiver to a new, lower terminal velocity, and then acceleration returns to 0.'
+};
+function checkQuiz(){
+  let score=0;
+  for(let i=1;i<=4;i++){
+    const sel=document.querySelector(`input[name="q${i}"]:checked`);
+    const fb=document.getElementById(`fb${i}`);
+    if(!sel){fb.className='q-feedback wrong';fb.textContent='Please select an answer.';fb.style.display='block';continue;}
+    if(sel.value===answers[`q${i}`]){
+      score++;
+      fb.className='q-feedback correct';
+      fb.textContent='Correct! '+explanations[`q${i}`];
+    } else {
+      fb.className='q-feedback wrong';
+      fb.textContent='Not quite. '+explanations[`q${i}`];
+    }
+    fb.style.display='block';
+  }
+  document.getElementById('quiz-result').textContent=`Score: ${score}/4`;
+}
+</script>
+</body>
+</html>

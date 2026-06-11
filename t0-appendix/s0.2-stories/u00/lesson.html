@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Introduction to Physics – The Big Picture</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',Arial,sans-serif;background:#f1f5f9;color:#1f2937;line-height:1.7;}
+
+  /* HERO */
+  .hero{background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);color:white;padding:64px 24px 52px;text-align:center;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 60%,rgba(99,102,241,.4) 0%,transparent 55%),radial-gradient(ellipse at 80% 30%,rgba(59,130,246,.3) 0%,transparent 50%);pointer-events:none;}
+  .hero-chip{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:5px 18px;font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;position:relative;}
+  .hero h1{font-size:2.8rem;font-weight:900;letter-spacing:-1px;position:relative;margin-bottom:10px;background:linear-gradient(90deg,#a5f3fc,#c4b5fd,#fbcfe8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .hero p{font-size:1.1rem;color:rgba(255,255,255,.82);max-width:720px;margin:0 auto;position:relative;}
+
+  /* CONTAINER */
+  .wrap{max-width:1100px;margin:0 auto;padding:40px 24px 80px;}
+
+  /* CARDS */
+  .card{background:white;border-radius:18px;padding:28px 26px;margin:24px 0;box-shadow:0 6px 20px rgba(0,0,0,.07);}
+  h2{font-size:1.6rem;font-weight:900;color:#0f4c81;margin-bottom:14px;}
+  h3{font-size:1.15rem;font-weight:800;color:#1e40af;margin:16px 0 8px;}
+  p{margin-bottom:12px;font-size:1rem;}
+  ul,ol{padding-left:22px;margin-bottom:12px;}
+  li{margin-bottom:7px;}
+
+  /* IB MAP */
+  .ib-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin:22px 0;}
+  .ib-card{border-radius:14px;padding:18px 14px;text-align:center;position:relative;}
+  .ib-num{font-size:.78rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+  .ib-title{font-size:1rem;font-weight:800;margin-bottom:6px;line-height:1.25;}
+  .ib-desc{font-size:.82rem;line-height:1.45;}
+  .t1{background:#eff6ff;border-top:5px solid #0f4c81;}.t1 .ib-num{color:#0f4c81;}
+  .t2{background:#f0fdf4;border-top:5px solid #16a34a;}.t2 .ib-num{color:#16a34a;}
+  .t3{background:#fffbeb;border-top:5px solid #d97706;}.t3 .ib-num{color:#d97706;}
+  .t4{background:#faf5ff;border-top:5px solid #7c3aed;}.t4 .ib-num{color:#7c3aed;}
+  .t5{background:#fff1f2;border-top:5px solid #dc2626;}.t5 .ib-num{color:#dc2626;}
+
+  /* CHAPTER FLOW */
+  .chapter-flow{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin:22px 0;}
+  .ch-card{border-radius:14px;padding:18px;border-left:5px solid;transition:transform .2s;}
+  .ch-card:hover{transform:translateY(-3px);}
+  .ch-num{font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+  .ch-scientist{font-size:1.05rem;font-weight:800;margin-bottom:4px;}
+  .ch-theme{font-size:.83rem;line-height:1.4;}
+  .ch-card a{text-decoration:none;color:inherit;display:block;}
+  .c0{background:#f8faff;border-color:#6366f1;}.c0 .ch-num{color:#6366f1;}
+  .c1{background:#fff8f0;border-color:#ea580c;}.c1 .ch-num{color:#ea580c;}
+  .c2{background:#f0fdf4;border-color:#16a34a;}.c2 .ch-num{color:#16a34a;}
+  .c3{background:#fef9ec;border-color:#ca8a04;}.c3 .ch-num{color:#ca8a04;}
+  .c4{background:#eff6ff;border-color:#2563eb;}.c4 .ch-num{color:#2563eb;}
+  .c5{background:#fdf4ff;border-color:#9333ea;}.c5 .ch-num{color:#9333ea;}
+  .c6{background:#fff1f2;border-color:#dc2626;}.c6 .ch-num{color:#dc2626;}
+  .c7{background:#f0fdfa;border-color:#0d9488;}.c7 .ch-num{color:#0d9488;}
+  .c8{background:#fefce8;border-color:#ca8a04;}.c8 .ch-num{color:#ca8a04;}
+  .c9{background:#f5f3ff;border-color:#7c3aed;}.c9 .ch-num{color:#7c3aed;}
+  .c10{background:#fff0f0;border-color:#b91c1c;}.c10 .ch-num{color:#b91c1c;}
+
+  /* QUOTE */
+  .quote{background:linear-gradient(135deg,#eff6ff,#f5f3ff);border-left:5px solid #6366f1;border-radius:12px;padding:22px 24px;margin:20px 0;}
+  .quote p{font-size:1.1rem;font-style:italic;color:#1e40af;margin:0;}
+  .quote span{display:block;font-size:.85rem;font-weight:700;color:#6366f1;margin-top:8px;}
+
+  /* JOURNEY ARROW */
+  .journey{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:20px 0;}
+  .jstep{background:white;border-radius:10px;padding:10px 16px;font-size:.88rem;font-weight:700;box-shadow:0 3px 10px rgba(0,0,0,.08);}
+  .jarrow{font-size:1.4rem;color:#94a3b8;}
+
+  /* MORAL BOX */
+  .moral{background:linear-gradient(135deg,#fef9ec,#fff8f0);border:2px solid #f59e0b;border-radius:14px;padding:24px;margin:24px 0;}
+  .moral-label{font-size:.75rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#b45309;margin-bottom:8px;}
+  .moral p{font-size:1.05rem;color:#78350f;margin:0;}
+
+  /* FOOTER */
+  footer{text-align:center;padding:28px;color:#6b7280;font-size:.88rem;background:white;border-top:1px solid #e2e8f0;}
+
+  @media(max-width:700px){
+    .ib-grid{grid-template-columns:1fr 1fr;}
+    .hero h1{font-size:2rem;}
+    .chapter-flow{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-chip">Chapter 0 — Introduction</div>
+  <h1>Welcome to Physics</h1>
+  <p>Before we solve a single equation, let's understand the greatest adventure in human history — the quest to understand how the universe works.</p>
+</header>
+
+<main class="wrap">
+
+  <!-- WHAT IS PHYSICS -->
+  <div class="card">
+    <h2>What Is Physics, Really?</h2>
+    <p>Physics is not a book of rules. It is a set of <strong>stories</strong> — stories told by people who refused to accept "that's just the way it is." They watched the sky, dropped objects off towers, bent light through glass, and asked a question that changed everything: <em>why?</em></p>
+    <p>Every formula you will learn has a person behind it. That person had doubts, made mistakes, sometimes was laughed at, sometimes was punished — and yet kept going. This course is about those people as much as it is about their equations.</p>
+    <div class="quote">
+      <p>"Physics is the only profession in which prophecy is not only accurate but routine."</p>
+      <span>— Neil deGrasse Tyson</span>
+    </div>
+    <p>Over the next chapters, we will meet 10 scientists whose work forms the backbone of IB Physics. Each chapter tells a human story: the struggle, the breakthrough, and the lesson it holds for you today.</p>
+  </div>
+
+  <!-- IB CURRICULUM MAP -->
+  <div class="card">
+    <h2>The IB Physics Curriculum at a Glance</h2>
+    <p>IB Physics is organised into five themes, moving from the everyday world you can see and touch — to the invisible, abstract world of particles, quantum states, and radioactivity.</p>
+    <div class="ib-grid">
+      <div class="ib-card t1">
+        <div class="ib-num">Theme 1</div>
+        <div class="ib-title">Space, Time &amp; Motion</div>
+        <div class="ib-desc">Motion, forces, momentum, energy, gravity, relativity</div>
+      </div>
+      <div class="ib-card t2">
+        <div class="ib-num">Theme 2</div>
+        <div class="ib-title">Particulate Nature of Matter</div>
+        <div class="ib-desc">Kinetic theory, thermal energy, gas laws, phase changes</div>
+      </div>
+      <div class="ib-card t3">
+        <div class="ib-num">Theme 3</div>
+        <div class="ib-title">Wave Behaviour</div>
+        <div class="ib-desc">Waves, sound, light, optics, diffraction, interference</div>
+      </div>
+      <div class="ib-card t4">
+        <div class="ib-num">Theme 4</div>
+        <div class="ib-title">Fields</div>
+        <div class="ib-desc">Gravitational, electric, magnetic fields and their interactions</div>
+      </div>
+      <div class="ib-card t5">
+        <div class="ib-num">Theme 5</div>
+        <div class="ib-title">Nuclear &amp; Quantum Physics</div>
+        <div class="ib-desc">Radioactivity, nuclear reactions, photoelectric effect, quantum theory</div>
+      </div>
+    </div>
+    <p>We start at the <strong>concrete and familiar</strong> (a ball thrown through the air) and journey toward the <strong>deeply abstract</strong> (a cat that is both alive and dead; particles that share statistics). The scientists in our story chapters map directly onto this journey.</p>
+  </div>
+
+  <!-- JOURNEY VISUALISATION -->
+  <div class="card">
+    <h2>Our Journey: From the Physical to the Abstract</h2>
+    <p>Think of the course as a road with signposts. Each scientist marks a turning point — a moment when physics took a giant step into new territory.</p>
+    <div class="journey">
+      <div class="jstep">🌍 Everyday Motion</div>
+      <div class="jarrow">→</div>
+      <div class="jstep">🌌 Astronomy &amp; Authority (Galileo)</div>
+      <div class="jarrow">→</div>
+      <div class="jstep">⚙️ Laws of Nature (Newton)</div>
+      <div class="jarrow">→</div>
+      <div class="jstep">⚡ Electricity &amp; Magnetism (Faraday)</div>
+      <div class="jarrow">→</div>
+      <div class="jstep">💡 Wave vs Particle (Young, Maxwell, Einstein)</div>
+      <div class="jarrow">→</div>
+      <div class="jstep">☢️ Radioactivity (Curie)</div>
+      <div class="jarrow">→</div>
+      <div class="jstep">🕒 Relativity (Einstein)</div>
+      <div class="jarrow">→</div>
+      <div class="jstep">🐱 Quantum Superposition (Schrödinger)</div>
+      <div class="jarrow">→</div>
+      <div class="jstep">💥 Nuclear Fission (Meitner)</div>
+      <div class="jarrow">→</div>
+      <div class="jstep">🔬 Quantum Statistics (Bose)</div>
+    </div>
+    <p>Each step made the previous one a special case of something larger. Newton's gravity became a special case of Einstein's spacetime. Classical wave theory became a special case of quantum mechanics. This is the beauty of physics: it keeps unifying ideas.</p>
+  </div>
+
+  <!-- 10 CHAPTERS PREVIEW -->
+  <div class="card">
+    <h2>Your 10 Story Chapters</h2>
+    <p>Each chapter below tells the story of one scientist (or pair), connects their work to the IB syllabus, and ends with an inspiring moral. Click any chapter to open it.</p>
+    <div class="chapter-flow">
+      <div class="ch-card c1">
+        <a href="01-galileo.html">
+          <div class="ch-num">Chapter 1</div>
+          <div class="ch-scientist">Galileo Galilei</div>
+          <div class="ch-theme">Observation, motion, and the courage to speak truth to power</div>
+        </a>
+      </div>
+      <div class="ch-card c2">
+        <a href="02-newton.html">
+          <div class="ch-num">Chapter 2</div>
+          <div class="ch-scientist">Isaac Newton</div>
+          <div class="ch-theme">Gravity, motion, and one of science's greatest unifications</div>
+        </a>
+      </div>
+      <div class="ch-card c3">
+        <a href="03-faraday.html">
+          <div class="ch-num">Chapter 3</div>
+          <div class="ch-scientist">Michael Faraday</div>
+          <div class="ch-theme">From bookbinder's apprentice to the father of electromagnetism</div>
+        </a>
+      </div>
+      <div class="ch-card c4">
+        <a href="04-light-wave-particle.html">
+          <div class="ch-num">Chapter 4</div>
+          <div class="ch-scientist">The Light Debate</div>
+          <div class="ch-theme">Newton, Huygens, Young, Maxwell — centuries of argument about light</div>
+        </a>
+      </div>
+      <div class="ch-card c5">
+        <a href="05-marie-pierre-curie.html">
+          <div class="ch-num">Chapter 5</div>
+          <div class="ch-scientist">Marie &amp; Pierre Curie</div>
+          <div class="ch-theme">Love, radioactivity, two Nobel Prizes, and extraordinary sacrifice</div>
+        </a>
+      </div>
+      <div class="ch-card c6">
+        <a href="06-einstein-relativity.html">
+          <div class="ch-num">Chapter 6</div>
+          <div class="ch-scientist">Einstein &amp; Relativity</div>
+          <div class="ch-theme">What happens when you ride a beam of light? The universe bends.</div>
+        </a>
+      </div>
+      <div class="ch-card c7">
+        <a href="07-einstein-chauffeur.html">
+          <div class="ch-num">Chapter 7</div>
+          <div class="ch-scientist">Einstein's Chauffeur</div>
+          <div class="ch-theme">The difference between understanding deeply and knowing by heart</div>
+        </a>
+      </div>
+      <div class="ch-card c8">
+        <a href="08-schrodinger.html">
+          <div class="ch-num">Chapter 8</div>
+          <div class="ch-scientist">Erwin Schrödinger</div>
+          <div class="ch-theme">A cat, a box, and the strangest question in physics: is reality real?</div>
+        </a>
+      </div>
+      <div class="ch-card c9">
+        <a href="09-lise-meitner.html">
+          <div class="ch-num">Chapter 9</div>
+          <div class="ch-scientist">Lise Meitner</div>
+          <div class="ch-theme">The woman who explained nuclear fission — and was denied the Nobel</div>
+        </a>
+      </div>
+      <div class="ch-card c10">
+        <a href="10-satyendra-bose.html">
+          <div class="ch-num">Chapter 10</div>
+          <div class="ch-scientist">Satyendra Nath Bose</div>
+          <div class="ch-theme">A letter to Einstein that rewrote quantum statistics from Kolkata</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW SCIENCE WORKS -->
+  <div class="card">
+    <h2>How Science Actually Works</h2>
+    <p>Before we begin the stories, here is something important to understand: <strong>science does not work the way textbooks suggest.</strong></p>
+    <ul>
+      <li>It is <strong>messy</strong> — full of wrong turns, abandoned hypotheses, and accidental discoveries.</li>
+      <li>It is <strong>social</strong> — ideas are accepted or rejected partly because of who proposes them, not just the evidence.</li>
+      <li>It is <strong>cumulative</strong> — every generation builds on (and sometimes demolishes) the work of the last.</li>
+      <li>It is <strong>human</strong> — scientists have rivalries, make errors, face prejudice, and sometimes lose credit for their own discoveries.</li>
+    </ul>
+    <p>Every chapter in this series illustrates one or more of these realities. By the end, you will understand not just the physics — but the remarkable human process through which we came to know it.</p>
+    <div class="quote">
+      <p>"Science is not a collection of facts. It is a way of thinking."</p>
+      <span>— Carl Sagan</span>
+    </div>
+  </div>
+
+  <!-- THE BIG IDEAS -->
+  <div class="card">
+    <h2>Three Big Ideas That Connect Everything</h2>
+    <h3>1. Observation beats authority</h3>
+    <p>From Galileo's telescope to Rosalind Franklin's X-ray images, the stories of science are stories of evidence overcoming assumption. The universe does not care what we believe it should do.</p>
+    <h3>2. Mathematics is the language of nature</h3>
+    <p>Newton gave us calculus to describe motion. Maxwell gave us equations that predicted electromagnetic waves. Einstein gave us field equations that predicted black holes. Every one of these predictions was later verified by experiment. Mathematics is not abstract decoration — it is physics in its most precise form.</p>
+    <h3>3. The bigger the idea, the more it unifies</h3>
+    <p>The greatest achievements in physics are always <em>unifications</em>: Newton unified earthly and celestial motion. Maxwell unified electricity, magnetism, and light. Einstein unified space and time. Every great step forward shows that what looked like two separate things was really one thing seen from different angles.</p>
+  </div>
+
+  <!-- MORAL -->
+  <div class="moral">
+    <div class="moral-label">The Moral of This Course</div>
+    <p>You are not studying physics to memorise formulas. You are studying it to train the habit of mind that built the modern world: <strong>look carefully, question everything, follow the evidence, and never let anyone tell you that you are the wrong kind of person to have great ideas.</strong></p>
+  </div>
+
+</main>
+
+<footer>
+  IB Physics Storytelling Series — Chapter 0: Introduction &nbsp;|&nbsp;
+  <a href="01-galileo.html" style="color:#6366f1;font-weight:700;">Next: Galileo and the Church →</a>
+</footer>
+
+</body>
+</html>

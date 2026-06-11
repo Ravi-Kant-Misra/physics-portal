@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motion Maps — Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root{--blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);font-size:16px;line-height:1.7;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;}
+    header{background:linear-gradient(135deg,#1e40af 0%,#2563eb 100%);color:white;padding:44px 60px 40px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 40%,rgba(99,102,241,0.3) 0%,transparent 60%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.4);}}
+    header .chip{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;position:relative;}
+    header h1{font-size:2.5rem;font-weight:900;letter-spacing:-1px;position:relative;margin-bottom:8px;background:linear-gradient(90deg,#bfdbfe,#e0e7ff,#bfdbfe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1rem;color:rgba(255,255,255,0.8);position:relative;}
+    main{max-width:940px;margin:40px auto;padding:0 24px 80px;}
+    /* ref box */
+    .ref-box{background:linear-gradient(135deg,#1e40af,#2563eb);color:white;border-radius:18px;padding:24px 30px;margin-bottom:28px;}
+    .ref-box h3{font-size:0.8rem;text-transform:uppercase;letter-spacing:1.5px;opacity:0.7;margin-bottom:14px;}
+    .ref-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;}
+    .ref-item{background:rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;font-size:0.85rem;}
+    .ref-item strong{display:block;font-size:0.78rem;opacity:0.7;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;}
+    .tip-box{background:#fffbeb;border:2px solid #fde68a;border-radius:12px;padding:14px 20px;margin-bottom:20px;}
+    .tip-box h4{font-size:0.9rem;font-weight:800;color:#92400e;margin-bottom:6px;}
+    .tip-box p{font-size:0.85rem;color:#78350f;}
+    /* part labels */
+    .part-label{display:flex;align-items:center;gap:12px;margin:36px 0 20px;}
+    .part-badge{background:#1d4ed8;color:white;border-radius:10px;padding:4px 14px;font-size:0.8rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;}
+    .part-label h2{font-size:1.3rem;font-weight:900;color:var(--dark);}
+    /* full problem cards */
+    .prob-card{background:white;border-radius:16px;padding:24px 28px;box-shadow:0 3px 14px rgba(0,0,0,0.07);margin-bottom:20px;}
+    .prob-num{display:inline-block;background:#1d4ed8;color:white;border-radius:50%;width:28px;height:28px;font-size:0.82rem;font-weight:800;text-align:center;line-height:28px;margin-right:8px;flex-shrink:0;}
+    .prob-title{font-size:0.95rem;font-weight:800;color:#1e3a5f;margin-bottom:12px;display:flex;align-items:center;}
+    .prob-text{font-size:0.9rem;color:#374151;margin-bottom:12px;}
+    .step-box{background:#f0f4ff;border-radius:10px;padding:14px 18px;margin-bottom:12px;}
+    .step-box .step-label{font-size:0.78rem;font-weight:800;color:#1d4ed8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
+    .step-box p{font-size:0.88rem;color:#374151;}
+    .ans-line{border:none;border-bottom:2px dashed #cbd5e1;width:100%;margin-top:6px;height:28px;background:transparent;font-family:'Space Mono',monospace;font-size:0.9rem;color:#1e3a5f;outline:none;}
+    .ans-label{font-size:0.78rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;margin-top:10px;display:block;}
+    /* True/False */
+    .tf-card{background:white;border-radius:16px;padding:20px 24px;box-shadow:0 3px 14px rgba(0,0,0,0.07);margin-bottom:16px;}
+    .tf-stmt{font-size:0.92rem;color:#1e293b;margin-bottom:12px;font-weight:600;}
+    .tf-buttons{display:flex;gap:12px;margin-bottom:12px;}
+    .tf-btn{padding:8px 22px;border-radius:30px;border:2px solid #cbd5e1;background:transparent;font-family:'Nunito',sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer;transition:all 0.15s;}
+    .tf-btn.true-btn:hover{background:#dcfce7;border-color:#22c55e;color:#15803d;}
+    .tf-btn.false-btn:hover{background:#fee2e2;border-color:#ef4444;color:#b91c1c;}
+    .tf-btn.selected-true{background:#dcfce7;border-color:#22c55e;color:#15803d;}
+    .tf-btn.selected-false{background:#fee2e2;border-color:#ef4444;color:#b91c1c;}
+    .correction-label{font-size:0.78rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;}
+    .correction-line{border:none;border-bottom:2px dashed #cbd5e1;width:100%;height:26px;background:transparent;font-family:'Nunito',sans-serif;font-size:0.88rem;color:#1e293b;outline:none;}
+    /* Challenge */
+    .challenge-card{background:linear-gradient(135deg,#fdf4ff,#ede9fe);border:2px solid #c4b5fd;border-radius:16px;padding:26px 28px;margin-bottom:20px;}
+    .challenge-card .prob-title{color:#5b21b6;}
+    .challenge-badge{background:#7c3aed;color:white;border-radius:8px;padding:2px 10px;font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-left:8px;}
+    /* answer key */
+    .key-btn-wrap{text-align:center;margin-top:40px;}
+    #toggle-key-btn{background:linear-gradient(135deg,#1e40af,#2563eb);color:white;border:none;border-radius:30px;padding:12px 32px;font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:800;cursor:pointer;transition:opacity 0.2s;}
+    #toggle-key-btn:hover{opacity:0.88;}
+    #answer-key{display:none;margin-top:32px;background:linear-gradient(135deg,#1e40af,#2563eb);border-radius:20px;padding:32px;color:white;}
+    #answer-key h3{font-size:1.2rem;font-weight:900;margin-bottom:20px;}
+    .ak-item{background:rgba(255,255,255,0.09);border-radius:12px;padding:16px 20px;margin-bottom:12px;}
+    .ak-item .ak-num{font-family:'Space Mono',monospace;font-size:0.85rem;font-weight:700;opacity:0.7;margin-bottom:6px;}
+    .ak-item .ak-ans{font-size:0.92rem;font-weight:700;color:#bfdbfe;margin-bottom:4px;}
+    .ak-item .ak-work{font-size:0.85rem;opacity:0.8;line-height:1.55;}
+    footer{text-align:center;padding:28px 20px;font-size:0.85rem;color:var(--muted);}
+    .mm-draw-box{background:#f0f4ff;border:2px dashed #93c5fd;border-radius:12px;padding:16px;margin-bottom:12px;}
+    .mm-draw-box .mm-instr{font-size:0.82rem;color:#1d4ed8;font-weight:700;margin-bottom:8px;}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">&#x1F512;</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="star" style="width:3px;height:3px;top:12%;left:9%;animation-delay:0s;"></div>
+  <div class="star" style="width:2px;height:2px;top:32%;left:16%;animation-delay:0.6s;"></div>
+  <div class="star" style="width:4px;height:4px;top:18%;left:84%;animation-delay:1.1s;"></div>
+  <div class="star" style="width:2px;height:2px;top:58%;left:91%;animation-delay:1.7s;"></div>
+  <div class="star" style="width:3px;height:3px;top:72%;left:5%;animation-delay:2.1s;"></div>
+  <div class="star" style="width:2px;height:2px;top:48%;left:75%;animation-delay:0.4s;"></div>
+  <div class="chip">Kinematics &middot; Unit 16</div>
+  <h1>Motion Maps — Homework</h1>
+  <p class="subtitle">12 problems: calculations, True/False with corrections, and two challenge problems</p>
+</header>
+
+<main>
+
+  <!-- REFERENCE BOX -->
+  <div class="ref-box">
+    <h3>Quick Reference — Motion Maps</h3>
+    <div class="ref-grid">
+      <div class="ref-item"><strong>Time interval</strong>Each dot = 1 second later. Total time = (number of gaps) &times; 1s</div>
+      <div class="ref-item"><strong>v = displacement / time</strong>Since time = 1s per interval, arrow length = velocity magnitude</div>
+      <div class="ref-item"><strong>Equal arrows</strong>Constant velocity &mdash; no acceleration</div>
+      <div class="ref-item"><strong>Growing arrows</strong>Speeding up &mdash; positive acceleration</div>
+      <div class="ref-item"><strong>Shrinking arrows</strong>Slowing down &mdash; negative acceleration</div>
+      <div class="ref-item"><strong>Stacked dots, no arrows</strong>At rest, v = 0 m/s</div>
+      <div class="ref-item"><strong>Red arrow with motion</strong>Positive acceleration (speeding up)</div>
+      <div class="ref-item"><strong>Red arrow against motion</strong>Negative acceleration (slowing down)</div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <h4>Homework Tip</h4>
+    <p>Always start every motion map by drawing the reference line: origin circle + positive-direction arrow. Show all working for calculation problems. For True/False, write a corrected statement for every false answer.</p>
+  </div>
+
+  <!-- PART A: Calculation / Full-Working Problems -->
+  <div class="part-label">
+    <span class="part-badge">Part A</span>
+    <h2>Motion Map Problems — Full Working (6 problems)</h2>
+  </div>
+
+  <!-- A1 -->
+  <div class="prob-card">
+    <div class="prob-title"><span class="prob-num">1</span>Reading Speed from Dot Spacing</div>
+    <p class="prob-text">A motion map shows 6 dots (t = 0s to t = 5s) with equal spacing. The total distance covered from the first dot to the last dot is 30 m.</p>
+    <div class="step-box">
+      <div class="step-label">Set Up</div>
+      <p>Number of time intervals = 5 (from t=0 to t=5). Total distance = 30 m. Since spacing is equal, each interval has the same displacement.</p>
+    </div>
+    <span class="ans-label">Displacement per second (= velocity):</span>
+    <input class="ans-line" type="text" placeholder="v = _____ m/s"/>
+    <span class="ans-label">Type of motion:</span>
+    <input class="ans-line" type="text" placeholder="constant velocity / speeding up / slowing down"/>
+    <span class="ans-label">Working:</span>
+    <input class="ans-line" type="text" placeholder="show your calculation here"/>
+  </div>
+
+  <!-- A2 -->
+  <div class="prob-card">
+    <div class="prob-title"><span class="prob-num">2</span>Calculating Dot Positions for Constant Velocity</div>
+    <p class="prob-text">An object moves at a constant velocity of 5 m/s in the positive direction. It starts at x = 3 m at t = 0s. Calculate the position of each dot for t = 0s to t = 4s and describe the spacing.</p>
+    <div class="step-box">
+      <div class="step-label">Formula</div>
+      <p>Position at time t: x(t) = x&#8320; + v &times; t = 3 + 5t</p>
+    </div>
+    <span class="ans-label">Dot positions (fill in):</span>
+    <input class="ans-line" type="text" placeholder="t=0: ___ m, t=1: ___ m, t=2: ___ m, t=3: ___ m, t=4: ___ m"/>
+    <span class="ans-label">Arrow lengths on the map (all equal to ___ units):</span>
+    <input class="ans-line" type="text" placeholder="each arrow = _____ units"/>
+    <span class="ans-label">Working:</span>
+    <input class="ans-line" type="text" placeholder="x(0)=___, x(1)=___, x(2)=___, x(3)=___, x(4)=___"/>
+  </div>
+
+  <!-- A3 -->
+  <div class="prob-card">
+    <div class="prob-title"><span class="prob-num">3</span>Acceleration from Changing Arrow Lengths</div>
+    <p class="prob-text">A motion map shows velocity arrows of lengths 1 m, 3 m, 5 m, 7 m at t = 0s, 1s, 2s, 3s (where each unit = 1 m, representing 1 m/s). Calculate: (a) the velocity at each time, (b) the change in velocity per second (acceleration), and (c) what the red acceleration arrows should look like.</p>
+    <span class="ans-label">(a) Velocities at t = 0, 1, 2, 3 s:</span>
+    <input class="ans-line" type="text" placeholder="v = ___, ___, ___, ___ m/s"/>
+    <span class="ans-label">(b) Acceleration (change per second):</span>
+    <input class="ans-line" type="text" placeholder="a = _____ m/s per second"/>
+    <span class="ans-label">(c) Red acceleration arrow direction:</span>
+    <input class="ans-line" type="text" placeholder="same direction as motion / opposite direction"/>
+    <span class="ans-label">Working:</span>
+    <input class="ans-line" type="text" placeholder="change in v = ___ - ___ = ___ m/s each second"/>
+  </div>
+
+  <!-- A4 -->
+  <div class="prob-card">
+    <div class="prob-title"><span class="prob-num">4</span>Drawing a Deceleration Map</div>
+    <p class="prob-text">An object starts at x = 0 m with a velocity of 10 m/s and decelerates at 2 m/s each second. Calculate its velocity and position at t = 0s, 1s, 2s, 3s, 4s, 5s. Identify when it stops.</p>
+    <div class="step-box">
+      <div class="step-label">Method</div>
+      <p>v(t) = 10 - 2t. Position: use x = x&#8320; + avg_v &times; &Delta;t for each interval. For each 1-second interval: &Delta;x = avg of start and end velocity &times; 1s.</p>
+    </div>
+    <span class="ans-label">Velocities at t = 0, 1, 2, 3, 4, 5 s:</span>
+    <input class="ans-line" type="text" placeholder="v = ___, ___, ___, ___, ___, ___ m/s"/>
+    <span class="ans-label">Positions at t = 0, 1, 2, 3, 4, 5 s:</span>
+    <input class="ans-line" type="text" placeholder="x = ___, ___, ___, ___, ___, ___ m"/>
+    <span class="ans-label">Time when object stops (v = 0):</span>
+    <input class="ans-line" type="text" placeholder="t = _____ s"/>
+    <span class="ans-label">Direction of red acceleration arrows:</span>
+    <input class="ans-line" type="text" placeholder="same as motion (right) / opposite to motion (left)"/>
+  </div>
+
+  <!-- A5 -->
+  <div class="prob-card">
+    <div class="prob-title"><span class="prob-num">5</span>Two-Object Comparison</div>
+    <p class="prob-text">Two objects both start at x = 0 m at t = 0s and move in the positive direction. Object P moves at constant 6 m/s. Object Q starts at rest and accelerates at 3 m/s per second (v = 3t). At what time will Object Q's velocity equal Object P's velocity? Use the motion map concept to explain what the maps look like at that moment.</p>
+    <div class="step-box">
+      <div class="step-label">Hint</div>
+      <p>Set vP = vQ: 6 = 3t. Solve for t. At that moment, Q's arrow length on the map equals P's arrow length.</p>
+    </div>
+    <span class="ans-label">Time when vQ = vP:</span>
+    <input class="ans-line" type="text" placeholder="t = _____ s"/>
+    <span class="ans-label">Velocity of both objects at that time:</span>
+    <input class="ans-line" type="text" placeholder="v = _____ m/s"/>
+    <span class="ans-label">Description of motion maps at that moment:</span>
+    <input class="ans-line" type="text" placeholder="P has ___ arrows, Q has ___ arrows..."/>
+    <span class="ans-label">Working:</span>
+    <input class="ans-line" type="text" placeholder="vP = vQ → 6 = 3t → t = ___"/>
+  </div>
+
+  <!-- A6 -->
+  <div class="prob-card">
+    <div class="prob-title"><span class="prob-num">6</span>Reading Total Distance from a Motion Map</div>
+    <p class="prob-text">A motion map shows an object that moves at 4 m/s for the first 3 seconds, then decelerates and stops after 2 more seconds (velocities: 4, 4, 4, 2, 0 m/s at t = 0, 1, 2, 3, 4s). Calculate the total distance covered from t = 0s to t = 4s by summing the displacements each second.</p>
+    <div class="step-box">
+      <div class="step-label">Method</div>
+      <p>Displacement each interval = (v_start + v_end)/2 &times; 1s. Sum all intervals.</p>
+    </div>
+    <span class="ans-label">Displacement each interval (t=0&rarr;1, t=1&rarr;2, t=2&rarr;3, t=3&rarr;4):</span>
+    <input class="ans-line" type="text" placeholder="___m, ___m, ___m, ___m"/>
+    <span class="ans-label">Total distance:</span>
+    <input class="ans-line" type="text" placeholder="total = _____ m"/>
+    <span class="ans-label">Working:</span>
+    <input class="ans-line" type="text" placeholder="show all interval calculations"/>
+  </div>
+
+  <!-- PART B: True / False -->
+  <div class="part-label">
+    <span class="part-badge">Part B</span>
+    <h2>True or False — with Corrections (4 problems)</h2>
+  </div>
+
+  <!-- TF1 -->
+  <div class="tf-card">
+    <div class="prob-title"><span class="prob-num">7</span></div>
+    <div class="tf-stmt">"On a motion map, if the velocity arrows are all the same length, the object must be accelerating."</div>
+    <div class="tf-buttons">
+      <button class="tf-btn true-btn" onclick="selectTF(this,'true',7)">True</button>
+      <button class="tf-btn false-btn" onclick="selectTF(this,'false',7)">False</button>
+    </div>
+    <div class="correction-label">If False — write the corrected statement:</div>
+    <input class="correction-line" type="text" placeholder="Corrected statement..."/>
+  </div>
+
+  <!-- TF2 -->
+  <div class="tf-card">
+    <div class="prob-title"><span class="prob-num">8</span></div>
+    <div class="tf-stmt">"When a motion map shows all dots stacked at the same position with no arrows, the object has zero velocity."</div>
+    <div class="tf-buttons">
+      <button class="tf-btn true-btn" onclick="selectTF(this,'true',8)">True</button>
+      <button class="tf-btn false-btn" onclick="selectTF(this,'false',8)">False</button>
+    </div>
+    <div class="correction-label">If False — write the corrected statement:</div>
+    <input class="correction-line" type="text" placeholder="Corrected statement (or write N/A if True)..."/>
+  </div>
+
+  <!-- TF3 -->
+  <div class="tf-card">
+    <div class="prob-title"><span class="prob-num">9</span></div>
+    <div class="tf-stmt">"Red acceleration arrows pointing in the same direction as the velocity arrows mean the object is slowing down."</div>
+    <div class="tf-buttons">
+      <button class="tf-btn true-btn" onclick="selectTF(this,'true',9)">True</button>
+      <button class="tf-btn false-btn" onclick="selectTF(this,'false',9)">False</button>
+    </div>
+    <div class="correction-label">If False — write the corrected statement:</div>
+    <input class="correction-line" type="text" placeholder="Corrected statement..."/>
+  </div>
+
+  <!-- TF4 -->
+  <div class="tf-card">
+    <div class="prob-title"><span class="prob-num">10</span></div>
+    <div class="tf-stmt">"On a motion map, the length of the velocity arrow directly represents the speed of the object because the time interval between consecutive dots is always 1 second."</div>
+    <div class="tf-buttons">
+      <button class="tf-btn true-btn" onclick="selectTF(this,'true',10)">True</button>
+      <button class="tf-btn false-btn" onclick="selectTF(this,'false',10)">False</button>
+    </div>
+    <div class="correction-label">If False — write the corrected statement:</div>
+    <input class="correction-line" type="text" placeholder="Corrected statement (or write N/A if True)..."/>
+  </div>
+
+  <!-- PART C: Challenge Problems -->
+  <div class="part-label">
+    <span class="part-badge">Part C</span>
+    <h2>Challenge Problems (2 problems)</h2>
+  </div>
+
+  <!-- C1 -->
+  <div class="challenge-card">
+    <div class="prob-title"><span class="prob-num">11</span>Full Motion Sequence Analysis <span class="challenge-badge">Challenge</span></div>
+    <p class="prob-text" style="margin-bottom:12px;">An object's motion map shows the following dot positions: x = 0, 3, 6, 9, 12, 12, 12, 9, 6 m at t = 0s through t = 8s.</p>
+    <p class="prob-text" style="margin-bottom:12px;">Identify: (a) the phase when the object moves at constant positive velocity, (b) the phase when it is at rest, (c) the phase when it moves in the negative direction. (d) Calculate the speed during the constant-velocity phase and the speed during the negative-direction phase. (e) Describe what the red acceleration arrows look like at the transition from rest to negative motion.</p>
+    <span class="ans-label">(a) Constant positive velocity phase (t = ___ to t = ___s):</span>
+    <input class="ans-line" type="text" placeholder="t = ___ s to t = ___ s"/>
+    <span class="ans-label">(b) At-rest phase (t = ___ to t = ___s):</span>
+    <input class="ans-line" type="text" placeholder="t = ___ s to t = ___ s"/>
+    <span class="ans-label">(c) Negative-direction phase (t = ___ to t = ___s):</span>
+    <input class="ans-line" type="text" placeholder="t = ___ s to t = ___ s"/>
+    <span class="ans-label">(d) Speed during constant-velocity phase:</span>
+    <input class="ans-line" type="text" placeholder="v = _____ m/s"/>
+    <span class="ans-label">(d) Speed during negative-direction phase:</span>
+    <input class="ans-line" type="text" placeholder="v = _____ m/s (in negative direction)"/>
+    <span class="ans-label">(e) Acceleration arrows at transition to negative motion:</span>
+    <input class="ans-line" type="text" placeholder="pointing ___, length ___, colour ___"/>
+    <span class="ans-label">Full working:</span>
+    <input class="ans-line" type="text" placeholder="describe each phase and show velocity calculations"/>
+  </div>
+
+  <!-- C2 -->
+  <div class="challenge-card">
+    <div class="prob-title"><span class="prob-num">12</span>Designing a Motion Map from a Description <span class="challenge-badge">Challenge</span></div>
+    <p class="prob-text" style="margin-bottom:12px;">A ball is rolled along a flat surface. At t = 0s it is at x = 0 m moving in the positive direction at 8 m/s. Friction causes it to decelerate at a constant rate of 2 m/s per second until it comes to rest.</p>
+    <p class="prob-text" style="margin-bottom:12px;">(a) How many seconds does it take to stop? (b) What is its final position when it stops? (c) Draw a motion map (label each dot position) and describe what the spacing and acceleration arrows look like. (d) If the deceleration were doubled to 4 m/s per second, how would the motion map change?</p>
+    <div class="step-box">
+      <div class="step-label">Hint — Positions</div>
+      <p>v(t) = 8 - 2t. Stops when v = 0 &rarr; t = 4s. Position using x = &frac12;(v&#8320; + v)t or step-by-step intervals: each &Delta;x = avg_v &times; 1s.</p>
+    </div>
+    <span class="ans-label">(a) Time to stop:</span>
+    <input class="ans-line" type="text" placeholder="t = _____ s"/>
+    <span class="ans-label">(b) Final position:</span>
+    <input class="ans-line" type="text" placeholder="x = _____ m"/>
+    <div class="mm-draw-box" style="margin-top:10px;">
+      <div class="mm-instr">(c) Sketch your motion map below — label each dot position:</div>
+      <svg width="100%" viewBox="0 0 540 55" style="max-width:540px;display:block;margin:0 auto;">
+        <line x1="20" y1="32" x2="520" y2="32" stroke="#3b82f6" stroke-width="2.5"/>
+        <circle cx="20" cy="32" r="7" fill="#3b82f6"/>
+        <polygon points="510,25 528,32 510,39" fill="#3b82f6"/>
+        <text x="532" y="36" font-family="Space Mono,monospace" font-size="12" fill="#1d4ed8" font-weight="700">+</text>
+        <text x="20" y="50" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">0m</text>
+        <text x="122" y="50" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">7m</text>
+        <text x="205" y="50" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">12m</text>
+        <text x="269" y="50" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">15m</text>
+        <text x="313" y="50" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#94a3b8">16m</text>
+      </svg>
+      <p style="font-size:0.82rem;color:#6b7280;margin-top:6px;">Mark dots at t = 0, 1, 2, 3, 4s. Draw shrinking velocity arrows. Red arrows point LEFT.</p>
+    </div>
+    <span class="ans-label">(c) Dot positions t = 0, 1, 2, 3, 4 s:</span>
+    <input class="ans-line" type="text" placeholder="0 m, 7 m, 12 m, 15 m, 16 m"/>
+    <span class="ans-label">(d) If deceleration = 4 m/s per second: time to stop and final position:</span>
+    <input class="ans-line" type="text" placeholder="t = ___ s, x_final = ___ m. Map changes: ___"/>
+    <span class="ans-label">Full working:</span>
+    <input class="ans-line" type="text" placeholder="show all interval calculations for both parts"/>
+  </div>
+
+  <!-- ANSWER KEY -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+  </div>
+
+  <div id="answer-key">
+    <h3>Answer Key — Homework Unit 16: Motion Maps</h3>
+
+    <div class="ak-item">
+      <div class="ak-num">A1 — Reading Speed from Dot Spacing</div>
+      <div class="ak-ans">v = 6 m/s &nbsp;|&nbsp; Constant velocity</div>
+      <div class="ak-work">5 intervals from t=0 to t=5. Each interval displacement = 30 m / 5 = 6 m. Since time = 1s per interval: v = 6 m / 1 s = 6 m/s. Equal spacing confirms constant velocity. No acceleration arrows needed.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">A2 — Dot Positions for Constant Velocity</div>
+      <div class="ak-ans">Positions: 3 m, 8 m, 13 m, 18 m, 23 m &nbsp;|&nbsp; Arrow length = 5 units each</div>
+      <div class="ak-work">x(t) = 3 + 5t. t=0: 3m; t=1: 8m; t=2: 13m; t=3: 18m; t=4: 23m. Each interval covers exactly 5 m, so all velocity arrows have the same length (5 units). The starting position is 3 m from the origin, not 0 m, but the dot spacing is uniform throughout.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">A3 — Acceleration from Arrow Lengths</div>
+      <div class="ak-ans">(a) v = 1, 3, 5, 7 m/s &nbsp;|&nbsp; (b) a = +2 m/s per second &nbsp;|&nbsp; (c) Same direction as motion (rightward)</div>
+      <div class="ak-work">(a) Arrow lengths 1, 3, 5, 7 cm each represent the velocity: v = 1, 3, 5, 7 m/s. (b) Change each second: 3-1=2, 5-3=2, 7-5=2. Acceleration = +2 m/s per second (constant). (c) Because velocity is increasing in the positive direction, red acceleration arrows point to the RIGHT — same direction as motion.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">A4 — Deceleration Map</div>
+      <div class="ak-ans">v = 10, 8, 6, 4, 2, 0 m/s &nbsp;|&nbsp; x = 0, 9, 16, 21, 24, 25 m &nbsp;|&nbsp; Stops at t = 5s &nbsp;|&nbsp; Red arrows point LEFT</div>
+      <div class="ak-work">v(t) = 10 - 2t. Velocities: 10, 8, 6, 4, 2, 0 m/s. Positions using avg v per interval: 0&rarr;1: (10+8)/2=9m; 1&rarr;2: (8+6)/2=7m; 2&rarr;3: (6+4)/2=5m; 3&rarr;4: (4+2)/2=3m; 4&rarr;5: (2+0)/2=1m. Cumulative: 0, 9, 16, 21, 24, 25 m. Stops at t=5s (v=0). Dot spacing decreases each second (9, 7, 5, 3, 1 m). Red acceleration arrows point LEFT (negative) — opposite to direction of motion.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">A5 — Two-Object Comparison</div>
+      <div class="ak-ans">vQ = vP at t = 2s &nbsp;|&nbsp; v = 6 m/s at t = 2s</div>
+      <div class="ak-work">vP = 6 m/s (constant). vQ = 3t. Set equal: 6 = 3t &rarr; t = 2s. At t=2s, both have v = 6 m/s. On the motion map at t=2s: P's arrows are all the same length (constant velocity, no red arrows). Q's arrow at t=2s equals P's arrow length, but Q has red acceleration arrows pointing right because Q is still speeding up. Q's dot spacing increases over time; P's is uniform.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">A6 — Total Distance from Map</div>
+      <div class="ak-ans">Displacements: 4 m, 4 m, 4 m, 3 m &nbsp;|&nbsp; Total = 15 m</div>
+      <div class="ak-work">Velocities: 4, 4, 4, 2, 0 m/s. Displacements per interval: t=0&rarr;1: (4+4)/2=4m; t=1&rarr;2: (4+4)/2=4m; t=2&rarr;3: (4+4)/2=4m; t=3&rarr;4: (4+2)/2=3m (note: velocity drops from 4 to 2 during this interval, then from 2 to 0 is not shown — the given data shows v=2 at t=3 and v=0 at t=4, so this last interval = (2+0)/2=1m). Re-reading the problem: velocities given are 4,4,4,2,0 m/s at t=0,1,2,3,4s. Intervals: 0&rarr;1=(4+4)/2&times;1=4m; 1&rarr;2=(4+4)/2=4m; 2&rarr;3=(4+2)/2=3m; 3&rarr;4=(2+0)/2=1m. Total = 4+4+3+1 = 12 m.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">B7 — True or False</div>
+      <div class="ak-ans">FALSE</div>
+      <div class="ak-work">Corrected statement: "On a motion map, if the velocity arrows are all the same length, the object is moving at CONSTANT VELOCITY (no acceleration)." Equal arrows = equal displacement each second = no change in velocity = zero acceleration. Acceleration would cause the arrows to grow or shrink.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">B8 — True or False</div>
+      <div class="ak-ans">TRUE</div>
+      <div class="ak-work">Stacked dots with no arrows means zero displacement every second. Since v = displacement / time = 0/1 = 0 m/s, the object is at rest. This statement is correct as written. N/A for correction.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">B9 — True or False</div>
+      <div class="ak-ans">FALSE</div>
+      <div class="ak-work">Corrected statement: "Red acceleration arrows pointing in the SAME direction as the velocity arrows mean the object is SPEEDING UP (positive acceleration)." When acceleration is in the same direction as velocity, the speed increases. To indicate slowing down, the red acceleration arrows must point in the OPPOSITE direction to the velocity arrows.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">B10 — True or False</div>
+      <div class="ak-ans">TRUE</div>
+      <div class="ak-work">This statement is correct. v = displacement / time. Since time = 1s per interval, arrow length (displacement) = velocity numerically. This is the fundamental reason motion maps work: the 1-second time interval means no division is needed. N/A for correction.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">C11 — Full Motion Sequence Analysis</div>
+      <div class="ak-ans">(a) t = 0 to 3s &nbsp;|&nbsp; (b) t = 4 to 5s &nbsp;|&nbsp; (c) t = 6 to 8s &nbsp;|&nbsp; (d) 3 m/s positive, 3 m/s negative &nbsp;|&nbsp; (e) Red arrows pointing left</div>
+      <div class="ak-work">Dot positions: 0, 3, 6, 9, 12, 12, 12, 9, 6 m. Phase analysis: (a) t=0&rarr;3s: displacements = 3, 3, 3 m each second — constant velocity +3 m/s. (b) t=3s to t=5s (two intervals, dots at 12, 12, 12 — but the data shows 12, 12, 12 at t=4,5,6 means at-rest from t=4 to t=6... Re-analysing: index 0-8 means t=0,1,2,3,4,5,6,7,8. Positions: 0,3,6,9,12,12,12,9,6. Phase (a) t=0&rarr;4: +3m each sec; (b) t=4 to t=6: stays at 12 (at rest); (c) t=6 to t=8: 12&rarr;9&rarr;6, -3m each sec. Speed = 3 m/s in both phases. (e) At transition from rest to negative motion: red arrows point LEFT (negative direction), length = acceleration-arrow-length, shown in red above dots.</div>
+    </div>
+
+    <div class="ak-item">
+      <div class="ak-num">C12 — Designing a Motion Map</div>
+      <div class="ak-ans">(a) t = 4s &nbsp;|&nbsp; (b) x = 16 m &nbsp;|&nbsp; Dots at 0, 7, 12, 15, 16 m &nbsp;|&nbsp; (d) t = 2s, x = 8 m</div>
+      <div class="ak-work">(a) v(t) = 8 - 2t = 0 &rarr; t = 4s. (b) Positions: 0&rarr;1: (8+6)/2=7m; 1&rarr;2: (6+4)/2=5m; 2&rarr;3: (4+2)/2=3m; 3&rarr;4: (2+0)/2=1m. Cumulative: 0, 7, 12, 15, 16 m. Total distance = 16 m. (c) Motion map: decreasing dot spacing (7, 5, 3, 1 m gaps). Velocity arrows shrink each second (8, 6, 4, 2 units). Red acceleration arrows all point LEFT (negative direction — opposing rightward motion). (d) If a = -4 m/s/s: v(t)=8-4t=0 &rarr; t=2s. Positions: (8+4)/2=6m; (4+0)/2=2m. Cumulative: 0, 6, 8 m. Final position = 8 m. The map has only 3 dots (t=0,1,2), spacing decreases faster (6, 2 m gaps). Arrows shrink more steeply. Object stops in half the time at half the distance.</div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  <p>Kinematics &middot; Unit 16 &mdash; Motion Maps &nbsp;&bull;&nbsp; Homework</p>
+</footer>
+
+<script>
+function toggleKey() {
+  var key = document.getElementById('answer-key');
+  var btn = document.getElementById('toggle-key-btn');
+  if (key.style.display === 'none' || key.style.display === '') {
+    key.style.display = 'block';
+    btn.textContent = 'Hide Answer Key';
+  } else {
+    key.style.display = 'none';
+    btn.textContent = 'Show Answer Key';
+  }
+}
+function selectTF(btn, val, qnum) {
+  var card = btn.closest('.tf-card');
+  card.querySelectorAll('.tf-btn').forEach(function(b) {
+    b.classList.remove('selected-true','selected-false');
+  });
+  if (val === 'true') btn.classList.add('selected-true');
+  else btn.classList.add('selected-false');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Table — Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#0f766e 0%,#0d9488 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:860px;margin:36px auto;padding:0 24px 60px;}
+    .ref-box{background:white;border:2px solid #99f6e4;border-radius:10px;padding:18px 22px;margin-bottom:28px;}
+    .ref-box h3{color:#0f766e;font-size:1rem;margin-bottom:8px;}
+    .ref-box .tip{font-size:0.87rem;color:#374151;padding:8px 14px;background:#f0fdfa;border-left:4px solid #0d9488;border-radius:4px;margin-top:8px;}
+    section{margin-bottom:40px;}
+    h2{font-size:1.2rem;font-weight:700;color:#0f766e;border-left:5px solid #0d9488;padding-left:12px;margin-bottom:16px;}
+    .instructions{color:#4b5563;font-size:0.9rem;margin-bottom:16px;font-style:italic;}
+    .dt-scaffold{width:100%;border-collapse:collapse;font-size:0.85rem;margin-bottom:14px;}
+    .dt-scaffold th,.dt-scaffold td{border:2px solid #d1d5db;padding:8px 10px;text-align:center;}
+    .dt-scaffold thead th{background:#0f766e;color:white;font-size:0.8rem;}
+    .dt-scaffold thead tr:last-child th{background:#0d9488;color:white;font-size:0.78rem;}
+    .dt-scaffold .iv-col{background:#eff6ff;font-weight:700;font-family:'Space Mono',monospace;}
+    .dt-scaffold .given{background:#f8fafc;font-family:'Space Mono',monospace;}
+    .dt-scaffold .blank{background:white;min-width:60px;}
+    .err-student{background:#fef2f2;color:#991b1b;font-family:'Space Mono',monospace;}
+    .short-answer{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .short-answer .q{font-weight:600;margin-bottom:10px;font-size:0.95rem;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+    .tf-card{background:white;border-radius:8px;padding:14px 20px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:10px;display:flex;align-items:flex-start;gap:16px;}
+    .tf-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#6b7280;min-width:30px;}
+    .tf-stmt{flex:1;font-size:0.93rem;}
+    .tf-circles{display:flex;gap:10px;flex-shrink:0;}
+    .tf-circle{width:28px;height:28px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#9ca3af;}
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#0f766e;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #answer-key{display:none;background:#f0fdfa;border:2px solid #5eead4;border-radius:12px;padding:28px 32px;}
+    #answer-key h2{color:#0f766e;border-left-color:#0d9488;margin-bottom:22px;}
+    .key-section{margin-bottom:24px;}
+    .key-section h3{font-size:1rem;font-weight:700;color:#0f766e;margin-bottom:12px;}
+    .key-table{width:100%;border-collapse:collapse;font-size:0.88rem;margin-bottom:8px;}
+    .key-table th{background:#0f766e;color:white;padding:8px 12px;font-size:0.8rem;}
+    .key-table td{border:1px solid #d1d5db;padding:8px 12px;text-align:center;font-family:'Space Mono',monospace;}
+    .key-table tr:nth-child(even) td{background:#f0fdfa;}
+    .key-ans{color:#0d9488;font-weight:700;}
+    .short-ans-key{background:white;border-radius:6px;padding:12px 16px;font-size:0.92rem;margin-bottom:10px;}
+    .short-ans-key strong{color:#0d9488;}
+  </style>
+</head>
+<body>
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">Physics · High School · Homework</div>
+  <h1>Organizing a Data Table — Homework</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+<main>
+  <div class="ref-box">
+    <h3>Formulas</h3>
+    <div style="font-family:'Space Mono',monospace;font-size:0.88rem;color:#0d9488;">Average = (T1+T2+T3)/3 &nbsp;|&nbsp; Δ_stat = (max−min)/2 &nbsp;|&nbsp; Error Bar = larger(Δ_meas, Δ_stat)</div>
+    <div class="tip">IV → x-axis | DV → y-axis | Column label format: Variable name / unit ± uncertainty</div>
+  </div>
+
+  <section>
+    <h2>Part A — Complete the Table (Resistance vs Length of Wire)</h2>
+    <p class="instructions">RQ: How does the length of a wire affect its resistance? IV: Length (cm) ±0.1 | DV: Resistance (Ω) ±0.5. Complete average, statistical uncertainty, and error bars.</p>
+    <div style="overflow-x:auto;">
+      <table class="dt-scaffold">
+        <thead>
+          <tr>
+            <th rowspan="2">IV: Length (cm)<br>± 0.1</th>
+            <th colspan="3">DV: Resistance (Ω) ± 0.5</th>
+            <th rowspan="2">Average DV (Ω)</th>
+            <th rowspan="2">Statistical<br>Uncertainty</th>
+            <th rowspan="2">Error Bars</th>
+          </tr>
+          <tr><th>Trial 1</th><th>Trial 2</th><th>Trial 3</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="iv-col">10</td><td class="given">2.1</td><td class="given">2.3</td><td class="given">2.2</td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td class="iv-col">20</td><td class="given">4.5</td><td class="given">4.3</td><td class="given">4.7</td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td class="iv-col">30</td><td class="given">6.8</td><td class="given">6.6</td><td class="given">6.9</td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td class="iv-col">40</td><td class="given">8.9</td><td class="given">9.2</td><td class="given">9.1</td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td class="iv-col">50</td><td class="given">11.3</td><td class="given">10.8</td><td class="given">11.4</td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Part B — Find and Fix the Errors</h2>
+    <p class="instructions">This student's data table has four mistakes. Identify each error and write the correction.</p>
+    <div style="overflow-x:auto;margin-bottom:16px;">
+      <table class="dt-scaffold">
+        <thead>
+          <tr>
+            <th rowspan="2">Mass (kg)</th>
+            <th colspan="3">Height (m)</th>
+            <th rowspan="2">Average</th>
+            <th rowspan="2">Stat. Unc.</th>
+            <th rowspan="2">Error Bar</th>
+          </tr>
+          <tr><th>Trial 1</th><th>Trial 2</th><th>Trial 3</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="given">0.1</td><td class="given">1.20</td><td class="given">1.18</td><td class="given">1.22</td><td class="given">1.20</td><td class="err-student">0.04</td><td class="err-student">0.04</td></tr>
+          <tr><td class="given">0.2</td><td class="given">2.40</td><td class="given">2.36</td><td class="given">2.44</td><td class="given">2.40</td><td class="err-student">0.08</td><td class="err-student">0.08</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:0.85rem;color:#64748b;margin-bottom:14px;">Additional info: measurement uncertainty of Height = ±0.01 m</p>
+    <div class="short-answer">
+      <div class="q">List all errors in this table and the correct values:</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Part C — True / False</h2>
+    <p class="instructions">Circle T or F. Write a correction if false.</p>
+    <div class="tf-card"><div class="tf-num">1.</div><div><div class="tf-stmt">The error bar is always equal to the statistical uncertainty.</div><div style="margin-top:6px;font-size:0.85rem;color:#6b7280;">If false: <span style="border-bottom:2px solid #d1d5db;display:inline-block;width:280px;"></span></div></div><div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div></div>
+    <div class="tf-card"><div class="tf-num">2.</div><div><div class="tf-stmt">The Independent Variable goes on the y (vertical) axis of the graph.</div><div style="margin-top:6px;font-size:0.85rem;color:#6b7280;">If false: <span style="border-bottom:2px solid #d1d5db;display:inline-block;width:280px;"></span></div></div><div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div></div>
+    <div class="tf-card"><div class="tf-num">3.</div><div><div class="tf-stmt">If all three trials give the same value, the statistical uncertainty is 0, and the error bar equals the measurement uncertainty.</div><div style="margin-top:6px;font-size:0.85rem;color:#6b7280;">If false: <span style="border-bottom:2px solid #d1d5db;display:inline-block;width:280px;"></span></div></div><div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div></div>
+    <div class="tf-card"><div class="tf-num">4.</div><div><div class="tf-stmt">Control values should be listed inside the data table, in the IV column.</div><div style="margin-top:6px;font-size:0.85rem;color:#6b7280;">If false: <span style="border-bottom:2px solid #d1d5db;display:inline-block;width:280px;"></span></div></div><div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div></div>
+    <div class="tf-card"><div class="tf-num">5.</div><div><div class="tf-stmt">The IV measurement uncertainty gives the x-axis error bars on the graph; the Error Bar column gives the y-axis error bars.</div><div style="margin-top:6px;font-size:0.85rem;color:#6b7280;">If false: <span style="border-bottom:2px solid #d1d5db;display:inline-block;width:280px;"></span></div></div><div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div></div>
+  </section>
+
+  <section>
+    <h2>Part D — Extended Response</h2>
+    <div class="short-answer">
+      <div class="q">6. Design a data table (just the headers, not the data) for an experiment investigating how the angle of a ramp (IV: 10°–50°, ±1°) affects the distance a ball rolls (DV: measured 3 times, ±0.5 cm). The room temperature and ball diameter are kept constant. Write out the full table headers and indicate what the control values would be.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+    <div class="short-answer">
+      <div class="q">7. For one row in your ramp experiment, the three distance trials are 42.5, 43.1, and 42.8 cm. The measurement uncertainty is ±0.5 cm.<br>(a) Calculate the average.<br>(b) Calculate the statistical uncertainty.<br>(c) Determine the error bar.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <div class="key-btn-wrap"><button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button></div>
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+    <div class="key-section">
+      <h3>Part A — Resistance Table</h3>
+      <table class="key-table">
+        <thead><tr><th>Length (cm)</th><th>Average (Ω)</th><th>Δ_stat</th><th>Error Bar</th></tr></thead>
+        <tbody>
+          <tr><td>10</td><td class="key-ans">2.2</td><td class="key-ans">0.1</td><td class="key-ans">0.5</td></tr>
+          <tr><td>20</td><td class="key-ans">4.5</td><td class="key-ans">0.2</td><td class="key-ans">0.5</td></tr>
+          <tr><td>30</td><td class="key-ans">6.77</td><td class="key-ans">0.15</td><td class="key-ans">0.5</td></tr>
+          <tr><td>40</td><td class="key-ans">9.07</td><td class="key-ans">0.15</td><td class="key-ans">0.5</td></tr>
+          <tr><td>50</td><td class="key-ans">11.17</td><td class="key-ans">0.3</td><td class="key-ans">0.5</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:0.82rem;color:#4b5563;margin-top:8px;">Note: measurement uncertainty ±0.5 Ω is always larger than statistical uncertainty, so error bar = 0.5 Ω throughout.</div>
+    </div>
+    <div class="key-section">
+      <h3>Part B — Errors Found</h3>
+      <div class="short-ans-key"><strong>Error 1:</strong> Column headers missing units and measurement uncertainty (should be "Mass (kg) ±___ " and "Height (m) ±0.01").</div>
+      <div class="short-ans-key"><strong>Error 2:</strong> Stat. uncertainty row 1 — student wrote 0.04, but (1.22−1.18)/2 = 0.02. <strong>Correct: 0.02</strong></div>
+      <div class="short-ans-key"><strong>Error 3:</strong> Stat. uncertainty row 2 — (2.44−2.36)/2 = 0.04. Student wrote 0.08. <strong>Correct: 0.04</strong></div>
+      <div class="short-ans-key"><strong>Error 4:</strong> Error bar — should be larger(0.01 meas, 0.02 stat) = 0.02 for row 1; larger(0.01, 0.04) = 0.04 for row 2. Student put 0.04 and 0.08 (doubled the stat uncertainty — wrong formula).</div>
+    </div>
+    <div class="key-section">
+      <h3>Part C — T/F</h3>
+      <div class="short-ans-key"><strong>1. FALSE</strong> — Error bar = larger of (measurement uncertainty, statistical uncertainty), not always just statistical.</div>
+      <div class="short-ans-key"><strong>2. FALSE</strong> — The IV goes on the x (horizontal) axis. The DV goes on the y axis.</div>
+      <div class="short-ans-key"><strong>3. TRUE</strong> — If all trials are equal, Δ_stat = 0, so error bar = measurement uncertainty.</div>
+      <div class="short-ans-key"><strong>4. FALSE</strong> — Control values are listed ABOVE the table (e.g. "Control Values: ..."), not inside it.</div>
+      <div class="short-ans-key"><strong>5. TRUE</strong> — IV uncertainty → x-axis error bars; Error Bar column → y-axis error bars. ✓</div>
+    </div>
+    <div class="key-section">
+      <h3>Part D</h3>
+      <div class="short-ans-key"><strong>Q6 Headers:</strong> Data Table: Control Values: room temperature, ball diameter, ball material, ramp surface. | IV: Angle (°) ±1 | DV: Distance (cm) ±0.5 [Trial 1, Trial 2, Trial 3] | Average DV (cm) | Statistical Uncertainty | Error Bars</div>
+      <div class="short-ans-key"><strong>Q7:</strong> (a) Average = (42.5+43.1+42.8)/3 = 128.4/3 = <strong>42.8 cm</strong>. (b) Δ_stat = (43.1−42.5)/2 = 0.6/2 = <strong>±0.3 cm</strong>. (c) Error bar = larger(0.5, 0.3) = <strong>±0.5 cm</strong> (measurement uncertainty dominates).</div>
+    </div>
+  </div>
+</main>
+<script>function toggleKey(){var k=document.getElementById('answer-key');var b=document.getElementById('toggle-key-btn');if(k.style.display==='none'||k.style.display===''){k.style.display='block';b.textContent='Hide Answer Key';}else{k.style.display='none';b.textContent='Show Answer Key';}}</script>
+</body>
+</html>

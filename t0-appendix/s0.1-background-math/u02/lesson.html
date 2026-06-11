@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculating with Significant Figures — Physics Lesson</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --blue:   #3b82f6;
+      --indigo: #6366f1;
+      --green:  #22c55e;
+      --amber:  #f59e0b;
+      --red:    #ef4444;
+      --orange: #f97316;
+      --purple: #a855f7;
+      --teal:   #14b8a6;
+      --dark:   #0f172a;
+      --muted:  #64748b;
+      --bg:     #f8faff;
+      --sig-bg: #dcfce7;
+      --sig-fg: #15803d;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      font-size: 17px;
+      line-height: 1.75;
+      background-image: radial-gradient(circle, #fed7aa 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #1c0a00 0%, #7c2d12 50%, #c2410c 100%);
+      color: white;
+      padding: 52px 60px 48px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+    header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(251,146,60,0.3) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 30%, rgba(239,68,68,0.25) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .star { position: absolute; border-radius: 50%; background: white; animation: twinkle 3s infinite alternate; }
+    @keyframes twinkle { from { opacity: 0.15; transform: scale(1); } to { opacity: 0.9; transform: scale(1.5); } }
+
+    header .chip {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      position: relative;
+    }
+    header h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+      position: relative;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #fed7aa, #fef08a, #fde68a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    header .subtitle { font-size: 1rem; color: rgba(255,255,255,0.75); position: relative; }
+
+    /* ── LAYOUT ── */
+    main { max-width: 900px; margin: 48px auto; padding: 0 24px 80px; }
+    section { margin-bottom: 60px; }
+
+    .section-label { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+    .section-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+    .section-label h2 { font-size: 1.5rem; font-weight: 900; color: var(--dark); }
+
+    /* ── INTRO ── */
+    .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    @media (max-width: 640px) { .intro-grid { grid-template-columns: 1fr; } }
+
+    .intro-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px 26px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+      border: 2px solid #ffedd5;
+    }
+    .intro-card p { font-size: 0.92rem; color: #374151; margin-bottom: 12px; }
+    .intro-card p:last-child { margin-bottom: 0; }
+
+    .rule-summary {
+      background: linear-gradient(135deg, #fff7ed, #fef3c7);
+      border: 2px solid #fbbf24;
+      border-radius: 16px;
+      padding: 24px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .rs-row { display: flex; gap: 14px; align-items: flex-start; }
+    .rs-icon {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .rs-text h4 { font-size: 0.95rem; font-weight: 900; margin-bottom: 3px; }
+    .rs-text p  { font-size: 0.82rem; color: #78350f; }
+
+    /* ── THE 2 BIG RULES ── */
+    .two-rules { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    @media (max-width: 620px) { .two-rules { grid-template-columns: 1fr; } }
+
+    .big-rule {
+      border-radius: 20px;
+      padding: 28px 26px;
+      position: relative;
+      overflow: hidden;
+    }
+    .br-add  { background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 2px solid #93c5fd; }
+    .br-mult { background: linear-gradient(135deg, #f0fdf4, #dcfce7); border: 2px solid #86efac; }
+
+    .big-rule .br-num {
+      font-size: 5rem;
+      font-weight: 900;
+      position: absolute;
+      top: -10px; right: 14px;
+      opacity: 0.08;
+      line-height: 1;
+    }
+    .big-rule .br-ops {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .br-add  .br-ops { color: #1d4ed8; }
+    .br-mult .br-ops { color: #166534; }
+
+    .big-rule h3 { font-size: 1.05rem; font-weight: 900; margin-bottom: 8px; }
+    .br-add  h3 { color: #1e40af; }
+    .br-mult h3 { color: #14532d; }
+
+    .big-rule p { font-size: 0.88rem; color: #374151; line-height: 1.65; margin-bottom: 10px; }
+    .big-rule p:last-child { margin-bottom: 0; }
+
+    .keyword {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .kw-blue { background: #dbeafe; color: #1d4ed8; }
+    .kw-green { background: #dcfce7; color: #166534; }
+
+    /* ── WORKED EXAMPLES ── */
+    .example-card {
+      background: white;
+      border-radius: 18px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      overflow: hidden;
+    }
+    .ex-header {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 22px;
+      border-bottom: 2px solid #f1f5f9;
+    }
+    .ex-num {
+      background: var(--dark);
+      color: white;
+      font-size: 0.75rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 1px;
+      padding: 4px 14px; border-radius: 20px;
+    }
+    .ex-type {
+      font-size: 0.8rem; font-weight: 700;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .ex-body { padding: 22px 26px; }
+
+    /* calculation layout */
+    .calc-block {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 18px 22px;
+      margin-bottom: 16px;
+      font-family: 'Space Mono', monospace;
+    }
+    .calc-line { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; font-size: 1.1rem; }
+    .calc-line:last-child { margin-bottom: 0; }
+    .calc-op { color: var(--muted); font-size: 1.2rem; width: 20px; text-align: center; }
+    .calc-num { font-size: 1.2rem; font-weight: 700; }
+    .calc-divider { border: none; border-top: 2px solid #cbd5e1; margin: 8px 0; }
+    .calc-result { font-size: 1.3rem; font-weight: 700; color: #1d4ed8; }
+    .calc-final  { font-size: 1.3rem; font-weight: 700; color: #166534; }
+
+    /* annotation */
+    .ann { font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-left: 8px; }
+    .ann-dp  { color: #2563eb; }
+    .ann-sf  { color: #16a34a; }
+    .ann-limit { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 4px; }
+
+    .step-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .step-list li { display: flex; gap: 12px; font-size: 0.9rem; color: #374151; align-items: flex-start; }
+    .step-dot {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: #e0e7ff; color: #4338ca;
+      font-weight: 900; font-size: 0.75rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .result-box {
+      margin-top: 14px;
+      padding: 14px 18px;
+      background: #f0fdf4;
+      border: 2px solid #86efac;
+      border-radius: 10px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .result-box .rb-label { font-size: 0.82rem; color: var(--muted); font-weight: 700; }
+    .result-box .rb-raw   { font-family: 'Space Mono', monospace; font-size: 1.1rem; color: #dc2626; text-decoration: line-through; }
+    .result-box .rb-arrow { font-size: 1.2rem; color: var(--muted); }
+    .result-box .rb-final { font-family: 'Space Mono', monospace; font-size: 1.3rem; font-weight: 700; color: #166534; }
+    .result-box .rb-sf    { font-size: 0.8rem; font-weight: 800; background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 10px; }
+
+    .explanation {
+      font-size: 0.9rem; color: #475569;
+      padding: 12px 16px;
+      background: #f8fafc;
+      border-left: 3px solid #cbd5e1;
+      border-radius: 8px;
+      margin-top: 12px;
+    }
+
+    /* ── ROUNDING RULES ── */
+    .round-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+    @media (max-width: 600px) { .round-grid { grid-template-columns: 1fr; } }
+
+    .round-card {
+      background: white;
+      border-radius: 14px;
+      padding: 18px 18px 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      text-align: center;
+    }
+    .round-card .rc-icon { font-size: 2rem; margin-bottom: 8px; }
+    .round-card h4 { font-size: 0.9rem; font-weight: 800; margin-bottom: 6px; }
+    .round-card .rc-rule { font-family: 'Space Mono', monospace; font-size: 1rem; font-weight: 700; margin: 8px 0; padding: 6px; border-radius: 8px; }
+    .round-card p { font-size: 0.8rem; color: var(--muted); }
+    .rc-down { background: #dbeafe; color: #1d4ed8; }
+    .rc-up   { background: #fef3c7; color: #92400e; }
+    .rc-even { background: #ede9fe; color: #5b21b6; }
+
+    /* ── ORDER OF OPS ── */
+    .ops-flow {
+      display: flex;
+      gap: 0;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .ops-step {
+      background: white;
+      border-radius: 14px;
+      padding: 16px 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      min-width: 130px;
+      flex: 1;
+    }
+    .ops-arrow { display: flex; align-items: center; padding: 0 8px; font-size: 1.5rem; color: #94a3b8; }
+    .ops-step .os-num { font-size: 1.6rem; font-weight: 900; margin-bottom: 4px; }
+    .ops-step h4 { font-size: 0.85rem; font-weight: 800; margin-bottom: 4px; }
+    .ops-step p  { font-size: 0.78rem; color: var(--muted); }
+    .os1 { color: #f97316; }
+    .os2 { color: #3b82f6; }
+    .os3 { color: #22c55e; }
+
+    /* ── CHEAT SHEET ── */
+    .cheat-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+    }
+    .cheat-table thead tr { background: var(--dark); color: white; }
+    .cheat-table th { padding: 13px 18px; text-align: left; font-size: 0.88rem; }
+    .cheat-table td { padding: 12px 18px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+    .cheat-table tr:last-child td { border-bottom: none; }
+    .cheat-table tr:nth-child(even) td { background: #f8fafc; }
+    .td-op   { font-family: 'Space Mono', monospace; font-weight: 700; font-size: 1.1rem; }
+    .td-rule { font-weight: 700; }
+    .td-blue  { color: #1d4ed8; }
+    .td-green { color: #166534; }
+
+    /* ── COMMON MISTAKES ── */
+    .mistakes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 600px) { .mistakes-grid { grid-template-columns: 1fr; } }
+
+    .mistake-card {
+      background: white;
+      border-radius: 14px;
+      padding: 18px 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      border-top: 4px solid #ef4444;
+    }
+    .mistake-card .mc-bad  { font-family: 'Space Mono', monospace; color: #dc2626; font-size: 0.95rem; margin: 8px 0 4px; text-decoration: line-through; }
+    .mistake-card .mc-good { font-family: 'Space Mono', monospace; color: #166534; font-size: 0.95rem; margin-bottom: 8px; }
+    .mistake-card h4 { font-size: 0.9rem; font-weight: 800; color: #dc2626; margin-bottom: 4px; }
+    .mistake-card p  { font-size: 0.82rem; color: var(--muted); }
+
+    /* ── QUIZ ── */
+    .quiz-section {
+      background: linear-gradient(135deg, #1c0a00, #7c2d12);
+      border-radius: 20px;
+      padding: 32px;
+      color: white;
+    }
+    .quiz-section h3 { font-size: 1.3rem; font-weight: 900; margin-bottom: 6px; }
+    .quiz-section > p { font-size: 0.88rem; opacity: 0.75; margin-bottom: 24px; }
+    .quiz-q {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-bottom: 14px;
+    }
+    .quiz-q .qtext { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; }
+    .quiz-q .qnum  { font-family: 'Space Mono', monospace; font-size: 1.3rem; font-weight: 700; margin-bottom: 14px; background: rgba(255,255,255,0.07); padding: 10px 14px; border-radius: 8px; }
+    .options { display: flex; flex-wrap: wrap; gap: 10px; }
+    .opt-btn {
+      background: rgba(255,255,255,0.1);
+      border: 2px solid rgba(255,255,255,0.2);
+      color: white;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.9rem; font-weight: 700;
+      padding: 8px 18px; border-radius: 30px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .opt-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.04); }
+    .opt-btn.correct { background: #22c55e; border-color: #22c55e; animation: popIn 0.3s ease; }
+    .opt-btn.wrong   { background: #ef4444; border-color: #ef4444; }
+    .feedback { font-size: 0.85rem; margin-top: 10px; padding: 8px 14px; border-radius: 8px; display: none; }
+    .feedback.show { display: block; }
+    .feedback.ok  { background: rgba(34,197,94,0.2);  color: #bbf7d0; }
+    .feedback.bad { background: rgba(239,68,68,0.2);   color: #fecaca; }
+    @keyframes popIn { 0%{transform:scale(0.9)} 60%{transform:scale(1.1)} 100%{transform:scale(1)} }
+
+    footer { text-align: center; padding: 32px 20px; font-size: 0.85rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()"
+      style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Enter Class →</button>
+    <p style="color:rgba(255,255,255,0.3);font-size:0.75rem;margin-top:20px;">Your teacher will share the password with you</p>
+  </div>
+</div>
+<script>
+(function(){
+  var PWD='physics2024';
+  var stored=localStorage.getItem('pg_ok');
+  if(stored&&stored===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}
+  else{document.body.style.overflow='hidden';}
+  window.pgCheck=function(){
+    var v=document.getElementById('pg-input').value.trim();
+    if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}
+    else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}
+  };
+})();
+</script>
+
+<header>
+  <div class="star" style="width:3px;height:3px;top:12%;left:7%;animation-delay:0s"></div>
+  <div class="star" style="width:2px;height:2px;top:22%;left:18%;animation-delay:0.6s"></div>
+  <div class="star" style="width:4px;height:4px;top:9%;left:35%;animation-delay:1.1s"></div>
+  <div class="star" style="width:2px;height:2px;top:58%;left:6%;animation-delay:1.7s"></div>
+  <div class="star" style="width:3px;height:3px;top:68%;left:25%;animation-delay:0.3s"></div>
+  <div class="star" style="width:2px;height:2px;top:14%;left:70%;animation-delay:0.9s"></div>
+  <div class="star" style="width:4px;height:4px;top:40%;left:85%;animation-delay:1.3s"></div>
+  <div class="star" style="width:3px;height:3px;top:74%;left:91%;animation-delay:0.2s"></div>
+  <div class="star" style="width:5px;height:5px;top:20%;left:55%;animation-delay:0.7s"></div>
+  <div class="chip">⚛️ Physics · High School · Measurement</div>
+  <h1>Calculating with Significant Figures</h1>
+  <p class="subtitle">How to keep the right number of sig figs when you add, subtract, multiply, or divide</p>
+</header>
+
+<main>
+
+<!-- ══ SECTION 1 — WHY ══ -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#ffedd5;">🤔</div>
+    <h2>Why Calculations Need Sig Fig Rules</h2>
+  </div>
+
+  <div class="intro-grid">
+    <div class="intro-card">
+      <p>You already know how to <strong>count</strong> significant figures in a single number. But what happens when you <em>calculate</em> with measurements?</p>
+      <p>Imagine you measure two lengths with different rulers. One gives you <strong>12.3 cm</strong> (3 sig figs, precision ±0.1 cm). Another gives you <strong>4.56 cm</strong> (3 sig figs, precision ±0.01 cm). When you add them, does your answer magically become more precise?</p>
+      <p><strong>No.</strong> Your answer can only be as precise as your <em>least precise</em> measurement. The calculation rules exist to enforce this — they stop you from claiming false precision in your results.</p>
+    </div>
+    <div class="rule-summary">
+      <div class="rs-row">
+        <div class="rs-icon" style="background:#dbeafe;">➕</div>
+        <div class="rs-text">
+          <h4 style="color:#1e40af;">Addition &amp; Subtraction</h4>
+          <p>Answer has the same number of <strong>decimal places</strong> as the measurement with the <em>fewest decimal places</em>.</p>
+        </div>
+      </div>
+      <div style="border-top:2px dashed #fde68a;"></div>
+      <div class="rs-row">
+        <div class="rs-icon" style="background:#dcfce7;">✖️</div>
+        <div class="rs-text">
+          <h4 style="color:#14532d;">Multiplication &amp; Division</h4>
+          <p>Answer has the same number of <strong>significant figures</strong> as the measurement with the <em>fewest sig figs</em>.</p>
+        </div>
+      </div>
+      <div style="border-top:2px dashed #fde68a;"></div>
+      <div class="rs-row">
+        <div class="rs-icon" style="background:#ede9fe;">🔢</div>
+        <div class="rs-text">
+          <h4 style="color:#5b21b6;">Powers &amp; Roots</h4>
+          <p>Answer keeps the <strong>same number of sig figs</strong> as the original number — same rule as multiply/divide.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 2 — THE 2 RULES ══ -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fef3c7;">📋</div>
+    <h2>The Three Rules in Detail</h2>
+  </div>
+
+  <div class="two-rules" style="grid-template-columns:1fr 1fr 1fr;">
+
+    <div class="big-rule br-add">
+      <div class="br-num">+−</div>
+      <div class="br-ops">+ &nbsp; −</div>
+      <span class="keyword kw-blue">Addition &amp; Subtraction</span>
+      <h3 style="margin-top:12px;">Count Decimal Places</h3>
+      <p>Look at each number's <strong>decimal places</strong> (digits after the decimal point). Your answer must be rounded to match the number with the <em>fewest</em> decimal places.</p>
+      <p><strong>Why?</strong> Because the least precise number only gives information to a certain decimal place. Knowing more decimal places beyond that is meaningless.</p>
+      <div style="background:rgba(59,130,246,0.08);border-radius:10px;padding:12px 14px;margin-top:8px;font-family:'Space Mono',monospace;font-size:0.95rem;">
+        12.3<span style="background:#dbeafe;border-radius:3px;padding:0 2px;color:#1d4ed8;">1</span> dp<br>
+        + 4.56<span style="background:#dbeafe;border-radius:3px;padding:0 2px;color:#1d4ed8;">2</span> dp<br>
+        <hr style="border:none;border-top:1px solid #93c5fd;margin:6px 0;">
+        = 16.86 → <strong style="color:#1d4ed8;">16.9</strong> <span style="font-size:0.75rem;color:#2563eb;">(1 dp)</span>
+      </div>
+    </div>
+
+    <div class="big-rule br-mult">
+      <div class="br-num">×÷</div>
+      <div class="br-ops">× &nbsp; ÷</div>
+      <span class="keyword kw-green">Multiplication &amp; Division</span>
+      <h3 style="margin-top:12px;">Count Sig Figs</h3>
+      <p>Look at each number's <strong>total significant figures</strong>. Your answer must be rounded to match the number with the <em>fewest</em> sig figs.</p>
+      <p><strong>Why?</strong> Multiplying or dividing two measurements combines their relative uncertainties. The least precise measurement limits how precise the result can be.</p>
+      <div style="background:rgba(34,197,94,0.08);border-radius:10px;padding:12px 14px;margin-top:8px;font-family:'Space Mono',monospace;font-size:0.95rem;">
+        4.56 <span style="background:#dcfce7;border-radius:3px;padding:0 2px;color:#166534;">3</span> sf<br>
+        × 1.4 <span style="background:#dcfce7;border-radius:3px;padding:0 2px;color:#166534;">2</span> sf<br>
+        <hr style="border:none;border-top:1px solid #86efac;margin:6px 0;">
+        = 6.384 → <strong style="color:#166534;">6.4</strong> <span style="font-size:0.75rem;color:#166534;">(2 sf)</span>
+      </div>
+    </div>
+
+    <div class="big-rule" style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:2px solid #c4b5fd;">
+      <div class="br-num" style="color:#7c3aed;">xⁿ</div>
+      <div class="br-ops" style="color:#7c3aed;">xⁿ &nbsp; √</div>
+      <span class="keyword" style="background:#ede9fe;color:#5b21b6;">Powers &amp; Roots</span>
+      <h3 style="margin-top:12px;color:#4c1d95;">Count Sig Figs (same as × ÷)</h3>
+      <p>Your answer keeps the <strong>same number of sig figs</strong> as the number you started with.</p>
+      <p><strong>Why?</strong> A power is repeated multiplication; a root is the inverse. Both operations combine the same number's uncertainty with itself — the sig fig count doesn't change.</p>
+      <div style="background:rgba(139,92,246,0.08);border-radius:10px;padding:12px 14px;margin-top:8px;font-family:'Space Mono',monospace;font-size:0.95rem;">
+        (2.3)<sup>2</sup> &nbsp;<span style="background:#ede9fe;border-radius:3px;padding:0 2px;color:#5b21b6;">2</span> sf<br>
+        = 5.29 → <strong style="color:#7c3aed;">5.3</strong> <span style="font-size:0.75rem;color:#7c3aed;">(2 sf)</span><br><br>
+        √4.56 &nbsp;<span style="background:#ede9fe;border-radius:3px;padding:0 2px;color:#5b21b6;">3</span> sf<br>
+        = 2.135… → <strong style="color:#7c3aed;">2.14</strong> <span style="font-size:0.75rem;color:#7c3aed;">(3 sf)</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ SECTION 3 — WORKED EXAMPLES ══ -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#dcfce7;">🔬</div>
+    <h2>Worked Examples</h2>
+  </div>
+
+  <!-- Ex 1: Addition -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 1</div>
+      <div class="ex-type">Addition — count decimal places</div>
+    </div>
+    <div class="ex-body">
+      <div class="calc-block">
+        <div class="calc-line">
+          <span class="calc-op"></span>
+          <span class="calc-num">23.1</span>
+          <span class="ann ann-dp">← 1 decimal place</span>
+        </div>
+        <div class="calc-line">
+          <span class="calc-op">+</span>
+          <span class="calc-num">45.67</span>
+          <span class="ann ann-dp">← 2 decimal places</span>
+        </div>
+        <div class="calc-line">
+          <span class="calc-op">+</span>
+          <span class="calc-num">8.902</span>
+          <span class="ann ann-dp">← 3 decimal places</span>
+        </div>
+        <hr class="calc-divider">
+        <div class="calc-line">
+          <span class="calc-op">=</span>
+          <span class="calc-result">77.672</span>
+          <span class="ann">Calculator answer</span>
+        </div>
+      </div>
+      <ul class="step-list">
+        <li><div class="step-dot">1</div><span>Find the number with the <strong>fewest decimal places</strong>: 23.1 → only <strong>1 decimal place</strong></span></li>
+        <li><div class="step-dot">2</div><span>Round the calculator answer to <strong>1 decimal place</strong>: 77.672 → <strong>77.7</strong></span></li>
+        <li><div class="step-dot">3</div><span>The digit after the rounding place is 7 (≥5) → round up the 6 → <strong>77.7</strong></span></li>
+      </ul>
+      <div class="result-box">
+        <div><div class="rb-label">Calculator says</div><div class="rb-raw">77.672</div></div>
+        <div class="rb-arrow">→</div>
+        <div><div class="rb-label">Correct answer</div><div class="rb-final">77.7</div></div>
+        <div class="rb-sf">1 decimal place</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ex 2: Subtraction -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 2</div>
+      <div class="ex-type">Subtraction — count decimal places</div>
+    </div>
+    <div class="ex-body">
+      <div class="calc-block">
+        <div class="calc-line">
+          <span class="calc-op"></span>
+          <span class="calc-num">100.0</span>
+          <span class="ann ann-dp">← 1 decimal place</span>
+        </div>
+        <div class="calc-line">
+          <span class="calc-op">−</span>
+          <span class="calc-num">23.456</span>
+          <span class="ann ann-dp">← 3 decimal places</span>
+        </div>
+        <hr class="calc-divider">
+        <div class="calc-line">
+          <span class="calc-op">=</span>
+          <span class="calc-result">76.544</span>
+          <span class="ann">Calculator answer</span>
+        </div>
+      </div>
+      <ul class="step-list">
+        <li><div class="step-dot">1</div><span>Fewest decimal places: 100.0 → <strong>1 decimal place</strong></span></li>
+        <li><div class="step-dot">2</div><span>Round 76.544 to 1 decimal place: digit after = 4 → round down → <strong>76.5</strong></span></li>
+      </ul>
+      <div class="result-box">
+        <div><div class="rb-label">Calculator says</div><div class="rb-raw">76.544</div></div>
+        <div class="rb-arrow">→</div>
+        <div><div class="rb-label">Correct answer</div><div class="rb-final">76.5</div></div>
+        <div class="rb-sf">1 decimal place</div>
+      </div>
+      <div class="explanation">💡 Notice that 100.0 has a decimal point — that trailing zero IS significant and tells us the measurement was made to the nearest 0.1. This limits the answer to 1 decimal place.</div>
+    </div>
+  </div>
+
+  <!-- Ex 3: Multiplication -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 3</div>
+      <div class="ex-type">Multiplication — count sig figs</div>
+    </div>
+    <div class="ex-body">
+      <div class="calc-block">
+        <div class="calc-line">
+          <span class="calc-op"></span>
+          <span class="calc-num">4.56</span>
+          <span class="ann ann-sf">← 3 sig figs</span>
+        </div>
+        <div class="calc-line">
+          <span class="calc-op">×</span>
+          <span class="calc-num">1.4</span>
+          <span class="ann ann-sf" style="color:#d97706;">← 2 sig figs ⚠️ fewest</span>
+        </div>
+        <hr class="calc-divider">
+        <div class="calc-line">
+          <span class="calc-op">=</span>
+          <span class="calc-result">6.384</span>
+          <span class="ann">Calculator answer</span>
+        </div>
+      </div>
+      <ul class="step-list">
+        <li><div class="step-dot">1</div><span>Count sig figs in each number: 4.56 = 3 sf, 1.4 = <strong>2 sf</strong> (fewest)</span></li>
+        <li><div class="step-dot">2</div><span>Round calculator answer to <strong>2 sig figs</strong>: 6.384 → <strong>6.4</strong></span></li>
+        <li><div class="step-dot">3</div><span>Check: 6.4 has 2 sig figs ✓</span></li>
+      </ul>
+      <div class="result-box">
+        <div><div class="rb-label">Calculator says</div><div class="rb-raw">6.384</div></div>
+        <div class="rb-arrow">→</div>
+        <div><div class="rb-label">Correct answer</div><div class="rb-final">6.4</div></div>
+        <div class="rb-sf">2 sig figs</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ex 4: Division -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 4</div>
+      <div class="ex-type">Division — count sig figs</div>
+    </div>
+    <div class="ex-body">
+      <div class="calc-block">
+        <div class="calc-line">
+          <span class="calc-op"></span>
+          <span class="calc-num">355</span>
+          <span class="ann ann-sf">← 3 sig figs</span>
+        </div>
+        <div class="calc-line">
+          <span class="calc-op">÷</span>
+          <span class="calc-num">113</span>
+          <span class="ann ann-sf">← 3 sig figs</span>
+        </div>
+        <hr class="calc-divider">
+        <div class="calc-line">
+          <span class="calc-op">=</span>
+          <span class="calc-result">3.14159…</span>
+          <span class="ann">Calculator answer</span>
+        </div>
+      </div>
+      <ul class="step-list">
+        <li><div class="step-dot">1</div><span>Both numbers have <strong>3 sig figs</strong> — answer must have 3 sig figs</span></li>
+        <li><div class="step-dot">2</div><span>3.14159… rounded to 3 sig figs: keep 3, 1, 4 → next digit is 1 (round down) → <strong>3.14</strong></span></li>
+      </ul>
+      <div class="result-box">
+        <div><div class="rb-label">Calculator says</div><div class="rb-raw">3.14159…</div></div>
+        <div class="rb-arrow">→</div>
+        <div><div class="rb-label">Correct answer</div><div class="rb-final">3.14</div></div>
+        <div class="rb-sf">3 sig figs</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ex 5: Mixed operations -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 5</div>
+      <div class="ex-type">Mixed operations — do in steps</div>
+    </div>
+    <div class="ex-body">
+      <p style="font-size:0.9rem;color:#374151;margin-bottom:14px;">Calculate: <strong>(3.2 + 1.45) × 6.10</strong></p>
+      <ul class="step-list">
+        <li><div class="step-dot">1</div><span><strong>Step 1 — Addition inside brackets first:</strong><br>3.2 (1 dp) + 1.45 (2 dp) = 4.65 → round to <strong>1 dp</strong> = <strong>4.6</strong> (but carry full value 4.65 internally)</span></li>
+        <li><div class="step-dot">2</div><span><strong>Step 2 — Multiplication:</strong><br>4.65 × 6.10 → count sig figs: 4.6 has 2 sf, 6.10 has 3 sf → fewest = <strong>2 sf</strong></span></li>
+        <li><div class="step-dot">3</div><span>4.65 × 6.10 = 28.365 → round to 2 sig figs → <strong>28</strong></span></li>
+      </ul>
+      <div class="result-box">
+        <div><div class="rb-label">Calculator says</div><div class="rb-raw">28.365</div></div>
+        <div class="rb-arrow">→</div>
+        <div><div class="rb-label">Correct answer</div><div class="rb-final">28</div></div>
+        <div class="rb-sf">2 sig figs</div>
+      </div>
+      <div class="explanation">💡 <strong>Important:</strong> In multi-step problems, carry the <em>unrounded</em> intermediate value through to the final calculation. Only round at the very last step. Rounding too early builds up errors!</div>
+    </div>
+  </div>
+
+  <!-- Ex 6: Power -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 6</div>
+      <div class="ex-type">Power — same sig figs as the base</div>
+    </div>
+    <div class="ex-body">
+      <div class="calc-block">
+        <div class="calc-line">
+          <span class="calc-op"></span>
+          <span class="calc-num">(2.30)²</span>
+          <span class="ann ann-sf">← 3 sig figs</span>
+        </div>
+        <hr class="calc-divider">
+        <div class="calc-line">
+          <span class="calc-op">=</span>
+          <span class="calc-result">5.2900</span>
+          <span class="ann">Calculator answer</span>
+        </div>
+      </div>
+      <ul class="step-list">
+        <li><div class="step-dot">1</div><span>The base number is <strong>2.30</strong> → it has <strong>3 sig figs</strong> (decimal present, trailing zero counts)</span></li>
+        <li><div class="step-dot">2</div><span>Raising to a power is repeated multiplication → use the <strong>sig fig rule</strong> (not decimal places)</span></li>
+        <li><div class="step-dot">3</div><span>Answer must have <strong>3 sig figs</strong>: 5.2900 → <strong>5.29</strong></span></li>
+      </ul>
+      <div class="result-box">
+        <div><div class="rb-label">Calculator says</div><div class="rb-raw">5.2900</div></div>
+        <div class="rb-arrow">→</div>
+        <div><div class="rb-label">Correct answer</div><div class="rb-final">5.29</div></div>
+        <div class="rb-sf">3 sig figs</div>
+      </div>
+      <div class="explanation">💡 Compare: (2.3)² → 2 sf → answer <strong>5.3</strong>. That one trailing zero in 2.30 makes a real difference — it earns you an extra sig fig in the answer.</div>
+    </div>
+  </div>
+
+  <!-- Ex 7: Square root -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 7</div>
+      <div class="ex-type">Square root — same sig figs as the radicand</div>
+    </div>
+    <div class="ex-body">
+      <div class="calc-block">
+        <div class="calc-line">
+          <span class="calc-op"></span>
+          <span class="calc-num">√ 4.56</span>
+          <span class="ann ann-sf">← 3 sig figs</span>
+        </div>
+        <hr class="calc-divider">
+        <div class="calc-line">
+          <span class="calc-op">=</span>
+          <span class="calc-result">2.13542…</span>
+          <span class="ann">Calculator answer</span>
+        </div>
+      </div>
+      <ul class="step-list">
+        <li><div class="step-dot">1</div><span>The number under the root (the <em>radicand</em>) is <strong>4.56</strong> → <strong>3 sig figs</strong></span></li>
+        <li><div class="step-dot">2</div><span>A square root is the inverse of squaring — same sig fig rule applies</span></li>
+        <li><div class="step-dot">3</div><span>Round to <strong>3 sig figs</strong>: 2.13542… → <strong>2.14</strong></span></li>
+      </ul>
+      <div class="result-box">
+        <div><div class="rb-label">Calculator says</div><div class="rb-raw">2.13542…</div></div>
+        <div class="rb-arrow">→</div>
+        <div><div class="rb-label">Correct answer</div><div class="rb-final">2.14</div></div>
+        <div class="rb-sf">3 sig figs</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;">
+        <div style="background:#f5f3ff;border-radius:10px;padding:14px;font-size:0.85rem;">
+          <div style="font-weight:800;color:#5b21b6;margin-bottom:8px;">More root examples:</div>
+          <div style="font-family:'Space Mono',monospace;font-size:0.88rem;color:#374151;line-height:1.9;">
+            √9.0 &nbsp;&nbsp; (2 sf) → <strong style="color:#7c3aed;">3.0</strong><br>
+            √9.00 &nbsp; (3 sf) → <strong style="color:#7c3aed;">3.00</strong><br>
+            √81.0 &nbsp; (3 sf) → <strong style="color:#7c3aed;">9.00</strong>
+          </div>
+        </div>
+        <div style="background:#f5f3ff;border-radius:10px;padding:14px;font-size:0.85rem;">
+          <div style="font-weight:800;color:#5b21b6;margin-bottom:8px;">More power examples:</div>
+          <div style="font-family:'Space Mono',monospace;font-size:0.88rem;color:#374151;line-height:1.9;">
+            (1.2)³ (2 sf) → <strong style="color:#7c3aed;">1.7</strong><br>
+            (4.0)² (2 sf) → <strong style="color:#7c3aed;">16</strong><br>
+            (1.50)² (3 sf) → <strong style="color:#7c3aed;">2.25</strong>
+          </div>
+        </div>
+      </div>
+      <div class="explanation">💡 <strong>Cube roots, 4th roots, any root</strong> — all follow the same rule. The answer has the same sig figs as the number you started with.</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══ SECTION 4 — ROUNDING RULES ══ -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fef3c7;">🎯</div>
+    <h2>Rounding Rules</h2>
+  </div>
+
+  <div class="round-grid">
+    <div class="round-card">
+      <div class="rc-icon">⬇️</div>
+      <h4>Round DOWN</h4>
+      <div class="rc-rule rc-down">digit &lt; 5</div>
+      <p>Drop the digit and leave the previous digit unchanged.<br><br><strong>3.74</strong> → 3.7 (to 2 sf)</p>
+    </div>
+    <div class="round-card">
+      <div class="rc-icon">⬆️</div>
+      <h4>Round UP</h4>
+      <div class="rc-rule rc-up">digit &gt; 5</div>
+      <p>Drop the digit and add 1 to the previous digit.<br><br><strong>3.76</strong> → 3.8 (to 2 sf)</p>
+    </div>
+    <div class="round-card">
+      <div class="rc-icon">🎲</div>
+      <h4>The "5" case</h4>
+      <div class="rc-rule rc-even">digit = 5</div>
+      <p>Round to the nearest <strong>even</strong> digit. (Banker's rounding — avoids bias.)<br><br><strong>3.75</strong> → 3.8 &nbsp;·&nbsp; <strong>3.65</strong> → 3.6</p>
+    </div>
+  </div>
+  <div style="background:#fef9c3;border:2px solid #fbbf24;border-radius:12px;padding:14px 18px;font-size:0.88rem;color:#78350f;">
+    💡 <strong>For most high school problems</strong>, just use the simple rule: digit ≥ 5 → round up, digit &lt; 5 → round down. The "round to even" rule matters more in advanced lab work.
+  </div>
+</section>
+
+<!-- ══ SECTION 5 — ORDER OF OPS ══ -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#ede9fe;">⚙️</div>
+    <h2>Multi-Step Calculations — The Right Order</h2>
+  </div>
+
+  <div class="ops-flow">
+    <div class="ops-step">
+      <div class="os-num os1">1</div>
+      <h4>Calculate First</h4>
+      <p>Do the full calculation on your calculator without rounding anything yet</p>
+    </div>
+    <div class="ops-arrow">→</div>
+    <div class="ops-step">
+      <div class="os-num os2">2</div>
+      <h4>Apply the Rules</h4>
+      <p>Identify which rule applies (+ / − → decimal places, × / ÷ → sig figs)</p>
+    </div>
+    <div class="ops-arrow">→</div>
+    <div class="ops-step">
+      <div class="os-num os3">3</div>
+      <h4>Round Once at End</h4>
+      <p>Round the final answer only — never round intermediate steps</p>
+    </div>
+  </div>
+
+  <div style="background:white;border-radius:14px;padding:20px 24px;box-shadow:0 2px 10px rgba(0,0,0,0.06);margin-top:4px;">
+    <h4 style="font-size:0.95rem;font-weight:800;margin-bottom:12px;">What happens if you round too early?</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div style="background:#fef2f2;border-radius:10px;padding:14px;font-size:0.85rem;">
+        <div style="color:#dc2626;font-weight:800;margin-bottom:6px;">❌ Wrong way</div>
+        <div style="font-family:'Space Mono',monospace;font-size:0.88rem;color:#374151;">
+          2.365 + 1.4 = 3.765<br>
+          <span style="color:#dc2626;">→ round to 3.8 (1 dp)</span><br>
+          3.8 × 2.5 = 9.5<br>
+          <span style="color:#dc2626;">→ round to 9.5 (2 sf)</span><br>
+          <strong>Answer: 9.5</strong>
+        </div>
+      </div>
+      <div style="background:#f0fdf4;border-radius:10px;padding:14px;font-size:0.85rem;">
+        <div style="color:#166534;font-weight:800;margin-bottom:6px;">✅ Right way</div>
+        <div style="font-family:'Space Mono',monospace;font-size:0.88rem;color:#374151;">
+          2.365 + 1.4 = 3.765<br>
+          <span style="color:#64748b;">(keep full value)</span><br>
+          3.765 × 2.5 = 9.4125<br>
+          <span style="color:#166534;">→ round to 9.4 (2 sf)</span><br>
+          <strong style="color:#166534;">Answer: 9.4</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 6 — CHEAT SHEET ══ -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fef3c7;">⚡</div>
+    <h2>Quick-Reference Cheat Sheet</h2>
+  </div>
+
+  <table class="cheat-table">
+    <thead>
+      <tr><th>Operation</th><th>Rule</th><th>Look for</th><th>Example</th><th>Answer</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="td-op td-blue">+</span> Addition</td>
+        <td class="td-rule td-blue">Fewest decimal places</td>
+        <td>Decimal places in each number</td>
+        <td style="font-family:'Space Mono',monospace;">12.1 + 0.045</td>
+        <td style="font-family:'Space Mono',monospace;font-weight:700;">12.1</td>
+      </tr>
+      <tr>
+        <td><span class="td-op td-blue">−</span> Subtraction</td>
+        <td class="td-rule td-blue">Fewest decimal places</td>
+        <td>Decimal places in each number</td>
+        <td style="font-family:'Space Mono',monospace;">50.0 − 1.234</td>
+        <td style="font-family:'Space Mono',monospace;font-weight:700;">48.8</td>
+      </tr>
+      <tr>
+        <td><span class="td-op td-green">×</span> Multiplication</td>
+        <td class="td-rule td-green">Fewest sig figs</td>
+        <td>Total sig figs in each number</td>
+        <td style="font-family:'Space Mono',monospace;">3.20 × 1.4</td>
+        <td style="font-family:'Space Mono',monospace;font-weight:700;">4.5</td>
+      </tr>
+      <tr>
+        <td><span class="td-op td-green">÷</span> Division</td>
+        <td class="td-rule td-green">Fewest sig figs</td>
+        <td>Total sig figs in each number</td>
+        <td style="font-family:'Space Mono',monospace;">8.40 ÷ 2.0</td>
+        <td style="font-family:'Space Mono',monospace;font-weight:700;">4.2</td>
+      </tr>
+      <tr>
+        <td>Mixed</td>
+        <td class="td-rule" style="color:#7c3aed;">Apply rule per step</td>
+        <td>Never round until final answer</td>
+        <td style="font-family:'Space Mono',monospace;">(1.2 + 3.45) × 2.0</td>
+        <td style="font-family:'Space Mono',monospace;font-weight:700;">9.3</td>
+      </tr>
+      <tr>
+        <td><span class="td-op" style="color:#7c3aed;">xⁿ</span> Power</td>
+        <td class="td-rule" style="color:#5b21b6;">Same sig figs as base</td>
+        <td>Sig figs in the base number</td>
+        <td style="font-family:'Space Mono',monospace;">(2.30)²</td>
+        <td style="font-family:'Space Mono',monospace;font-weight:700;">5.29</td>
+      </tr>
+      <tr>
+        <td><span class="td-op" style="color:#7c3aed;">√</span> Root</td>
+        <td class="td-rule" style="color:#5b21b6;">Same sig figs as radicand</td>
+        <td>Sig figs under the root sign</td>
+        <td style="font-family:'Space Mono',monospace;">√4.56</td>
+        <td style="font-family:'Space Mono',monospace;font-weight:700;">2.14</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══ SECTION 7 — COMMON MISTAKES ══ -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fee2e2;">⚠️</div>
+    <h2>Common Mistakes to Avoid</h2>
+  </div>
+
+  <div class="mistakes-grid">
+    <div class="mistake-card">
+      <h4>❌ Using sig fig rule for + and −</h4>
+      <div class="mc-bad">12.1 + 0.045 = 12.1 (1 sf?? wrong!)</div>
+      <div class="mc-good">12.1 + 0.045 = 12.1 (1 dp ✓)</div>
+      <p>Addition uses <strong>decimal places</strong>, not total sig figs. The answer 12.1 has 3 sig figs — that's fine.</p>
+    </div>
+    <div class="mistake-card">
+      <h4>❌ Using decimal place rule for × and ÷</h4>
+      <div class="mc-bad">3.2 × 1.45 = 4.64 (2 dp? wrong!)</div>
+      <div class="mc-good">3.2 × 1.45 = 4.6 (2 sf ✓)</div>
+      <p>Multiplication uses <strong>sig figs</strong>, not decimal places. 3.2 has 2 sig figs → answer has 2 sig figs.</p>
+    </div>
+    <div class="mistake-card">
+      <h4>❌ Rounding intermediate steps</h4>
+      <div class="mc-bad">Round at every step → error builds</div>
+      <div class="mc-good">Keep full digits → round once at end</div>
+      <p>Always carry full calculator precision through multi-step problems. Round only the <strong>final answer</strong>.</p>
+    </div>
+    <div class="mistake-card">
+      <h4>❌ Forgetting exact numbers have ∞ sig figs</h4>
+      <div class="mc-bad">Counting "2 apples" as 1 sig fig</div>
+      <div class="mc-good">Counted/defined values → unlimited sig figs</div>
+      <p>Numbers from counting (2 apples, 3 sides) or definitions (1 km = 1000 m) are exact — they never limit your sig figs.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 8 — QUIZ ══ -->
+<section>
+  <div class="quiz-section">
+    <h3>⚡ Quick Check — Calculations</h3>
+    <p>Apply the rules and pick the correct answer.</p>
+
+    <div class="quiz-q" id="q1">
+      <div class="qtext">What is the correct answer (with proper sig figs)?</div>
+      <div class="qnum">14.5 + 2.34 + 0.007</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q1',false,'16.847','Close — but you need to apply the rule. The fewest decimal places here is 1 (from 14.5). Round to 1 dp.')">16.847</button>
+        <button class="opt-btn" onclick="check(this,'q1',true,'16.8','Correct! 14.5 has 1 decimal place — fewest. 14.5 + 2.34 + 0.007 = 16.847 → round to 1 dp = 16.8')">16.8</button>
+        <button class="opt-btn" onclick="check(this,'q1',false,'16.85','Too many decimal places. Check which number has the fewest decimal places.')">16.85</button>
+        <button class="opt-btn" onclick="check(this,'q1',false,'17','That would be rounding to 0 decimal places — but no number here has 0 decimal places.')">17</button>
+      </div>
+      <div class="feedback" id="q1-fb"></div>
+    </div>
+
+    <div class="quiz-q" id="q2">
+      <div class="qtext">What is the correct answer (with proper sig figs)?</div>
+      <div class="qnum">3.40 × 6.2</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q2',false,'21.08','Too many sig figs. Count: 3.40 has 3 sf, 6.2 has 2 sf — the answer needs 2 sf.')">21.08</button>
+        <button class="opt-btn" onclick="check(this,'q2',false,'21.1','3 sig figs — but 6.2 only has 2, so 2 sig figs is the limit.')">21.1</button>
+        <button class="opt-btn" onclick="check(this,'q2',true,'21','Correct! 3.40 (3 sf) × 6.2 (2 sf) = 21.08 → round to 2 sf = 21')">21</button>
+        <button class="opt-btn" onclick="check(this,'q2',false,'20','Check your rounding: 21.08 rounded to 2 sf is 21, not 20.')">20</button>
+      </div>
+      <div class="feedback" id="q2-fb"></div>
+    </div>
+
+    <div class="quiz-q" id="q3">
+      <div class="qtext">A student calculates: 45.0 ÷ 2.00. Which answer is correct?</div>
+      <div class="qnum">45.0 ÷ 2.00</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q3',false,'22','Only 2 sig figs — but both numbers have 3 sig figs, so the answer should have 3.')">22</button>
+        <button class="opt-btn" onclick="check(this,'q3',false,'22.5','2 decimal places — but division uses sig figs, not decimal places.')">22.5</button>
+        <button class="opt-btn" onclick="check(this,'q3',true,'22.5','Correct! 45.0 has 3 sf, 2.00 has 3 sf → answer needs 3 sf. 45.0 ÷ 2.00 = 22.5 exactly ✓')">22.5</button>
+        <button class="opt-btn" onclick="check(this,'q3',false,'22.50','4 sig figs — one too many. Count: 45.0 and 2.00 each have 3 sf → answer needs 3 sf.')">22.50</button>
+      </div>
+      <div class="feedback" id="q3-fb"></div>
+    </div>
+
+    <div class="quiz-q" id="q4">
+      <div class="qtext">What is the correct answer with proper sig figs?</div>
+      <div class="qnum">(3.4)²</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q4',false,'11.56','Too many sig figs. 3.4 has only 2 sig figs — the answer must have 2 sig figs.')">11.56</button>
+        <button class="opt-btn" onclick="check(this,'q4',false,'11.6','3 sig figs — but 3.4 only has 2, so the answer must have 2 sig figs.')">11.6</button>
+        <button class="opt-btn" onclick="check(this,'q4',true,'12','Correct! 3.4 has 2 sig figs → answer needs 2 sig figs. 3.4² = 11.56 → round to 2 sf = 12 ✓')">12</button>
+        <button class="opt-btn" onclick="check(this,'q4',false,'10','Check your rounding: 11.56 rounded to 2 sig figs is 12, not 10.')">10</button>
+      </div>
+      <div class="feedback" id="q4-fb"></div>
+    </div>
+
+    <div class="quiz-q" id="q5">
+      <div class="qtext">What is the correct answer with proper sig figs?</div>
+      <div class="qnum">√ 12.0</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q5',false,'3','Only 1 sig fig — but 12.0 has 3 sig figs, so the answer needs 3 sig figs.')">3</button>
+        <button class="opt-btn" onclick="check(this,'q5',false,'3.5','2 sig figs — 12.0 has 3 sig figs so the answer needs 3 sig figs.')">3.5</button>
+        <button class="opt-btn" onclick="check(this,'q5',true,'3.46','Correct! 12.0 has 3 sig figs → answer needs 3 sig figs. √12.0 = 3.4641… → 3.46 ✓')">3.46</button>
+        <button class="opt-btn" onclick="check(this,'q5',false,'3.464','4 sig figs — one too many. 12.0 has 3 sig figs so stop at 3.')">3.464</button>
+      </div>
+      <div class="feedback" id="q5-fb"></div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer>Physics · High School &nbsp;·&nbsp; Unit 2: Calculating with Significant Figures</footer>
+
+<script>
+  function check(btn, qid, correct, label, msg) {
+    var q = document.getElementById(qid);
+    var fb = document.getElementById(qid+'-fb');
+    q.querySelectorAll('.opt-btn').forEach(function(b){b.disabled=true;b.style.opacity='0.55';b.style.cursor='default';});
+    btn.style.opacity='1';
+    btn.classList.add(correct?'correct':'wrong');
+    if(!correct){
+      var answers={q1:'16.8',q2:'21',q3:'22.5',q4:'12',q5:'3.46'};
+      q.querySelectorAll('.opt-btn').forEach(function(b){if(b.textContent.trim()===answers[qid]){b.classList.add('correct');b.style.opacity='1';}});
+    }
+    fb.textContent=(correct?'✅ ':'❌ ')+msg;
+    fb.className='feedback show '+(correct?'ok':'bad');
+  }
+</script>
+</body>
+</html>

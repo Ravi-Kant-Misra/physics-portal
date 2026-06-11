@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>X and Y Components — Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0fdff;background-image:radial-gradient(circle,#a5f3fc 1px,transparent 1px);background-size:28px 28px;color:#0f172a;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#164e63 0%,#0e7490 50%,#0891b2 100%);color:white;padding:32px 60px 28px;position:relative;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:820px;margin:36px auto;padding:0 24px 60px;}
+
+    .rules-box{background:white;border:2px solid #a5f3fc;border-radius:10px;padding:18px 22px;margin-bottom:36px;}
+    .rules-box h3{color:#0e7490;font-size:1rem;margin-bottom:10px;}
+    .rules-box .rule-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:6px;font-size:0.92rem;color:#374151;}
+    .rule-dot{width:22px;height:22px;background:#0e7490;color:white;border-radius:50%;font-size:0.75rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+    .rules-box .formula{font-family:'Space Mono',monospace;background:#ecfeff;color:#0e7490;padding:4px 10px;border-radius:6px;font-size:0.9rem;font-weight:700;}
+
+    section{margin-bottom:44px;}
+    h2{font-size:1.2rem;font-weight:800;color:#0e7490;border-left:5px solid #06b6d4;padding-left:12px;margin-bottom:16px;}
+    .instructions{color:#4b5563;font-size:0.92rem;margin-bottom:18px;font-style:italic;}
+
+    /* PART A: REAL-WORLD SCENARIOS */
+    .scenario-grid{display:grid;gap:16px;}
+    .sc-card{background:white;border-radius:12px;padding:20px 24px;box-shadow:0 1px 8px rgba(0,0,0,0.07);border-left:4px solid #0891b2;}
+    .sc-card .q-num{font-size:0.75rem;font-weight:800;text-transform:uppercase;color:#0891b2;margin-bottom:6px;}
+    .sc-card .scenario{background:#f0fdff;border-radius:8px;padding:12px 16px;margin-bottom:12px;font-size:0.92rem;color:#164e63;}
+    .sc-card .scenario strong{display:block;margin-bottom:4px;}
+    .sc-card .parts{display:flex;flex-direction:column;gap:10px;}
+    .sc-card .part-row{display:flex;align-items:center;gap:10px;}
+    .sc-card .part-label{font-size:0.88rem;font-weight:700;color:#0e7490;white-space:nowrap;min-width:140px;}
+    .write-line{flex:1;border:none;border-bottom:2px solid #d1d5db;background:transparent;font-family:'Space Mono',monospace;font-size:0.95rem;color:#0f172a;padding:4px 2px;outline:none;}
+    .write-line:focus{border-bottom-color:#0e7490;}
+
+    /* PART B: MULTI-STEP PROBLEMS */
+    .prob-card{background:white;border-radius:12px;padding:20px 24px;box-shadow:0 1px 8px rgba(0,0,0,0.07);border-top:3px solid #0e7490;margin-bottom:16px;}
+    .prob-card .q-num{font-size:0.75rem;font-weight:800;text-transform:uppercase;color:#0e7490;margin-bottom:6px;}
+    .prob-card .q-text{font-size:0.95rem;font-weight:700;color:#0f172a;margin-bottom:8px;}
+    .prob-card .given-vals{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+    .given-chip{background:#ecfeff;border:1px solid #67e8f9;padding:4px 12px;border-radius:20px;font-family:'Space Mono',monospace;font-size:0.85rem;color:#0e7490;font-weight:700;}
+    .work-area{display:grid;gap:10px;}
+    .work-line-wrap{display:flex;align-items:center;gap:10px;}
+    .work-line-wrap .prompt{font-size:0.85rem;color:#64748b;white-space:nowrap;min-width:120px;}
+
+    /* PART C: CONCEPT QUESTIONS */
+    .concept-q{background:white;border-radius:12px;padding:18px 22px;box-shadow:0 1px 8px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .concept-q .q{font-weight:700;font-size:0.95rem;margin-bottom:10px;}
+    .concept-q .lines{display:flex;flex-direction:column;gap:14px;}
+    .concept-q .blank-line{border-bottom:2px solid #d1d5db;min-height:24px;width:100%;}
+
+    /* PART D: TRUE/FALSE ANALYSIS */
+    .tf-grid{display:grid;gap:12px;}
+    .tf-card{background:white;border-radius:10px;padding:14px 20px;box-shadow:0 1px 6px rgba(0,0,0,0.07);display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;}
+    .tf-card .stmt{font-size:0.92rem;color:#0f172a;}
+    .tf-buttons{display:flex;gap:8px;}
+    .tf-btn{padding:6px 14px;border:2px solid #d1d5db;border-radius:8px;font-size:0.85rem;font-weight:800;cursor:pointer;background:white;font-family:inherit;transition:all 0.15s;}
+    .tf-btn:hover{border-color:#0e7490;}
+    .tf-btn.selected-t{background:#dcfce7;border-color:#22c55e;color:#15803d;}
+    .tf-btn.selected-f{background:#fef2f2;border-color:#ef4444;color:#991b1b;}
+
+    /* PART E: CHALLENGE — FIND THE MISSING SIDE */
+    .challenge-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    @media(max-width:580px){.challenge-grid{grid-template-columns:1fr;}}
+    .ch-card{background:white;border-radius:12px;padding:20px;box-shadow:0 1px 8px rgba(0,0,0,0.07);text-align:center;border-top:3px solid #7c3aed;}
+    .ch-card .q-num{font-size:0.75rem;font-weight:800;text-transform:uppercase;color:#7c3aed;margin-bottom:8px;}
+    .ch-card .ch-given{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+    .ch-chip-purple{background:#f3e8ff;border:1px solid #d8b4fe;padding:4px 12px;border-radius:20px;font-family:'Space Mono',monospace;font-size:0.85rem;color:#7c3aed;font-weight:700;}
+    .ch-answer{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:12px;}
+    .ch-answer .ch-label{font-size:0.88rem;font-weight:700;color:#7c3aed;}
+    .ch-answer input{border:none;border-bottom:2px solid #a78bfa;background:transparent;font-family:'Space Mono',monospace;font-size:1rem;color:#0f172a;padding:4px;outline:none;width:100px;text-align:center;}
+    .ch-answer input:focus{border-bottom-color:#7c3aed;}
+    .show-work{margin-top:10px;}
+    .show-work input{width:100%;border:none;border-bottom:1px dashed #d1d5db;background:transparent;font-family:'Space Mono',monospace;font-size:0.85rem;color:#0f172a;padding:4px 2px;outline:none;}
+    .show-work input:focus{border-bottom-color:#7c3aed;}
+
+    /* ANSWER KEY */
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#0e7490;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;transition:background 0.2s;}
+    #toggle-key-btn:hover{background:#0891b2;}
+    #answer-key{display:none;background:#ecfeff;border:2px solid #a5f3fc;border-radius:12px;padding:28px 32px;margin-top:10px;}
+    #answer-key h3{color:#0e7490;font-size:1.1rem;margin-bottom:18px;}
+    .key-section{margin-bottom:22px;}
+    .key-section h4{font-size:0.95rem;font-weight:800;color:#0e7490;border-bottom:1px solid #a5f3fc;padding-bottom:6px;margin-bottom:12px;}
+    .key-row{display:grid;grid-template-columns:auto 1fr;gap:12px;margin-bottom:8px;align-items:baseline;}
+    .key-num{font-weight:800;color:#0e7490;font-size:0.9rem;white-space:nowrap;}
+    .key-ans{font-family:'Space Mono',monospace;font-size:0.9rem;color:#0f172a;}
+    .key-ans .correct{color:#15803d;font-weight:700;}
+
+    /* PASSWORD */
+    .lock-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.95);display:flex;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(8px);}
+    .lock-box{background:white;border-radius:24px;padding:48px 40px;max-width:400px;width:90%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,0.4);}
+    .lock-box .lock-icon{font-size:3rem;margin-bottom:16px;}
+    .lock-box h2{font-size:1.6rem;font-weight:900;color:#0f172a;margin-bottom:8px;}
+    .lock-box p{font-size:0.92rem;color:#64748b;margin-bottom:24px;}
+    .lock-box input{width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:10px;font-size:1rem;font-family:inherit;margin-bottom:14px;outline:none;transition:border-color 0.2s;}
+    .lock-box input:focus{border-color:#0e7490;}
+    .lock-box button{width:100%;padding:12px;background:linear-gradient(135deg,#0e7490,#0891b2);color:white;border:none;border-radius:10px;font-size:1rem;font-weight:800;cursor:pointer;font-family:inherit;}
+    .lock-box .err{color:#ef4444;font-size:0.85rem;margin-top:8px;display:none;}
+    .content-hidden{filter:blur(8px);pointer-events:none;user-select:none;}
+  </style>
+</head>
+<body>
+
+<div class="lock-overlay" id="lockOverlay">
+  <div class="lock-box">
+    <div class="lock-icon">&#128274;</div>
+    <h2>Homework</h2>
+    <p>Enter the class password to access this assignment.</p>
+    <input type="password" id="pwInput" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()">
+    <button onclick="checkPw()">Unlock</button>
+    <div class="err" id="pwErr">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<div id="mainContent" class="content-hidden">
+
+<header>
+  <div class="label">IB Physics &nbsp;|&nbsp; Unit 21 &nbsp;|&nbsp; Homework</div>
+  <h1>X and Y Components of Vectors</h1>
+  <div class="meta">Name: _________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+
+  <div class="rules-box">
+    <h3>Key Rules to Remember</h3>
+    <div class="rule-row"><div class="rule-dot">1</div><div>Vector rule: <span class="formula">&#8594;A = &#8594;Ax + &#8594;Ay</span></div></div>
+    <div class="rule-row"><div class="rule-dot">2</div><div>Pythagorean rule: <span class="formula">Ax&#178; + Ay&#178; = A&#178;</span> &nbsp; (A is the hypotenuse)</div></div>
+    <div class="rule-row"><div class="rule-dot">!</div><div><strong>A &#8800; Ax + Ay</strong> for diagonal vectors — use the Pythagorean theorem!</div></div>
+  </div>
+
+  <!-- PART A: REAL-WORLD SCENARIOS -->
+  <section>
+    <h2>Part A — Real-World Scenarios</h2>
+    <p class="instructions">Read each scenario. Describe the direction of each component and determine whether each component is zero or non-zero.</p>
+
+    <div class="scenario-grid">
+
+      <div class="sc-card">
+        <div class="q-num">Question 1</div>
+        <div class="scenario">
+          <strong>Scenario:</strong>
+          A plane flies at an angle toward the northeast (upper-right). Its velocity vector &#8594;v has magnitude 300 km/h.
+        </div>
+        <div class="parts">
+          <div class="part-row"><span class="part-label">vx direction:</span><input class="write-line" type="text" placeholder="direction and sign..."></div>
+          <div class="part-row"><span class="part-label">vy direction:</span><input class="write-line" type="text" placeholder="direction and sign..."></div>
+          <div class="part-row"><span class="part-label">Is vx = 0? (yes/no):</span><input class="write-line" type="text" placeholder=""></div>
+          <div class="part-row"><span class="part-label">Is vy = 0? (yes/no):</span><input class="write-line" type="text" placeholder=""></div>
+        </div>
+      </div>
+
+      <div class="sc-card">
+        <div class="q-num">Question 2</div>
+        <div class="scenario">
+          <strong>Scenario:</strong>
+          A submarine descends straight down. Its velocity vector &#8594;v has magnitude 5 m/s.
+        </div>
+        <div class="parts">
+          <div class="part-row"><span class="part-label">vx direction:</span><input class="write-line" type="text" placeholder="direction and sign..."></div>
+          <div class="part-row"><span class="part-label">vy direction:</span><input class="write-line" type="text" placeholder="direction and sign..."></div>
+          <div class="part-row"><span class="part-label">vx magnitude:</span><input class="write-line" type="text" placeholder="vx = ?"></div>
+          <div class="part-row"><span class="part-label">vy magnitude:</span><input class="write-line" type="text" placeholder="vy = ?"></div>
+        </div>
+      </div>
+
+      <div class="sc-card">
+        <div class="q-num">Question 3</div>
+        <div class="scenario">
+          <strong>Scenario:</strong>
+          A soccer ball is kicked diagonally to the lower-left (toward the bottom-left corner of the field). Its displacement is 20 m.
+        </div>
+        <div class="parts">
+          <div class="part-row"><span class="part-label">dx direction:</span><input class="write-line" type="text" placeholder="direction and sign..."></div>
+          <div class="part-row"><span class="part-label">dy direction:</span><input class="write-line" type="text" placeholder="direction and sign..."></div>
+          <div class="part-row"><span class="part-label">Is dx = 0? (yes/no):</span><input class="write-line" type="text" placeholder=""></div>
+          <div class="part-row"><span class="part-label">What quadrant?</span><input class="write-line" type="text" placeholder="Quadrant..."></div>
+        </div>
+      </div>
+
+      <div class="sc-card">
+        <div class="q-num">Question 4</div>
+        <div class="scenario">
+          <strong>Scenario:</strong>
+          A train moves purely to the left along a flat track. Speed = 80 km/h.
+        </div>
+        <div class="parts">
+          <div class="part-row"><span class="part-label">vx value:</span><input class="write-line" type="text" placeholder="vx = ? km/h (sign?)"></div>
+          <div class="part-row"><span class="part-label">vy value:</span><input class="write-line" type="text" placeholder="vy = ? km/h"></div>
+          <div class="part-row"><span class="part-label">Explain why vy = 0:</span><input class="write-line" type="text" placeholder="Because..."></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PART B: PYTHAGOREAN CALCULATIONS -->
+  <section>
+    <h2>Part B — Pythagorean Theorem Problems</h2>
+    <p class="instructions">Show all working. Use the formula Ax&#178; + Ay&#178; = A&#178;. Include units in your answer.</p>
+
+    <div class="prob-card">
+      <div class="q-num">Question 5</div>
+      <div class="q-text">A displacement vector has components Ax = 9 m and Ay = 12 m. Find the magnitude A.</div>
+      <div class="given-vals">
+        <span class="given-chip">Ax = 9 m</span>
+        <span class="given-chip">Ay = 12 m</span>
+        <span class="given-chip">A = ?</span>
+      </div>
+      <div class="work-area">
+        <div class="work-line-wrap"><span class="prompt">Formula:</span><input class="write-line" type="text"></div>
+        <div class="work-line-wrap"><span class="prompt">Substitute:</span><input class="write-line" type="text"></div>
+        <div class="work-line-wrap"><span class="prompt">Answer A =</span><input class="write-line" type="text"></div>
+      </div>
+    </div>
+
+    <div class="prob-card">
+      <div class="q-num">Question 6</div>
+      <div class="q-text">A velocity vector has magnitude v = 26 m/s and a y-component vy = 10 m/s. Find vx.</div>
+      <div class="given-vals">
+        <span class="given-chip">v = 26 m/s</span>
+        <span class="given-chip">vy = 10 m/s</span>
+        <span class="given-chip">vx = ?</span>
+      </div>
+      <div class="work-area">
+        <div class="work-line-wrap"><span class="prompt">Formula:</span><input class="write-line" type="text"></div>
+        <div class="work-line-wrap"><span class="prompt">Rearrange:</span><input class="write-line" type="text"></div>
+        <div class="work-line-wrap"><span class="prompt">Substitute:</span><input class="write-line" type="text"></div>
+        <div class="work-line-wrap"><span class="prompt">Answer vx =</span><input class="write-line" type="text"></div>
+      </div>
+    </div>
+
+    <div class="prob-card">
+      <div class="q-num">Question 7</div>
+      <div class="q-text">A force vector &#8594;F has x-component Fx = 20 N and y-component Fy = 21 N. Find the magnitude F.</div>
+      <div class="given-vals">
+        <span class="given-chip">Fx = 20 N</span>
+        <span class="given-chip">Fy = 21 N</span>
+        <span class="given-chip">F = ?</span>
+      </div>
+      <div class="work-area">
+        <div class="work-line-wrap"><span class="prompt">Formula:</span><input class="write-line" type="text"></div>
+        <div class="work-line-wrap"><span class="prompt">Substitute:</span><input class="write-line" type="text"></div>
+        <div class="work-line-wrap"><span class="prompt">Answer F =</span><input class="write-line" type="text"></div>
+      </div>
+    </div>
+
+    <div class="prob-card">
+      <div class="q-num">Question 8</div>
+      <div class="q-text">A displacement has magnitude d = 50 m and x-component dx = 30 m. Find the y-component dy.</div>
+      <div class="given-vals">
+        <span class="given-chip">d = 50 m</span>
+        <span class="given-chip">dx = 30 m</span>
+        <span class="given-chip">dy = ?</span>
+      </div>
+      <div class="work-area">
+        <div class="work-line-wrap"><span class="prompt">Formula:</span><input class="write-line" type="text"></div>
+        <div class="work-line-wrap"><span class="prompt">Rearrange:</span><input class="write-line" type="text"></div>
+        <div class="work-line-wrap"><span class="prompt">Substitute:</span><input class="write-line" type="text"></div>
+        <div class="work-line-wrap"><span class="prompt">Answer dy =</span><input class="write-line" type="text"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART C: CONCEPT / SHORT ANSWER -->
+  <section>
+    <h2>Part C — Concept Questions</h2>
+
+    <div class="concept-q">
+      <div class="q">9. A student writes: "The magnitude of a vector equals the sum of its two components: A = Ax + Ay." Explain in 2–3 sentences why this statement is incorrect for diagonal vectors, and what the correct relationship is.</div>
+      <div class="lines">
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+      </div>
+    </div>
+
+    <div class="concept-q">
+      <div class="q">10. Why does a purely horizontal vector have Ay = 0? Explain using the meaning of the y-component.</div>
+      <div class="lines">
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+      </div>
+    </div>
+
+    <div class="concept-q">
+      <div class="q">11. In your own words, explain what it means that &#8594;A = &#8594;Ax + &#8594;Ay is a <em>vector</em> equation, not a scalar equation. What does the arrow notation tell you?</div>
+      <div class="lines">
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART D: TRUE / FALSE -->
+  <section>
+    <h2>Part D — True or False</h2>
+    <p class="instructions">Click TRUE or FALSE for each statement. You may explain your reasoning below each item.</p>
+
+    <div class="tf-grid">
+      <div class="tf-card">
+        <div class="stmt">12. A vector with Ax = 0 must be pointing straight up or straight down.</div>
+        <div class="tf-buttons">
+          <button class="tf-btn" onclick="selectTF(this,'t','q12')">TRUE</button>
+          <button class="tf-btn" onclick="selectTF(this,'f','q12')">FALSE</button>
+        </div>
+      </div>
+      <div class="tf-card">
+        <div class="stmt">13. The Pythagorean theorem applies to vector components because Ax and Ay are always perpendicular.</div>
+        <div class="tf-buttons">
+          <button class="tf-btn" onclick="selectTF(this,'t','q13')">TRUE</button>
+          <button class="tf-btn" onclick="selectTF(this,'f','q13')">FALSE</button>
+        </div>
+      </div>
+      <div class="tf-card">
+        <div class="stmt">14. If Ax = 3 m and Ay = 4 m, then A = 3 + 4 = 7 m.</div>
+        <div class="tf-buttons">
+          <button class="tf-btn" onclick="selectTF(this,'t','q14')">TRUE</button>
+          <button class="tf-btn" onclick="selectTF(this,'f','q14')">FALSE</button>
+        </div>
+      </div>
+      <div class="tf-card">
+        <div class="stmt">15. A diagonal vector always has both a non-zero x-component and a non-zero y-component.</div>
+        <div class="tf-buttons">
+          <button class="tf-btn" onclick="selectTF(this,'t','q15')">TRUE</button>
+          <button class="tf-btn" onclick="selectTF(this,'f','q15')">FALSE</button>
+        </div>
+      </div>
+      <div class="tf-card">
+        <div class="stmt">16. A vector pointing in the bottom-left direction has a positive Ax and a negative Ay.</div>
+        <div class="tf-buttons">
+          <button class="tf-btn" onclick="selectTF(this,'t','q16')">TRUE</button>
+          <button class="tf-btn" onclick="selectTF(this,'f','q16')">FALSE</button>
+        </div>
+      </div>
+      <div class="tf-card">
+        <div class="stmt">17. The magnitude A is always equal to or greater than either component Ax or Ay individually.</div>
+        <div class="tf-buttons">
+          <button class="tf-btn" onclick="selectTF(this,'t','q17')">TRUE</button>
+          <button class="tf-btn" onclick="selectTF(this,'f','q17')">FALSE</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART E: CHALLENGE PROBLEMS -->
+  <section>
+    <h2>Part E — Challenge: Find the Missing Value</h2>
+    <p class="instructions">All of these are Pythagorean triples (no calculator needed if you recognize the pattern). Find the missing component or magnitude.</p>
+
+    <div class="challenge-grid">
+      <div class="ch-card">
+        <div class="q-num">Question 18</div>
+        <div class="ch-given">
+          <span class="ch-chip-purple">Ax = 8 m</span>
+          <span class="ch-chip-purple">Ay = 15 m</span>
+          <span class="ch-chip-purple">A = ?</span>
+        </div>
+        <div class="show-work">
+          <input type="text" placeholder="Working: ___&#178; + ___&#178; = ___&#178;">
+        </div>
+        <div class="ch-answer">
+          <span class="ch-label">A =</span>
+          <input type="text" placeholder="? m">
+        </div>
+      </div>
+
+      <div class="ch-card">
+        <div class="q-num">Question 19</div>
+        <div class="ch-given">
+          <span class="ch-chip-purple">A = 25 m</span>
+          <span class="ch-chip-purple">Ax = 7 m</span>
+          <span class="ch-chip-purple">Ay = ?</span>
+        </div>
+        <div class="show-work">
+          <input type="text" placeholder="Working: ___&#178; = ___&#178; − ___&#178;">
+        </div>
+        <div class="ch-answer">
+          <span class="ch-label">Ay =</span>
+          <input type="text" placeholder="? m">
+        </div>
+      </div>
+
+      <div class="ch-card">
+        <div class="q-num">Question 20</div>
+        <div class="ch-given">
+          <span class="ch-chip-purple">A = 29 m</span>
+          <span class="ch-chip-purple">Ay = 20 m</span>
+          <span class="ch-chip-purple">Ax = ?</span>
+        </div>
+        <div class="show-work">
+          <input type="text" placeholder="Working: ___&#178; = ___&#178; − ___&#178;">
+        </div>
+        <div class="ch-answer">
+          <span class="ch-label">Ax =</span>
+          <input type="text" placeholder="? m">
+        </div>
+      </div>
+
+      <div class="ch-card">
+        <div class="q-num">Question 21</div>
+        <div class="ch-given">
+          <span class="ch-chip-purple">Ax = 12 m</span>
+          <span class="ch-chip-purple">Ay = 35 m</span>
+          <span class="ch-chip-purple">A = ?</span>
+        </div>
+        <div class="show-work">
+          <input type="text" placeholder="Working: ___&#178; + ___&#178; = ___&#178;">
+        </div>
+        <div class="ch-answer">
+          <span class="ch-label">A =</span>
+          <input type="text" placeholder="? m">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANSWER KEY -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+  </div>
+  <div id="answer-key">
+    <h3>Answer Key</h3>
+
+    <div class="key-section">
+      <h4>Part A — Real-World Scenarios</h4>
+      <div class="key-row"><span class="key-num">Q1 (Plane NE):</span><span class="key-ans">vx: <span class="correct">right (+)</span>, vy: <span class="correct">up (+)</span>. Both non-zero (diagonal vector, Quadrant I)</span></div>
+      <div class="key-row"><span class="key-num">Q2 (Sub down):</span><span class="key-ans">vx = <span class="correct">0</span> (no horizontal travel). vy: <span class="correct">down (−)</span>, vy = 5 m/s downward</span></div>
+      <div class="key-row"><span class="key-num">Q3 (Ball SW):</span><span class="key-ans">dx: <span class="correct">left (−)</span>, dy: <span class="correct">down (−)</span>. dx ≠ 0. <span class="correct">Quadrant III</span></span></div>
+      <div class="key-row"><span class="key-num">Q4 (Train left):</span><span class="key-ans">vx = <span class="correct">−80 km/h</span>. vy = <span class="correct">0</span>. Flat track = no vertical motion</span></div>
+    </div>
+
+    <div class="key-section">
+      <h4>Part B — Pythagorean Calculations</h4>
+      <div class="key-row"><span class="key-num">Q5:</span><span class="key-ans">9&#178; + 12&#178; = A&#178; &rarr; 81 + 144 = 225 &rarr; <span class="correct">A = 15 m</span> (9-12-15 = 3&#215;3-4-5)</span></div>
+      <div class="key-row"><span class="key-num">Q6:</span><span class="key-ans">vx&#178; = 26&#178; − 10&#178; = 676 − 100 = 576 &rarr; <span class="correct">vx = 24 m/s</span> (10-24-26 = 2&#215;5-12-13)</span></div>
+      <div class="key-row"><span class="key-num">Q7:</span><span class="key-ans">20&#178; + 21&#178; = F&#178; &rarr; 400 + 441 = 841 &rarr; <span class="correct">F = 29 N</span> (20-21-29 Pythagorean triple)</span></div>
+      <div class="key-row"><span class="key-num">Q8:</span><span class="key-ans">dy&#178; = 50&#178; − 30&#178; = 2500 − 900 = 1600 &rarr; <span class="correct">dy = 40 m</span> (30-40-50 = 10&#215;3-4-5)</span></div>
+    </div>
+
+    <div class="key-section">
+      <h4>Part C — Concept Questions</h4>
+      <div class="key-row"><span class="key-num">Q9:</span><span class="key-ans">Ax and Ay are perpendicular, so they form a right triangle with A as hypotenuse. The correct relationship is <span class="correct">Ax&#178; + Ay&#178; = A&#178;</span>, not A = Ax + Ay.</span></div>
+      <div class="key-row"><span class="key-num">Q10:</span><span class="key-ans">Ay measures vertical travel. A horizontal vector moves purely sideways — it has <span class="correct">zero vertical displacement</span>, so Ay = 0.</span></div>
+      <div class="key-row"><span class="key-num">Q11:</span><span class="key-ans">The arrow means direction matters. &#8594;Ax and &#8594;Ay are added <span class="correct">tip-to-tail</span> (vectorially), not as plain numbers. Their directions are perpendicular, which is why we need the Pythagorean theorem for magnitudes.</span></div>
+    </div>
+
+    <div class="key-section">
+      <h4>Part D — True / False</h4>
+      <div class="key-row"><span class="key-num">Q12:</span><span class="key-ans"><span class="correct">TRUE</span> — Ax = 0 means no horizontal component, so the vector must be purely vertical.</span></div>
+      <div class="key-row"><span class="key-num">Q13:</span><span class="key-ans"><span class="correct">TRUE</span> — x and y are always perpendicular by definition, so the Pythagorean theorem always applies.</span></div>
+      <div class="key-row"><span class="key-num">Q14:</span><span class="key-ans"><span class="correct">FALSE</span> — 3&#178; + 4&#178; = 5&#178; &rarr; A = 5 m, not 7 m. Never add scalar components directly.</span></div>
+      <div class="key-row"><span class="key-num">Q15:</span><span class="key-ans"><span class="correct">TRUE</span> — Diagonal means traveling in both horizontal and vertical directions simultaneously.</span></div>
+      <div class="key-row"><span class="key-num">Q16:</span><span class="key-ans"><span class="correct">FALSE</span> — Bottom-left (Quadrant III) has Ax pointing LEFT (negative) and Ay pointing DOWN (also negative).</span></div>
+      <div class="key-row"><span class="key-num">Q17:</span><span class="key-ans"><span class="correct">TRUE</span> — A is the hypotenuse and is always the longest side of a right triangle (A ≥ Ax and A ≥ Ay).</span></div>
+    </div>
+
+    <div class="key-section">
+      <h4>Part E — Challenge Problems</h4>
+      <div class="key-row"><span class="key-num">Q18:</span><span class="key-ans">8&#178; + 15&#178; = 64 + 225 = 289 &rarr; <span class="correct">A = 17 m</span> (8-15-17 triple)</span></div>
+      <div class="key-row"><span class="key-num">Q19:</span><span class="key-ans">Ay&#178; = 25&#178; − 7&#178; = 625 − 49 = 576 &rarr; <span class="correct">Ay = 24 m</span> (7-24-25 triple)</span></div>
+      <div class="key-row"><span class="key-num">Q20:</span><span class="key-ans">Ax&#178; = 29&#178; − 20&#178; = 841 − 400 = 441 &rarr; <span class="correct">Ax = 21 m</span> (20-21-29 triple)</span></div>
+      <div class="key-row"><span class="key-num">Q21:</span><span class="key-ans">12&#178; + 35&#178; = 144 + 1225 = 1369 &rarr; <span class="correct">A = 37 m</span> (12-35-37 triple)</span></div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<script>
+  function checkPw(){
+    const v=document.getElementById('pwInput').value;
+    if(v==='physics2024'){
+      document.getElementById('lockOverlay').style.display='none';
+      document.getElementById('mainContent').classList.remove('content-hidden');
+    } else {
+      document.getElementById('pwErr').style.display='block';
+      document.getElementById('pwInput').value='';
+    }
+  }
+  function toggleKey(){
+    const k=document.getElementById('answer-key');
+    const b=document.getElementById('toggle-key-btn');
+    if(k.style.display==='block'){k.style.display='none';b.textContent='Show Answer Key';}
+    else{k.style.display='block';b.textContent='Hide Answer Key';}
+  }
+  function selectTF(btn,val,qid){
+    const parent=btn.closest('.tf-buttons');
+    parent.querySelectorAll('.tf-btn').forEach(b=>{
+      b.classList.remove('selected-t','selected-f');
+    });
+    btn.classList.add(val==='t'?'selected-t':'selected-f');
+  }
+</script>
+</body>
+</html>

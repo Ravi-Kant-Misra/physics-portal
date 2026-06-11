@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Unit 15 Homework – Air Resistance</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+    --dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+  body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:radial-gradient(circle,#cbd5e1 1px,transparent 1px);
+    background-size:28px 28px;opacity:.55;}
+
+  #gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#1e40af,#2563eb);}
+  #gate .box{background:#fff;border-radius:20px;padding:2.5rem 2rem;max-width:360px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35);}
+  #gate h2{font-size:1.5rem;font-weight:800;margin-bottom:.4rem;color:var(--dark);}
+  #gate p{color:var(--muted);font-size:.9rem;margin-bottom:1.2rem;}
+  #gate input{width:100%;padding:.75rem 1rem;border:2px solid #e2e8f0;border-radius:10px;font-family:'Nunito',sans-serif;font-size:1rem;outline:none;transition:border .2s;}
+  #gate input:focus{border-color:var(--blue);}
+  #gate button{margin-top:1rem;width:100%;padding:.8rem;background:linear-gradient(135deg,#1e40af,#6366f1);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s;}
+  #gate button:hover{opacity:.88;}
+  #gate .err{color:var(--red);font-size:.85rem;margin-top:.6rem;min-height:1.1rem;}
+
+  #main{display:none;position:relative;z-index:1;}
+
+  header{background:linear-gradient(135deg,#1e40af 0%,#2563eb 100%);
+    padding:3rem 1.5rem 2.5rem;text-align:center;position:relative;overflow:hidden;}
+  header .stars{position:absolute;inset:0;pointer-events:none;}
+  header .stars span{position:absolute;border-radius:50%;background:#fff;animation:twinkle 3s infinite;}
+  @keyframes twinkle{0%,100%{opacity:.15;transform:scale(1);}50%{opacity:.9;transform:scale(1.4);}}
+  .chip{display:inline-block;background:rgba(255,255,255,.18);color:#e0eaff;font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.1em;padding:.3rem .9rem;border-radius:99px;border:1px solid rgba(255,255,255,.25);margin-bottom:.9rem;}
+  header h1{font-size:clamp(1.6rem,4.5vw,2.6rem);font-weight:900;
+    background:linear-gradient(90deg,#93c5fd,#fff 50%,#c7d2fe);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    line-height:1.15;margin-bottom:.5rem;}
+  header p.sub{color:rgba(255,255,255,.7);font-size:1rem;max-width:560px;margin:0 auto;}
+
+  .wrap{max-width:900px;margin:0 auto;padding:2.5rem 1.2rem 4rem;}
+
+  .ref-box{background:linear-gradient(135deg,#eff6ff,#eef2ff);border:1.5px solid #bfdbfe;border-radius:16px;padding:1.4rem 1.6rem;margin-bottom:.9rem;}
+  .ref-box h3{font-size:1rem;font-weight:800;color:var(--indigo);margin-bottom:.7rem;}
+  .ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.5rem .8rem;}
+  .ref-item{font-family:'Space Mono',monospace;font-size:.82rem;color:#1e3a5f;background:#fff;padding:.4rem .7rem;border-radius:8px;border:1px solid #dbeafe;}
+
+  .tip-box{background:linear-gradient(135deg,#fffbeb,#fef3c7);border-left:4px solid var(--amber);border-radius:0 12px 12px 0;padding:.9rem 1.1rem;margin-bottom:2rem;}
+  .tip-box strong{color:#92400e;}
+  .tip-box p{color:#374151;font-size:.9rem;margin-bottom:0;}
+
+  .part-label{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:.8rem;margin-top:1.8rem;}
+
+  .prob-full{background:#fff;border-radius:14px;padding:1.5rem 1.6rem;box-shadow:0 2px 14px rgba(59,130,246,.06);border:1px solid #e8edf8;margin-bottom:1.2rem;}
+  .prob-full .p-num{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--muted);margin-bottom:.5rem;letter-spacing:.08em;}
+  .prob-full p{color:#374151;line-height:1.68;margin-bottom:.5rem;}
+  .prob-full p:last-of-type{margin-bottom:.3rem;}
+  .work-lines .line{border-bottom:1px solid #e2e8f0;height:26px;margin-bottom:4px;}
+  .work-lines{border-top:1px solid #e8edf8;margin-top:.9rem;padding-top:.7rem;}
+  .work-lines .box-ans{border:1.5px solid #bfdbfe;border-radius:8px;height:38px;margin-top:.5rem;display:flex;align-items:center;padding:0 .8rem;color:#94a3b8;font-size:.85rem;}
+
+  /* T/F */
+  .tf-card{background:#fff;border-radius:14px;padding:1.4rem 1.6rem;box-shadow:0 2px 14px rgba(59,130,246,.06);border:1px solid #e8edf8;margin-bottom:1rem;}
+  .tf-card .p-num{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--muted);margin-bottom:.4rem;}
+  .tf-card p{color:#374151;line-height:1.65;margin-bottom:.6rem;}
+  .tf-options{display:flex;gap:1.5rem;margin-bottom:.7rem;}
+  .tf-options label{display:flex;align-items:center;gap:.4rem;font-weight:700;color:#374151;font-size:.95rem;cursor:pointer;}
+  .tf-options input{accent-color:var(--indigo);}
+  .corr-line-label{font-size:.85rem;font-weight:700;color:#64748b;margin-bottom:.3rem;}
+  .corr-line{border-bottom:1px solid #e2e8f0;height:26px;margin-bottom:4px;}
+
+  /* Challenge */
+  .challenge-card{background:linear-gradient(135deg,#faf5ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:14px;padding:1.5rem 1.6rem;margin-bottom:1.2rem;}
+  .challenge-card .p-num{font-family:'Space Mono',monospace;font-size:.7rem;color:#7c3aed;margin-bottom:.5rem;}
+  .challenge-card p{color:#374151;line-height:1.68;margin-bottom:.5rem;}
+  .challenge-card .work-lines .line{border-bottom:1px solid #ddd6fe;height:26px;margin-bottom:4px;}
+  .challenge-card .work-lines{border-top:1px solid #ddd6fe;margin-top:.9rem;padding-top:.7rem;}
+  .challenge-card .work-lines .box-ans{border:1.5px solid #c4b5fd;border-radius:8px;height:38px;margin-top:.5rem;display:flex;align-items:center;padding:0 .8rem;color:#94a3b8;font-size:.85rem;}
+
+  /* Answer key */
+  #answer-key{display:none;margin-top:2rem;}
+  .key-card{background:#fff;border-radius:14px;padding:1.5rem;border:1.5px solid #bbf7d0;margin-bottom:1rem;}
+  .key-card h3{font-size:1rem;font-weight:800;color:#065f46;margin-bottom:.8rem;}
+  .key-item{display:flex;gap:.6rem;margin-bottom:.7rem;align-items:flex-start;}
+  .key-num{font-family:'Space Mono',monospace;font-size:.75rem;background:#d1fae5;color:#065f46;padding:.2rem .5rem;border-radius:6px;white-space:nowrap;margin-top:1px;}
+  .key-text{color:#374151;font-size:.9rem;line-height:1.65;}
+  .key-formula{font-family:'Space Mono',monospace;font-size:.82rem;background:#f0fdf4;padding:.4rem .7rem;border-radius:8px;margin:.3rem 0;color:#065f46;display:block;}
+
+  .toggle-btn{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;padding:.75rem 2rem;border-radius:10px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s;display:block;margin:0 auto;}
+  .toggle-btn:hover{opacity:.88;}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="box">
+    <h2>Physics Portal</h2>
+    <p>Enter the password to access this homework.</p>
+    <input type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPW()"/>
+    <button onclick="checkPW()">Unlock</button>
+    <div class="err" id="pw-err"></div>
+  </div>
+</div>
+
+<div id="main">
+<header>
+  <div class="stars" id="stars-container"></div>
+  <div class="chip">Kinematics · Unit 15</div>
+  <h1>Homework — Air Resistance on Projectiles</h1>
+  <p class="sub">Full working solutions required for Part A. Show all steps clearly.</p>
+</header>
+
+<div class="wrap">
+
+  <!-- REFERENCE BOX -->
+  <div class="ref-box">
+    <h3>Key Formulas &amp; Concepts</h3>
+    <div class="ref-grid">
+      <div class="ref-item">ΣF = m · a</div>
+      <div class="ref-item">F_g = m · g (g = 9.81 m/s²)</div>
+      <div class="ref-item">Terminal V: ΣF = 0 → F_air = F_g</div>
+      <div class="ref-item">F_air opposes velocity direction</div>
+      <div class="ref-item">At terminal V: a = 0 m/s²</div>
+      <div class="ref-item">Slope of V-t = acceleration</div>
+      <div class="ref-item">Down is positive convention</div>
+      <div class="ref-item">Air resistance ∝ speed</div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <strong>Study Tip:</strong>
+    <p>For all Part A problems, identify the known forces, apply ΣF = m·a, and check whether ΣF = 0 (terminal velocity) or ΣF ≠ 0 (still accelerating/decelerating). Show your formula, substitution, and final answer with units.</p>
+  </div>
+
+  <!-- PART A: 6 full working problems -->
+  <div class="part-label">Part A — Full Working Problems (6 questions)</div>
+
+  <div class="prob-full">
+    <div class="p-num">PROBLEM 01</div>
+    <p>A ball of mass 0.25 kg is falling through air. At a particular instant, its acceleration is measured as 6.20 m/s² downward (using the convention that down is positive). Calculate the magnitude of the air resistance force acting on the ball at that instant.</p>
+    <div class="work-lines">
+      <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+      <div class="box-ans">Final Answer: F_air = ___________</div>
+    </div>
+  </div>
+
+  <div class="prob-full">
+    <div class="p-num">PROBLEM 02</div>
+    <p>A 60 kg skydiver is falling and has reached terminal velocity (no parachute). She then opens her parachute, and the new air resistance force immediately becomes 1800 N upward.</p>
+    <p>(a) What was the air resistance force before the parachute opened?</p>
+    <p>(b) What is the net force acting on the skydiver immediately after the parachute opens?</p>
+    <p>(c) What is the skydiver's acceleration (magnitude and direction) immediately after the parachute opens?</p>
+    <div class="work-lines">
+      <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+      <div class="box-ans">Answers: (a) _______ (b) _______ (c) _______</div>
+    </div>
+  </div>
+
+  <div class="prob-full">
+    <div class="p-num">PROBLEM 03</div>
+    <p>A 0.14 kg baseball is moving horizontally at 25 m/s. Air resistance creates a force of 0.70 N opposing its horizontal motion.</p>
+    <p>(a) Calculate the horizontal deceleration of the ball.</p>
+    <p>(b) How does this deceleration compare to the deceleration the ball would experience if it were moving at 12.5 m/s? (Hint: air resistance is proportional to speed — halving the speed halves F_air.) Show your reasoning.</p>
+    <div class="work-lines">
+      <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+      <div class="box-ans">Answers: (a) a = _______ (b) _______ m/s²</div>
+    </div>
+  </div>
+
+  <div class="prob-full">
+    <div class="p-num">PROBLEM 04</div>
+    <p>A ball of mass 0.40 kg is dropped into water. In water, the combined upward force (drag + buoyancy) at terminal velocity in water is 4.5 N. Meanwhile, the ball's weight is constant.</p>
+    <p>(a) Is this terminal velocity in water higher or lower than terminal velocity in air? Explain using ΣF = 0.</p>
+    <p>(b) Calculate the ball's weight (F<sub>g</sub>).</p>
+    <p>(c) At the moment the ball enters the water at terminal velocity from air (where F_air = F_g = your answer from (b)), what is the net force on the ball? What is the direction of acceleration?</p>
+    <div class="work-lines">
+      <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+      <div class="box-ans">Answers: (a) _______ (b) F_g = _______ (c) ΣF = _______ direction = _______</div>
+    </div>
+  </div>
+
+  <div class="prob-full">
+    <div class="p-num">PROBLEM 05</div>
+    <p>A projectile is launched at an angle. With no air resistance, it has a horizontal range of 120 m and lands symmetrically (60 m for each half). With air resistance, the first half of the horizontal displacement is 40 m and the second half is 28 m.</p>
+    <p>(a) What is the total range with air resistance?</p>
+    <p>(b) By how much (in metres) is the range reduced compared to the no-air-resistance case?</p>
+    <p>(c) State one other difference in the trajectory (besides range) caused by air resistance.</p>
+    <div class="work-lines">
+      <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+      <div class="box-ans">Answers: (a) _______ m (b) _______ m (c) _______________________</div>
+    </div>
+  </div>
+
+  <div class="prob-full">
+    <div class="p-num">PROBLEM 06</div>
+    <p>A 2.0 kg ball falls from rest. At t = 0, a<sub>y</sub> = 9.81 m/s². At a later time t<sub>1</sub>, the acceleration has dropped to 4.0 m/s².</p>
+    <p>(a) Calculate F<sub>g</sub> for the ball.</p>
+    <p>(b) Calculate the air resistance force F<sub>air</sub> at time t<sub>1</sub>.</p>
+    <p>(c) The ball eventually reaches terminal velocity. At terminal velocity, what is F<sub>air</sub>? What is the acceleration?</p>
+    <div class="work-lines">
+      <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+      <div class="box-ans">Answers: (a) F_g = _______ (b) F_air = _______ (c) F_air = _______, a = _______</div>
+    </div>
+  </div>
+
+  <!-- PART B: 4 True/False -->
+  <div class="part-label">Part B — True or False? Circle your answer and correct any false statements.</div>
+
+  <div class="tf-card">
+    <div class="p-num">PROBLEM 07</div>
+    <p>"A projectile with air resistance has a symmetric trajectory — the first half of the range equals the second half of the range."</p>
+    <div class="tf-options">
+      <label><input type="radio" name="tf7" value="T"/> TRUE</label>
+      <label><input type="radio" name="tf7" value="F"/> FALSE</label>
+    </div>
+    <div class="corr-line-label">If false, write the correct statement:</div>
+    <div class="corr-line"></div><div class="corr-line"></div>
+  </div>
+
+  <div class="tf-card">
+    <div class="p-num">PROBLEM 08</div>
+    <p>"At terminal velocity, the net force on a falling object is zero, so the velocity is zero."</p>
+    <div class="tf-options">
+      <label><input type="radio" name="tf8" value="T"/> TRUE</label>
+      <label><input type="radio" name="tf8" value="F"/> FALSE</label>
+    </div>
+    <div class="corr-line-label">If false, write the correct statement:</div>
+    <div class="corr-line"></div><div class="corr-line"></div>
+  </div>
+
+  <div class="tf-card">
+    <div class="p-num">PROBLEM 09</div>
+    <p>"On a V<sub>y</sub> vs t graph for a falling ball with air resistance, the slope of the curve equals the instantaneous acceleration at that point."</p>
+    <div class="tf-options">
+      <label><input type="radio" name="tf9" value="T"/> TRUE</label>
+      <label><input type="radio" name="tf9" value="F"/> FALSE</label>
+    </div>
+    <div class="corr-line-label">If false, write the correct statement:</div>
+    <div class="corr-line"></div><div class="corr-line"></div>
+  </div>
+
+  <div class="tf-card">
+    <div class="p-num">PROBLEM 10</div>
+    <p>"Air resistance only affects the vertical component of a projectile's velocity, not the horizontal component."</p>
+    <div class="tf-options">
+      <label><input type="radio" name="tf10" value="T"/> TRUE</label>
+      <label><input type="radio" name="tf10" value="F"/> FALSE</label>
+    </div>
+    <div class="corr-line-label">If false, write the correct statement:</div>
+    <div class="corr-line"></div><div class="corr-line"></div>
+  </div>
+
+  <!-- PART C: 2 Challenge problems -->
+  <div class="part-label">Part C — Challenge Problems</div>
+
+  <div class="challenge-card">
+    <div class="p-num">PROBLEM 11 — CHALLENGE</div>
+    <p>A ball of mass 0.30 kg is dropped from a tall building. The air resistance force on the ball is given by F<sub>air</sub> = k·v, where k = 0.15 N·s/m and v is speed in m/s.</p>
+    <p>(a) At what speed will the ball reach terminal velocity? (Set up the terminal velocity condition and solve for v.)</p>
+    <p>(b) At the instant the ball's speed is 10 m/s, calculate: F<sub>air</sub>, F<sub>g</sub>, ΣF, and a<sub>y</sub>. Show full working.</p>
+    <p>(c) Is the ball still accelerating at v = 10 m/s? How do you know?</p>
+    <div class="work-lines">
+      <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+      <div class="box-ans">Answers: (a) v_terminal = _______ m/s  (b) a_y = _______ m/s²  (c) _______</div>
+    </div>
+  </div>
+
+  <div class="challenge-card">
+    <div class="p-num">PROBLEM 12 — CHALLENGE</div>
+    <p>A skydiver (mass 75 kg) falls from rest and reaches a terminal velocity of 55 m/s (no parachute). She then opens her parachute and reaches a new terminal velocity of 6 m/s.</p>
+    <p>(a) What is the air resistance force at each terminal velocity? (Express as F<sub>air,1</sub> and F<sub>air,2</sub>.)</p>
+    <p>(b) By what factor has the air resistance force increased at the lower terminal velocity compared to the higher terminal velocity? (i.e., what is F<sub>air,2</sub> / F<sub>air,1</sub>?)</p>
+    <p>(c) Sketch the shape of the V<sub>y</sub> vs t graph for this skydiver's complete fall. Label: initial acceleration, TV without parachute, parachute opening, TV with parachute. No numbers needed — just shape and labels.</p>
+    <div class="work-lines">
+      <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+      <div class="box-ans">Answers: (a) F_air,1 = _______ N  F_air,2 = _______ N  (b) ratio = _______</div>
+    </div>
+  </div>
+
+  <!-- ANSWER KEY TOGGLE -->
+  <div style="text-align:center;margin-top:2.5rem;">
+    <button class="toggle-btn" id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+  </div>
+
+  <div id="answer-key">
+    <div class="part-label" style="margin-top:1.5rem;">Answer Key</div>
+
+    <div class="key-card">
+      <h3>Part A — Full Working Answers</h3>
+
+      <div class="key-item">
+        <div class="key-num">01</div>
+        <div class="key-text">
+          <strong>F_air = 0.903 N</strong><br/>
+          ΣF<sub>y</sub> = m · a<sub>y</sub> (down positive)<br/>
+          F<sub>g</sub> − F<sub>air</sub> = m · a<sub>y</sub><br/>
+          F<sub>g</sub> = mg = 0.25 × 9.81 = 2.4525 N<br/>
+          F<sub>air</sub> = F<sub>g</sub> − m·a<sub>y</sub> = 2.4525 − (0.25 × 6.20) = 2.4525 − 1.55 = <strong>0.9025 ≈ 0.903 N</strong>
+        </div>
+      </div>
+
+      <div class="key-item">
+        <div class="key-num">02</div>
+        <div class="key-text">
+          <strong>(a) F_air,before = 588.6 N; (b) ΣF = 1211.4 N upward; (c) a = 20.19 m/s² upward</strong><br/>
+          (a) At terminal velocity: F<sub>air</sub> = F<sub>g</sub> = mg = 60 × 9.81 = 588.6 N<br/>
+          (b) After parachute: ΣF = F<sub>air,new</sub> − F<sub>g</sub> = 1800 − 588.6 = 1211.4 N upward<br/>
+          (c) a = ΣF / m = 1211.4 / 60 = <strong>20.19 m/s² upward</strong> (decelerating the fall)
+        </div>
+      </div>
+
+      <div class="key-item">
+        <div class="key-num">03</div>
+        <div class="key-text">
+          <strong>(a) a = 5.0 m/s²; (b) a = 2.5 m/s² at half speed</strong><br/>
+          (a) ΣF<sub>x</sub> = m · a<sub>x</sub> → a = F<sub>air</sub>/m = 0.70 / 0.14 = <strong>5.0 m/s²</strong> deceleration<br/>
+          (b) At 12.5 m/s (half speed), F<sub>air</sub> is halved → F<sub>air</sub> = 0.35 N<br/>
+          a = 0.35 / 0.14 = <strong>2.5 m/s²</strong> — half the deceleration. This demonstrates the self-diminishing nature of air resistance.
+        </div>
+      </div>
+
+      <div class="key-item">
+        <div class="key-num">04</div>
+        <div class="key-text">
+          <strong>(a) Lower; (b) F_g = 3.924 N; (c) ΣF = 0.576 N upward</strong><br/>
+          (a) Terminal velocity in water is <strong>lower</strong>. In water, the combined resistive force (4.5 N) is greater than F<sub>g</sub> at the speed the ball was travelling in air. The ball must slow to a speed where F<sub>drag,water</sub> = F<sub>g</sub> = 3.924 N at the new, lower terminal velocity.<br/>
+          (b) F<sub>g</sub> = mg = 0.40 × 9.81 = <strong>3.924 N</strong><br/>
+          (c) Upon entering water at air terminal velocity: F<sub>drag,water</sub> = 4.5 N up, F<sub>g</sub> = 3.924 N down.<br/>
+          ΣF = 4.5 − 3.924 = <strong>0.576 N upward</strong> (decelerating)
+        </div>
+      </div>
+
+      <div class="key-item">
+        <div class="key-num">05</div>
+        <div class="key-text">
+          <strong>(a) 68 m; (b) 52 m reduction; (c) lower peak height / asymmetric trajectory (steeper descent)</strong><br/>
+          (a) Total range with air resistance = 40 + 28 = <strong>68 m</strong><br/>
+          (b) Reduction = 120 − 68 = <strong>52 m</strong><br/>
+          (c) Accept any one of: lower peak height; trajectory is asymmetric (steeper on descent than ascent); V<sub>x</sub> is continuously decreasing; landing speed is less than launch speed.
+        </div>
+      </div>
+
+      <div class="key-item">
+        <div class="key-num">06</div>
+        <div class="key-text">
+          <strong>(a) F_g = 19.62 N; (b) F_air = 11.62 N; (c) F_air = 19.62 N, a = 0 m/s²</strong><br/>
+          (a) F<sub>g</sub> = mg = 2.0 × 9.81 = <strong>19.62 N</strong><br/>
+          (b) At t<sub>1</sub>: ΣF = m·a = 2.0 × 4.0 = 8.0 N (downward)<br/>
+          F<sub>g</sub> − F<sub>air</sub> = 8.0 → F<sub>air</sub> = 19.62 − 8.0 = <strong>11.62 N</strong><br/>
+          (c) At terminal velocity: F<sub>air</sub> = F<sub>g</sub> = <strong>19.62 N</strong>; acceleration = <strong>0 m/s²</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-card">
+      <h3>Part B — True/False Answers</h3>
+
+      <div class="key-item">
+        <div class="key-num">07</div>
+        <div class="key-text">
+          <strong>FALSE.</strong> Correct statement: With air resistance, the trajectory is <em>asymmetric</em> — the second half of the range is shorter than the first half because V<sub>x</sub> is continuously reduced by air drag. The descent is steeper than the ascent.
+        </div>
+      </div>
+
+      <div class="key-item">
+        <div class="key-num">08</div>
+        <div class="key-text">
+          <strong>FALSE.</strong> Correct statement: At terminal velocity, ΣF = 0 N and therefore <em>acceleration</em> = 0 m/s² — but the <em>velocity is constant and non-zero</em> (it is the maximum falling speed). Zero net force means constant velocity, not zero velocity.
+        </div>
+      </div>
+
+      <div class="key-item">
+        <div class="key-num">09</div>
+        <div class="key-text">
+          <strong>TRUE.</strong> The slope of the V<sub>y</sub> vs t graph at any point equals the instantaneous acceleration at that time. As the curve flattens (slope → 0), the acceleration approaches 0 at terminal velocity.
+        </div>
+      </div>
+
+      <div class="key-item">
+        <div class="key-num">10</div>
+        <div class="key-text">
+          <strong>FALSE.</strong> Correct statement: Air resistance acts opposite to the velocity vector, which has both horizontal (V<sub>x</sub>) and vertical (V<sub>y</sub>) components during flight. Therefore air resistance reduces <em>both</em> components — it "takes away from the velocity in both the x and y directions."
+        </div>
+      </div>
+    </div>
+
+    <div class="key-card">
+      <h3>Part C — Challenge Answers</h3>
+
+      <div class="key-item">
+        <div class="key-num">11a</div>
+        <div class="key-text">
+          <strong>Terminal velocity = 19.62 m/s</strong><br/>
+          Terminal velocity condition: F<sub>air</sub> = F<sub>g</sub><br/>
+          k·v = mg → 0.15·v = 0.30 × 9.81 = 2.943 N<br/>
+          v = 2.943 / 0.15 = <strong>19.62 m/s</strong>
+        </div>
+      </div>
+
+      <div class="key-item">
+        <div class="key-num">11b</div>
+        <div class="key-text">
+          <strong>At v = 10 m/s: F_air = 1.5 N; F_g = 2.943 N; ΣF = 1.443 N downward; a_y = 4.81 m/s²</strong><br/>
+          F<sub>air</sub> = k·v = 0.15 × 10 = <strong>1.5 N</strong><br/>
+          F<sub>g</sub> = mg = 0.30 × 9.81 = <strong>2.943 N</strong><br/>
+          ΣF = F<sub>g</sub> − F<sub>air</sub> = 2.943 − 1.5 = <strong>1.443 N downward</strong><br/>
+          a<sub>y</sub> = ΣF / m = 1.443 / 0.30 = <strong>4.81 m/s² downward</strong>
+        </div>
+      </div>
+
+      <div class="key-item">
+        <div class="key-num">11c</div>
+        <div class="key-text">
+          <strong>Yes, the ball is still accelerating at v = 10 m/s.</strong> Because ΣF = 1.443 N ≠ 0, the net force is not zero, so the ball still has a downward acceleration of 4.81 m/s². Terminal velocity has not yet been reached (19.62 m/s).
+        </div>
+      </div>
+
+      <div class="key-item">
+        <div class="key-num">12a</div>
+        <div class="key-text">
+          <strong>F_air,1 = 735.75 N; F_air,2 = 735.75 N</strong><br/>
+          At both terminal velocities: ΣF = 0 → F<sub>air</sub> = F<sub>g</sub> = mg = 75 × 9.81 = <strong>735.75 N</strong><br/>
+          Note: At terminal velocity, F<sub>air</sub> always equals F<sub>g</sub> regardless of the speed. The difference is that the parachute produces the same opposing force at a much lower speed.
+        </div>
+      </div>
+
+      <div class="key-item">
+        <div class="key-num">12b</div>
+        <div class="key-text">
+          <strong>Ratio = 1 (F_air,2 / F_air,1 = 735.75 / 735.75 = 1)</strong><br/>
+          At any terminal velocity, F<sub>air</sub> = F<sub>g</sub> = constant. The ratio is always 1. The insight is that the parachute achieves the same F<sub>air</sub> = F<sub>g</sub> equilibrium at a far lower speed — the same force is generated at a much lower velocity due to the much greater surface area and drag coefficient of the parachute.
+        </div>
+      </div>
+
+      <div class="key-item">
+        <div class="key-num">12c</div>
+        <div class="key-text">
+          <strong>V<sub>y</sub> vs t graph shape:</strong><br/>
+          1. Starts at 0 m/s, rises with decreasing gradient (concave-down curve).<br/>
+          2. Asymptotes to TV1 = 55 m/s (upper horizontal dashed line labeled "Terminal velocity without parachute").<br/>
+          3. Flat at TV1 until parachute opens.<br/>
+          4. At parachute opening: sharp drop in V<sub>y</sub>.<br/>
+          5. Rises with decreasing gradient to TV2 = 6 m/s (lower horizontal dashed line labeled "Terminal velocity with parachute").<br/>
+          6. Flat at TV2 thereafter.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end .wrap -->
+</div><!-- end #main -->
+
+<script>
+const CORRECT = btoa('physics2024');
+function checkPW(){
+  const v=document.getElementById('pw-input').value;
+  if(btoa(v)===CORRECT){
+    localStorage.setItem('portal_auth',CORRECT);
+    document.getElementById('gate').style.display='none';
+    document.getElementById('main').style.display='block';
+  } else {
+    document.getElementById('pw-err').textContent='Incorrect password. Try again.';
+  }
+}
+(function(){
+  if(localStorage.getItem('portal_auth')===CORRECT){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('main').style.display='block';
+  }
+})();
+
+(function(){
+  const c=document.getElementById('stars-container');
+  for(let i=0;i<45;i++){
+    const s=document.createElement('span');
+    const sz=Math.random()*3+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*3}s;`;
+    c.appendChild(s);
+  }
+})();
+
+function toggleKey(){
+  const k=document.getElementById('answer-key');
+  const b=document.getElementById('toggle-key-btn');
+  if(k.style.display==='block'){
+    k.style.display='none';
+    b.textContent='Show Answer Key';
+  } else {
+    k.style.display='block';
+    b.textContent='Hide Answer Key';
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Table — Classwork</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#134e4a 0%,#0f766e 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:860px;margin:36px auto;padding:0 24px 60px;}
+    .ref-box{background:white;border:2px solid #99f6e4;border-radius:10px;padding:18px 22px;margin-bottom:28px;}
+    .ref-box h3{color:#134e4a;font-size:1rem;margin-bottom:10px;}
+    .ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .ref-item{background:#f0fdfa;border-radius:7px;padding:8px 12px;font-size:0.85rem;}
+    .ref-item .sym{font-family:'Space Mono',monospace;font-weight:700;color:#0d9488;}
+    section{margin-bottom:40px;}
+    h2{font-size:1.2rem;font-weight:700;color:#134e4a;border-left:5px solid #0d9488;padding-left:12px;margin-bottom:16px;}
+    .instructions{color:#4b5563;font-size:0.9rem;margin-bottom:16px;font-style:italic;}
+    /* data table scaffold */
+    .dt-scaffold{width:100%;border-collapse:collapse;font-size:0.85rem;margin-bottom:14px;}
+    .dt-scaffold th, .dt-scaffold td{border:2px solid #d1d5db;padding:8px 10px;text-align:center;}
+    .dt-scaffold thead th{background:#134e4a;color:white;font-size:0.8rem;}
+    .dt-scaffold thead tr:last-child th{background:#0f766e;color:white;font-size:0.78rem;}
+    .dt-scaffold .iv-col{background:#eff6ff;font-weight:700;font-family:'Space Mono',monospace;}
+    .dt-scaffold .given{background:#f8fafc;color:#374151;font-family:'Space Mono',monospace;}
+    .dt-scaffold .blank{background:white;min-width:60px;}
+    .blank-cell{min-height:28px;display:block;}
+    /* short answer */
+    .short-answer{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .short-answer .q{font-weight:600;margin-bottom:10px;font-size:0.95rem;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+    .field-set{display:flex;flex-direction:column;gap:8px;}
+    .field-row{display:flex;align-items:center;gap:8px;font-size:0.85rem;}
+    .fill-line{border-bottom:2px solid #d1d5db;min-height:24px;flex:1;}
+    /* key */
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#134e4a;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #answer-key{display:none;background:#f0fdfa;border:2px solid #5eead4;border-radius:12px;padding:28px 32px;}
+    #answer-key h2{color:#134e4a;border-left-color:#0d9488;margin-bottom:22px;}
+    .key-section{margin-bottom:24px;}
+    .key-section h3{font-size:1rem;font-weight:700;color:#134e4a;margin-bottom:12px;}
+    .key-table{width:100%;border-collapse:collapse;font-size:0.88rem;}
+    .key-table th{background:#134e4a;color:white;padding:8px 12px;font-size:0.8rem;}
+    .key-table td{border:1px solid #d1d5db;padding:8px 12px;text-align:center;font-family:'Space Mono',monospace;}
+    .key-table tr:nth-child(even) td{background:#f0fdfa;}
+    .key-ans{color:#0d9488;font-weight:700;}
+    .short-ans-key{background:white;border-radius:6px;padding:12px 16px;font-size:0.92rem;margin-bottom:10px;}
+    .short-ans-key strong{color:#0d9488;}
+  </style>
+</head>
+<body>
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">Physics · High School · In-Class Activity</div>
+  <h1>Organizing a Data Table — Classwork</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+<main>
+  <div class="ref-box">
+    <h3>Formulas</h3>
+    <div class="ref-grid">
+      <div class="ref-item"><span class="sym">Average = (T1+T2+T3) / 3</span></div>
+      <div class="ref-item"><span class="sym">Δ_stat = (max − min) / 2</span></div>
+      <div class="ref-item"><span class="sym">Error Bar = larger(Δ_meas, Δ_stat)</span></div>
+      <div class="ref-item"><span class="sym">IV → x-axis &nbsp;|&nbsp; DV → y-axis</span></div>
+    </div>
+  </div>
+
+  <section>
+    <h2>Part A — Complete the Data Table (Spring Stretch)</h2>
+    <p class="instructions">Research question: How does mass affect spring stretch? IV: Mass (kg) ±0.001 | DV: Stretch (m) ±0.001. Fill in the blank Average DV, Statistical Uncertainty, and Error Bar columns.</p>
+    <div style="overflow-x:auto;">
+      <table class="dt-scaffold">
+        <thead>
+          <tr>
+            <th rowspan="2">IV: Mass (kg)<br>± 0.001</th>
+            <th colspan="3">DV: Stretch (m) ± 0.001</th>
+            <th rowspan="2">Average DV (m)</th>
+            <th rowspan="2">Statistical<br>Uncertainty</th>
+            <th rowspan="2">Error Bars</th>
+          </tr>
+          <tr><th>Trial 1</th><th>Trial 2</th><th>Trial 3</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="iv-col">0.050</td><td class="given">0.012</td><td class="given">0.010</td><td class="given">0.008</td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td class="iv-col">0.100</td><td class="given">0.018</td><td class="given">0.022</td><td class="given">0.022</td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td class="iv-col">0.150</td><td class="given">0.030</td><td class="given">0.031</td><td class="given">0.029</td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td class="iv-col">0.200</td><td class="given">0.040</td><td class="given">0.042</td><td class="given">0.038</td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td class="iv-col">0.250</td><td class="given">0.052</td><td class="given">0.050</td><td class="given">0.048</td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Part B — Complete the Data Table (Pendulum)</h2>
+    <p class="instructions">Research question: How does string length affect the period of a pendulum? IV: String length (m) ±0.005 | DV: Period (s) ±0.1. Complete all blank columns.</p>
+    <div style="overflow-x:auto;">
+      <table class="dt-scaffold">
+        <thead>
+          <tr>
+            <th rowspan="2">IV: Length (m)<br>± 0.005</th>
+            <th colspan="3">DV: Period (s) ± 0.1</th>
+            <th rowspan="2">Average DV (s)</th>
+            <th rowspan="2">Statistical<br>Uncertainty</th>
+            <th rowspan="2">Error Bars</th>
+          </tr>
+          <tr><th>Trial 1</th><th>Trial 2</th><th>Trial 3</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="iv-col">0.20</td><td class="given">0.9</td><td class="given">0.9</td><td class="given">1.0</td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td class="iv-col">0.40</td><td class="given">1.3</td><td class="given">1.2</td><td class="given">1.3</td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td class="iv-col">0.60</td><td class="given">1.5</td><td class="given">1.6</td><td class="given">1.6</td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td class="iv-col">0.80</td><td class="given">1.8</td><td class="given">1.7</td><td class="given">1.8</td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td class="iv-col">1.00</td><td class="given">2.0</td><td class="given">2.1</td><td class="given">2.0</td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Part C — Table Header Labels</h2>
+    <p class="instructions">Write the correct column header label for each situation below.</p>
+    <div class="short-answer">
+      <div class="q">1. The independent variable is temperature in degrees Celsius (°C), with a measurement uncertainty of ±0.5. Write the column header exactly as it should appear in an IB data table.</div>
+      <div class="write-lines"><div class="write-line"></div></div>
+    </div>
+    <div class="short-answer">
+      <div class="q">2. The dependent variable is force in Newtons (N), with a measurement uncertainty of ±0.2 N. Write the full DV section header (spanning all trial columns).</div>
+      <div class="write-lines"><div class="write-line"></div></div>
+    </div>
+    <div class="short-answer">
+      <div class="q">3. List three things that should be recorded as Control Values above the table for the spring experiment in Part A.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Part D — Short Answer</h2>
+    <div class="short-answer">
+      <div class="q">4. In Part A, row 3 (mass = 0.150 kg), the statistical uncertainty is smaller than the measurement uncertainty. Which value do you use as the error bar, and why?</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+    <div class="short-answer">
+      <div class="q">5. A student records only one trial per IV value to save time. Explain why this makes the Statistical Uncertainty and Error Bar columns impossible to complete correctly.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <div class="key-btn-wrap"><button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button></div>
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+    <div class="key-section">
+      <h3>Part A — Spring Stretch</h3>
+      <table class="key-table">
+        <thead><tr><th>Mass (kg)</th><th>Average (m)</th><th>Δ_stat</th><th>Error Bar</th></tr></thead>
+        <tbody>
+          <tr><td>0.050</td><td class="key-ans">0.010</td><td class="key-ans">0.002</td><td class="key-ans">0.002</td></tr>
+          <tr><td>0.100</td><td class="key-ans">0.021</td><td class="key-ans">0.002</td><td class="key-ans">0.002</td></tr>
+          <tr><td>0.150</td><td class="key-ans">0.030</td><td class="key-ans">0.001</td><td class="key-ans">0.001</td></tr>
+          <tr><td>0.200</td><td class="key-ans">0.040</td><td class="key-ans">0.002</td><td class="key-ans">0.002</td></tr>
+          <tr><td>0.250</td><td class="key-ans">0.050</td><td class="key-ans">0.002</td><td class="key-ans">0.002</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:0.82rem;color:#4b5563;margin-top:8px;">Row 3 note: Δ_stat = (0.031−0.029)/2 = 0.001. Error bar = larger(0.001 meas, 0.001 stat) = 0.001</div>
+    </div>
+    <div class="key-section">
+      <h3>Part B — Pendulum</h3>
+      <table class="key-table">
+        <thead><tr><th>Length (m)</th><th>Average (s)</th><th>Δ_stat</th><th>Error Bar</th></tr></thead>
+        <tbody>
+          <tr><td>0.20</td><td class="key-ans">0.93</td><td class="key-ans">0.05</td><td class="key-ans">0.1</td></tr>
+          <tr><td>0.40</td><td class="key-ans">1.27</td><td class="key-ans">0.05</td><td class="key-ans">0.1</td></tr>
+          <tr><td>0.60</td><td class="key-ans">1.57</td><td class="key-ans">0.05</td><td class="key-ans">0.1</td></tr>
+          <tr><td>0.80</td><td class="key-ans">1.77</td><td class="key-ans">0.05</td><td class="key-ans">0.1</td></tr>
+          <tr><td>1.00</td><td class="key-ans">2.03</td><td class="key-ans">0.05</td><td class="key-ans">0.1</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:0.82rem;color:#4b5563;margin-top:8px;">Measurement uncertainty (±0.1 s) is always ≥ statistical uncertainty here, so Error Bar = 0.1 throughout.</div>
+    </div>
+    <div class="key-section">
+      <h3>Part C &amp; D</h3>
+      <div class="short-ans-key"><strong>C1:</strong> Temperature / °C ± 0.5</div>
+      <div class="short-ans-key"><strong>C2:</strong> DV: Force (N) ± 0.2 &nbsp;[spanning Trial 1, Trial 2, Trial 3]</div>
+      <div class="short-ans-key"><strong>C3:</strong> Any three of: wire diameter, coil diameter, length of spring, spring material, temperature, type of mass used.</div>
+      <div class="short-ans-key"><strong>D4:</strong> Use the measurement uncertainty (±0.001 m) because it is the larger of the two (0.001 stat = 0.001 meas — equal, so either works, use 0.001). Error bar = ±0.001 m. The error bar is always the LARGER uncertainty.</div>
+      <div class="short-ans-key"><strong>D5:</strong> With only one trial per IV value, there is no spread to measure — you cannot calculate (max−min)/2 from a single data point. Statistical uncertainty requires at least two trials to have any meaning. The error bar then relies solely on measurement uncertainty, which may underestimate the true variability in the experiment.</div>
+    </div>
+  </div>
+</main>
+<script>function toggleKey(){var k=document.getElementById('answer-key');var b=document.getElementById('toggle-key-btn');if(k.style.display==='none'||k.style.display===''){k.style.display='block';b.textContent='Hide Answer Key';}else{k.style.display='none';b.textContent='Show Answer Key';}}</script>
+</body>
+</html>

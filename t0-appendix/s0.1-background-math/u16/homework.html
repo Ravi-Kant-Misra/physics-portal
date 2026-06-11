@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Line of Best Fit — Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#1e40af 100%);color:white;padding:32px 60px 28px;position:relative;overflow:hidden;}
+    header .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.4);}}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;position:relative;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;position:relative;}
+    header .meta{opacity:0.85;font-size:0.9rem;position:relative;}
+    main{max-width:820px;margin:36px auto;padding:0 24px 60px;}
+
+    /* reference */
+    .ref-box{background:white;border:2px solid #bfdbfe;border-radius:10px;padding:18px 22px;margin-bottom:28px;}
+    .ref-box h3{color:#1e40af;font-size:1rem;font-weight:800;margin-bottom:8px;}
+    .ref-eq{font-family:'Space Mono',monospace;font-size:0.82rem;background:#eff6ff;color:#1d4ed8;padding:10px 16px;border-radius:8px;line-height:1.9;margin-bottom:8px;}
+    .ref-box .tip{font-size:0.87rem;color:#374151;padding:8px 14px;background:#f0f4ff;border-left:4px solid #3b82f6;border-radius:4px;margin-top:8px;}
+
+    /* layout */
+    section{margin-bottom:40px;}
+    h2{font-size:1.2rem;font-weight:700;color:#1e40af;border-left:5px solid #2563eb;padding-left:12px;margin-bottom:16px;}
+    .instructions{color:#4b5563;font-size:0.9rem;margin-bottom:16px;font-style:italic;}
+    .problem-card{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .problem-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:8px;}
+    .field-set{display:flex;flex-direction:column;gap:8px;}
+    .field-row{display:flex;align-items:center;gap:8px;font-size:0.85rem;flex-wrap:wrap;}
+    .fill-line{border-bottom:2px solid #d1d5db;min-height:24px;flex:1;min-width:80px;}
+    .short-line{border-bottom:2px solid #d1d5db;min-height:24px;width:150px;display:inline-block;}
+    .short-answer{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .short-answer .q{font-weight:600;margin-bottom:10px;font-size:0.95rem;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+
+    /* lp mock */
+    .lp-mock{background:#1e293b;border-radius:10px;padding:14px 18px;font-family:'Space Mono',monospace;font-size:0.82rem;color:#94a3b8;margin-bottom:14px;}
+    .lp-mock .lp-lbl{color:#34d399;font-weight:700;}
+    .lp-mock .lp-v{color:#fbbf24;}
+    .lp-mock .lp-row{margin-bottom:5px;}
+
+    /* equation fill */
+    .eq-fill{background:#f8fafc;border-radius:10px;padding:14px 18px;font-family:'Space Mono',monospace;font-size:0.88rem;color:#374151;margin-top:10px;line-height:2.4;border:1px dashed #cbd5e1;}
+    .eq-blank{display:inline-block;border-bottom:2px solid #2563eb;min-width:80px;vertical-align:bottom;margin:0 3px;}
+
+    /* true/false */
+    .tf-card{background:white;border-radius:8px;padding:14px 20px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:10px;display:flex;align-items:flex-start;gap:16px;}
+    .tf-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#6b7280;min-width:30px;margin-top:3px;}
+    .tf-body{flex:1;}
+    .tf-stmt{font-size:0.93rem;margin-bottom:6px;}
+    .tf-correct{font-size:0.82rem;color:#6b7280;}
+    .tf-correct span{border-bottom:2px solid #d1d5db;display:inline-block;width:260px;}
+    .tf-circles{display:flex;gap:10px;flex-shrink:0;}
+    .tf-circle{width:28px;height:28px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#9ca3af;}
+
+    /* answer key */
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#1e40af;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #answer-key{display:none;background:#eff6ff;border:2px solid #93c5fd;border-radius:12px;padding:28px 32px;}
+    #answer-key h2{color:#1e40af;border-left-color:#2563eb;margin-bottom:22px;}
+    .key-section{margin-bottom:24px;}
+    .key-section h3{font-size:1rem;font-weight:700;color:#1e40af;margin-bottom:12px;}
+    .key-item{background:white;border-radius:6px;padding:10px 14px;font-size:0.92rem;margin-bottom:8px;}
+    .key-item .kq{font-size:0.8rem;color:#6b7280;margin-bottom:2px;}
+    .key-item .kans{color:#1d4ed8;font-weight:700;}
+    .key-item .kexpl{color:#4b5563;font-size:0.82rem;margin-top:4px;}
+    .short-ans-key{background:white;border-radius:6px;padding:12px 16px;font-size:0.92rem;margin-bottom:10px;line-height:1.8;}
+    .short-ans-key strong{color:#1d4ed8;}
+    .short-ans-key .kfml{font-family:'Space Mono',monospace;font-size:0.85rem;color:#1d4ed8;background:#eff6ff;padding:4px 10px;border-radius:6px;display:inline-block;margin:3px 0;}
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="star" style="width:3px;height:3px;top:22%;left:6%;animation-delay:0.1s"></div>
+  <div class="star" style="width:2px;height:2px;top:55%;left:14%;animation-delay:0.9s"></div>
+  <div class="star" style="width:4px;height:4px;top:25%;left:85%;animation-delay:0.3s"></div>
+  <div class="star" style="width:2px;height:2px;top:65%;left:92%;animation-delay:1.3s"></div>
+  <div class="label">Physics · High School · Homework</div>
+  <h1>Line of Best Fit Equations — Homework</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+
+  <!-- REFERENCE -->
+  <div class="ref-box">
+    <h3>Quick Reference</h3>
+    <div class="ref-eq">y-variable(y-unit) = ( slope &#177; slope-unc &nbsp;slope-unit/x-unit ) &#215; x-variable(x-unit) + ( y-int &#177; y-int-unc &nbsp;y-unit )</div>
+    <div class="tip">Average slope = (m_max+m_min)/2 &nbsp;|&nbsp; Δslope = (m_max&minus;m_min)/2 &nbsp;|&nbsp; Average b = (b_max+b_min)/2 &nbsp;|&nbsp; Δb = |b_min&minus;b_max|/2 &nbsp;|&nbsp; % unc = (Δ/avg)×100%</div>
+  </div>
+
+  <!-- PART A: Harder Logger Pro Problems -->
+  <section>
+    <h2>Part A — Logger Pro Analysis Problems</h2>
+    <p class="instructions">For each Logger Pro output, complete all calculations and write the full average best-fit equation plus the max and min slope equations.</p>
+
+    <!-- Problem 1: Spring constant -->
+    <div class="problem-card">
+      <div class="problem-num">Q1 — Spring experiment: Force (N) vs stretch (m)</div>
+      <div class="lp-mock">
+        <div class="lp-row"><span class="lp-lbl">Best-fit line:</span> &nbsp; slope = <span class="lp-v">18.4</span> &nbsp; y-intercept = <span class="lp-v">0.3</span></div>
+        <div class="lp-row"><span class="lp-lbl">Max slope line:</span> slope = <span class="lp-v">21.2</span> &nbsp; y-intercept = <span class="lp-v">&#8722;1.8</span></div>
+        <div class="lp-row"><span class="lp-lbl">Min slope line:</span> &nbsp;slope = <span class="lp-v">15.6</span> &nbsp; y-intercept = <span class="lp-v">2.4</span></div>
+        <div class="lp-row" style="margin-top:6px;color:#64748b;">x-axis: stretch (m) &nbsp;|&nbsp; y-axis: Force (N)</div>
+      </div>
+      <div class="field-set">
+        <div class="field-row">Average slope = <span class="fill-line"></span> &nbsp; Slope uncertainty = <span class="fill-line"></span></div>
+        <div class="field-row">Average y-int = <span class="fill-line"></span> &nbsp; Y-int uncertainty = <span class="fill-line"></span></div>
+        <div class="field-row">% slope uncertainty = <span class="fill-line"></span> &nbsp; % y-int uncertainty = <span class="fill-line"></span></div>
+      </div>
+      <p style="font-size:0.85rem;color:#475569;margin:12px 0 6px;font-weight:600;">Average best-fit equation:</p>
+      <div class="eq-fill">
+        <span class="eq-blank" style="min-width:60px;"></span>(<span class="eq-blank" style="min-width:40px;"></span>) = ( <span class="eq-blank" style="min-width:60px;"></span> &#177; <span class="eq-blank" style="min-width:50px;"></span> <span class="eq-blank" style="min-width:60px;"></span> ) &#215; <span class="eq-blank" style="min-width:60px;"></span>(<span class="eq-blank" style="min-width:40px;"></span>) + ( <span class="eq-blank" style="min-width:50px;"></span> &#177; <span class="eq-blank" style="min-width:50px;"></span> <span class="eq-blank" style="min-width:40px;"></span> )
+      </div>
+      <p style="font-size:0.85rem;color:#475569;margin:10px 0 6px;font-weight:600;">Max slope equation &amp; Min slope equation:</p>
+      <div class="eq-fill" style="margin-bottom:8px;">Max: <span class="eq-blank" style="min-width:60px;"></span>(<span class="eq-blank" style="min-width:40px;"></span>) = ( <span class="eq-blank" style="min-width:50px;"></span> <span class="eq-blank" style="min-width:50px;"></span> ) &#215; <span class="eq-blank" style="min-width:60px;"></span>(<span class="eq-blank" style="min-width:40px;"></span>) + ( <span class="eq-blank" style="min-width:50px;"></span> <span class="eq-blank" style="min-width:40px;"></span> )</div>
+      <div class="eq-fill">Min: <span class="eq-blank" style="min-width:60px;"></span>(<span class="eq-blank" style="min-width:40px;"></span>) = ( <span class="eq-blank" style="min-width:50px;"></span> <span class="eq-blank" style="min-width:50px;"></span> ) &#215; <span class="eq-blank" style="min-width:60px;"></span>(<span class="eq-blank" style="min-width:40px;"></span>) + ( <span class="eq-blank" style="min-width:50px;"></span> <span class="eq-blank" style="min-width:40px;"></span> )</div>
+      <div class="field-set" style="margin-top:12px;">
+        <div class="field-row">The slope of this graph represents the spring constant k. State k with uncertainty: k = <span class="fill-line"></span></div>
+      </div>
+    </div>
+
+    <!-- Problem 2: Pendulum T² vs L -->
+    <div class="problem-card">
+      <div class="problem-num">Q2 — Pendulum: Period² (s²) vs Length (m) — Logger Pro data</div>
+      <div class="lp-mock">
+        <div class="lp-row"><span class="lp-lbl">Best-fit line:</span> &nbsp; slope = <span class="lp-v">3.96</span> &nbsp; y-intercept = <span class="lp-v">0.08</span></div>
+        <div class="lp-row"><span class="lp-lbl">Max slope line:</span> slope = <span class="lp-v">4.22</span> &nbsp; y-intercept = <span class="lp-v">&#8722;0.14</span></div>
+        <div class="lp-row"><span class="lp-lbl">Min slope line:</span> &nbsp;slope = <span class="lp-v">3.70</span> &nbsp; y-intercept = <span class="lp-v">0.30</span></div>
+        <div class="lp-row" style="margin-top:6px;color:#64748b;">x-axis: Length (m) &nbsp;|&nbsp; y-axis: Period² (s²)</div>
+      </div>
+      <div class="field-set">
+        <div class="field-row">Average slope = <span class="fill-line"></span> &nbsp; Slope uncertainty = <span class="fill-line"></span></div>
+        <div class="field-row">Average y-int = <span class="fill-line"></span> &nbsp; Y-int uncertainty = <span class="fill-line"></span></div>
+        <div class="field-row">% slope uncertainty = <span class="fill-line"></span></div>
+      </div>
+      <p style="font-size:0.85rem;color:#475569;margin:12px 0 6px;font-weight:600;">Average best-fit equation:</p>
+      <div class="eq-fill">
+        <span class="eq-blank" style="min-width:70px;"></span>(<span class="eq-blank" style="min-width:50px;"></span>) = ( <span class="eq-blank" style="min-width:50px;"></span> &#177; <span class="eq-blank" style="min-width:50px;"></span> <span class="eq-blank" style="min-width:60px;"></span> ) &#215; <span class="eq-blank" style="min-width:70px;"></span>(<span class="eq-blank" style="min-width:40px;"></span>) + ( <span class="eq-blank" style="min-width:50px;"></span> &#177; <span class="eq-blank" style="min-width:50px;"></span> <span class="eq-blank" style="min-width:40px;"></span> )
+      </div>
+      <div class="field-set" style="margin-top:12px;">
+        <div class="field-row">The slope = 4&#960;&#178;/g. Calculate g from the average slope: g = <span class="fill-line"></span></div>
+        <div class="field-row">Using the % uncertainty in slope, find the absolute uncertainty in g: &#916;g = <span class="fill-line"></span></div>
+        <div class="field-row">Express g with uncertainty: g = <span class="fill-line"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART B: Unit Analysis -->
+  <section>
+    <h2>Part B — Unit and Label Analysis</h2>
+    <p class="instructions">Determine the correct slope unit and y-intercept unit for each graph scenario.</p>
+
+    <div class="problem-card">
+      <div class="problem-num">Q3 — For each graph, state the slope unit and the y-intercept unit</div>
+      <table style="width:100%;border-collapse:collapse;font-size:0.88rem;margin-top:6px;">
+        <thead>
+          <tr style="background:#1e40af;color:white;">
+            <th style="padding:8px 12px;text-align:left;">y-axis</th>
+            <th style="padding:8px 12px;text-align:left;">x-axis</th>
+            <th style="padding:8px 12px;text-align:left;">Slope unit (y/x)</th>
+            <th style="padding:8px 12px;text-align:left;">Y-intercept unit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:8px 12px;border:1px solid #d1d5db;">Force (N)</td><td style="padding:8px 12px;border:1px solid #d1d5db;">acceleration (m/s²)</td><td style="padding:8px 12px;border:1px solid #d1d5db;min-width:100px;"></td><td style="padding:8px 12px;border:1px solid #d1d5db;min-width:100px;"></td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px 12px;border:1px solid #d1d5db;">Voltage (V)</td><td style="padding:8px 12px;border:1px solid #d1d5db;">Current (A)</td><td style="padding:8px 12px;border:1px solid #d1d5db;"></td><td style="padding:8px 12px;border:1px solid #d1d5db;"></td></tr>
+          <tr><td style="padding:8px 12px;border:1px solid #d1d5db;">KE (J)</td><td style="padding:8px 12px;border:1px solid #d1d5db;">v² (m²/s²)</td><td style="padding:8px 12px;border:1px solid #d1d5db;"></td><td style="padding:8px 12px;border:1px solid #d1d5db;"></td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px 12px;border:1px solid #d1d5db;">Period² (s²)</td><td style="padding:8px 12px;border:1px solid #d1d5db;">Length (m)</td><td style="padding:8px 12px;border:1px solid #d1d5db;"></td><td style="padding:8px 12px;border:1px solid #d1d5db;"></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PART C: True / False -->
+  <section>
+    <h2>Part C — True / False</h2>
+    <p class="instructions">Circle T or F. If false, write the correction on the line.</p>
+
+    <div class="tf-card">
+      <div class="tf-num">4.</div>
+      <div class="tf-body">
+        <div class="tf-stmt">The average slope in the best-fit equation is calculated as (m<sub>max</sub> + m<sub>min</sub>) / 2.</div>
+        <div class="tf-correct">If false, correction: <span></span></div>
+      </div>
+      <div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div>
+    </div>
+
+    <div class="tf-card">
+      <div class="tf-num">5.</div>
+      <div class="tf-body">
+        <div class="tf-stmt">The maximum slope line always has the highest y-intercept of the three lines.</div>
+        <div class="tf-correct">If false, correction: <span></span></div>
+      </div>
+      <div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div>
+    </div>
+
+    <div class="tf-card">
+      <div class="tf-num">6.</div>
+      <div class="tf-body">
+        <div class="tf-stmt">The slope unit in the equation y-variable(m) = (slope ± unc m/s) × x-variable(s) + (b ± unc m) is m/s.</div>
+        <div class="tf-correct">If false, correction: <span></span></div>
+      </div>
+      <div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div>
+    </div>
+
+    <div class="tf-card">
+      <div class="tf-num">7.</div>
+      <div class="tf-body">
+        <div class="tf-stmt">When writing the max slope equation, you should use the average y-intercept (not b<sub>max</sub>).</div>
+        <div class="tf-correct">If false, correction: <span></span></div>
+      </div>
+      <div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div>
+    </div>
+
+    <div class="tf-card">
+      <div class="tf-num">8.</div>
+      <div class="tf-body">
+        <div class="tf-stmt">A y-intercept of &minus;2.3 ± 1.1 m is physically reasonable — the negative sign and the uncertainty value are both acceptable in a best-fit equation.</div>
+        <div class="tf-correct">If false, correction: <span></span></div>
+      </div>
+      <div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div>
+    </div>
+  </section>
+
+  <!-- PART D: Extended Response -->
+  <section>
+    <h2>Part D — Extended Response</h2>
+
+    <div class="short-answer">
+      <div class="q">9. A student performs a bouncing ball experiment plotting height of bounce h (m) on the y-axis vs drop height H (m) on the x-axis. Logger Pro gives:<br>
+      Best-fit: slope = 0.62, y-int = &minus;0.04 &nbsp;|&nbsp; Max slope: slope = 0.69, y-int = &minus;0.12 &nbsp;|&nbsp; Min slope: slope = 0.55, y-int = 0.04<br><br>
+      (a) Calculate the average slope, slope uncertainty, average y-intercept, and y-intercept uncertainty.<br>
+      (b) Write the complete average best-fit equation in proper IB Physics format.<br>
+      (c) The slope of this graph represents the coefficient of restitution e. Write e with its uncertainty and percentage uncertainty.<br>
+      (d) What does the y-intercept represent physically, and what should it ideally equal?</div>
+      <div class="write-lines">
+        <div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div>
+      </div>
+    </div>
+
+    <div class="short-answer">
+      <div class="q">10. Explain, in your own words, why the y-intercept uncertainty formula uses |b<sub>min</sub> &minus; b<sub>max</sub>| (with b<sub>min</sub> first) rather than (b<sub>max</sub> &minus; b<sub>min</sub>) the way the slope formula uses (m<sub>max</sub> &minus; m<sub>min</sub>). In your answer, describe the geometry of what happens to the y-intercept as you move from the min slope line to the max slope line.</div>
+      <div class="write-lines">
+        <div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANSWER KEY TOGGLE -->
+  <div class="key-btn-wrap"><button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button></div>
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A — Q1: Spring Experiment</h3>
+      <div class="short-ans-key">
+        <strong>Calculations:</strong><br>
+        <span class="kfml">Average slope = (21.2 + 15.6) / 2 = 36.8 / 2 = 18.4 N/m</span><br>
+        <span class="kfml">Slope uncertainty = (21.2 &#8722; 15.6) / 2 = 5.6 / 2 = 2.8 N/m</span><br>
+        <span class="kfml">% slope unc = (2.8 / 18.4) &#215; 100% &#8773; 15.2%</span><br>
+        <span class="kfml">Average y-int = (&#8722;1.8 + 2.4) / 2 = 0.6 / 2 = 0.3 N</span><br>
+        <span class="kfml">&#916;b = |2.4 &#8722; (&#8722;1.8)| / 2 = |4.2| / 2 = 2.1 N</span><br>
+        <span class="kfml">% y-int unc = (2.1 / 0.3) &#215; 100% = 700% (very large — b is near zero)</span>
+      </div>
+      <div class="short-ans-key">
+        <strong>Average best-fit equation:</strong><br>
+        <span class="kfml">Force(N) = ( 18.4 &#177; 2.8 N/m ) &#215; stretch(m) + ( 0.3 &#177; 2.1 N )</span>
+      </div>
+      <div class="short-ans-key">
+        <strong>Max slope equation:</strong><br>
+        <span class="kfml">Force(N) = ( 21.2 N/m ) &#215; stretch(m) + ( &#8722;1.8 N )</span><br>
+        <strong>Min slope equation:</strong><br>
+        <span class="kfml">Force(N) = ( 15.6 N/m ) &#215; stretch(m) + ( 2.4 N )</span><br>
+        <strong>Spring constant:</strong> k = 18.4 &#177; 2.8 N/m (same as slope, since F = kx)
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part A — Q2: Pendulum T² vs L</h3>
+      <div class="short-ans-key">
+        <strong>Calculations:</strong><br>
+        <span class="kfml">Average slope = (4.22 + 3.70) / 2 = 7.92 / 2 = 3.96 s²/m</span><br>
+        <span class="kfml">Slope uncertainty = (4.22 &#8722; 3.70) / 2 = 0.52 / 2 = 0.26 s²/m</span><br>
+        <span class="kfml">% slope unc = (0.26 / 3.96) &#215; 100% &#8773; 6.6%</span><br>
+        <span class="kfml">Average y-int = (&#8722;0.14 + 0.30) / 2 = 0.16 / 2 = 0.08 s²</span><br>
+        <span class="kfml">&#916;b = |0.30 &#8722; (&#8722;0.14)| / 2 = 0.44 / 2 = 0.22 s²</span>
+      </div>
+      <div class="short-ans-key">
+        <strong>Average best-fit equation:</strong><br>
+        <span class="kfml">Period²(s²) = ( 3.96 &#177; 0.26 s²/m ) &#215; Length(m) + ( 0.08 &#177; 0.22 s² )</span>
+      </div>
+      <div class="short-ans-key">
+        <strong>Finding g:</strong><br>
+        <span class="kfml">slope = 4&#960;² / g  &#8594;  g = 4&#960;² / 3.96 = 39.48 / 3.96 &#8773; 9.97 m/s²</span><br>
+        <span class="kfml">% unc in g = % unc in slope = 6.6%</span><br>
+        <span class="kfml">&#916;g = 0.066 &#215; 9.97 &#8773; 0.66 m/s²</span><br>
+        <span class="kfml">g = 9.97 &#177; 0.66 m/s² (or rounded to 10.0 &#177; 0.7 m/s²)</span>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B — Q3: Slope and Y-intercept Units</h3>
+      <div class="short-ans-key">
+        <strong>Force (N) vs acceleration (m/s²):</strong> slope unit = N/(m/s²) = kg &nbsp;|&nbsp; y-int unit = N<br>
+        <strong>Voltage (V) vs Current (A):</strong> slope unit = V/A = &#937; (Ohms) &nbsp;|&nbsp; y-int unit = V<br>
+        <strong>KE (J) vs v² (m²/s²):</strong> slope unit = J/(m²/s²) = kg &nbsp;|&nbsp; y-int unit = J<br>
+        <strong>Period² (s²) vs Length (m):</strong> slope unit = s²/m &nbsp;|&nbsp; y-int unit = s²
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C — True / False</h3>
+      <div class="short-ans-key"><strong>4. TRUE</strong> — Average slope = (m_max + m_min) / 2 ✓</div>
+      <div class="short-ans-key"><strong>5. FALSE</strong> — The maximum slope line has the <em>lowest</em> y-intercept (it pivots steeply, forcing its intercept down). The minimum slope line has the highest y-intercept.</div>
+      <div class="short-ans-key"><strong>6. TRUE</strong> — Slope unit = y-unit / x-unit = m/s ✓ (y in meters, x in seconds)</div>
+      <div class="short-ans-key"><strong>7. FALSE</strong> — When writing the max slope equation, use b<sub>max</sub> (the y-intercept from the max slope line itself), not the average y-intercept. Each individual line equation uses that line's own slope and intercept.</div>
+      <div class="short-ans-key"><strong>8. TRUE</strong> — A negative y-intercept is physically acceptable (e.g., the line crosses the y-axis below zero). The uncertainty value (positive) is also correct. ✓</div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part D — Extended Response</h3>
+      <div class="short-ans-key">
+        <strong>Q9:</strong><br>
+        <strong>(a)</strong><br>
+        <span class="kfml">Average slope = (0.69 + 0.55) / 2 = 0.62</span><br>
+        <span class="kfml">Slope uncertainty = (0.69 &#8722; 0.55) / 2 = 0.07</span><br>
+        <span class="kfml">Average y-int = (&#8722;0.12 + 0.04) / 2 = &#8722;0.04 m</span><br>
+        <span class="kfml">&#916;b = |0.04 &#8722; (&#8722;0.12)| / 2 = 0.16 / 2 = 0.08 m</span><br><br>
+        <strong>(b)</strong> <span class="kfml">bounce height(m) = ( 0.62 &#177; 0.07 ) &#215; drop height(m) + ( &#8722;0.04 &#177; 0.08 m )</span><br>
+        Note: slope is dimensionless (m/m), so slope unit = m/m (dimensionless ratio)<br><br>
+        <strong>(c)</strong> e = 0.62 &#177; 0.07, % uncertainty = (0.07/0.62) &#215; 100% &#8773; 11.3%<br><br>
+        <strong>(d)</strong> The y-intercept represents the bounce height when drop height = 0 m, which should ideally be 0 m (a ball dropped from zero height has zero bounce). The average y-intercept of &#8722;0.04 &#177; 0.08 m is consistent with zero within its uncertainty, so the intercept is not significantly different from the ideal value.
+      </div>
+      <div class="short-ans-key">
+        <strong>Q10:</strong> When the slope increases (steeper line), the line must still pass through the same cluster of data points. To be steeper while passing through the middle of the data, the line pivots: its left side drops and its right side rises. This means the y-intercept (where the line hits the y-axis, which is to the left of the data) goes down as the slope goes up. Therefore m<sub>max</sub> corresponds to b<sub>max</sub> being the lowest intercept value, and m<sub>min</sub> corresponds to b<sub>min</sub> being the highest. Since b<sub>min</sub> &gt; b<sub>max</sub>, (b<sub>min</sub> &minus; b<sub>max</sub>) is positive. We write it this way (rather than b<sub>max</sub> &minus; b<sub>min</sub>) to get a positive result without needing the absolute value. However, this relationship can reverse in some data configurations, which is why the formula uses |b<sub>min</sub> &minus; b<sub>max</sub>| to guarantee a positive uncertainty regardless.
+      </div>
+    </div>
+  </div>
+
+</main>
+<script>function toggleKey(){var k=document.getElementById('answer-key');var b=document.getElementById('toggle-key-btn');if(k.style.display==='none'||k.style.display===''){k.style.display='block';b.textContent='Hide Answer Key';}else{k.style.display='none';b.textContent='Show Answer Key';}}</script>
+</body>
+</html>

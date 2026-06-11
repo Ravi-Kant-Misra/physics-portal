@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inverse Trig Functions — Physics Lesson</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root {
+      --purple:#9333ea;--purple-dark:#581c87;--purple-mid:#7e22ce;
+      --pink:#ec4899;--indigo:#6366f1;--blue:#3b82f6;
+      --green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+      --dark:#0f172a;--card:#ffffff;--bg:#faf5ff;--muted:#94a3b8;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:17px;line-height:1.75;background-image:radial-gradient(circle,#e9d5ff 1px,transparent 1px);background-size:28px 28px;}
+    header{background:linear-gradient(135deg,#581c87 0%,#7e22ce 50%,#9333ea 100%);color:white;padding:52px 60px 48px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(236,72,153,0.3) 0%,transparent 60%),radial-gradient(ellipse at 80% 30%,rgba(99,102,241,0.3) 0%,transparent 55%),radial-gradient(ellipse at 60% 80%,rgba(147,51,234,0.2) 0%,transparent 50%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.4);}}
+    header .chip{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px;position:relative;}
+    header h1{font-size:3.2rem;font-weight:900;letter-spacing:-1px;position:relative;margin-bottom:10px;background:linear-gradient(90deg,#f5d0fe,#e9d5ff,#fce7f3);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1.1rem;color:rgba(255,255,255,0.75);position:relative;max-width:520px;margin:0 auto;}
+    main{max-width:900px;margin:48px auto;padding:0 24px 80px;}
+    section{margin-bottom:60px;}
+    .section-label{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+    .section-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    .section-label h2{font-size:1.5rem;font-weight:900;color:var(--dark);}
+
+    /* Concept card */
+    .concept-card{background:white;border-radius:18px;padding:28px 32px;box-shadow:0 4px 20px rgba(147,51,234,0.1);border:2px solid #e9d5ff;margin-bottom:24px;}
+    .concept-card h3{font-size:1.1rem;font-weight:900;color:var(--purple-dark);margin-bottom:14px;}
+    .concept-card p{color:#374151;margin-bottom:10px;font-size:0.95rem;}
+
+    /* Arrow diagram */
+    .arrow-diagram{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;margin:20px 0;}
+    .ad-box{background:linear-gradient(135deg,#f3e8ff,#ede9fe);border:2px solid #c4b5fd;border-radius:14px;padding:14px 22px;text-align:center;min-width:120px;}
+    .ad-box .ad-label{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#6d28d9;margin-bottom:4px;}
+    .ad-box .ad-val{font-family:'Space Mono',monospace;font-size:1.4rem;font-weight:700;color:#3730a3;}
+    .ad-arrow{display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 14px;}
+    .ad-arrow .arrow-line{font-size:2rem;color:#9333ea;line-height:1;}
+    .ad-arrow .arrow-label{font-size:0.72rem;font-weight:700;color:#9333ea;text-align:center;max-width:90px;}
+    .ad-arrow-rev .arrow-line{color:#ec4899;}
+    .ad-arrow-rev .arrow-label{color:#ec4899;}
+
+    /* Table styles */
+    .trig-table{width:100%;border-collapse:collapse;border-radius:14px;overflow:hidden;box-shadow:0 4px 16px rgba(147,51,234,0.1);}
+    .trig-table th{padding:13px 18px;font-size:0.85rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;}
+    .trig-table td{padding:13px 18px;font-size:0.95rem;border-top:1px solid #f3e8ff;}
+    .th-left{background:linear-gradient(135deg,#6d28d9,#7c3aed);color:white;text-align:left;}
+    .th-right{background:linear-gradient(135deg,#9333ea,#a855f7);color:white;text-align:left;}
+    .td-func{font-family:'Space Mono',monospace;font-weight:700;color:#6d28d9;background:#faf5ff;}
+    .td-inv{font-family:'Space Mono',monospace;font-weight:700;color:#a21caf;background:#fdf4ff;}
+    .trig-table tr:hover td{background:#f5f3ff;}
+    .trig-table tr:hover .td-func{background:#ede9fe;}
+    .trig-table tr:hover .td-inv{background:#fae8ff;}
+    .arrow-col{text-align:center;font-size:1.3rem;background:#f5f3ff;}
+
+    /* Example cards */
+    .example-card{background:white;border-radius:18px;margin-bottom:22px;box-shadow:0 4px 20px rgba(147,51,234,0.08);overflow:hidden;border:1px solid #e9d5ff;}
+    .ex-header{display:flex;align-items:center;gap:14px;padding:16px 24px;border-bottom:2px solid #f3e8ff;background:#faf5ff;}
+    .ex-num{background:linear-gradient(135deg,#581c87,#9333ea);color:white;font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:4px 14px;border-radius:20px;}
+    .ex-trig-type{font-size:0.82rem;font-weight:700;color:#9333ea;text-transform:uppercase;letter-spacing:0.5px;}
+    .ex-body{padding:20px 24px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:start;}
+    @media(max-width:600px){.ex-body{grid-template-columns:1fr;}}
+    .ex-text{}
+    .ex-formula{font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;color:#7e22ce;background:#f3e8ff;border-radius:10px;padding:10px 16px;display:inline-block;margin:10px 0;}
+    .ex-answer{font-family:'Space Mono',monospace;font-size:1.6rem;font-weight:900;color:#9333ea;}
+    .ex-steps{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+    .ex-step{display:flex;gap:10px;align-items:flex-start;font-size:0.9rem;color:#374151;}
+    .step-dot{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#7e22ce,#a855f7);color:white;font-weight:800;font-size:0.72rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+
+    /* Key insight box */
+    .key-insight{background:linear-gradient(135deg,#fdf4ff,#f5f3ff);border:2px solid #c4b5fd;border-radius:14px;padding:18px 22px;margin:16px 0;display:flex;gap:14px;align-items:flex-start;}
+    .ki-icon{font-size:1.6rem;flex-shrink:0;}
+    .ki-text{font-size:0.92rem;color:#374151;}
+    .ki-text strong{color:#6d28d9;}
+
+    /* Table comparison */
+    .compare-table{width:100%;border-collapse:collapse;border-radius:14px;overflow:hidden;box-shadow:0 4px 16px rgba(147,51,234,0.1);margin-bottom:24px;}
+    .compare-table th{padding:14px 20px;font-size:0.85rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;text-align:center;}
+    .compare-table td{padding:12px 20px;font-size:0.93rem;border-top:1px solid #f3e8ff;text-align:center;}
+    .cth-func{background:linear-gradient(135deg,#1e40af,#3b82f6);color:white;}
+    .cth-inv{background:linear-gradient(135deg,#7e22ce,#9333ea);color:white;}
+    .ctd-func{background:#eff6ff;font-family:'Space Mono',monospace;font-weight:700;color:#1d4ed8;}
+    .ctd-inv{background:#faf5ff;font-family:'Space Mono',monospace;font-weight:700;color:#7e22ce;}
+
+    /* Quiz */
+    .quiz-section{background:linear-gradient(135deg,#2e1065,#4c1d95);border-radius:20px;padding:32px;color:white;}
+    .quiz-section h3{font-size:1.3rem;font-weight:900;margin-bottom:6px;}
+    .quiz-section p{font-size:0.88rem;opacity:0.75;margin-bottom:24px;}
+    .quiz-q{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:18px 22px;margin-bottom:14px;}
+    .quiz-q .qtext{font-size:0.95rem;margin-bottom:14px;font-weight:700;}
+    .quiz-q .qnum{font-family:'Space Mono',monospace;font-size:1.4rem;font-weight:700;margin-bottom:14px;color:#e9d5ff;}
+    .options{display:flex;flex-wrap:wrap;gap:10px;}
+    .opt-btn{background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);color:white;font-family:'Nunito',sans-serif;font-size:0.92rem;font-weight:700;padding:8px 18px;border-radius:30px;cursor:pointer;transition:all 0.2s;}
+    .opt-btn:hover{background:rgba(255,255,255,0.2);transform:scale(1.04);}
+    .opt-btn.correct{background:#22c55e;border-color:#22c55e;animation:popIn 0.3s ease;}
+    .opt-btn.wrong{background:#ef4444;border-color:#ef4444;}
+    .feedback{font-size:0.85rem;margin-top:10px;padding:8px 14px;border-radius:8px;display:none;}
+    .feedback.show{display:block;}
+    .feedback.ok{background:rgba(34,197,94,0.2);color:#bbf7d0;}
+    .feedback.bad{background:rgba(239,68,68,0.2);color:#fecaca;}
+    @keyframes popIn{0%{transform:scale(0.9);}60%{transform:scale(1.1);}100%{transform:scale(1);}}
+    footer{text-align:center;padding:32px 20px;font-size:0.85rem;color:var(--muted);}
+
+    /* Triangle SVG wrapper */
+    .tri-svg-wrap{display:flex;align-items:center;justify-content:center;}
+    .highlight-pill{display:inline-block;font-size:0.78rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-right:4px;margin-bottom:6px;}
+    .hp-sin{background:#fce7f3;color:#be185d;}
+    .hp-cos{background:#e0e7ff;color:#3730a3;}
+    .hp-tan{background:#dcfce7;color:#15803d;}
+    .ex-given{font-size:0.88rem;color:#475569;margin-bottom:8px;}
+    .ex-given strong{color:#1e293b;}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#2e1065,#4c1d95,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#9333ea,#6366f1);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="star" style="width:3px;height:3px;top:12%;left:8%;animation-delay:0s"></div>
+  <div class="star" style="width:2px;height:2px;top:25%;left:15%;animation-delay:0.5s"></div>
+  <div class="star" style="width:4px;height:4px;top:10%;left:30%;animation-delay:1s"></div>
+  <div class="star" style="width:3px;height:3px;top:70%;left:20%;animation-delay:0.3s"></div>
+  <div class="star" style="width:2px;height:2px;top:15%;left:75%;animation-delay:0.8s"></div>
+  <div class="star" style="width:4px;height:4px;top:40%;left:88%;animation-delay:1.2s"></div>
+  <div class="star" style="width:5px;height:5px;top:20%;left:55%;animation-delay:0.6s"></div>
+  <div class="chip">Physics · High School · Vectors &amp; Trig</div>
+  <h1>Inverse Trig Functions</h1>
+  <p class="subtitle">Use sin⁻¹, cos⁻¹, and tan⁻¹ to find unknown angles from side ratios</p>
+</header>
+
+<main>
+
+<!-- SECTION 1: Inverse Functions Concept -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#f3e8ff;">🔄</div>
+    <h2>What Is an Inverse Function?</h2>
+  </div>
+
+  <div class="concept-card">
+    <h3>The Big Idea: Flip the Input and Output</h3>
+    <p>A regular function takes an <strong>input x</strong> and produces an <strong>output y</strong>. An <strong>inverse function</strong> does the opposite — it takes in that <strong>y</strong> and gives you back the original <strong>x</strong>.</p>
+    <p>We write the inverse of a function f as <strong>f⁻¹</strong>. The superscript ⁻¹ does <em>not</em> mean "1 divided by f" — it means "reverse of f".</p>
+  </div>
+
+  <!-- Arrow diagram: x → y and y → x -->
+  <div class="arrow-diagram">
+    <div class="ad-box">
+      <div class="ad-label">Input</div>
+      <div class="ad-val">x</div>
+    </div>
+    <div class="ad-arrow">
+      <div class="arrow-line">→</div>
+      <div class="arrow-label">f(x) = y</div>
+    </div>
+    <div class="ad-box">
+      <div class="ad-label">Output</div>
+      <div class="ad-val">y</div>
+    </div>
+    <div class="ad-arrow ad-arrow-rev" style="padding:0 20px;">
+      <div class="arrow-line" style="transform:rotate(180deg); display:inline-block;">→</div>
+      <div class="arrow-label">f⁻¹(y) = x</div>
+    </div>
+    <div class="ad-box" style="border-color:#f9a8d4;background:linear-gradient(135deg,#fce7f3,#fdf2f8);">
+      <div class="ad-label" style="color:#be185d;">Back to</div>
+      <div class="ad-val" style="color:#9d174d;">x</div>
+    </div>
+  </div>
+
+  <div class="concept-card" style="margin-top:24px;">
+    <h3>Worked Example: y = 5x + 2</h3>
+    <p>The function <strong>y = 5x + 2</strong> takes a number, multiplies by 5, then adds 2. Its inverse <strong>y = (x − 2)/5</strong> undoes those steps in reverse order: subtract 2 first, then divide by 5.</p>
+    <p>Notice how the inputs and outputs are swapped:</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
+      <div>
+        <div style="background:linear-gradient(135deg,#1e3a5f,#1d4ed8);color:white;border-radius:10px 10px 0 0;padding:10px 16px;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;">y = 5x + 2</div>
+        <table style="width:100%;border-collapse:collapse;background:white;border-radius:0 0 10px 10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+          <thead><tr><th style="padding:8px 16px;background:#dbeafe;color:#1e40af;font-size:0.82rem;text-align:center;">x (in)</th><th style="padding:8px 16px;background:#dbeafe;color:#1e40af;font-size:0.82rem;text-align:center;">y (out)</th></tr></thead>
+          <tbody>
+            <tr><td style="padding:8px 16px;text-align:center;font-family:'Space Mono',monospace;font-weight:700;">2</td><td style="padding:8px 16px;text-align:center;font-family:'Space Mono',monospace;font-weight:700;color:#1d4ed8;">12</td></tr>
+            <tr style="background:#f8faff;"><td style="padding:8px 16px;text-align:center;font-family:'Space Mono',monospace;font-weight:700;">5</td><td style="padding:8px 16px;text-align:center;font-family:'Space Mono',monospace;font-weight:700;color:#1d4ed8;">27</td></tr>
+            <tr><td style="padding:8px 16px;text-align:center;font-family:'Space Mono',monospace;font-weight:700;">8</td><td style="padding:8px 16px;text-align:center;font-family:'Space Mono',monospace;font-weight:700;color:#1d4ed8;">42</td></tr>
+            <tr style="background:#f8faff;"><td style="padding:8px 16px;text-align:center;font-family:'Space Mono',monospace;font-weight:700;">10</td><td style="padding:8px 16px;text-align:center;font-family:'Space Mono',monospace;font-weight:700;color:#1d4ed8;">52</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div style="background:linear-gradient(135deg,#6b21a8,#a855f7);color:white;border-radius:10px 10px 0 0;padding:10px 16px;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;">y = (x − 2) / 5 &nbsp;[inverse]</div>
+        <table style="width:100%;border-collapse:collapse;background:white;border-radius:0 0 10px 10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+          <thead><tr><th style="padding:8px 16px;background:#f3e8ff;color:#6d28d9;font-size:0.82rem;text-align:center;">x (in)</th><th style="padding:8px 16px;background:#f3e8ff;color:#6d28d9;font-size:0.82rem;text-align:center;">y (out)</th></tr></thead>
+          <tbody>
+            <tr><td style="padding:8px 16px;text-align:center;font-family:'Space Mono',monospace;font-weight:700;color:#1d4ed8;">12</td><td style="padding:8px 16px;text-align:center;font-family:'Space Mono',monospace;font-weight:700;color:#9333ea;">2</td></tr>
+            <tr style="background:#faf5ff;"><td style="padding:8px 16px;text-align:center;font-family:'Space Mono',monospace;font-weight:700;color:#1d4ed8;">27</td><td style="padding:8px 16px;text-align:center;font-family:'Space Mono',monospace;font-weight:700;color:#9333ea;">5</td></tr>
+            <tr><td style="padding:8px 16px;text-align:center;font-family:'Space Mono',monospace;font-weight:700;color:#1d4ed8;">42</td><td style="padding:8px 16px;text-align:center;font-family:'Space Mono',monospace;font-weight:700;color:#9333ea;">8</td></tr>
+            <tr style="background:#faf5ff;"><td style="padding:8px 16px;text-align:center;font-family:'Space Mono',monospace;font-weight:700;color:#1d4ed8;">52</td><td style="padding:8px 16px;text-align:center;font-family:'Space Mono',monospace;font-weight:700;color:#9333ea;">10</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="key-insight" style="margin-top:16px;">
+      <div class="ki-icon">💡</div>
+      <div class="ki-text">The outputs of y = 5x + 2 <strong>become the inputs</strong> of the inverse, and vice versa. The columns are simply swapped!</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: Trig vs Inverse Trig -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#ede9fe;">📐</div>
+    <h2>Regular Trig vs. Inverse Trig</h2>
+  </div>
+
+  <div class="concept-card">
+    <h3>What does each one take in — and give out?</h3>
+    <p><strong>Regular trig functions</strong> (sin, cos, tan) take in an <strong>angle</strong> and output a <strong>ratio</strong> of two sides.</p>
+    <p><strong>Inverse trig functions</strong> (sin⁻¹, cos⁻¹, tan⁻¹) take in a <strong>ratio</strong> of two sides and output an <strong>angle</strong>.</p>
+  </div>
+
+  <!-- Side-by-side flow -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+    <div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:2px solid #93c5fd;border-radius:16px;padding:20px 24px;text-align:center;">
+      <div style="font-size:0.8rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#1d4ed8;margin-bottom:10px;">Regular Trig</div>
+      <div style="font-size:1.1rem;font-weight:700;color:#1e40af;margin-bottom:10px;">ANGLE → RATIO</div>
+      <div style="font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;color:#1d4ed8;background:white;border-radius:8px;padding:8px 12px;">sin(30°) = 0.5</div>
+      <div style="font-size:0.82rem;color:#374151;margin-top:8px;">You know the angle — you find the ratio</div>
+    </div>
+    <div style="background:linear-gradient(135deg,#faf5ff,#f3e8ff);border:2px solid #c4b5fd;border-radius:16px;padding:20px 24px;text-align:center;">
+      <div style="font-size:0.8rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#7e22ce;margin-bottom:10px;">Inverse Trig</div>
+      <div style="font-size:1.1rem;font-weight:700;color:#6d28d9;margin-bottom:10px;">RATIO → ANGLE</div>
+      <div style="font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;color:#7e22ce;background:white;border-radius:8px;padding:8px 12px;">sin⁻¹(0.5) = 30°</div>
+      <div style="font-size:0.82rem;color:#374151;margin-top:8px;">You know the ratio — you find the angle</div>
+    </div>
+  </div>
+
+  <!-- Comparison table: all 3 trig functions -->
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th class="cth-func" style="text-align:left;">Trig Function (angle → ratio)</th>
+        <th style="background:#475569;color:white;padding:14px 12px;text-align:center;font-size:1.3rem;">⇄</th>
+        <th class="cth-inv" style="text-align:left;">Inverse Trig (ratio → angle)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="ctd-func" style="text-align:left;padding:14px 20px;">sin(θ) = Opposite / Hypotenuse</td>
+        <td style="text-align:center;background:#f1f5f9;font-size:1.2rem;">⇄</td>
+        <td class="ctd-inv" style="text-align:left;padding:14px 20px;">sin⁻¹(Opposite / Hypotenuse) = θ</td>
+      </tr>
+      <tr>
+        <td class="ctd-func" style="text-align:left;padding:14px 20px;">cos(θ) = Adjacent / Hypotenuse</td>
+        <td style="text-align:center;background:#f1f5f9;font-size:1.2rem;">⇄</td>
+        <td class="ctd-inv" style="text-align:left;padding:14px 20px;">cos⁻¹(Adjacent / Hypotenuse) = θ</td>
+      </tr>
+      <tr>
+        <td class="ctd-func" style="text-align:left;padding:14px 20px;">tan(θ) = Opposite / Adjacent</td>
+        <td style="text-align:center;background:#f1f5f9;font-size:1.2rem;">⇄</td>
+        <td class="ctd-inv" style="text-align:left;padding:14px 20px;">tan⁻¹(Opposite / Adjacent) = θ</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="key-insight">
+    <div class="ki-icon">🔑</div>
+    <div class="ki-text"><strong>When to use inverse trig:</strong> Whenever you know two sides of a right triangle and need to find an angle, use the appropriate inverse trig function on your calculator. On most calculators, press <strong>SHIFT</strong> (or <strong>2nd</strong>) before sin, cos, or tan.</div>
+  </div>
+</section>
+
+<!-- SECTION 3: Worked Examples -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#dcfce7;">🔬</div>
+    <h2>Worked Examples — Finding the Angle</h2>
+  </div>
+
+  <!-- Example 1: sin -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 1</div>
+      <span class="highlight-pill hp-sin">sin⁻¹</span>
+      <div class="ex-trig-type">Opposite &amp; Hypotenuse known</div>
+    </div>
+    <div class="ex-body">
+      <div class="tri-svg-wrap">
+        <svg viewBox="0 0 160 130" xmlns="http://www.w3.org/2000/svg" width="160" height="130">
+          <!-- Triangle -->
+          <polygon points="20,110 140,110 20,20" fill="#fce7f3" stroke="#be185d" stroke-width="2"/>
+          <!-- Right angle marker -->
+          <rect x="20" y="98" width="12" height="12" fill="none" stroke="#be185d" stroke-width="1.5"/>
+          <!-- Hypotenuse label -->
+          <text x="88" y="58" font-family="'Space Mono',monospace" font-size="12" font-weight="700" fill="#be185d" text-anchor="middle" transform="rotate(-42,88,58)">10</text>
+          <!-- Opposite label -->
+          <text x="8" y="68" font-family="'Space Mono',monospace" font-size="12" font-weight="700" fill="#7c3aed" text-anchor="middle">8</text>
+          <!-- Angle arc -->
+          <path d="M 140,110 A 24,24 0 0,0 116,88" fill="none" stroke="#9333ea" stroke-width="2"/>
+          <text x="124" y="103" font-family="sans-serif" font-size="11" font-weight="700" fill="#9333ea">θ</text>
+          <!-- Labels -->
+          <text x="80" y="126" font-family="sans-serif" font-size="9" fill="#475569" text-anchor="middle">Adjacent</text>
+          <text x="152" y="68" font-family="sans-serif" font-size="9" fill="#475569" text-anchor="middle" transform="rotate(90,152,68)">Opp</text>
+        </svg>
+      </div>
+      <div class="ex-text">
+        <div class="ex-given"><strong>Given:</strong> Opposite = 8, Hypotenuse = 10</div>
+        <div class="ex-given"><strong>Find:</strong> angle θ</div>
+        <div class="ex-formula">sin⁻¹(8/10) = θ</div>
+        <div class="ex-steps">
+          <div class="ex-step"><div class="step-dot">1</div><span>Opposite &amp; Hypotenuse are known → use sin⁻¹</span></div>
+          <div class="ex-step"><div class="step-dot">2</div><span>Calculate: 8 ÷ 10 = 0.8</span></div>
+          <div class="ex-step"><div class="step-dot">3</div><span>Press sin⁻¹(0.8) on calculator</span></div>
+        </div>
+        <div class="ex-answer" style="margin-top:12px;">θ = 53.1°</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example 2: cos -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 2</div>
+      <span class="highlight-pill hp-cos">cos⁻¹</span>
+      <div class="ex-trig-type">Adjacent &amp; Hypotenuse known</div>
+    </div>
+    <div class="ex-body">
+      <div class="tri-svg-wrap">
+        <svg viewBox="0 0 160 130" xmlns="http://www.w3.org/2000/svg" width="160" height="130">
+          <polygon points="20,110 140,110 20,20" fill="#e0e7ff" stroke="#3730a3" stroke-width="2"/>
+          <rect x="20" y="98" width="12" height="12" fill="none" stroke="#3730a3" stroke-width="1.5"/>
+          <text x="88" y="58" font-family="'Space Mono',monospace" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle" transform="rotate(-42,88,58)">24</text>
+          <text x="82" y="124" font-family="'Space Mono',monospace" font-size="12" font-weight="700" fill="#7c3aed" text-anchor="middle">11</text>
+          <path d="M 20,20 A 24,24 0 0,1 44,20" fill="none" stroke="#9333ea" stroke-width="2"/>
+          <text x="38" y="34" font-family="sans-serif" font-size="11" font-weight="700" fill="#9333ea">θ</text>
+          <text x="8" y="68" font-family="sans-serif" font-size="9" fill="#475569" text-anchor="middle" transform="rotate(90,8,68)">Opp</text>
+        </svg>
+      </div>
+      <div class="ex-text">
+        <div class="ex-given"><strong>Given:</strong> Adjacent = 11, Hypotenuse = 24</div>
+        <div class="ex-given"><strong>Find:</strong> angle θ</div>
+        <div class="ex-formula">cos⁻¹(11/24) = θ</div>
+        <div class="ex-steps">
+          <div class="ex-step"><div class="step-dot">1</div><span>Adjacent &amp; Hypotenuse are known → use cos⁻¹</span></div>
+          <div class="ex-step"><div class="step-dot">2</div><span>Calculate: 11 ÷ 24 = 0.4583…</span></div>
+          <div class="ex-step"><div class="step-dot">3</div><span>Press cos⁻¹(0.4583) on calculator</span></div>
+        </div>
+        <div class="ex-answer" style="margin-top:12px;">θ = 62.7°</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example 3: tan -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 3</div>
+      <span class="highlight-pill hp-tan">tan⁻¹</span>
+      <div class="ex-trig-type">Opposite &amp; Adjacent known</div>
+    </div>
+    <div class="ex-body">
+      <div class="tri-svg-wrap">
+        <svg viewBox="0 0 160 130" xmlns="http://www.w3.org/2000/svg" width="160" height="130">
+          <polygon points="20,110 140,110 20,20" fill="#dcfce7" stroke="#15803d" stroke-width="2"/>
+          <rect x="20" y="98" width="12" height="12" fill="none" stroke="#15803d" stroke-width="1.5"/>
+          <text x="8" y="68" font-family="'Space Mono',monospace" font-size="12" font-weight="700" fill="#15803d" text-anchor="middle">7</text>
+          <text x="82" y="124" font-family="'Space Mono',monospace" font-size="12" font-weight="700" fill="#7c3aed" text-anchor="middle">5</text>
+          <path d="M 140,110 A 22,22 0 0,0 118,89" fill="none" stroke="#9333ea" stroke-width="2"/>
+          <text x="123" y="103" font-family="sans-serif" font-size="11" font-weight="700" fill="#9333ea">θ</text>
+        </svg>
+      </div>
+      <div class="ex-text">
+        <div class="ex-given"><strong>Given:</strong> Opposite = 7, Adjacent = 5</div>
+        <div class="ex-given"><strong>Find:</strong> angle θ</div>
+        <div class="ex-formula">tan⁻¹(7/5) = θ</div>
+        <div class="ex-steps">
+          <div class="ex-step"><div class="step-dot">1</div><span>Opposite &amp; Adjacent are known → use tan⁻¹</span></div>
+          <div class="ex-step"><div class="step-dot">2</div><span>Calculate: 7 ÷ 5 = 1.4</span></div>
+          <div class="ex-step"><div class="step-dot">3</div><span>Press tan⁻¹(1.4) on calculator</span></div>
+        </div>
+        <div class="ex-answer" style="margin-top:12px;">θ = 54.5°</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example 4: sin -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 4</div>
+      <span class="highlight-pill hp-sin">sin⁻¹</span>
+      <div class="ex-trig-type">Opposite &amp; Hypotenuse known</div>
+    </div>
+    <div class="ex-body">
+      <div class="tri-svg-wrap">
+        <svg viewBox="0 0 160 130" xmlns="http://www.w3.org/2000/svg" width="160" height="130">
+          <polygon points="20,110 140,110 20,20" fill="#fce7f3" stroke="#be185d" stroke-width="2"/>
+          <rect x="20" y="98" width="12" height="12" fill="none" stroke="#be185d" stroke-width="1.5"/>
+          <text x="88" y="58" font-family="'Space Mono',monospace" font-size="12" font-weight="700" fill="#be185d" text-anchor="middle" transform="rotate(-42,88,58)">20</text>
+          <text x="8" y="68" font-family="'Space Mono',monospace" font-size="12" font-weight="700" fill="#7c3aed" text-anchor="middle">8</text>
+          <path d="M 140,110 A 22,22 0 0,0 118,89" fill="none" stroke="#9333ea" stroke-width="2"/>
+          <text x="123" y="103" font-family="sans-serif" font-size="11" font-weight="700" fill="#9333ea">θ</text>
+        </svg>
+      </div>
+      <div class="ex-text">
+        <div class="ex-given"><strong>Given:</strong> Opposite = 8, Hypotenuse = 20</div>
+        <div class="ex-given"><strong>Find:</strong> angle θ</div>
+        <div class="ex-formula">sin⁻¹(8/20) = θ</div>
+        <div class="ex-steps">
+          <div class="ex-step"><div class="step-dot">1</div><span>Opposite &amp; Hypotenuse are known → use sin⁻¹</span></div>
+          <div class="ex-step"><div class="step-dot">2</div><span>Calculate: 8 ÷ 20 = 0.4</span></div>
+          <div class="ex-step"><div class="step-dot">3</div><span>Press sin⁻¹(0.4) on calculator</span></div>
+        </div>
+        <div class="ex-answer" style="margin-top:12px;">θ = 23.6°</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example 5: cos -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 5</div>
+      <span class="highlight-pill hp-cos">cos⁻¹</span>
+      <div class="ex-trig-type">Adjacent &amp; Hypotenuse known</div>
+    </div>
+    <div class="ex-body">
+      <div class="tri-svg-wrap">
+        <svg viewBox="0 0 160 130" xmlns="http://www.w3.org/2000/svg" width="160" height="130">
+          <polygon points="20,110 140,110 20,20" fill="#e0e7ff" stroke="#3730a3" stroke-width="2"/>
+          <rect x="20" y="98" width="12" height="12" fill="none" stroke="#3730a3" stroke-width="1.5"/>
+          <text x="88" y="58" font-family="'Space Mono',monospace" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle" transform="rotate(-42,88,58)">12</text>
+          <text x="82" y="124" font-family="'Space Mono',monospace" font-size="12" font-weight="700" fill="#7c3aed" text-anchor="middle">3</text>
+          <path d="M 20,20 A 24,24 0 0,1 44,20" fill="none" stroke="#9333ea" stroke-width="2"/>
+          <text x="38" y="34" font-family="sans-serif" font-size="11" font-weight="700" fill="#9333ea">θ</text>
+        </svg>
+      </div>
+      <div class="ex-text">
+        <div class="ex-given"><strong>Given:</strong> Adjacent = 3, Hypotenuse = 12</div>
+        <div class="ex-given"><strong>Find:</strong> angle θ</div>
+        <div class="ex-formula">cos⁻¹(3/12) = θ</div>
+        <div class="ex-steps">
+          <div class="ex-step"><div class="step-dot">1</div><span>Adjacent &amp; Hypotenuse are known → use cos⁻¹</span></div>
+          <div class="ex-step"><div class="step-dot">2</div><span>Calculate: 3 ÷ 12 = 0.25</span></div>
+          <div class="ex-step"><div class="step-dot">3</div><span>Press cos⁻¹(0.25) on calculator</span></div>
+        </div>
+        <div class="ex-answer" style="margin-top:12px;">θ = 75.5°</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example 6: tan -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 6</div>
+      <span class="highlight-pill hp-tan">tan⁻¹</span>
+      <div class="ex-trig-type">Opposite &amp; Adjacent known</div>
+    </div>
+    <div class="ex-body">
+      <div class="tri-svg-wrap">
+        <svg viewBox="0 0 160 130" xmlns="http://www.w3.org/2000/svg" width="160" height="130">
+          <polygon points="20,110 140,110 20,20" fill="#dcfce7" stroke="#15803d" stroke-width="2"/>
+          <rect x="20" y="98" width="12" height="12" fill="none" stroke="#15803d" stroke-width="1.5"/>
+          <text x="8" y="68" font-family="'Space Mono',monospace" font-size="12" font-weight="700" fill="#15803d" text-anchor="middle">42</text>
+          <text x="82" y="124" font-family="'Space Mono',monospace" font-size="12" font-weight="700" fill="#7c3aed" text-anchor="middle">28</text>
+          <path d="M 140,110 A 22,22 0 0,0 118,89" fill="none" stroke="#9333ea" stroke-width="2"/>
+          <text x="123" y="103" font-family="sans-serif" font-size="11" font-weight="700" fill="#9333ea">θ</text>
+        </svg>
+      </div>
+      <div class="ex-text">
+        <div class="ex-given"><strong>Given:</strong> Opposite = 42, Adjacent = 28</div>
+        <div class="ex-given"><strong>Find:</strong> angle θ</div>
+        <div class="ex-formula">tan⁻¹(42/28) = θ</div>
+        <div class="ex-steps">
+          <div class="ex-step"><div class="step-dot">1</div><span>Opposite &amp; Adjacent are known → use tan⁻¹</span></div>
+          <div class="ex-step"><div class="step-dot">2</div><span>Calculate: 42 ÷ 28 = 1.5</span></div>
+          <div class="ex-step"><div class="step-dot">3</div><span>Press tan⁻¹(1.5) on calculator</span></div>
+        </div>
+        <div class="ex-answer" style="margin-top:12px;">θ = 56.3°</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: Decision Guide -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fef9c3;">⚡</div>
+    <h2>Which Inverse Trig to Use?</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+    <div style="background:linear-gradient(135deg,#fdf2f8,#fce7f3);border:2px solid #f9a8d4;border-radius:16px;padding:20px;text-align:center;">
+      <div style="font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#be185d;margin-bottom:8px;">Use sin⁻¹ when you have</div>
+      <div style="font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;color:#9d174d;margin-bottom:10px;">Opp + Hyp</div>
+      <div style="font-family:'Space Mono',monospace;font-size:0.92rem;color:#be185d;background:white;border-radius:8px;padding:8px;">θ = sin⁻¹(Opp/Hyp)</div>
+    </div>
+    <div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:2px solid #93c5fd;border-radius:16px;padding:20px;text-align:center;">
+      <div style="font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#1d4ed8;margin-bottom:8px;">Use cos⁻¹ when you have</div>
+      <div style="font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;color:#1e3a8a;margin-bottom:10px;">Adj + Hyp</div>
+      <div style="font-family:'Space Mono',monospace;font-size:0.92rem;color:#1d4ed8;background:white;border-radius:8px;padding:8px;">θ = cos⁻¹(Adj/Hyp)</div>
+    </div>
+    <div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #86efac;border-radius:16px;padding:20px;text-align:center;">
+      <div style="font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#15803d;margin-bottom:8px;">Use tan⁻¹ when you have</div>
+      <div style="font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;color:#14532d;margin-bottom:10px;">Opp + Adj</div>
+      <div style="font-family:'Space Mono',monospace;font-size:0.92rem;color:#15803d;background:white;border-radius:8px;padding:8px;">θ = tan⁻¹(Opp/Adj)</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: Quiz -->
+<section>
+  <div class="quiz-section">
+    <h3>Quick Check — Test Yourself!</h3>
+    <p>Choose the correct inverse trig expression or angle for each question.</p>
+
+    <!-- Q1 -->
+    <div class="quiz-q" id="q1">
+      <div class="qtext">A right triangle has Opposite = 6 and Hypotenuse = 10. Which expression finds angle θ?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q1',false,'cos⁻¹(6/10)','cos⁻¹ uses Adjacent/Hypotenuse. We have Opposite/Hypotenuse — that is sin⁻¹.')">cos⁻¹(6/10)</button>
+        <button class="opt-btn" onclick="check(this,'q1',true,'sin⁻¹(6/10)','Correct! Opposite and Hypotenuse → use sin⁻¹. sin⁻¹(6/10) = 36.9°')">sin⁻¹(6/10)</button>
+        <button class="opt-btn" onclick="check(this,'q1',false,'tan⁻¹(6/10)','tan⁻¹ uses Opposite/Adjacent. We don\'t know the Adjacent side here.')">tan⁻¹(6/10)</button>
+        <button class="opt-btn" onclick="check(this,'q1',false,'sin⁻¹(10/6)','The ratio is always the smaller part over the larger — Opposite over Hypotenuse.')">sin⁻¹(10/6)</button>
+      </div>
+      <div class="feedback" id="q1-fb"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-q" id="q2">
+      <div class="qtext">A right triangle has Adjacent = 5 and Hypotenuse = 13. What is the angle to 1 decimal place?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q2',false,'67.4°','That would be sin⁻¹(5/13) — but we have adjacent and hypotenuse, so we use cos⁻¹.')">67.4°</button>
+        <button class="opt-btn" onclick="check(this,'q2',true,'67.4°... wait — cos⁻¹(5/13) = 67.4°','Correct! cos⁻¹(5/13) = 67.4°')">67.4°</button>
+        <button class="opt-btn" onclick="check(this,'q2',false,'22.6°','22.6° = sin⁻¹(5/13). But we have adjacent and hypotenuse → use cos⁻¹, not sin⁻¹.')">22.6°</button>
+        <button class="opt-btn" onclick="check(this,'q2',false,'45.0°','Not correct. cos⁻¹(5/13) ≠ 45°.')">45.0°</button>
+      </div>
+      <div class="feedback" id="q2-fb"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-q" id="q3">
+      <div class="qtext">A right triangle has Opposite = 9 and Adjacent = 12. What is angle θ?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q3',false,'53.1°','sin⁻¹(9/15) = 36.9°, not 53.1°. We have opp and adj — use tan⁻¹.')">53.1°</button>
+        <button class="opt-btn" onclick="check(this,'q3',false,'41.8°','Close! But check: tan⁻¹(9/12) = tan⁻¹(0.75) = 36.9°, not 41.8°.')">41.8°</button>
+        <button class="opt-btn" onclick="check(this,'q3',true,'36.9°','Correct! tan⁻¹(9/12) = tan⁻¹(0.75) = 36.9°')">36.9°</button>
+        <button class="opt-btn" onclick="check(this,'q3',false,'48.6°','Not correct. Use tan⁻¹(Opposite/Adjacent) = tan⁻¹(9/12) = 36.9°.')">48.6°</button>
+      </div>
+      <div class="feedback" id="q3-fb"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer>Physics · High School &nbsp;·&nbsp; Unit 26: Review of Trig — Inverse Trig Functions &nbsp;·&nbsp; IB Physics</footer>
+<script>
+function check(btn,qid,correct,label,msg){
+  var q=document.getElementById(qid);
+  var fb=document.getElementById(qid+'-fb');
+  q.querySelectorAll('.opt-btn').forEach(function(b){b.disabled=true;b.style.opacity='0.55';b.style.cursor='default';});
+  btn.style.opacity='1';
+  btn.classList.add(correct?'correct':'wrong');
+  fb.textContent=(correct?'✓ ':'✗ ')+msg;
+  fb.className='feedback show '+(correct?'ok':'bad');
+}
+</script>
+</body>
+</html>

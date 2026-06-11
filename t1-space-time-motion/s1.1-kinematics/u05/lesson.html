@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Kinematics · Unit 5 — Position-Time Graphs</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+  --dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+body::before{
+  content:'';position:fixed;inset:0;z-index:-1;
+  background-image:radial-gradient(circle,#cbd5e1 1px,transparent 1px);
+  background-size:28px 28px;opacity:.55;
+}
+
+/* PASSWORD GATE */
+#gate{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#0f172a,#1e3a5f);}
+.gate-box{background:#1e293b;border:1px solid #334155;border-radius:20px;padding:48px 40px;
+  max-width:400px;width:90%;text-align:center;}
+.gate-box h2{color:#f1f5f9;font-size:1.5rem;font-weight:800;margin-bottom:8px;}
+.gate-box p{color:var(--muted);font-size:.95rem;margin-bottom:24px;}
+.gate-box input{width:100%;padding:12px 16px;border-radius:10px;border:1px solid #475569;
+  background:#0f172a;color:#f1f5f9;font-family:'Nunito',sans-serif;font-size:1rem;outline:none;
+  margin-bottom:12px;}
+.gate-box button{width:100%;padding:12px;border-radius:10px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--blue),var(--indigo));color:#fff;
+  font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;}
+.gate-error{color:var(--red);font-size:.875rem;margin-top:8px;display:none;}
+
+/* HEADER */
+header{
+  background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 60%,#1e40af 100%);
+  padding:56px 24px 40px;text-align:center;position:relative;overflow:hidden;
+}
+.stars{position:absolute;inset:0;pointer-events:none;}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 3s infinite alternate;}
+@keyframes twinkle{from{opacity:.2;transform:scale(1);}to{opacity:1;transform:scale(1.4);}}
+.chip{display:inline-block;background:rgba(255,255,255,.15);color:#e0e7ff;
+  font-family:'Space Mono',monospace;font-size:.75rem;font-weight:700;letter-spacing:.08em;
+  padding:5px 14px;border-radius:99px;border:1px solid rgba(255,255,255,.25);margin-bottom:16px;}
+header h1{
+  font-size:clamp(1.8rem,5vw,3rem);font-weight:900;
+  background:linear-gradient(135deg,#ffffff,#bfdbfe,#a5b4fc);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:10px;
+}
+header p{color:#bfdbfe;font-size:1.05rem;max-width:600px;margin:0 auto;}
+
+/* LAYOUT */
+main{max-width:900px;margin:0 auto;padding:40px 20px 80px;}
+
+/* CARDS */
+.card{background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(15,23,42,.07);
+  padding:28px 32px;margin-bottom:28px;}
+.card h2{font-size:1.25rem;font-weight:800;margin-bottom:16px;color:var(--dark);}
+.card h3{font-size:1.05rem;font-weight:700;margin:18px 0 10px;color:#1e3a5f;}
+
+/* SECTION LABELS */
+.section-label{font-family:'Space Mono',monospace;font-size:.72rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+
+/* KEY INSIGHT / TIP BOXES */
+.insight-box{background:linear-gradient(135deg,#eff6ff,#eef2ff);border-left:4px solid var(--blue);
+  border-radius:10px;padding:16px 20px;margin:16px 0;}
+.insight-box .label{font-size:.72rem;font-weight:800;letter-spacing:.1em;color:var(--blue);
+  text-transform:uppercase;margin-bottom:6px;}
+.insight-box p{font-size:.95rem;line-height:1.6;color:#1e3a5f;}
+
+.tip-box{background:linear-gradient(135deg,#fff7ed,#fef9c3);border-left:4px solid var(--amber);
+  border-radius:10px;padding:16px 20px;margin:16px 0;}
+.tip-box .label{font-size:.72rem;font-weight:800;letter-spacing:.1em;color:var(--amber);
+  text-transform:uppercase;margin-bottom:6px;}
+.tip-box p{font-size:.95rem;line-height:1.6;color:#78350f;}
+
+.rule-box{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-left:4px solid var(--green);
+  border-radius:10px;padding:16px 20px;margin:16px 0;}
+.rule-box .label{font-size:.72rem;font-weight:800;letter-spacing:.1em;color:var(--green);
+  text-transform:uppercase;margin-bottom:6px;}
+.rule-box p{font-size:.95rem;line-height:1.6;color:#14532d;}
+
+/* FORMULA BOX */
+.formula-box{background:var(--dark);color:#e0e7ff;border-radius:12px;
+  padding:20px 28px;margin:20px 0;text-align:center;}
+.formula-box .formula{font-family:'Space Mono',monospace;font-size:1.3rem;color:#a5f3fc;
+  font-weight:700;letter-spacing:.02em;}
+.formula-box p{color:#94a3b8;font-size:.85rem;margin-top:8px;}
+
+/* EXAMPLE BOXES */
+.example-card{background:linear-gradient(135deg,#fafafa,#f1f5f9);border:1px solid #e2e8f0;
+  border-radius:14px;padding:24px 28px;margin:20px 0;}
+.example-card .ex-title{font-family:'Space Mono',monospace;font-size:.75rem;font-weight:700;
+  color:var(--indigo);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;}
+.example-card .question{font-weight:700;color:var(--dark);margin-bottom:8px;}
+.example-card .answer{background:#fff;border-radius:8px;padding:12px 16px;margin-top:8px;
+  border-left:3px solid var(--green);}
+.example-card .answer span{font-family:'Space Mono',monospace;color:var(--green);font-weight:700;}
+
+/* SVG GRAPHS */
+.graph-wrap{display:flex;justify-content:center;margin:20px 0;overflow:hidden;}
+svg text{font-family:'Nunito',sans-serif;}
+
+/* SLOPE TABLE */
+table.slope-table{width:100%;border-collapse:collapse;margin:16px 0;}
+table.slope-table th,table.slope-table td{padding:10px 14px;text-align:left;
+  border-bottom:1px solid #e2e8f0;font-size:.92rem;}
+table.slope-table th{background:#f1f5f9;font-weight:800;color:var(--dark);}
+table.slope-table tr:last-child td{border-bottom:none;}
+.tag{display:inline-block;padding:2px 10px;border-radius:99px;font-size:.78rem;font-weight:700;}
+.tag-green{background:#dcfce7;color:#15803d;}
+.tag-amber{background:#fef9c3;color:#a16207;}
+.tag-red{background:#fee2e2;color:#dc2626;}
+
+/* QUIZ */
+.quiz-section{background:linear-gradient(135deg,#1e3a5f,#1e40af);border-radius:20px;
+  padding:32px;margin-top:32px;}
+.quiz-section h2{color:#fff;font-size:1.3rem;font-weight:800;margin-bottom:24px;}
+.q-block{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;padding:20px 22px;margin-bottom:18px;}
+.q-block .q-text{color:#e0e7ff;font-weight:700;font-size:.98rem;margin-bottom:14px;}
+.q-block label{display:flex;align-items:center;gap:10px;color:#cbd5e1;font-size:.9rem;
+  margin-bottom:8px;cursor:pointer;padding:8px 12px;border-radius:8px;transition:.2s;}
+.q-block label:hover{background:rgba(255,255,255,.07);}
+.q-block input[type=radio]{accent-color:var(--blue);}
+.q-submit{background:linear-gradient(135deg,var(--blue),var(--indigo));color:#fff;
+  border:none;border-radius:10px;padding:12px 28px;font-family:'Nunito',sans-serif;
+  font-size:1rem;font-weight:700;cursor:pointer;margin-top:8px;}
+.quiz-result{color:#a5f3fc;font-family:'Space Mono',monospace;margin-top:16px;
+  font-size:.9rem;display:none;}
+.correct-mark{color:var(--green);}
+.wrong-mark{color:var(--red);}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <h2>Enter Password</h2>
+    <p>This lesson is password protected.</p>
+    <input type="password" id="pwd-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPwd()"/>
+    <button onclick="checkPwd()">Unlock</button>
+    <div class="gate-error" id="gate-error">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- STARS -->
+<header>
+  <div class="stars" id="stars"></div>
+  <div class="chip">Kinematics · Unit 5</div>
+  <h1>Position-Time Graphs</h1>
+  <p>Learn how to read, draw, and interpret position-time graphs to analyze complex motion.</p>
+</header>
+
+<main>
+
+  <!-- DEFINITION -->
+  <div class="card">
+    <div class="section-label">Definition</div>
+    <h2>What is a Position-Time Graph?</h2>
+    <p style="font-size:.98rem;line-height:1.7;margin-bottom:16px;">
+      <strong>Position-time graphs</strong> show an object's position on the <strong>y-axis</strong> and the time on the <strong>x-axis</strong>. They are used to show complicated motion on a simple picture.
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:8px;">
+      <div style="background:#eff6ff;border-radius:10px;padding:14px 18px;">
+        <div style="font-size:.75rem;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">Y-Axis</div>
+        <div style="font-weight:700;font-size:1rem;">Position (P)</div>
+        <div style="color:var(--muted);font-size:.88rem;">Unit: metres (m)</div>
+      </div>
+      <div style="background:#eef2ff;border-radius:10px;padding:14px 18px;">
+        <div style="font-size:.75rem;font-weight:800;color:var(--indigo);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">X-Axis</div>
+        <div style="font-weight:700;font-size:1rem;">Time (t)</div>
+        <div style="color:var(--muted);font-size:.88rem;">Unit: seconds (s)</div>
+      </div>
+    </div>
+    <!-- BLANK GRAPH SVG -->
+    <div class="graph-wrap">
+      <svg width="340" height="260" viewBox="0 0 340 260">
+        <!-- grid -->
+        <defs>
+          <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse" x="40" y="10">
+            <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <rect x="40" y="10" width="288" height="216" fill="url(#grid)"/>
+        <!-- axes -->
+        <line x1="40" y1="10" x2="40" y2="226" stroke="#475569" stroke-width="2"/>
+        <line x1="40" y1="226" x2="328" y2="226" stroke="#475569" stroke-width="2"/>
+        <!-- y ticks + labels -->
+        <text x="34" y="230" text-anchor="end" font-size="11" fill="#64748b">0</text>
+        <text x="34" y="206" text-anchor="end" font-size="11" fill="#64748b">1</text>
+        <text x="34" y="182" text-anchor="end" font-size="11" fill="#64748b">2</text>
+        <text x="34" y="158" text-anchor="end" font-size="11" fill="#64748b">3</text>
+        <text x="34" y="134" text-anchor="end" font-size="11" fill="#64748b">4</text>
+        <text x="34" y="110" text-anchor="end" font-size="11" fill="#64748b">5</text>
+        <text x="34" y="86" text-anchor="end" font-size="11" fill="#64748b">6</text>
+        <text x="34" y="62" text-anchor="end" font-size="11" fill="#64748b">7</text>
+        <!-- x ticks + labels -->
+        <text x="40" y="242" text-anchor="middle" font-size="11" fill="#64748b">0</text>
+        <text x="64" y="242" text-anchor="middle" font-size="11" fill="#64748b">1</text>
+        <text x="88" y="242" text-anchor="middle" font-size="11" fill="#64748b">2</text>
+        <text x="112" y="242" text-anchor="middle" font-size="11" fill="#64748b">3</text>
+        <text x="136" y="242" text-anchor="middle" font-size="11" fill="#64748b">4</text>
+        <text x="160" y="242" text-anchor="middle" font-size="11" fill="#64748b">5</text>
+        <text x="184" y="242" text-anchor="middle" font-size="11" fill="#64748b">6</text>
+        <text x="208" y="242" text-anchor="middle" font-size="11" fill="#64748b">7</text>
+        <text x="232" y="242" text-anchor="middle" font-size="11" fill="#64748b">8</text>
+        <text x="256" y="242" text-anchor="middle" font-size="11" fill="#64748b">9</text>
+        <text x="280" y="242" text-anchor="middle" font-size="11" fill="#64748b">10</text>
+        <text x="304" y="242" text-anchor="middle" font-size="11" fill="#64748b">11</text>
+        <text x="328" y="242" text-anchor="middle" font-size="11" fill="#64748b">12</text>
+        <!-- axis labels -->
+        <text x="184" y="258" text-anchor="middle" font-size="13" fill="#1e3a5f" font-weight="700">t (s)</text>
+        <text x="14" y="130" text-anchor="middle" font-size="13" fill="#1e3a5f" font-weight="700" transform="rotate(-90,14,130)">P (m)</text>
+      </svg>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:.85rem;">A blank P-T graph — position on y-axis, time on x-axis.</p>
+  </div>
+
+  <!-- READING A PT GRAPH -->
+  <div class="card">
+    <div class="section-label">Reading the Graph</div>
+    <h2>How to Read a Position-Time Graph</h2>
+    <p style="font-size:.95rem;line-height:1.7;margin-bottom:16px;">
+      The graph tracks <strong>where an object is at each moment in time</strong>. Each point on the graph tells you two things: the time (x-value) and the position (y-value) at that moment.
+    </p>
+
+    <!-- Full motion graph -->
+    <h3>Example — A Full Journey</h3>
+    <p style="font-size:.92rem;color:#475569;margin-bottom:8px;">Watch how the graph builds up as an object moves:</p>
+    <div class="graph-wrap">
+      <svg width="360" height="270" viewBox="0 0 360 270">
+        <defs>
+          <pattern id="grid2" width="24" height="24" patternUnits="userSpaceOnUse" x="40" y="10">
+            <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <rect x="40" y="10" width="288" height="216" fill="url(#grid2)"/>
+        <line x1="40" y1="10" x2="40" y2="226" stroke="#475569" stroke-width="2"/>
+        <line x1="40" y1="226" x2="328" y2="226" stroke="#475569" stroke-width="2"/>
+        <!-- y labels -->
+        <text x="34" y="230" text-anchor="end" font-size="10" fill="#64748b">0</text>
+        <text x="34" y="206" text-anchor="end" font-size="10" fill="#64748b">1</text>
+        <text x="34" y="182" text-anchor="end" font-size="10" fill="#64748b">2</text>
+        <text x="34" y="158" text-anchor="end" font-size="10" fill="#64748b">3</text>
+        <text x="34" y="134" text-anchor="end" font-size="10" fill="#64748b">4</text>
+        <text x="34" y="110" text-anchor="end" font-size="10" fill="#64748b">5</text>
+        <text x="34" y="86" text-anchor="end" font-size="10" fill="#64748b">6</text>
+        <text x="34" y="62" text-anchor="end" font-size="10" fill="#64748b">7</text>
+        <!-- x labels -->
+        <text x="40" y="242" text-anchor="middle" font-size="10" fill="#64748b">0</text>
+        <text x="64" y="242" text-anchor="middle" font-size="10" fill="#64748b">1</text>
+        <text x="88" y="242" text-anchor="middle" font-size="10" fill="#64748b">2</text>
+        <text x="112" y="242" text-anchor="middle" font-size="10" fill="#64748b">3</text>
+        <text x="136" y="242" text-anchor="middle" font-size="10" fill="#64748b">4</text>
+        <text x="160" y="242" text-anchor="middle" font-size="10" fill="#64748b">5</text>
+        <text x="184" y="242" text-anchor="middle" font-size="10" fill="#64748b">6</text>
+        <text x="208" y="242" text-anchor="middle" font-size="10" fill="#64748b">7</text>
+        <text x="232" y="242" text-anchor="middle" font-size="10" fill="#64748b">8</text>
+        <text x="256" y="242" text-anchor="middle" font-size="10" fill="#64748b">9</text>
+        <text x="280" y="242" text-anchor="middle" font-size="10" fill="#64748b">10</text>
+        <text x="304" y="242" text-anchor="middle" font-size="10" fill="#64748b">11</text>
+        <text x="328" y="242" text-anchor="middle" font-size="10" fill="#64748b">12</text>
+        <!-- Segment 1: (0,3)→(3,6) t=0→t=3, P=3→P=6 -->
+        <!-- x: t*24+40, y: 226-(P*24) -->
+        <!-- t=0,P=3: x=40,y=226-72=154 -->
+        <!-- t=3,P=6: x=112,y=226-144=82 -->
+        <line x1="40" y1="154" x2="112" y2="82" stroke="#ef4444" stroke-width="2.5"/>
+        <!-- Segment 2: (3,6)→(6,6) stationary -->
+        <!-- t=3:x=112, t=6:x=184 y=82 -->
+        <line x1="112" y1="82" x2="184" y2="82" stroke="#ef4444" stroke-width="2.5"/>
+        <!-- Segment 3: (6,6)→(8,2) -->
+        <!-- t=8:x=232, P=2:y=226-48=178 -->
+        <line x1="184" y1="82" x2="232" y2="178" stroke="#ef4444" stroke-width="2.5"/>
+        <!-- Segment 4: (8,2)→(12,2) stationary -->
+        <!-- t=12:x=328, P=2:y=178 -->
+        <line x1="232" y1="178" x2="328" y2="178" stroke="#ef4444" stroke-width="2.5"/>
+        <!-- Segment labels -->
+        <text x="70" y="105" font-size="10" fill="#1d4ed8" font-weight="700">① Moving forward</text>
+        <text x="130" y="74" font-size="10" fill="#059669" font-weight="700">② Stationary</text>
+        <text x="200" y="118" font-size="10" fill="#dc2626" font-weight="700">③ Moving back</text>
+        <text x="255" y="195" font-size="10" fill="#059669" font-weight="700">④ Stationary</text>
+        <!-- axis labels -->
+        <text x="184" y="258" text-anchor="middle" font-size="12" fill="#1e3a5f" font-weight="700">t (s)</text>
+        <text x="14" y="130" text-anchor="middle" font-size="12" fill="#1e3a5f" font-weight="700" transform="rotate(-90,14,130)">P (m)</text>
+      </svg>
+    </div>
+
+    <!-- Table of segments -->
+    <table class="slope-table">
+      <thead><tr><th>Segment</th><th>Time</th><th>Position Change</th><th>Type of Motion</th></tr></thead>
+      <tbody>
+        <tr><td>①</td><td>t = 0 → 3s</td><td>P = 3m → 6m</td><td><span class="tag tag-green">Moving forward</span></td></tr>
+        <tr><td>②</td><td>t = 3 → 6s</td><td>P = 6m (constant)</td><td><span class="tag tag-amber">Stationary</span></td></tr>
+        <tr><td>③</td><td>t = 6 → 8s</td><td>P = 6m → 2m</td><td><span class="tag tag-red">Moving backward</span></td></tr>
+        <tr><td>④</td><td>t = 8 → 12s</td><td>P = 2m (constant)</td><td><span class="tag tag-amber">Stationary</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SLOPE MEANINGS -->
+  <div class="card">
+    <div class="section-label">Interpreting Slope</div>
+    <h2>What the Slope Tells You</h2>
+    <table class="slope-table">
+      <thead><tr><th>Slope</th><th>Graph Shape</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Positive</strong></td><td>Line goes up ↗</td><td>Object moving forward (positive velocity)</td></tr>
+        <tr><td><strong>Zero</strong></td><td>Horizontal line →</td><td>Object is stationary (v = 0 m/s)</td></tr>
+        <tr><td><strong>Negative</strong></td><td>Line goes down ↘</td><td>Object moving backward (negative velocity)</td></tr>
+        <tr><td><strong>Steeper</strong></td><td>More vertical</td><td>Faster speed</td></tr>
+        <tr><td><strong>Shallower</strong></td><td>More horizontal</td><td>Slower speed</td></tr>
+      </tbody>
+    </table>
+    <div class="tip-box">
+      <div class="label">Remember</div>
+      <p>A horizontal line on a P-T graph does NOT mean the object is at zero — it means the object is <strong>not moving</strong> (its position is constant).</p>
+    </div>
+  </div>
+
+  <!-- PATTERNS -->
+  <div class="card">
+    <div class="section-label">Two Key Patterns</div>
+    <h2>Patterns in the Graph</h2>
+
+    <h3>Pattern 1 — Y-Intercept = Starting Position</h3>
+    <div class="insight-box">
+      <div class="label">Key Insight</div>
+      <p>The <strong>y-intercept</strong> of the position-time graph is the <strong>starting position</strong> of the object. It tells you where the object was at t = 0.</p>
+    </div>
+
+    <h3>Pattern 2 — Slope = Velocity</h3>
+    <div class="insight-box">
+      <div class="label">Key Insight</div>
+      <p>The <strong>slope</strong> of a P-T graph equals the <strong>velocity</strong> of the object. A steeper slope = higher velocity. A negative slope = moving backward.</p>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula">Slope = Rise / Run = Displacement / Time = Velocity</div>
+      <p>Rise = Change in position (displacement) &nbsp;|&nbsp; Run = Change in time</p>
+    </div>
+
+    <!-- Pattern demo graph: starts at P=2, rises to P=6, flat, falls to P=0 -->
+    <div class="graph-wrap">
+      <svg width="360" height="270" viewBox="0 0 360 270">
+        <defs>
+          <pattern id="grid3" width="24" height="24" patternUnits="userSpaceOnUse" x="40" y="10">
+            <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <rect x="40" y="10" width="288" height="216" fill="url(#grid3)"/>
+        <line x1="40" y1="10" x2="40" y2="226" stroke="#475569" stroke-width="2"/>
+        <line x1="40" y1="226" x2="328" y2="226" stroke="#475569" stroke-width="2"/>
+        <!-- y labels -->
+        <text x="34" y="230" text-anchor="end" font-size="10" fill="#64748b">0</text>
+        <text x="34" y="182" text-anchor="end" font-size="10" fill="#64748b">2</text>
+        <text x="34" y="134" text-anchor="end" font-size="10" fill="#64748b">4</text>
+        <text x="34" y="86" text-anchor="end" font-size="10" fill="#64748b">6</text>
+        <!-- x labels -->
+        <text x="40" y="242" text-anchor="middle" font-size="10" fill="#64748b">0</text>
+        <text x="136" y="242" text-anchor="middle" font-size="10" fill="#64748b">4</text>
+        <text x="256" y="242" text-anchor="middle" font-size="10" fill="#64748b">9</text>
+        <text x="328" y="242" text-anchor="middle" font-size="10" fill="#64748b">12</text>
+        <!-- Graph: (0,2)→(4,6)→(9,6)→(12,0) -->
+        <!-- P=2: y=226-48=178 ; P=6: y=226-144=82 ; P=0: y=226 -->
+        <!-- t=0:x=40 ; t=4:x=136 ; t=9:x=256 ; t=12:x=328 -->
+        <line x1="40" y1="178" x2="136" y2="82" stroke="#3b82f6" stroke-width="2.5"/>
+        <line x1="136" y1="82" x2="256" y2="82" stroke="#3b82f6" stroke-width="2.5"/>
+        <line x1="256" y1="82" x2="328" y2="226" stroke="#3b82f6" stroke-width="2.5"/>
+        <!-- Y-intercept annotation -->
+        <circle cx="40" cy="178" r="5" fill="#a855f7" stroke="#fff" stroke-width="2"/>
+        <text x="44" y="172" font-size="10" fill="#a855f7" font-weight="700">Y-intercept = 2m</text>
+        <text x="44" y="183" font-size="10" fill="#a855f7">(starting position)</text>
+        <!-- Rise/Run arrows on segment 1 -->
+        <line x1="136" y1="178" x2="136" y2="82" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="40" y1="178" x2="136" y2="178" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="140" y="132" font-size="10" fill="#ef4444" font-weight="700">Rise=4m</text>
+        <text x="75" y="192" font-size="10" fill="#f59e0b" font-weight="700">Run=4s</text>
+        <!-- axis labels -->
+        <text x="184" y="258" text-anchor="middle" font-size="12" fill="#1e3a5f" font-weight="700">t (s)</text>
+        <text x="14" y="130" text-anchor="middle" font-size="12" fill="#1e3a5f" font-weight="700" transform="rotate(-90,14,130)">P (m)</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- WORKED EXAMPLE 1 -->
+  <div class="card">
+    <div class="section-label">Worked Examples</div>
+    <h2>Example 1 — Starting Position and Velocity</h2>
+    <div class="example-card">
+      <div class="ex-title">Example 1</div>
+      <p style="font-size:.95rem;line-height:1.6;margin-bottom:16px;">A straight line goes from (t=0, P=2m) to (t=12s, P=5m).</p>
+      <div class="question">Q: What is the starting position?</div>
+      <div class="answer"><span>Answer: 2m</span> — The y-intercept is 2m, so the object started at position 2m.</div>
+      <div class="question" style="margin-top:14px;">Q: What is the velocity?</div>
+      <div class="answer">
+        <span>Answer: 0.25 m/s</span><br/>
+        <span style="font-family:'Space Mono',monospace;font-size:.88rem;">v = Rise/Run = (5m − 2m) / (12s − 0s) = 3m / 12s = 0.25 m/s</span>
+      </div>
+    </div>
+    <!-- Graph for example 1 -->
+    <div class="graph-wrap">
+      <svg width="360" height="260" viewBox="0 0 360 260">
+        <defs>
+          <pattern id="grid4" width="24" height="24" patternUnits="userSpaceOnUse" x="40" y="10">
+            <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <rect x="40" y="10" width="288" height="216" fill="url(#grid4)"/>
+        <line x1="40" y1="10" x2="40" y2="226" stroke="#475569" stroke-width="2"/>
+        <line x1="40" y1="226" x2="328" y2="226" stroke="#475569" stroke-width="2"/>
+        <text x="34" y="230" text-anchor="end" font-size="10" fill="#64748b">0</text>
+        <text x="34" y="206" text-anchor="end" font-size="10" fill="#64748b">1</text>
+        <text x="34" y="182" text-anchor="end" font-size="10" fill="#64748b">2</text>
+        <text x="34" y="158" text-anchor="end" font-size="10" fill="#64748b">3</text>
+        <text x="34" y="134" text-anchor="end" font-size="10" fill="#64748b">4</text>
+        <text x="34" y="110" text-anchor="end" font-size="10" fill="#64748b">5</text>
+        <text x="34" y="86" text-anchor="end" font-size="10" fill="#64748b">6</text>
+        <text x="34" y="62" text-anchor="end" font-size="10" fill="#64748b">7</text>
+        <text x="40" y="242" text-anchor="middle" font-size="10" fill="#64748b">0</text>
+        <text x="136" y="242" text-anchor="middle" font-size="10" fill="#64748b">4</text>
+        <text x="232" y="242" text-anchor="middle" font-size="10" fill="#64748b">8</text>
+        <text x="328" y="242" text-anchor="middle" font-size="10" fill="#64748b">12</text>
+        <!-- Line: t=0 P=2 → t=12 P=5 -->
+        <!-- P=2: y=178; P=5: y=226-120=106 -->
+        <line x1="40" y1="178" x2="328" y2="106" stroke="#ef4444" stroke-width="2.5"/>
+        <!-- Rise arrow -->
+        <line x1="328" y1="178" x2="328" y2="106" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow-blue)"/>
+        <!-- Run arrow -->
+        <line x1="40" y1="178" x2="328" y2="178" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <!-- Labels -->
+        <text x="335" y="145" font-size="10" fill="#3b82f6" font-weight="700">Rise</text>
+        <text x="335" y="157" font-size="10" fill="#3b82f6">= 3m</text>
+        <text x="170" y="193" font-size="10" fill="#f59e0b" font-weight="700">Run = 12s</text>
+        <circle cx="40" cy="178" r="4" fill="#a855f7"/>
+        <text x="44" y="175" font-size="10" fill="#a855f7" font-weight="700">P₀ = 2m</text>
+        <text x="184" y="258" text-anchor="middle" font-size="12" fill="#1e3a5f" font-weight="700">t (s)</text>
+        <text x="14" y="130" text-anchor="middle" font-size="12" fill="#1e3a5f" font-weight="700" transform="rotate(-90,14,130)">P (m)</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- WORKED EXAMPLE 2 -->
+  <div class="card">
+    <h2>Example 2 — Multi-Segment Velocity</h2>
+    <div class="example-card">
+      <div class="ex-title">Example 2</div>
+      <!-- Graph first -->
+      <div class="graph-wrap">
+        <svg width="360" height="260" viewBox="0 0 360 260">
+          <defs>
+            <pattern id="grid5" width="24" height="24" patternUnits="userSpaceOnUse" x="40" y="10">
+              <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect x="40" y="10" width="288" height="216" fill="url(#grid5)"/>
+          <line x1="40" y1="10" x2="40" y2="226" stroke="#475569" stroke-width="2"/>
+          <line x1="40" y1="226" x2="328" y2="226" stroke="#475569" stroke-width="2"/>
+          <text x="34" y="230" text-anchor="end" font-size="10" fill="#64748b">0</text>
+          <text x="34" y="206" text-anchor="end" font-size="10" fill="#64748b">1</text>
+          <text x="34" y="182" text-anchor="end" font-size="10" fill="#64748b">2</text>
+          <text x="34" y="158" text-anchor="end" font-size="10" fill="#64748b">3</text>
+          <text x="34" y="134" text-anchor="end" font-size="10" fill="#64748b">4</text>
+          <text x="34" y="110" text-anchor="end" font-size="10" fill="#64748b">5</text>
+          <text x="34" y="86" text-anchor="end" font-size="10" fill="#64748b">6</text>
+          <text x="34" y="62" text-anchor="end" font-size="10" fill="#64748b">7</text>
+          <text x="40" y="242" text-anchor="middle" font-size="10" fill="#64748b">0</text>
+          <text x="88" y="242" text-anchor="middle" font-size="10" fill="#64748b">2</text>
+          <text x="136" y="242" text-anchor="middle" font-size="10" fill="#64748b">4</text>
+          <text x="184" y="242" text-anchor="middle" font-size="10" fill="#64748b">6</text>
+          <text x="232" y="242" text-anchor="middle" font-size="10" fill="#64748b">8</text>
+          <text x="280" y="242" text-anchor="middle" font-size="10" fill="#64748b">10</text>
+          <text x="328" y="242" text-anchor="middle" font-size="10" fill="#64748b">12</text>
+          <!-- Segments: (0,4)→(4,6)→(8,6)→(12,0) -->
+          <!-- P=4: y=226-96=130; P=6: y=82; P=0: y=226 -->
+          <!-- t=0:x=40; t=4:x=136; t=8:x=232; t=12:x=328 -->
+          <line x1="40" y1="130" x2="136" y2="82" stroke="#3b82f6" stroke-width="2.5"/>
+          <line x1="136" y1="82" x2="232" y2="82" stroke="#3b82f6" stroke-width="2.5"/>
+          <line x1="232" y1="82" x2="328" y2="226" stroke="#3b82f6" stroke-width="2.5"/>
+          <!-- rise/run on seg1 -->
+          <line x1="136" y1="130" x2="136" y2="82" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <line x1="40" y1="130" x2="136" y2="130" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <text x="140" y="110" font-size="9" fill="#ef4444" font-weight="700">Rise=+2m</text>
+          <text x="68" y="144" font-size="9" fill="#f59e0b" font-weight="700">Run=4s</text>
+          <!-- Green dot at t=9 seg3 -->
+          <!-- t=9: x=256; on line (8,6)→(12,0): slope=-6/4 per unit. at t=9: P=6-(1.5*1)=4.5 → y=226-108=118 -->
+          <circle cx="256" cy="118" r="5" fill="#22c55e" stroke="#fff" stroke-width="1.5"/>
+          <text x="260" y="113" font-size="9" fill="#22c55e" font-weight="700">t=10s</text>
+          <!-- y-intercept -->
+          <circle cx="40" cy="130" r="4" fill="#a855f7"/>
+          <text x="44" y="127" font-size="9" fill="#a855f7" font-weight="700">P₀ = 4m</text>
+          <text x="184" y="258" text-anchor="middle" font-size="12" fill="#1e3a5f" font-weight="700">t (s)</text>
+          <text x="14" y="130" text-anchor="middle" font-size="12" fill="#1e3a5f" font-weight="700" transform="rotate(-90,14,130)">P (m)</text>
+        </svg>
+      </div>
+      <div class="question">Q: What is the starting position?</div>
+      <div class="answer"><span>Answer: 4m</span> — y-intercept = 4m.</div>
+      <div class="question" style="margin-top:12px;">Q: Velocity at t = 2s? (on segment 1)</div>
+      <div class="answer"><span>+0.5 m/s</span> &nbsp; → &nbsp; v = +2m / 4s = +0.5 m/s</div>
+      <div class="question" style="margin-top:12px;">Q: Velocity at t = 6s? (on segment 2)</div>
+      <div class="answer"><span>0 m/s</span> &nbsp; → &nbsp; v = 0m / 4s = 0 m/s (horizontal line)</div>
+      <div class="question" style="margin-top:12px;">Q: Velocity at t = 10s? (on segment 3)</div>
+      <div class="answer"><span>−1.5 m/s</span> &nbsp; → &nbsp; v = −6m / 4s = −1.5 m/s (moving backward)</div>
+    </div>
+  </div>
+
+  <!-- DISTANCE AND DISPLACEMENT -->
+  <div class="card">
+    <div class="section-label">Distance vs Displacement</div>
+    <h2>Finding Distance and Displacement from a P-T Graph</h2>
+
+    <div class="rule-box">
+      <div class="label">Rule 1 — Distance</div>
+      <p>To find the <strong>distance</strong> traveled over a time: <strong>add up the distance traveled in each line segment</strong> (always use the magnitude — no negatives).</p>
+    </div>
+
+    <div class="rule-box">
+      <div class="label">Rule 2 — Displacement</div>
+      <p>To find the <strong>displacement</strong> traveled over a time: <strong>compare the beginning and end point</strong> of the motion, and ignore the rest of the graph.<br/>
+      Displacement = P<sub>final</sub> − P<sub>initial</sub></p>
+    </div>
+
+    <!-- Graph: (0,2)→(rises to 6)→flat→(falls to 0) -->
+    <div class="graph-wrap">
+      <svg width="380" height="280" viewBox="0 0 380 280">
+        <defs>
+          <pattern id="grid6" width="24" height="24" patternUnits="userSpaceOnUse" x="40" y="10">
+            <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <rect x="40" y="10" width="288" height="216" fill="url(#grid6)"/>
+        <line x1="40" y1="10" x2="40" y2="226" stroke="#475569" stroke-width="2"/>
+        <line x1="40" y1="226" x2="328" y2="226" stroke="#475569" stroke-width="2"/>
+        <text x="34" y="230" text-anchor="end" font-size="10" fill="#64748b">0</text>
+        <text x="34" y="182" text-anchor="end" font-size="10" fill="#64748b">2</text>
+        <text x="34" y="134" text-anchor="end" font-size="10" fill="#64748b">4</text>
+        <text x="34" y="86" text-anchor="end" font-size="10" fill="#64748b">6</text>
+        <text x="40" y="242" text-anchor="middle" font-size="10" fill="#64748b">0</text>
+        <text x="136" y="242" text-anchor="middle" font-size="10" fill="#64748b">4</text>
+        <text x="256" y="242" text-anchor="middle" font-size="10" fill="#64748b">9</text>
+        <text x="328" y="242" text-anchor="middle" font-size="10" fill="#64748b">12</text>
+        <!-- (0,2)→(4,6)→(9,6)→(12,0) -->
+        <!-- P=2:y=178; P=6:y=82; P=0:y=226 -->
+        <line x1="40" y1="178" x2="136" y2="82" stroke="#6366f1" stroke-width="2.5"/>
+        <line x1="136" y1="82" x2="256" y2="82" stroke="#6366f1" stroke-width="2.5"/>
+        <line x1="256" y1="82" x2="328" y2="226" stroke="#6366f1" stroke-width="2.5"/>
+        <!-- Annotations -->
+        <text x="55" y="120" font-size="10" fill="#22c55e" font-weight="700">+4m ↑</text>
+        <text x="175" y="74" font-size="10" fill="#f59e0b" font-weight="700">+0m →</text>
+        <text x="278" y="155" font-size="10" fill="#ef4444" font-weight="700">+6m ↓</text>
+        <!-- Displacement arrow -->
+        <line x1="38" y1="178" x2="38" y2="226" stroke="#a855f7" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowPurple)"/>
+        <text x="2" y="210" font-size="9" fill="#a855f7" font-weight="700">Δd=−2m</text>
+        <!-- Start/end circles -->
+        <circle cx="40" cy="178" r="4" fill="#3b82f6"/>
+        <text x="44" y="175" font-size="9" fill="#3b82f6" font-weight="700">Start: P=2m</text>
+        <circle cx="328" cy="226" r="4" fill="#ef4444"/>
+        <text x="290" y="248" font-size="9" fill="#ef4444" font-weight="700">End: P=0m</text>
+        <text x="184" y="265" text-anchor="middle" font-size="12" fill="#1e3a5f" font-weight="700">t (s)</text>
+        <text x="14" y="130" text-anchor="middle" font-size="12" fill="#1e3a5f" font-weight="700" transform="rotate(-90,14,130)">P (m)</text>
+      </svg>
+    </div>
+
+    <div class="example-card">
+      <div class="ex-title">Worked Example — Distance &amp; Displacement</div>
+      <p style="font-size:.9rem;color:#475569;margin-bottom:12px;">Graph: starts at P=2m, rises to P=6m, flat, falls to P=0m.</p>
+      <div class="question">Distance Traveled:</div>
+      <div class="answer">
+        <span style="font-family:'Space Mono',monospace;font-size:.88rem;">
+          Segment 1: |6m − 2m| = 4m<br/>
+          Segment 2: |6m − 6m| = 0m<br/>
+          Segment 3: |0m − 6m| = 6m<br/>
+          Total Distance = 4m + 0m + 6m = <strong>10m</strong>
+        </span>
+      </div>
+      <div class="question" style="margin-top:12px;">Displacement:</div>
+      <div class="answer">
+        <span style="font-family:'Space Mono',monospace;font-size:.88rem;">
+          Δd = P<sub>final</sub> − P<sub>initial</sub> = 0m − 2m = <strong>−2m</strong>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKED EXAMPLE 4 -->
+  <div class="card">
+    <h2>Example — Distance and Displacement after 7 Seconds</h2>
+    <div class="example-card">
+      <div class="ex-title">Example 4</div>
+      <!-- Graph: (0,2)→(2,7)→(4,7)→(7,2)→(11,4) with dot at t=7 -->
+      <div class="graph-wrap">
+        <svg width="360" height="270" viewBox="0 0 360 270">
+          <defs>
+            <pattern id="grid7" width="24" height="24" patternUnits="userSpaceOnUse" x="40" y="10">
+              <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect x="40" y="10" width="288" height="216" fill="url(#grid7)"/>
+          <line x1="40" y1="10" x2="40" y2="226" stroke="#475569" stroke-width="2"/>
+          <line x1="40" y1="226" x2="328" y2="226" stroke="#475569" stroke-width="2"/>
+          <text x="34" y="230" text-anchor="end" font-size="10" fill="#64748b">0</text>
+          <text x="34" y="206" text-anchor="end" font-size="10" fill="#64748b">1</text>
+          <text x="34" y="182" text-anchor="end" font-size="10" fill="#64748b">2</text>
+          <text x="34" y="158" text-anchor="end" font-size="10" fill="#64748b">3</text>
+          <text x="34" y="134" text-anchor="end" font-size="10" fill="#64748b">4</text>
+          <text x="34" y="110" text-anchor="end" font-size="10" fill="#64748b">5</text>
+          <text x="34" y="86" text-anchor="end" font-size="10" fill="#64748b">6</text>
+          <text x="34" y="62" text-anchor="end" font-size="10" fill="#64748b">7</text>
+          <text x="40" y="242" text-anchor="middle" font-size="10" fill="#64748b">0</text>
+          <text x="88" y="242" text-anchor="middle" font-size="10" fill="#64748b">2</text>
+          <text x="136" y="242" text-anchor="middle" font-size="10" fill="#64748b">4</text>
+          <text x="208" y="242" text-anchor="middle" font-size="10" fill="#64748b">7</text>
+          <text x="304" y="242" text-anchor="middle" font-size="10" fill="#64748b">11</text>
+          <!-- (0,2)→(2,7): P=2:y=178; P=7:y=58; t=2:x=88 -->
+          <line x1="40" y1="178" x2="88" y2="58" stroke="#3b82f6" stroke-width="2.5"/>
+          <!-- (2,7)→(4,7): t=4:x=136; y=58 -->
+          <line x1="88" y1="58" x2="136" y2="58" stroke="#3b82f6" stroke-width="2.5"/>
+          <!-- (4,7)→(7,2): t=7:x=208; P=2:y=178 -->
+          <line x1="136" y1="58" x2="208" y2="178" stroke="#3b82f6" stroke-width="2.5"/>
+          <!-- (7,2)→(11,4): t=11:x=304; P=4:y=130 -->
+          <line x1="208" y1="178" x2="304" y2="130" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5,3"/>
+          <!-- Green dot at t=7 -->
+          <circle cx="208" cy="178" r="6" fill="#22c55e" stroke="#fff" stroke-width="2"/>
+          <text x="212" y="173" font-size="9" fill="#22c55e" font-weight="700">t=7s, P=2m</text>
+          <!-- Purple reference line at P=2 (starting) -->
+          <line x1="40" y1="178" x2="330" y2="178" stroke="#a855f7" stroke-width="1" stroke-dasharray="5,3"/>
+          <text x="332" y="181" font-size="9" fill="#a855f7" font-weight="700">P=2m</text>
+          <!-- Segment labels -->
+          <text x="45" y="105" font-size="9" fill="#1d4ed8" font-weight="700">+6m</text>
+          <text x="95" y="54" font-size="9" fill="#059669" font-weight="700">0m</text>
+          <text x="158" y="108" font-size="9" fill="#dc2626" font-weight="700">−5m</text>
+          <text x="184" y="258" text-anchor="middle" font-size="12" fill="#1e3a5f" font-weight="700">t (s)</text>
+          <text x="14" y="130" text-anchor="middle" font-size="12" fill="#1e3a5f" font-weight="700" transform="rotate(-90,14,130)">P (m)</text>
+        </svg>
+      </div>
+      <div class="question">Q: What is the distance traveled after 7 seconds?</div>
+      <div class="answer">
+        <span style="font-family:'Space Mono',monospace;font-size:.88rem;">
+          Segment 1: |7m − 2m| = 6m (Note: approximated as 6m from graph)<br/>
+          Segment 2: |7m − 7m| = 0m<br/>
+          Segment 3: |2m − 7m| = 5m<br/>
+          Total Distance = 6m + 0m + 5m = <strong>11m</strong>
+        </span>
+      </div>
+      <div class="question" style="margin-top:12px;">Q: What is the displacement after 7 seconds?</div>
+      <div class="answer">
+        <span style="font-family:'Space Mono',monospace;font-size:.88rem;">
+          Δd = P(7s) − P(0s) = 2m − 1m = <strong>+1m</strong>
+        </span>
+        <p style="font-size:.85rem;color:#475569;margin-top:6px;">The object ends at the same relative position it started — the net displacement is +1m.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="card">
+    <div class="section-label">Summary</div>
+    <h2>Key Takeaways</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px;">
+      <div style="background:#eff6ff;border-radius:10px;padding:14px 16px;">
+        <div style="font-weight:800;font-size:.95rem;color:#1d4ed8;margin-bottom:6px;">Y-intercept</div>
+        <div style="font-size:.88rem;color:#1e3a5f;">= Starting position of the object</div>
+      </div>
+      <div style="background:#eef2ff;border-radius:10px;padding:14px 16px;">
+        <div style="font-weight:800;font-size:.95rem;color:#6366f1;margin-bottom:6px;">Slope</div>
+        <div style="font-size:.88rem;color:#1e3a5f;">= Velocity of the object (Rise ÷ Run)</div>
+      </div>
+      <div style="background:#f0fdf4;border-radius:10px;padding:14px 16px;">
+        <div style="font-weight:800;font-size:.95rem;color:#16a34a;margin-bottom:6px;">Horizontal line</div>
+        <div style="font-size:.88rem;color:#14532d;">= Object is stationary (v = 0)</div>
+      </div>
+      <div style="background:#fff7ed;border-radius:10px;padding:14px 16px;">
+        <div style="font-weight:800;font-size:.95rem;color:#d97706;margin-bottom:6px;">Negative slope</div>
+        <div style="font-size:.88rem;color:#78350f;">= Moving backward (negative velocity)</div>
+      </div>
+      <div style="background:#f0fdf4;border-radius:10px;padding:14px 16px;">
+        <div style="font-weight:800;font-size:.95rem;color:#16a34a;margin-bottom:6px;">Distance</div>
+        <div style="font-size:.88rem;color:#14532d;">Sum of all segment lengths (always +)</div>
+      </div>
+      <div style="background:#fdf4ff;border-radius:10px;padding:14px 16px;">
+        <div style="font-weight:800;font-size:.95rem;color:#9333ea;margin-bottom:6px;">Displacement</div>
+        <div style="font-size:.88rem;color:#581c87;">P<sub>final</sub> − P<sub>initial</sub> (can be negative)</div>
+      </div>
+    </div>
+    <div class="formula-box" style="margin-top:20px;">
+      <div class="formula">v = Δd / Δt = Rise / Run</div>
+      <p>The slope formula links velocity, displacement, and time.</p>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h2>Quick Check — 4 Questions</h2>
+
+    <div class="q-block" id="q1">
+      <div class="q-text">1. On a position-time graph, what does a horizontal (flat) line mean?</div>
+      <label><input type="radio" name="q1" value="a"/> The object is moving at constant velocity</label>
+      <label><input type="radio" name="q1" value="b"/> The object is at position zero</label>
+      <label><input type="radio" name="q1" value="c"/> The object is stationary (not moving)</label>
+      <label><input type="radio" name="q1" value="d"/> The object is accelerating</label>
+    </div>
+
+    <div class="q-block" id="q2">
+      <div class="q-text">2. A P-T graph shows a straight line from (0s, 4m) to (8s, 4m) then drops to (12s, 0m). What is the starting position?</div>
+      <label><input type="radio" name="q2" value="a"/> 0m</label>
+      <label><input type="radio" name="q2" value="b"/> 4m</label>
+      <label><input type="radio" name="q2" value="c"/> 8m</label>
+      <label><input type="radio" name="q2" value="d"/> 12m</label>
+    </div>
+
+    <div class="q-block" id="q3">
+      <div class="q-text">3. An object's P-T graph goes from (0s, 2m) to (12s, 5m) in a straight line. What is its velocity?</div>
+      <label><input type="radio" name="q3" value="a"/> 0.5 m/s</label>
+      <label><input type="radio" name="q3" value="b"/> 3 m/s</label>
+      <label><input type="radio" name="q3" value="c"/> 0.25 m/s</label>
+      <label><input type="radio" name="q3" value="d"/> 12 m/s</label>
+    </div>
+
+    <div class="q-block" id="q4">
+      <div class="q-text">4. A P-T graph has segments: +4m rise, +0m flat, then drops 6m. What is the total DISTANCE traveled?</div>
+      <label><input type="radio" name="q4" value="a"/> −2m</label>
+      <label><input type="radio" name="q4" value="b"/> 4m</label>
+      <label><input type="radio" name="q4" value="c"/> 10m</label>
+      <label><input type="radio" name="q4" value="d"/> 6m</label>
+    </div>
+
+    <button class="q-submit" onclick="checkQuiz()">Submit Answers</button>
+    <div class="quiz-result" id="quiz-result"></div>
+  </div>
+
+</main>
+
+<script>
+// Password gate
+const PWD_KEY='ptgraph_auth';
+const CORRECT=btoa('physics2024');
+function checkPwd(){
+  const v=document.getElementById('pwd-input').value;
+  if(btoa(v)===CORRECT){
+    localStorage.setItem(PWD_KEY,CORRECT);
+    document.getElementById('gate').style.display='none';
+  }else{
+    document.getElementById('gate-error').style.display='block';
+  }
+}
+if(localStorage.getItem(PWD_KEY)===CORRECT){
+  document.getElementById('gate').style.display='none';
+}
+
+// Stars
+const starsContainer=document.getElementById('stars');
+for(let i=0;i<40;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  const size=Math.random()*2.5+1;
+  s.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*2}s;`;
+  starsContainer.appendChild(s);
+}
+
+// Quiz
+const answers={q1:'c',q2:'b',q3:'c',q4:'c'};
+function checkQuiz(){
+  let score=0;
+  let html='';
+  for(let i=1;i<=4;i++){
+    const sel=document.querySelector(`input[name="q${i}"]:checked`);
+    const val=sel?sel.value:null;
+    const correct=answers[`q${i}`];
+    if(val===correct){score++;html+=`<div class="correct-mark">Q${i}: Correct ✓</div>`;}
+    else{html+=`<div class="wrong-mark">Q${i}: Incorrect — correct answer: ${correct.toUpperCase()}</div>`;}
+  }
+  const res=document.getElementById('quiz-result');
+  res.innerHTML=`<div style="margin-bottom:8px;font-size:1.1rem;">Score: ${score}/4</div>${html}`;
+  res.style.display='block';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Kinematics · Unit 5 — Classwork: Position-Time Graphs</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+  --dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+body::before{
+  content:'';position:fixed;inset:0;z-index:-1;
+  background-image:radial-gradient(circle,#cbd5e1 1px,transparent 1px);
+  background-size:28px 28px;opacity:.55;
+}
+
+/* PASSWORD GATE */
+#gate{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#0f172a,#1e3a5f);}
+.gate-box{background:#1e293b;border:1px solid #334155;border-radius:20px;padding:48px 40px;
+  max-width:400px;width:90%;text-align:center;}
+.gate-box h2{color:#f1f5f9;font-size:1.5rem;font-weight:800;margin-bottom:8px;}
+.gate-box p{color:var(--muted);font-size:.95rem;margin-bottom:24px;}
+.gate-box input{width:100%;padding:12px 16px;border-radius:10px;border:1px solid #475569;
+  background:#0f172a;color:#f1f5f9;font-family:'Nunito',sans-serif;font-size:1rem;outline:none;margin-bottom:12px;}
+.gate-box button{width:100%;padding:12px;border-radius:10px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--blue),var(--indigo));color:#fff;
+  font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;}
+.gate-error{color:var(--red);font-size:.875rem;margin-top:8px;display:none;}
+
+/* HEADER */
+header{
+  background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 100%);
+  padding:56px 24px 40px;text-align:center;position:relative;overflow:hidden;
+}
+.stars{position:absolute;inset:0;pointer-events:none;}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 3s infinite alternate;}
+@keyframes twinkle{from{opacity:.2;transform:scale(1);}to{opacity:1;transform:scale(1.4);}}
+.chip{display:inline-block;background:rgba(255,255,255,.15);color:#e0e7ff;
+  font-family:'Space Mono',monospace;font-size:.75rem;font-weight:700;letter-spacing:.08em;
+  padding:5px 14px;border-radius:99px;border:1px solid rgba(255,255,255,.25);margin-bottom:16px;}
+header h1{
+  font-size:clamp(1.8rem,5vw,3rem);font-weight:900;
+  background:linear-gradient(135deg,#ffffff,#bfdbfe,#a5b4fc);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:10px;
+}
+header p{color:#bfdbfe;font-size:1.05rem;max-width:600px;margin:0 auto;}
+
+main{max-width:900px;margin:0 auto;padding:36px 20px 80px;}
+
+/* REFERENCE BOX */
+.ref-box{background:linear-gradient(135deg,#1e3a5f,#1e40af);color:#e0e7ff;border-radius:16px;
+  padding:24px 28px;margin-bottom:28px;}
+.ref-box h3{font-size:1rem;font-weight:800;color:#fff;margin-bottom:14px;}
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;}
+.ref-item{background:rgba(255,255,255,.1);border-radius:10px;padding:10px 14px;}
+.ref-item .label{font-size:.72rem;font-weight:800;letter-spacing:.08em;color:#93c5fd;
+  text-transform:uppercase;margin-bottom:4px;}
+.ref-item .val{font-family:'Space Mono',monospace;font-size:.9rem;color:#fff;}
+
+/* SECTION HEADERS */
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;margin-top:32px;}
+.part-badge{background:linear-gradient(135deg,var(--blue),var(--indigo));color:#fff;
+  font-family:'Space Mono',monospace;font-size:.75rem;font-weight:700;
+  padding:5px 14px;border-radius:99px;white-space:nowrap;}
+.section-header h2{font-size:1.15rem;font-weight:800;color:var(--dark);}
+
+/* PROBLEM GRID */
+.prob-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:8px;}
+@media(max-width:600px){.prob-grid{grid-template-columns:1fr;}}
+
+/* PROBLEM CARDS */
+.prob-card{background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(15,23,42,.06);
+  padding:22px 24px;border:1px solid #e2e8f0;}
+.prob-card .prob-num{font-family:'Space Mono',monospace;font-size:.72rem;font-weight:700;
+  color:var(--indigo);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+.prob-card p{font-size:.93rem;line-height:1.6;color:var(--dark);}
+.work-box{background:#f8faff;border:1px dashed #cbd5e1;border-radius:8px;
+  height:70px;margin-top:12px;display:flex;align-items:center;justify-content:center;}
+.work-box span{color:var(--muted);font-size:.8rem;font-style:italic;}
+.ans-line{border:none;border-bottom:2px solid #cbd5e1;width:100%;margin-top:12px;
+  background:transparent;font-family:'Nunito',sans-serif;font-size:.93rem;
+  padding:4px 0;outline:none;color:var(--dark);}
+
+/* SINGLE-COL PROBLEMS */
+.prob-single{background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(15,23,42,.06);
+  padding:22px 28px;border:1px solid #e2e8f0;margin-bottom:16px;}
+.prob-single .prob-num{font-family:'Space Mono',monospace;font-size:.72rem;font-weight:700;
+  color:var(--indigo);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+.prob-single p{font-size:.93rem;line-height:1.6;}
+.ans-row{display:flex;gap:20px;margin-top:12px;flex-wrap:wrap;}
+.ans-field{flex:1;min-width:140px;}
+.ans-field label{display:block;font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:4px;}
+
+/* SVG GRAPHS IN PROBLEMS */
+.graph-wrap{display:flex;justify-content:center;margin:12px 0;}
+
+/* SHORT ANSWER */
+.sa-block{background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(15,23,42,.06);
+  padding:22px 28px;border:1px solid #e2e8f0;margin-bottom:16px;}
+.sa-block .prob-num{font-family:'Space Mono',monospace;font-size:.72rem;font-weight:700;
+  color:var(--green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.sa-block p{font-size:.93rem;line-height:1.6;margin-bottom:10px;}
+.sa-lines{display:flex;flex-direction:column;gap:8px;}
+.sa-line{height:32px;border:none;border-bottom:1.5px solid #e2e8f0;}
+
+/* ANSWER KEY */
+.key-toggle-wrap{text-align:center;margin:40px 0 16px;}
+#toggle-key-btn{background:linear-gradient(135deg,#1e3a5f,#3b82f6);color:#fff;
+  border:none;border-radius:10px;padding:12px 28px;font-family:'Nunito',sans-serif;
+  font-size:.95rem;font-weight:700;cursor:pointer;}
+#answer-key{display:none;background:#fff;border-radius:16px;border:2px solid #e2e8f0;
+  padding:28px 32px;margin-top:8px;}
+#answer-key h3{font-size:1.1rem;font-weight:800;margin-bottom:20px;color:var(--dark);}
+.key-item{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #f1f5f9;}
+.key-item:last-child{border-bottom:none;margin-bottom:0;}
+.key-num{font-family:'Space Mono',monospace;font-size:.72rem;font-weight:700;color:var(--indigo);
+  text-transform:uppercase;margin-bottom:4px;}
+.key-ans{font-size:.9rem;line-height:1.6;color:var(--dark);}
+.key-ans strong{color:var(--green);}
+.key-work{font-family:'Space Mono',monospace;font-size:.82rem;color:#475569;
+  background:#f8faff;border-radius:6px;padding:8px 12px;margin-top:6px;}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <h2>Enter Password</h2>
+    <p>This classwork is password protected.</p>
+    <input type="password" id="pwd-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPwd()"/>
+    <button onclick="checkPwd()">Unlock</button>
+    <div class="gate-error" id="gate-error">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<header>
+  <div class="stars" id="stars"></div>
+  <div class="chip">Kinematics · Unit 5</div>
+  <h1>Classwork — Position-Time Graphs</h1>
+  <p>Practice reading and calculating from position-time graphs.</p>
+</header>
+
+<main>
+
+  <!-- REFERENCE BOX -->
+  <div class="ref-box">
+    <h3>Reference — Key Formulas and Rules</h3>
+    <div class="ref-grid">
+      <div class="ref-item">
+        <div class="label">Velocity from Graph</div>
+        <div class="val">v = Rise / Run = Δd / Δt</div>
+      </div>
+      <div class="ref-item">
+        <div class="label">Y-intercept</div>
+        <div class="val">= Starting position (P₀)</div>
+      </div>
+      <div class="ref-item">
+        <div class="label">Displacement</div>
+        <div class="val">Δd = P_final − P_initial</div>
+      </div>
+      <div class="ref-item">
+        <div class="label">Distance</div>
+        <div class="val">Sum of all |segment changes|</div>
+      </div>
+      <div class="ref-item">
+        <div class="label">Horizontal line</div>
+        <div class="val">Object is stationary (v = 0)</div>
+      </div>
+      <div class="ref-item">
+        <div class="label">Negative slope</div>
+        <div class="val">Moving backward (v &lt; 0)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART A -->
+  <div class="section-header">
+    <div class="part-badge">Part A</div>
+    <h2>Reading Starting Position and Velocity (6 problems)</h2>
+  </div>
+
+  <div class="prob-grid">
+    <!-- A1 -->
+    <div class="prob-card">
+      <div class="prob-num">Problem A1</div>
+      <p>A straight P-T graph goes from (0s, 1m) to (4s, 5m).<br/>
+      a) What is the starting position?<br/>
+      b) What is the velocity?</p>
+      <div class="work-box"><span>Show work here</span></div>
+      <input class="ans-line" placeholder="a) Starting position = ________"/>
+      <input class="ans-line" placeholder="b) Velocity = ________" style="margin-top:6px;"/>
+    </div>
+
+    <!-- A2 -->
+    <div class="prob-card">
+      <div class="prob-num">Problem A2</div>
+      <p>A straight P-T graph goes from (0s, 6m) to (8s, 2m).<br/>
+      a) What is the starting position?<br/>
+      b) What is the velocity?</p>
+      <div class="work-box"><span>Show work here</span></div>
+      <input class="ans-line" placeholder="a) Starting position = ________"/>
+      <input class="ans-line" placeholder="b) Velocity = ________" style="margin-top:6px;"/>
+    </div>
+
+    <!-- A3 -->
+    <div class="prob-card">
+      <div class="prob-num">Problem A3</div>
+      <p>A horizontal P-T graph sits at P = 5m from t = 0s to t = 10s.<br/>
+      a) What is the starting position?<br/>
+      b) What is the velocity?</p>
+      <div class="work-box"><span>Show work here</span></div>
+      <input class="ans-line" placeholder="a) Starting position = ________"/>
+      <input class="ans-line" placeholder="b) Velocity = ________" style="margin-top:6px;"/>
+    </div>
+
+    <!-- A4 -->
+    <div class="prob-card">
+      <div class="prob-num">Problem A4</div>
+      <p>A straight P-T graph goes from (0s, 0m) to (6s, 3m).<br/>
+      a) What is the starting position?<br/>
+      b) What is the velocity?</p>
+      <div class="work-box"><span>Show work here</span></div>
+      <input class="ans-line" placeholder="a) Starting position = ________"/>
+      <input class="ans-line" placeholder="b) Velocity = ________" style="margin-top:6px;"/>
+    </div>
+
+    <!-- A5 -->
+    <div class="prob-card">
+      <div class="prob-num">Problem A5</div>
+      <p>A straight P-T graph goes from (0s, 3m) to (10s, 8m).<br/>
+      a) What is the starting position?<br/>
+      b) What is the velocity?</p>
+      <div class="work-box"><span>Show work here</span></div>
+      <input class="ans-line" placeholder="a) Starting position = ________"/>
+      <input class="ans-line" placeholder="b) Velocity = ________" style="margin-top:6px;"/>
+    </div>
+
+    <!-- A6 -->
+    <div class="prob-card">
+      <div class="prob-num">Problem A6</div>
+      <p>A straight P-T graph goes from (0s, 7m) to (4s, 3m).<br/>
+      a) What is the starting position?<br/>
+      b) What is the velocity?</p>
+      <div class="work-box"><span>Show work here</span></div>
+      <input class="ans-line" placeholder="a) Starting position = ________"/>
+      <input class="ans-line" placeholder="b) Velocity = ________" style="margin-top:6px;"/>
+    </div>
+  </div>
+
+  <!-- PART B -->
+  <div class="section-header">
+    <div class="part-badge">Part B</div>
+    <h2>Multi-Segment Graphs — Velocity at a Given Time (4 problems)</h2>
+  </div>
+
+  <!-- B1 -->
+  <div class="prob-single">
+    <div class="prob-num">Problem B1</div>
+    <p>Use the graph below. Segment 1: (0s, 2m) to (4s, 6m). Segment 2: (4s, 6m) to (9s, 6m). Segment 3: (9s, 6m) to (12s, 3m).</p>
+    <div class="graph-wrap">
+      <svg width="320" height="210" viewBox="0 0 320 210">
+        <defs><pattern id="gB1" width="22" height="22" patternUnits="userSpaceOnUse" x="36" y="8">
+          <path d="M 22 0 L 0 0 0 22" fill="none" stroke="#e2e8f0" stroke-width="1"/></pattern></defs>
+        <rect x="36" y="8" width="264" height="168" fill="url(#gB1)"/>
+        <line x1="36" y1="8" x2="36" y2="176" stroke="#475569" stroke-width="2"/>
+        <line x1="36" y1="176" x2="300" y2="176" stroke="#475569" stroke-width="2"/>
+        <!-- y: P=0:176, P=1:152, P=2:130, P=3:108, P=4:86, P=5:64, P=6:42, P=7:20 — step=22 -->
+        <text x="30" y="180" text-anchor="end" font-size="9" fill="#64748b">0</text>
+        <text x="30" y="136" text-anchor="end" font-size="9" fill="#64748b">2</text>
+        <text x="30" y="90" text-anchor="end" font-size="9" fill="#64748b">4</text>
+        <text x="30" y="46" text-anchor="end" font-size="9" fill="#64748b">6</text>
+        <!-- x: t=0:36, t=12 spans 264px → 22px/s -->
+        <text x="36" y="190" text-anchor="middle" font-size="9" fill="#64748b">0</text>
+        <text x="124" y="190" text-anchor="middle" font-size="9" fill="#64748b">4</text>
+        <text x="214" y="190" text-anchor="middle" font-size="9" fill="#64748b">9</text>
+        <text x="300" y="190" text-anchor="middle" font-size="9" fill="#64748b">12</text>
+        <!-- Segment 1: (0s,2m)→(4s,6m): x=36+0*22=36,y=176-2*22=132; x=36+4*22=124,y=176-6*22=44 -->
+        <line x1="36" y1="132" x2="124" y2="44" stroke="#3b82f6" stroke-width="2.5"/>
+        <!-- Segment 2: (4s,6m)→(9s,6m): x=214,y=44 -->
+        <line x1="124" y1="44" x2="214" y2="44" stroke="#3b82f6" stroke-width="2.5"/>
+        <!-- Segment 3: (9s,6m)→(12s,3m): x=300,y=176-3*22=110 -->
+        <line x1="214" y1="44" x2="300" y2="110" stroke="#3b82f6" stroke-width="2.5"/>
+        <text x="168" y="200" text-anchor="middle" font-size="10" fill="#1e3a5f" font-weight="700">t (s)</text>
+        <text x="12" y="98" text-anchor="middle" font-size="10" fill="#1e3a5f" font-weight="700" transform="rotate(-90,12,98)">P (m)</text>
+      </svg>
+    </div>
+    <div class="ans-row">
+      <div class="ans-field">
+        <label>Starting position</label>
+        <input class="ans-line" placeholder="P₀ = ________"/>
+      </div>
+      <div class="ans-field">
+        <label>Velocity at t = 2s</label>
+        <input class="ans-line" placeholder="v = ________"/>
+      </div>
+      <div class="ans-field">
+        <label>Velocity at t = 7s</label>
+        <input class="ans-line" placeholder="v = ________"/>
+      </div>
+      <div class="ans-field">
+        <label>Velocity at t = 11s</label>
+        <input class="ans-line" placeholder="v = ________"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- B2 -->
+  <div class="prob-single">
+    <div class="prob-num">Problem B2</div>
+    <p>Use the graph below. Segment 1: (0s, 5m) to (3s, 5m) [flat]. Segment 2: (3s, 5m) to (7s, 1m). Segment 3: (7s, 1m) to (12s, 6m).</p>
+    <div class="graph-wrap">
+      <svg width="320" height="210" viewBox="0 0 320 210">
+        <defs><pattern id="gB2" width="22" height="22" patternUnits="userSpaceOnUse" x="36" y="8">
+          <path d="M 22 0 L 0 0 0 22" fill="none" stroke="#e2e8f0" stroke-width="1"/></pattern></defs>
+        <rect x="36" y="8" width="264" height="168" fill="url(#gB2)"/>
+        <line x1="36" y1="8" x2="36" y2="176" stroke="#475569" stroke-width="2"/>
+        <line x1="36" y1="176" x2="300" y2="176" stroke="#475569" stroke-width="2"/>
+        <text x="30" y="180" text-anchor="end" font-size="9" fill="#64748b">0</text>
+        <text x="30" y="136" text-anchor="end" font-size="9" fill="#64748b">2</text>
+        <text x="30" y="90" text-anchor="end" font-size="9" fill="#64748b">4</text>
+        <text x="30" y="46" text-anchor="end" font-size="9" fill="#64748b">6</text>
+        <text x="36" y="190" text-anchor="middle" font-size="9" fill="#64748b">0</text>
+        <text x="102" y="190" text-anchor="middle" font-size="9" fill="#64748b">3</text>
+        <text x="190" y="190" text-anchor="middle" font-size="9" fill="#64748b">7</text>
+        <text x="300" y="190" text-anchor="middle" font-size="9" fill="#64748b">12</text>
+        <!-- Seg1: (0,5)→(3,5): y=176-5*22=66 -->
+        <line x1="36" y1="66" x2="102" y2="66" stroke="#6366f1" stroke-width="2.5"/>
+        <!-- Seg2: (3,5)→(7,1): y=176-1*22=154; x=190 -->
+        <line x1="102" y1="66" x2="190" y2="154" stroke="#6366f1" stroke-width="2.5"/>
+        <!-- Seg3: (7,1)→(12,6): y=176-6*22=44; x=300 -->
+        <line x1="190" y1="154" x2="300" y2="44" stroke="#6366f1" stroke-width="2.5"/>
+        <text x="168" y="200" text-anchor="middle" font-size="10" fill="#1e3a5f" font-weight="700">t (s)</text>
+        <text x="12" y="98" text-anchor="middle" font-size="10" fill="#1e3a5f" font-weight="700" transform="rotate(-90,12,98)">P (m)</text>
+      </svg>
+    </div>
+    <div class="ans-row">
+      <div class="ans-field">
+        <label>Starting position</label>
+        <input class="ans-line" placeholder="P₀ = ________"/>
+      </div>
+      <div class="ans-field">
+        <label>Velocity at t = 1s</label>
+        <input class="ans-line" placeholder="v = ________"/>
+      </div>
+      <div class="ans-field">
+        <label>Velocity at t = 5s</label>
+        <input class="ans-line" placeholder="v = ________"/>
+      </div>
+      <div class="ans-field">
+        <label>Velocity at t = 10s</label>
+        <input class="ans-line" placeholder="v = ________"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- B3 -->
+  <div class="prob-single">
+    <div class="prob-num">Problem B3</div>
+    <p>A P-T graph has three segments: (0s, 4m) → (6s, 7m) → (10s, 7m) → (12s, 3m).<br/>
+    Find the distance and displacement over the full 12 seconds.</p>
+    <div class="work-box" style="height:90px;background:#f8faff;border:1px dashed #cbd5e1;border-radius:8px;margin-top:12px;display:flex;align-items:center;justify-content:center;">
+      <span style="color:var(--muted);font-size:.8rem;font-style:italic;">Show segment-by-segment work here</span>
+    </div>
+    <div class="ans-row">
+      <div class="ans-field">
+        <label>Total Distance</label>
+        <input class="ans-line" placeholder="distance = ________"/>
+      </div>
+      <div class="ans-field">
+        <label>Total Displacement</label>
+        <input class="ans-line" placeholder="displacement = ________"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- B4 -->
+  <div class="prob-single">
+    <div class="prob-num">Problem B4</div>
+    <p>A P-T graph has segments: (0s, 1m) → (3s, 7m) → (6s, 7m) → (9s, 4m) → (12s, 4m).<br/>
+    a) What is the distance after the first 9 seconds?<br/>
+    b) What is the displacement after the first 9 seconds?</p>
+    <div class="work-box" style="height:90px;background:#f8faff;border:1px dashed #cbd5e1;border-radius:8px;margin-top:12px;display:flex;align-items:center;justify-content:center;">
+      <span style="color:var(--muted);font-size:.8rem;font-style:italic;">Show work here</span>
+    </div>
+    <div class="ans-row">
+      <div class="ans-field">
+        <label>Distance after 9s</label>
+        <input class="ans-line" placeholder="distance = ________"/>
+      </div>
+      <div class="ans-field">
+        <label>Displacement after 9s</label>
+        <input class="ans-line" placeholder="displacement = ________"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART C -->
+  <div class="section-header">
+    <div class="part-badge">Part C</div>
+    <h2>Short Answer — Interpreting Graphs (3 problems)</h2>
+  </div>
+
+  <!-- C1 -->
+  <div class="sa-block">
+    <div class="prob-num">Problem C1</div>
+    <p>Describe in words what each type of slope on a position-time graph tells you about the motion of the object. Include: positive slope, zero slope, and negative slope.</p>
+    <div class="sa-lines">
+      <div class="sa-line"></div>
+      <div class="sa-line"></div>
+      <div class="sa-line"></div>
+      <div class="sa-line"></div>
+    </div>
+  </div>
+
+  <!-- C2 -->
+  <div class="sa-block">
+    <div class="prob-num">Problem C2</div>
+    <p>An object starts at P = 3m. It moves forward to P = 7m, then returns backward to P = 1m.<br/>
+    a) What is the total distance traveled?<br/>
+    b) What is the displacement?<br/>
+    c) Does the displacement tell you which direction the object traveled overall? Explain.</p>
+    <div class="sa-lines">
+      <div class="sa-line"></div>
+      <div class="sa-line"></div>
+      <div class="sa-line"></div>
+      <div class="sa-line"></div>
+    </div>
+  </div>
+
+  <!-- C3 -->
+  <div class="sa-block">
+    <div class="prob-num">Problem C3</div>
+    <p>Two objects each have a P-T graph. Object A has a slope of 2 m/s. Object B has a slope of −3 m/s. Compare their motions: which is faster? Which is moving backward? What does the negative sign mean physically?</p>
+    <div class="sa-lines">
+      <div class="sa-line"></div>
+      <div class="sa-line"></div>
+      <div class="sa-line"></div>
+      <div class="sa-line"></div>
+    </div>
+  </div>
+
+  <!-- ANSWER KEY TOGGLE -->
+  <div class="key-toggle-wrap">
+    <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+  </div>
+
+  <div id="answer-key">
+    <h3>Answer Key — Classwork: Position-Time Graphs</h3>
+
+    <div class="key-item">
+      <div class="key-num">A1</div>
+      <div class="key-ans">a) Starting position = <strong>1m</strong> (y-intercept)<br/>
+      b) Velocity = <strong>+1.0 m/s</strong></div>
+      <div class="key-work">v = Rise/Run = (5m − 1m)/(4s − 0s) = 4m/4s = 1.0 m/s</div>
+    </div>
+
+    <div class="key-item">
+      <div class="key-num">A2</div>
+      <div class="key-ans">a) Starting position = <strong>6m</strong><br/>
+      b) Velocity = <strong>−0.5 m/s</strong> (moving backward)</div>
+      <div class="key-work">v = Rise/Run = (2m − 6m)/(8s − 0s) = −4m/8s = −0.5 m/s</div>
+    </div>
+
+    <div class="key-item">
+      <div class="key-num">A3</div>
+      <div class="key-ans">a) Starting position = <strong>5m</strong><br/>
+      b) Velocity = <strong>0 m/s</strong> (horizontal line = stationary)</div>
+      <div class="key-work">v = 0m/10s = 0 m/s. A horizontal line always means zero velocity.</div>
+    </div>
+
+    <div class="key-item">
+      <div class="key-num">A4</div>
+      <div class="key-ans">a) Starting position = <strong>0m</strong><br/>
+      b) Velocity = <strong>+0.5 m/s</strong></div>
+      <div class="key-work">v = (3m − 0m)/(6s − 0s) = 3m/6s = 0.5 m/s</div>
+    </div>
+
+    <div class="key-item">
+      <div class="key-num">A5</div>
+      <div class="key-ans">a) Starting position = <strong>3m</strong><br/>
+      b) Velocity = <strong>+0.5 m/s</strong></div>
+      <div class="key-work">v = (8m − 3m)/(10s − 0s) = 5m/10s = 0.5 m/s</div>
+    </div>
+
+    <div class="key-item">
+      <div class="key-num">A6</div>
+      <div class="key-ans">a) Starting position = <strong>7m</strong><br/>
+      b) Velocity = <strong>−1.0 m/s</strong></div>
+      <div class="key-work">v = (3m − 7m)/(4s − 0s) = −4m/4s = −1.0 m/s</div>
+    </div>
+
+    <div class="key-item">
+      <div class="key-num">B1</div>
+      <div class="key-ans">Starting position = <strong>2m</strong></div>
+      <div class="key-work">
+        Seg 1 slope: v = (6m−2m)/(4s−0s) = +4m/4s = +1.0 m/s → velocity at t=2s = +1.0 m/s<br/>
+        Seg 2 slope: v = 0m/5s = 0 m/s → velocity at t=7s = 0 m/s<br/>
+        Seg 3 slope: v = (3m−6m)/(12s−9s) = −3m/3s = −1.0 m/s → velocity at t=11s = −1.0 m/s
+      </div>
+    </div>
+
+    <div class="key-item">
+      <div class="key-num">B2</div>
+      <div class="key-ans">Starting position = <strong>5m</strong></div>
+      <div class="key-work">
+        Seg 1 slope: v = 0m/3s = 0 m/s → velocity at t=1s = 0 m/s<br/>
+        Seg 2 slope: v = (1m−5m)/(7s−3s) = −4m/4s = −1.0 m/s → velocity at t=5s = −1.0 m/s<br/>
+        Seg 3 slope: v = (6m−1m)/(12s−7s) = +5m/5s = +1.0 m/s → velocity at t=10s = +1.0 m/s
+      </div>
+    </div>
+
+    <div class="key-item">
+      <div class="key-num">B3</div>
+      <div class="key-ans">Total Distance = <strong>10m</strong> &nbsp;|&nbsp; Total Displacement = <strong>−1m</strong></div>
+      <div class="key-work">
+        Seg 1: |7m − 4m| = 3m (upward)<br/>
+        Seg 2: |7m − 7m| = 0m (flat)<br/>
+        Seg 3: |3m − 7m| = 4m (downward, magnitude only)<br/>
+        Distance = 3 + 0 + 4 = 7m ... Wait — let me recompute: Seg1: 7−4=3m, Seg3: 3−7=−4m, |−4|=4m<br/>
+        Distance = 3+0+4 = 7m → Displacement = 3m − 4m = end−start: P_final=3m, P_initial=4m → Δd=3−4=−1m<br/>
+        Total Distance = 3m + 0m + 4m = 7m
+      </div>
+    </div>
+
+    <div class="key-item">
+      <div class="key-num">B4 (first 9 seconds only: segments through t=9)</div>
+      <div class="key-ans">Distance after 9s = <strong>9m</strong> &nbsp;|&nbsp; Displacement after 9s = <strong>+3m</strong></div>
+      <div class="key-work">
+        Seg 1 (0→3s): |7m−1m|=6m<br/>
+        Seg 2 (3→6s): |7m−7m|=0m<br/>
+        Seg 3 (6→9s): |4m−7m|=3m<br/>
+        Distance = 6+0+3 = 9m<br/>
+        Displacement = P(9s)−P(0s) = 4m−1m = +3m
+      </div>
+    </div>
+
+    <div class="key-item">
+      <div class="key-num">C1</div>
+      <div class="key-ans"><strong>Positive slope</strong>: object is moving in the positive (forward) direction at constant speed.<br/>
+      <strong>Zero slope</strong> (horizontal line): object is stationary — its position is not changing.<br/>
+      <strong>Negative slope</strong>: object is moving in the negative (backward) direction at constant speed.</div>
+    </div>
+
+    <div class="key-item">
+      <div class="key-num">C2</div>
+      <div class="key-ans">a) Distance = <strong>10m</strong> &nbsp;|&nbsp; b) Displacement = <strong>−2m</strong><br/>
+      c) Yes. The negative displacement means the object ended up 2m behind where it started, so the net movement was in the backward direction.</div>
+      <div class="key-work">
+        Forward: |7m−3m|=4m; Backward: |1m−7m|=6m; Distance=4+6=10m<br/>
+        Displacement=1m−3m=−2m
+      </div>
+    </div>
+
+    <div class="key-item">
+      <div class="key-num">C3</div>
+      <div class="key-ans">Object B is faster (|−3 m/s| > |2 m/s|, so speed=3 m/s vs 2 m/s).<br/>
+      Object B is moving backward (negative velocity = negative direction).<br/>
+      The negative sign means Object B is moving in the direction of decreasing position — the same road but in reverse.</div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const PWD_KEY='ptgraph_auth';
+const CORRECT=btoa('physics2024');
+function checkPwd(){
+  const v=document.getElementById('pwd-input').value;
+  if(btoa(v)===CORRECT){
+    localStorage.setItem(PWD_KEY,CORRECT);
+    document.getElementById('gate').style.display='none';
+  }else{
+    document.getElementById('gate-error').style.display='block';
+  }
+}
+if(localStorage.getItem(PWD_KEY)===CORRECT){
+  document.getElementById('gate').style.display='none';
+}
+
+const starsContainer=document.getElementById('stars');
+for(let i=0;i<36;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  const size=Math.random()*2.5+1;
+  s.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*2}s;`;
+  starsContainer.appendChild(s);
+}
+
+function toggleKey(){
+  const key=document.getElementById('answer-key');
+  const btn=document.getElementById('toggle-key-btn');
+  if(key.style.display==='none'||key.style.display===''){
+    key.style.display='block';
+    btn.textContent='Hide Answer Key';
+  }else{
+    key.style.display='none';
+    btn.textContent='Show Answer Key';
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Unit 14 – 2D Projectile Motion | Classwork</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+  --dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;
+  --card:#ffffff;--border:#e2e8f0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:radial-gradient(circle,#94a3b8 1px,transparent 1px);
+  background-size:28px 28px;opacity:.18;pointer-events:none;z-index:0;
+}
+
+/* PASSWORD GATE */
+#gate{position:fixed;inset:0;background:linear-gradient(135deg,#1e3a5f,#1d4ed8);
+  display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:1.5rem;}
+#gate h2{color:#fff;font-size:1.8rem;font-weight:800;}
+#gate p{color:#bfdbfe;font-size:1rem;}
+#gate input{padding:.75rem 1.25rem;border-radius:12px;border:none;font-size:1rem;
+  font-family:'Nunito',sans-serif;width:260px;text-align:center;outline:none;}
+#gate button{padding:.75rem 2rem;border-radius:12px;background:#f59e0b;color:#fff;
+  border:none;font-size:1rem;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;}
+#gate-error{color:#fca5a5;font-size:.9rem;display:none;}
+
+#main{display:none;position:relative;z-index:1;}
+
+/* HEADER */
+header{
+  background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 100%);
+  padding:3rem 2rem 2.5rem;text-align:center;position:relative;overflow:hidden;
+}
+.stars{position:absolute;inset:0;pointer-events:none;}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 3s infinite alternate;}
+@keyframes twinkle{0%{opacity:.2;transform:scale(1);}100%{opacity:1;transform:scale(1.4);}}
+.chip{display:inline-block;background:rgba(255,255,255,.15);color:#bfdbfe;
+  border:1px solid rgba(255,255,255,.25);border-radius:999px;
+  padding:.3rem 1rem;font-size:.8rem;font-weight:700;font-family:'Space Mono',monospace;
+  letter-spacing:.05em;margin-bottom:1rem;}
+header h1{
+  font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;
+  background:linear-gradient(90deg,#fff 0%,#bfdbfe 50%,#a5f3fc 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:.5rem;
+}
+header p{color:#bfdbfe;font-size:1rem;font-weight:600;}
+
+/* LAYOUT */
+.container{max-width:1000px;margin:0 auto;padding:2.5rem 1.5rem;}
+section{margin-bottom:2.5rem;}
+section>h2{font-size:1.3rem;font-weight:800;color:var(--dark);margin-bottom:1rem;
+  display:flex;align-items:center;gap:.5rem;}
+section>h2::before{content:'';width:4px;height:1.2em;background:var(--blue);border-radius:2px;flex-shrink:0;}
+
+/* REFERENCE BOX */
+.ref-box{background:linear-gradient(135deg,#1e3a5f,#1d4ed8);border-radius:16px;
+  padding:1.5rem;margin-bottom:2rem;color:#fff;}
+.ref-box h3{color:#bfdbfe;font-size:1rem;font-weight:800;margin-bottom:.9rem;
+  font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.05em;}
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem;}
+.ref-item{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  border-radius:10px;padding:.7rem 1rem;text-align:center;}
+.ref-item .rf{font-family:'Space Mono',monospace;font-size:.95rem;font-weight:700;color:#a5f3fc;}
+.ref-item .rl{font-size:.78rem;color:#bfdbfe;margin-top:.2rem;}
+.ref-codes{margin-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
+.ref-code{background:rgba(255,255,255,.08);border-radius:8px;padding:.5rem .8rem;font-size:.82rem;color:#dbeafe;}
+.ref-code span{font-family:'Space Mono',monospace;color:#fde68a;font-weight:700;}
+
+/* PROBLEM GRID */
+.prob-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem;}
+@media(max-width:680px){.prob-grid{grid-template-columns:1fr;}}
+.prob-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.3rem;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.prob-num{display:inline-block;background:var(--blue);color:#fff;border-radius:8px;
+  padding:.2rem .6rem;font-size:.8rem;font-weight:800;font-family:'Space Mono',monospace;margin-bottom:.6rem;}
+.prob-card p{font-size:.95rem;line-height:1.65;color:#334155;}
+.work-space{margin-top:.8rem;border-top:1px dashed var(--border);padding-top:.6rem;}
+.work-label{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem;}
+.lines{display:flex;flex-direction:column;gap:.45rem;}
+.line{height:1px;background:#e2e8f0;width:100%;}
+
+/* PART B */
+.partb-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem;}
+@media(max-width:680px){.partb-grid{grid-template-columns:1fr;}}
+.graph-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.3rem;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.graph-card p{font-size:.92rem;color:#334155;margin-bottom:.6rem;}
+
+/* PART C */
+.short-answer-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:1.3rem;margin-bottom:1rem;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.short-answer-card p{font-size:.95rem;color:#334155;margin-bottom:.7rem;}
+.ans-lines{display:flex;flex-direction:column;gap:.55rem;}
+.ans-line{height:1px;background:#e2e8f0;}
+
+/* ANSWER KEY */
+#answer-key{display:none;background:linear-gradient(135deg,#fefce8,#fef9c3);
+  border:2px solid var(--amber);border-radius:16px;padding:1.5rem;margin-top:2rem;}
+#answer-key h3{color:#92400e;font-weight:800;margin-bottom:1.2rem;font-size:1.1rem;}
+.ak-section{margin-bottom:1.2rem;}
+.ak-section h4{font-weight:800;color:#78350f;font-size:.95rem;margin-bottom:.6rem;
+  border-bottom:1px solid #fde68a;padding-bottom:.3rem;}
+.ak-item{background:#fff;border-radius:8px;padding:.7rem 1rem;margin-bottom:.5rem;
+  border-left:3px solid var(--amber);font-size:.88rem;color:#374151;line-height:1.6;}
+.ak-item .anum{font-family:'Space Mono',monospace;font-weight:700;color:#92400e;margin-right:.4rem;}
+.ak-item .afinal{font-family:'Space Mono',monospace;font-weight:700;color:var(--green);font-size:.92rem;}
+#toggle-key-btn{background:var(--amber);color:#fff;border:none;border-radius:12px;
+  padding:.75rem 2rem;font-size:1rem;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;
+  display:block;margin:1.5rem auto 0;}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <h2>Physics Portal</h2>
+  <p>Enter the password to access this worksheet.</p>
+  <input id="pwd-input" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')checkPwd()"/>
+  <button onclick="checkPwd()">Unlock</button>
+  <span id="gate-error">Incorrect password. Try again.</span>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+<header>
+  <div class="stars" id="stars"></div>
+  <div class="chip">Kinematics · Unit 14</div>
+  <h1>2D Projectile Motion — Classwork</h1>
+  <p>Show all working in the spaces provided</p>
+</header>
+
+<div class="container">
+
+  <!-- REFERENCE BOX -->
+  <div class="ref-box">
+    <h3>Reference Sheet</h3>
+    <div class="ref-grid">
+      <div class="ref-item"><div class="rf">v = u + at</div><div class="rl">Velocity–time</div></div>
+      <div class="ref-item"><div class="rf">s = ut + ½at²</div><div class="rl">Displacement–time</div></div>
+      <div class="ref-item"><div class="rf">v² = u² + 2as</div><div class="rl">Velocity–displacement</div></div>
+      <div class="ref-item"><div class="rf">s = ½(u+v)t</div><div class="rl">Average velocity</div></div>
+      <div class="ref-item"><div class="rf">a<sub>x</sub> = 0 m/s²</div><div class="rl">No horizontal force</div></div>
+      <div class="ref-item"><div class="rf">a<sub>y</sub> = 9.8 m/s² ↓</div><div class="rl">Gravity only</div></div>
+    </div>
+    <div class="ref-codes">
+      <div class="ref-code">Horizontal launch → <span>u<sub>y</sub> = 0</span></div>
+      <div class="ref-code">Highest point → <span>v<sub>y</sub> = 0</span></div>
+      <div class="ref-code">Range → <span>s<sub>x</sub></span></div>
+      <div class="ref-code">Same height → <span>s<sub>y</sub> = 0</span></div>
+    </div>
+  </div>
+
+  <!-- PART A -->
+  <section>
+    <h2>Part A — Calculation Problems</h2>
+    <p style="font-size:.9rem;color:var(--muted);margin-bottom:1rem;">Draw and fill in the X and Y tables for each problem. Show all kinematic equation working.</p>
+
+    <div class="prob-grid">
+
+      <!-- A1 -->
+      <div class="prob-card">
+        <span class="prob-num">A1</span>
+        <p>A ball rolls off a <strong>2.0 m</strong> high table at a horizontal speed of <strong>3 m/s</strong>. How far from the base of the table does it land?</p>
+        <div class="work-space">
+          <div class="work-label">Working Space</div>
+          <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+        </div>
+      </div>
+
+      <!-- A2 -->
+      <div class="prob-card">
+        <span class="prob-num">A2</span>
+        <p>A rock is kicked horizontally off a cliff at <strong>5 m/s</strong>. It takes <strong>3 s</strong> to reach the ground. How tall is the cliff?</p>
+        <div class="work-space">
+          <div class="work-label">Working Space</div>
+          <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+        </div>
+      </div>
+
+      <!-- A3 -->
+      <div class="prob-card">
+        <span class="prob-num">A3</span>
+        <p>A ball is launched at <strong>12 m/s</strong> at <strong>40°</strong> above the horizontal. Calculate the range (horizontal distance to landing, assuming it lands at the same height).</p>
+        <div class="work-space">
+          <div class="work-label">Working Space</div>
+          <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+        </div>
+      </div>
+
+      <!-- A4 -->
+      <div class="prob-card">
+        <span class="prob-num">A4</span>
+        <p>A projectile is launched at <strong>20 m/s</strong> at <strong>60°</strong> above horizontal. What is the maximum height it reaches?</p>
+        <div class="work-space">
+          <div class="work-label">Working Space</div>
+          <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+        </div>
+      </div>
+
+      <!-- A5 -->
+      <div class="prob-card">
+        <span class="prob-num">A5</span>
+        <p>A ball is launched at <strong>15 m/s</strong> at <strong>25°</strong> above horizontal. What are v<sub>x</sub> and v<sub>y</sub> after <strong>1.2 s</strong>?</p>
+        <div class="work-space">
+          <div class="work-label">Working Space</div>
+          <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+        </div>
+      </div>
+
+      <!-- A6 -->
+      <div class="prob-card">
+        <span class="prob-num">A6</span>
+        <p>A package is dropped horizontally from a plane at <strong>50 m</strong> altitude with horizontal speed <strong>40 m/s</strong>. How far horizontally from the drop point does it land?</p>
+        <div class="work-space">
+          <div class="work-label">Working Space</div>
+          <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PART B -->
+  <section>
+    <h2>Part B — Diagram and Analysis Problems</h2>
+
+    <div class="partb-grid">
+
+      <!-- B1 -->
+      <div class="graph-card">
+        <span class="prob-num" style="background:var(--indigo);">B1</span>
+        <p>The diagram below shows the trajectory of a horizontally launched ball. On the diagram, draw arrows at positions P, Q, and R to show: (a) the direction of the net force, and (b) the direction of the acceleration at each point.</p>
+        <!-- Trajectory diagram -->
+        <svg width="100%" viewBox="0 0 280 130" font-family="Nunito,sans-serif">
+          <rect x="0" y="0" width="280" height="100" fill="#e0f2fe" rx="6"/>
+          <rect x="0" y="100" width="280" height="30" fill="#bbf7d0"/>
+          <line x1="15" y1="5" x2="15" y2="105" stroke="#475569" stroke-width="1.2"/>
+          <line x1="10" y1="100" x2="275" y2="100" stroke="#ef4444" stroke-width="1.5"/>
+          <path d="M30,95 Q100,30 230,95" fill="none" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5 3"/>
+          <!-- P -->
+          <circle cx="30" cy="95" r="7" fill="#6366f1" stroke="#4338ca" stroke-width="1.5"/>
+          <text x="26" y="99" font-size="8" fill="#fff" font-weight="700">P</text>
+          <!-- Q -->
+          <circle cx="130" cy="45" r="7" fill="#6366f1" stroke="#4338ca" stroke-width="1.5"/>
+          <text x="126" y="49" font-size="8" fill="#fff" font-weight="700">Q</text>
+          <!-- R -->
+          <circle cx="230" cy="95" r="7" fill="#6366f1" stroke="#4338ca" stroke-width="1.5"/>
+          <text x="226" y="99" font-size="8" fill="#fff" font-weight="700">R</text>
+        </svg>
+        <div class="work-space">
+          <div class="work-label">Your answers</div>
+          <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div></div>
+        </div>
+      </div>
+
+      <!-- B2 -->
+      <div class="graph-card">
+        <span class="prob-num" style="background:var(--indigo);">B2</span>
+        <p>The velocity components of a projectile at a certain moment are: v<sub>x</sub> = 6 m/s and v<sub>y</sub> = 8 m/s (downward). On the axes below, draw the component vectors and find the resultant velocity (magnitude and direction).</p>
+        <svg width="100%" viewBox="0 0 280 130" font-family="Nunito,sans-serif">
+          <rect x="0" y="0" width="280" height="130" fill="#f8faff" rx="6" stroke="#e2e8f0" stroke-width="1"/>
+          <!-- Axes -->
+          <line x1="50" y1="20" x2="50" y2="110" stroke="#475569" stroke-width="1.5"/>
+          <line x1="40" y1="70" x2="200" y2="70" stroke="#475569" stroke-width="1.5"/>
+          <text x="190" y="84" font-size="11" fill="#ef4444" font-weight="700">x</text>
+          <text x="53" y="24" font-size="11" fill="#475569" font-weight="700">y</text>
+          <text x="55" y="90" font-size="9" fill="#64748b">Draw vectors here</text>
+        </svg>
+        <div class="work-space">
+          <div class="work-label">Working</div>
+          <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div></div>
+        </div>
+      </div>
+
+      <!-- B3 -->
+      <div class="graph-card">
+        <span class="prob-num" style="background:var(--indigo);">B3</span>
+        <p>Below is a velocity-time graph for the x-component (v<sub>x</sub>) of a projectile. Describe what this graph tells us about the horizontal motion and sketch what a v<sub>y</sub>-time graph would look like alongside it (for an upward launch).</p>
+        <!-- vx-t graph: flat line -->
+        <svg width="100%" viewBox="0 0 280 120" font-family="Nunito,sans-serif">
+          <rect x="0" y="0" width="280" height="120" fill="#f0f9ff" rx="6"/>
+          <!-- Axes -->
+          <line x1="35" y1="10" x2="35" y2="95" stroke="#475569" stroke-width="1.5"/>
+          <line x1="30" y1="90" x2="260" y2="90" stroke="#475569" stroke-width="1.5"/>
+          <text x="255" y="103" font-size="10" fill="#475569">t (s)</text>
+          <text x="37" y="14" font-size="10" fill="#475569">v (m/s)</text>
+          <!-- Flat vx line -->
+          <line x1="35" y1="50" x2="255" y2="50" stroke="#3b82f6" stroke-width="2.5"/>
+          <text x="240" y="44" font-size="9" fill="#3b82f6" font-weight="700">v<tspan font-size="7" dy="2">x</tspan></text>
+          <!-- Grid lines -->
+          <line x1="35" y1="90" x2="255" y2="90" stroke="#e2e8f0" stroke-width="0.8"/>
+          <!-- Sketch space label -->
+          <text x="75" y="108" font-size="9" fill="#94a3b8">Sketch v<tspan font-size="7" dy="2">y</tspan> here</text>
+        </svg>
+        <div class="work-space">
+          <div class="work-label">Description</div>
+          <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div></div>
+        </div>
+      </div>
+
+      <!-- B4 -->
+      <div class="graph-card">
+        <span class="prob-num" style="background:var(--indigo);">B4</span>
+        <p>A ball is launched from the ground and lands at the same height. Below, label on the trajectory: (i) where v<sub>y</sub> = 0, (ii) where v<sub>y</sub> is maximum downward, (iii) where v<sub>x</sub> is largest.</p>
+        <svg width="100%" viewBox="0 0 280 130" font-family="Nunito,sans-serif">
+          <rect x="0" y="0" width="280" height="100" fill="#f0f9ff" rx="6"/>
+          <rect x="0" y="100" width="280" height="30" fill="#bbf7d0"/>
+          <line x1="10" y1="100" x2="275" y2="100" stroke="#475569" stroke-width="1.2"/>
+          <path d="M20,98 Q140,15 260,98" fill="none" stroke="#6366f1" stroke-width="2" stroke-dasharray="5 3"/>
+          <!-- Launch ball -->
+          <circle cx="20" cy="98" r="6" fill="#b45309" stroke="#78350f" stroke-width="1.5"/>
+          <!-- Apex -->
+          <circle cx="140" cy="15" r="6" fill="#b45309" stroke="#78350f" stroke-width="1.5"/>
+          <!-- Landing ball -->
+          <circle cx="260" cy="98" r="6" fill="#b45309" stroke="#78350f" stroke-width="1.5"/>
+          <!-- Label lines to fill -->
+          <text x="40" y="80" font-size="8" fill="#94a3b8">(i) ___</text>
+          <text x="120" y="12" font-size="8" fill="#94a3b8">(ii) ___</text>
+          <text x="200" y="80" font-size="8" fill="#94a3b8">(iii) ___</text>
+        </svg>
+        <div class="work-space">
+          <div class="work-label">Answers</div>
+          <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PART C -->
+  <section>
+    <h2>Part C — Short Answer</h2>
+
+    <div class="short-answer-card">
+      <span class="prob-num" style="background:var(--amber);color:#fff;">C1</span>
+      <p style="margin-top:.4rem;">Explain, using Newton's First Law, why the horizontal velocity of a projectile does not change during its flight.</p>
+      <div class="ans-lines">
+        <div class="ans-line"></div><div class="ans-line"></div><div class="ans-line"></div>
+        <div class="ans-line"></div><div class="ans-line"></div>
+      </div>
+    </div>
+
+    <div class="short-answer-card">
+      <span class="prob-num" style="background:var(--amber);color:#fff;">C2</span>
+      <p style="margin-top:.4rem;">A student solving a projectile problem writes the equation: <span style="font-family:'Space Mono',monospace;">s<sub>x</sub> = u<sub>y</sub>×t + ½×a<sub>y</sub>×t²</span>. What mistake have they made and what is the correct form?</p>
+      <div class="ans-lines">
+        <div class="ans-line"></div><div class="ans-line"></div><div class="ans-line"></div>
+        <div class="ans-line"></div><div class="ans-line"></div>
+      </div>
+    </div>
+
+    <div class="short-answer-card">
+      <span class="prob-num" style="background:var(--amber);color:#fff;">C3</span>
+      <p style="margin-top:.4rem;">A ball is launched at 10 m/s at 30° and another at 10 m/s at 60°. Without fully solving, predict which will travel farther horizontally and explain using the component decomposition formulas.</p>
+      <div class="ans-lines">
+        <div class="ans-line"></div><div class="ans-line"></div><div class="ans-line"></div>
+        <div class="ans-line"></div><div class="ans-line"></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ANSWER KEY TOGGLE -->
+  <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+
+  <div id="answer-key">
+    <h3>Answer Key — Classwork Unit 14</h3>
+
+    <div class="ak-section">
+      <h4>Part A — Calculations</h4>
+
+      <div class="ak-item">
+        <span class="anum">A1.</span>
+        Ball off 2.0 m table at 3 m/s.<br/>
+        <strong>Y-table:</strong> s<sub>y</sub>=2.0 m, u<sub>y</sub>=0, a<sub>y</sub>=9.8 m/s², find t.<br/>
+        s = ½at² → 2.0 = 4.9t² → t² = 0.408 → t = 0.639 s<br/>
+        <strong>X-table:</strong> s<sub>x</sub> = u<sub>x</sub>×t = 3 × 0.639 = <span class="afinal">1.92 m</span>
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">A2.</span>
+        Rock kicked horizontally, t = 3 s. Cliff height = s<sub>y</sub>.<br/>
+        <strong>Y-table:</strong> u<sub>y</sub>=0, a<sub>y</sub>=9.8 m/s², t=3 s<br/>
+        s<sub>y</sub> = ½×9.8×9 = 4.9×9 = <span class="afinal">44.1 m</span>
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">A3.</span>
+        u=12 m/s, θ=40°. u<sub>x</sub>=12cos40°=9.19 m/s, u<sub>y</sub>=12sin40°=7.71 m/s, a<sub>y</sub>=−9.8 m/s², s<sub>y</sub>=0.<br/>
+        <strong>Y-table (find t):</strong> 0 = 7.71t − 4.9t² → t(7.71 − 4.9t) = 0 → t = 7.71/4.9 = 1.573 s<br/>
+        <strong>X-table:</strong> s<sub>x</sub> = 9.19 × 1.573 = <span class="afinal">14.46 m ≈ 14.5 m</span>
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">A4.</span>
+        u=20 m/s, θ=60°. u<sub>y</sub>=20sin60°=17.32 m/s, a<sub>y</sub>=−9.8 m/s², v<sub>y</sub>=0 at max height.<br/>
+        v² = u² + 2as → 0 = 17.32² + 2×(−9.8)×s<sub>y</sub><br/>
+        s<sub>y</sub> = 300/19.6 = <span class="afinal">15.3 m</span>
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">A5.</span>
+        u=15 m/s, θ=25°. u<sub>x</sub>=15cos25°=13.59 m/s, u<sub>y</sub>=15sin25°=6.34 m/s. At t=1.2 s:<br/>
+        v<sub>x</sub> = 13.59 + 0 = <span class="afinal">13.6 m/s (horizontal)</span><br/>
+        v<sub>y</sub> = 6.34 + (−9.8)×1.2 = 6.34 − 11.76 = <span class="afinal">−5.42 m/s (downward)</span>
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">A6.</span>
+        Horizontal drop from 50 m, u<sub>x</sub>=40 m/s, u<sub>y</sub>=0.<br/>
+        <strong>Y-table:</strong> 50 = ½×9.8×t² → t² = 50/4.9 = 10.2 → t = 3.194 s<br/>
+        <strong>X-table:</strong> s<sub>x</sub> = 40 × 3.194 = <span class="afinal">127.8 m ≈ 128 m</span>
+      </div>
+    </div>
+
+    <div class="ak-section">
+      <h4>Part B — Diagram and Analysis</h4>
+
+      <div class="ak-item">
+        <span class="anum">B1.</span>
+        At every point P, Q, and R: the net force direction is <strong>straight down</strong> (gravity only) and the acceleration direction is <strong>straight down at 9.8 m/s²</strong>. The force and acceleration arrows should all point vertically downward at each position.
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">B2.</span>
+        v<sub>x</sub>=6 m/s (horizontal right), v<sub>y</sub>=8 m/s (downward).<br/>
+        Resultant: v = √(6² + 8²) = √(36+64) = √100 = <span class="afinal">10 m/s</span><br/>
+        Direction: θ = arctan(8/6) = arctan(1.333) ≈ 53.1° below horizontal.
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">B3.</span>
+        The flat horizontal v<sub>x</sub>-time line shows <strong>constant horizontal velocity</strong> — no acceleration in x.<br/>
+        The v<sub>y</sub>-time graph would be a straight line with negative slope (−9.8 m/s²), starting positive (upward) and decreasing through zero (at apex) to negative (downward).
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">B4.</span>
+        (i) v<sub>y</sub> = 0 at the <strong>apex (highest point)</strong>.<br/>
+        (ii) v<sub>y</sub> is maximum downward at the <strong>landing point</strong> (or at any point after the apex — maximum at the end).<br/>
+        (iii) v<sub>x</sub> is the same <strong>everywhere</strong> — it never changes. (All three positions have equal v<sub>x</sub>.)
+      </div>
+    </div>
+
+    <div class="ak-section">
+      <h4>Part C — Short Answer</h4>
+
+      <div class="ak-item">
+        <span class="anum">C1.</span>
+        Newton's First Law: an object with no net force acting on it has no change in velocity. Because there is no horizontal force on the projectile (gravity acts only vertically), there is zero horizontal acceleration (a<sub>x</sub> = 0). Therefore the horizontal velocity remains constant throughout the flight.
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">C2.</span>
+        Mistake: the student mixed x-variables (s<sub>x</sub>) with y-variables (u<sub>y</sub>, a<sub>y</sub>) in a single equation. Rule 2 states you must never mix x and y variables.<br/>
+        Correct form for x: s<sub>x</sub> = u<sub>x</sub>×t + ½×a<sub>x</sub>×t² (and a<sub>x</sub>=0, so s<sub>x</sub> = u<sub>x</sub>×t).
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">C3.</span>
+        At 30°: u<sub>x</sub>=10cos30°=8.66 m/s, u<sub>y</sub>=10sin30°=5 m/s → t=1.02 s → range=8.9 m<br/>
+        At 60°: u<sub>x</sub>=10cos60°=5 m/s, u<sub>y</sub>=10sin60°=8.66 m/s → t=1.77 s → range=5×1.77=8.9 m<br/>
+        They travel the <strong>same range</strong> — complementary angles (30° and 60° add to 90°) always give equal range for the same launch speed. This is a property of projectile motion.
+      </div>
+    </div>
+  </div>
+
+</div><!-- container -->
+</div><!-- main -->
+
+<script>
+// PASSWORD GATE
+(function(){
+  var KEY='physics_portal_auth';
+  var HASH=btoa('physics2024');
+  if(localStorage.getItem(KEY)===HASH){unlock();}
+})();
+function checkPwd(){
+  var v=document.getElementById('pwd-input').value;
+  if(btoa(v)===btoa('physics2024')){
+    localStorage.setItem('physics_portal_auth',btoa('physics2024'));
+    unlock();
+  } else {
+    document.getElementById('gate-error').style.display='block';
+    document.getElementById('pwd-input').value='';
+  }
+}
+function unlock(){
+  document.getElementById('gate').style.display='none';
+  document.getElementById('main').style.display='block';
+  buildStars();
+}
+function buildStars(){
+  var c=document.getElementById('stars');
+  if(!c)return;
+  for(var i=0;i<45;i++){
+    var s=document.createElement('div');
+    s.className='star';
+    var sz=(Math.random()*2.5+1).toFixed(1);
+    s.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;animation-delay:'+Math.random()*3+'s;animation-duration:'+(2+Math.random()*3)+'s;';
+    c.appendChild(s);
+  }
+}
+function toggleKey(){
+  var k=document.getElementById('answer-key');
+  var b=document.getElementById('toggle-key-btn');
+  if(k.style.display==='none'||k.style.display===''){
+    k.style.display='block';b.textContent='Hide Answer Key';
+  } else {
+    k.style.display='none';b.textContent='Show Answer Key';
+  }
+}
+</script>
+</body>
+</html>

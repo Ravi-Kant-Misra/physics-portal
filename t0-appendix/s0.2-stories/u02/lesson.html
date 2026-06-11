@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chapter 2 – Isaac Newton | IB Physics Stories</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',Arial,sans-serif;background:#f1f5f9;color:#1f2937;line-height:1.7;}
+  .hero{background:linear-gradient(135deg,#14532d,#166534,#16a34a);color:white;padding:64px 24px 52px;text-align:center;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 30%,rgba(134,239,172,.3) 0%,transparent 55%);pointer-events:none;}
+  .hero-chip{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:5px 18px;font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;position:relative;}
+  .hero h1{font-size:2.8rem;font-weight:900;letter-spacing:-1px;position:relative;margin-bottom:10px;}
+  .hero .hook{font-size:1.2rem;color:rgba(255,255,255,.88);max-width:700px;margin:0 auto;position:relative;font-style:italic;}
+  .wrap{max-width:1100px;margin:0 auto;padding:40px 24px 80px;}
+  .card{background:white;border-radius:18px;padding:28px 26px;margin:24px 0;box-shadow:0 6px 20px rgba(0,0,0,.07);}
+  .grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:28px;align-items:start;}
+  h2{font-size:1.55rem;font-weight:900;color:#166534;margin-bottom:14px;}
+  h3{font-size:1.1rem;font-weight:800;color:#15803d;margin:16px 0 8px;}
+  p{margin-bottom:12px;}
+  ul,ol{padding-left:22px;margin-bottom:12px;}
+  li{margin-bottom:7px;}
+  img{max-width:100%;border-radius:14px;display:block;}
+  .img-cap{font-size:.8rem;color:#6b7280;margin-top:7px;font-style:italic;text-align:center;}
+  .timeline{list-style:none;padding:0;border-left:3px solid #bbf7d0;margin:16px 0;}
+  .timeline li{padding:8px 0 8px 24px;position:relative;}
+  .timeline li::before{content:'';width:12px;height:12px;border-radius:50%;background:#16a34a;border:3px solid white;box-shadow:0 0 0 2px #16a34a;position:absolute;left:-7.5px;top:14px;}
+  .timeline .yr{font-weight:900;color:#166534;margin-right:8px;}
+  .ib-box{background:#f0fdf4;border-left:5px solid #16a34a;border-radius:12px;padding:18px 20px;margin:20px 0;}
+  .ib-box-label{font-size:.72rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#166534;margin-bottom:8px;}
+  .quote{background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border-left:5px solid #16a34a;border-radius:12px;padding:20px 22px;margin:20px 0;}
+  .quote p{font-size:1.05rem;font-style:italic;color:#166534;margin:0;}
+  .quote span{display:block;font-size:.83rem;font-weight:700;color:#16a34a;margin-top:7px;}
+  .moral{background:linear-gradient(135deg,#fef9ec,#fff8f0);border:2px solid #f59e0b;border-radius:16px;padding:26px;margin:26px 0;}
+  .moral-label{font-size:.72rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#b45309;margin-bottom:10px;}
+  .moral p{font-size:1.08rem;color:#78350f;margin:0;font-weight:600;}
+  .tag{display:inline-block;background:#dcfce7;color:#166534;padding:5px 14px;border-radius:999px;font-size:.8rem;font-weight:700;margin-right:6px;}
+  .law-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:18px 0;}
+  .law-card{background:#f0fdf4;border:2px solid #86efac;border-radius:14px;padding:18px;text-align:center;}
+  .law-num{font-size:2rem;font-weight:900;color:#16a34a;margin-bottom:6px;}
+  .law-title{font-weight:800;color:#166534;margin-bottom:6px;}
+  .law-desc{font-size:.88rem;line-height:1.5;}
+  .page-nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:40px;}
+  .nav-btn{background:#166534;color:white;text-decoration:none;border-radius:10px;padding:10px 22px;font-weight:800;font-size:.92rem;transition:background .2s;}
+  .nav-btn:hover{background:#16a34a;}
+  footer{text-align:center;padding:26px;color:#6b7280;font-size:.87rem;background:white;border-top:1px solid #e2e8f0;}
+  @media(max-width:700px){.grid{grid-template-columns:1fr;}.hero h1{font-size:2rem;}.law-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-chip">Chapter 2 · Classical Physics</div>
+  <h1>Isaac Newton</h1>
+  <p class="hook">"He didn't just discover gravity — he showed that the force pulling an apple to the ground is the same force holding the Moon in orbit. The universe was suddenly one."</p>
+</header>
+
+<main class="wrap">
+
+  <div style="margin-bottom:20px;">
+    <span class="tag">1643 – 1727</span>
+    <span class="tag">Gravity &amp; Motion</span>
+    <span class="tag">IB Theme 1</span>
+    <span class="tag">England</span>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+      <div>
+        <h2>A Difficult Beginning</h2>
+        <p>Isaac Newton was born on Christmas Day, 1643, in Woolsthorpe, Lincolnshire, England. He was premature and so small at birth that his mother said he could fit inside a quart pot. His father had died three months before he was born. When Newton was three, his mother remarried and left him in the care of his grandmother. He reportedly hated his stepfather and, by his own account, once threatened to burn down the house with his stepfather and mother inside it.</p>
+        <p>He was a troubled, lonely child who found refuge in making things: kites, windmills, water clocks, sundials. He was not immediately recognised as brilliant at school. His uncle eventually noticed his ability and pushed for him to go to Cambridge.</p>
+        <h3>The Miraculous Years (1665–1667)</h3>
+        <p>In 1665, Cambridge was closed because of plague. Newton went home to Woolsthorpe. In the next 18 months — alone, in the countryside — he invented calculus, began working out the theory of gravity, and made fundamental discoveries about the nature of light. He was 23 years old. These two years are known as his <em>annus mirabilis</em> — the miraculous years. He later said: <em>"All this was in the two plague years of 1665 and 1666, for in those days I was in the prime of my age for invention."</em></p>
+      </div>
+      <div>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Portrait_of_Sir_Isaac_Newton%2C_1689.jpg/400px-Portrait_of_Sir_Isaac_Newton%2C_1689.jpg" alt="Portrait of Isaac Newton, 1689"/>
+        <p class="img-cap">Isaac Newton, painted by Godfrey Kneller in 1689, two years after <em>Principia Mathematica</em> was published.</p>
+        <div class="ib-box" style="margin-top:18px;">
+          <div class="ib-box-label">IB Physics Connection</div>
+          <p style="margin:0;font-size:.92rem;"><strong>Theme 1 — Space, Time &amp; Motion:</strong> Newton's three laws of motion and his law of universal gravitation are the direct content of IB Theme 1. Circular motion, momentum, and energy all build on his framework.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Newton's Three Laws of Motion</h2>
+    <p>These three laws, published in the <em>Principia</em> in 1687, are the engine of classical physics. Every IB student must know them deeply.</p>
+    <div class="law-grid">
+      <div class="law-card">
+        <div class="law-num">I</div>
+        <div class="law-title">Law of Inertia</div>
+        <div class="law-desc">An object at rest stays at rest, and an object in motion stays in motion, unless acted upon by an external net force.</div>
+      </div>
+      <div class="law-card">
+        <div class="law-num">II</div>
+        <div class="law-title">F = ma</div>
+        <div class="law-desc">The net force on an object equals its mass times its acceleration. The greater the force, the greater the change in motion.</div>
+      </div>
+      <div class="law-card">
+        <div class="law-num">III</div>
+        <div class="law-title">Action &amp; Reaction</div>
+        <div class="law-desc">For every action there is an equal and opposite reaction. Forces always come in pairs.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Universal Gravitation: One Law Rules Them All</h2>
+    <p>The famous apple story is probably embellished, but Newton himself confirmed that seeing a falling apple in his garden made him wonder: does the same force that pulls the apple down also pull the Moon? If so, the Moon is constantly falling toward Earth — it just moves sideways fast enough that it keeps missing.</p>
+    <p>His <strong>Law of Universal Gravitation</strong> states: every mass attracts every other mass with a force proportional to the product of their masses and inversely proportional to the square of the distance between them. In mathematical form:</p>
+    <p style="text-align:center;font-size:1.3rem;font-weight:800;color:#166534;margin:18px 0;font-family:monospace;">F = G · m₁m₂ / r²</p>
+    <p>The astonishing thing was that the <em>same</em> equation described a falling apple, the orbit of the Moon, the orbit of Jupiter, and the tides. For the first time in history, earthly and heavenly physics were unified into one framework.</p>
+    <div class="quote">
+      <p>"If I have seen further, it is by standing on the shoulders of giants."</p>
+      <span>— Isaac Newton, in a letter to Robert Hooke, 1676</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Newton on Light: The Prism Experiments</h2>
+    <p>Newton also made fundamental discoveries about light. He passed sunlight through a glass prism and saw it split into a rainbow spectrum. Then he passed the coloured light through a second prism and recombined it into white light again. His conclusion: white light is not pure — it is a mixture of all colours. Each colour bends by a slightly different angle in glass (dispersion), which is why rainbows exist.</p>
+    <p>He proposed that light was made of tiny particles he called <em>corpuscles</em>. This put him in direct conflict with Christiaan Huygens, who argued light was a wave. This debate — particle or wave? — would run for two more centuries. (See Chapter 4.)</p>
+  </div>
+
+  <div class="card">
+    <h2>Timeline</h2>
+    <ul class="timeline">
+      <li><span class="yr">1643</span> Born at Woolsthorpe Manor, Lincolnshire, England.</li>
+      <li><span class="yr">1661</span> Enters Trinity College, Cambridge.</li>
+      <li><span class="yr">1665–67</span> Plague closes Cambridge; annus mirabilis — calculus, gravity, optics.</li>
+      <li><span class="yr">1669</span> Appointed Lucasian Professor of Mathematics at Cambridge (the chair later held by Stephen Hawking).</li>
+      <li><span class="yr">1672</span> Presents reflecting telescope to the Royal Society; publishes first paper on light and colour.</li>
+      <li><span class="yr">1687</span> Publishes <em>Philosophiæ Naturalis Principia Mathematica</em> — three laws of motion + universal gravitation.</li>
+      <li><span class="yr">1704</span> Publishes <em>Opticks</em> — his work on light and colour.</li>
+      <li><span class="yr">1705</span> Knighted by Queen Anne — the first scientist to receive this honour.</li>
+      <li><span class="yr">1727</span> Dies in London, age 84. Buried in Westminster Abbey.</li>
+    </ul>
+  </div>
+
+  <div class="moral">
+    <div class="moral-label">Moral of the Story</div>
+    <p>Newton was a difficult, secretive, and often unpleasant person who had bitter rivalries and did not share credit easily. He was also perhaps the greatest scientific mind in history. His story teaches us that genius does not come packaged with good character — and that the most important breakthroughs sometimes come not from conferences and collaboration, but from a young person alone in a room with time to think. <strong>Isolation, curiosity, and patience can be the most powerful laboratory of all.</strong></p>
+  </div>
+
+  <div class="page-nav">
+    <a href="01-galileo.html" class="nav-btn">← Chapter 1: Galileo</a>
+    <a href="03-faraday.html" class="nav-btn">Next: Michael Faraday →</a>
+  </div>
+
+</main>
+
+<footer>IB Physics Storytelling Series &nbsp;|&nbsp; Chapter 2: Isaac Newton</footer>
+</body>
+</html>

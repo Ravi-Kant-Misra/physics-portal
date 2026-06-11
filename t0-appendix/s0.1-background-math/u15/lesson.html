@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logger Pro — Physics Lesson</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root{--blue:#3b82f6;--indigo:#6366f1;--slate:#475569;--dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);font-size:17px;line-height:1.75;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;}
+    header{background:linear-gradient(135deg,#1e3a5f 0%,#1e40af 55%,#2563eb 100%);color:white;padding:52px 60px 48px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 50%,rgba(99,102,241,0.3) 0%,transparent 60%),radial-gradient(ellipse at 75% 30%,rgba(59,130,246,0.25) 0%,transparent 55%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.4);}}
+    header .chip{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px;position:relative;}
+    header h1{font-size:2.9rem;font-weight:900;letter-spacing:-1px;position:relative;margin-bottom:10px;background:linear-gradient(90deg,#bfdbfe,#e0e7ff,#bfdbfe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1.05rem;color:rgba(255,255,255,0.82);position:relative;max-width:560px;margin:0 auto;}
+    main{max-width:940px;margin:48px auto;padding:0 24px 80px;}
+    section{margin-bottom:60px;}
+    .section-label{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+    .section-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    .section-label h2{font-size:1.5rem;font-weight:900;color:var(--dark);}
+
+    /* intro */
+    .intro-card{background:white;border-radius:18px;padding:26px 30px;box-shadow:0 4px 20px rgba(0,0,0,0.07);border-left:6px solid #2563eb;margin-bottom:24px;}
+    .intro-card p{color:#374151;font-size:0.95rem;margin-bottom:10px;}
+    .intro-card p:last-child{margin-bottom:0;}
+
+    /* step flow */
+    .step-flow{display:flex;flex-direction:column;gap:0;margin-bottom:28px;}
+    .step-item{display:grid;grid-template-columns:48px 1fr;gap:0;align-items:stretch;}
+    .step-num-col{display:flex;flex-direction:column;align-items:center;}
+    .step-circle{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#1e40af,#2563eb);color:white;font-weight:900;font-size:1.1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1;}
+    .step-line{width:2px;background:#bfdbfe;flex:1;margin:0 auto;}
+    .step-content{background:white;border-radius:14px;padding:18px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin:0 0 14px 16px;border-left:3px solid #3b82f6;}
+    .step-content h4{font-size:1rem;font-weight:800;color:#1e3a5f;margin-bottom:6px;}
+    .step-content p{font-size:0.9rem;color:#374151;}
+    .step-content .menu-path{font-family:'Space Mono',monospace;font-size:0.85rem;background:#eff6ff;padding:5px 12px;border-radius:6px;display:inline-block;margin-top:6px;color:#1d4ed8;}
+    .step-content .note{font-size:0.82rem;color:#64748b;margin-top:6px;font-style:italic;}
+
+    /* screen mockup */
+    .screen-mock{background:#1e293b;border-radius:14px;padding:20px 24px;margin-top:12px;font-family:'Space Mono',monospace;font-size:0.82rem;color:#94a3b8;}
+    .screen-mock .col-header{color:#34d399;font-weight:700;}
+    .screen-mock .data-val{color:#fbbf24;}
+    .screen-mock .axis-label{color:#60a5fa;}
+    .screen-mock table{border-collapse:collapse;width:auto;}
+    .screen-mock td{padding:3px 14px;border:1px solid #334155;}
+    .screen-mock th{padding:3px 14px;border:1px solid #334155;color:#34d399;}
+
+    /* column options */
+    .col-options-card{background:white;border-radius:16px;padding:22px 26px;box-shadow:0 3px 14px rgba(0,0,0,0.07);margin-bottom:20px;border-top:4px solid #2563eb;}
+    .col-options-card h3{font-size:1rem;font-weight:800;color:#1e3a5f;margin-bottom:14px;}
+    .options-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    @media(max-width:580px){.options-grid{grid-template-columns:1fr;}}
+    .opt-field{background:#f8fafc;border-radius:10px;padding:12px 16px;}
+    .opt-field h5{font-size:0.82rem;font-weight:800;color:#2563eb;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:4px;}
+    .opt-field p{font-size:0.85rem;color:#475569;}
+    .opt-field .eg{font-family:'Space Mono',monospace;font-size:0.88rem;color:#1e40af;margin-top:4px;}
+
+    /* error bar settings */
+    .error-bar-panel{background:#fef2f2;border:2px solid #fca5a5;border-radius:16px;padding:22px 26px;margin-bottom:22px;}
+    .error-bar-panel h3{font-size:1rem;font-weight:800;color:#991b1b;margin-bottom:12px;}
+    .error-bar-panel p{font-size:0.9rem;color:#7f1d1d;margin-bottom:8px;}
+    .error-bar-panel .setting{font-family:'Space Mono',monospace;font-size:0.88rem;background:white;padding:6px 14px;border-radius:8px;display:inline-block;margin:4px 2px;color:#991b1b;}
+
+    /* best fit lines */
+    .bestfit-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px;}
+    @media(max-width:600px){.bestfit-grid{grid-template-columns:1fr;}}
+    .bf-card{border-radius:14px;padding:18px 20px;border:2px solid;}
+    .bf-min{background:#eff6ff;border-color:#93c5fd;}
+    .bf-max{background:#f0fdf4;border-color:#86efac;}
+    .bf-best{background:#fef3c7;border-color:#fde68a;}
+    .bf-card h4{font-size:0.95rem;font-weight:800;margin-bottom:8px;}
+    .bf-min h4{color:#1d4ed8;}
+    .bf-max h4{color:#15803d;}
+    .bf-best h4{color:#92400e;}
+    .bf-card p{font-size:0.85rem;color:#374151;}
+
+    /* calculated column */
+    .calc-col-box{background:white;border-radius:16px;padding:22px 26px;box-shadow:0 3px 14px rgba(0,0,0,0.07);margin-bottom:22px;border-left:5px solid #6366f1;}
+    .calc-col-box h3{font-size:1rem;font-weight:800;color:#312e81;margin-bottom:12px;}
+    .calc-col-box p{font-size:0.9rem;color:#374151;margin-bottom:8px;}
+    .calc-col-box .formula-eg{font-family:'Space Mono',monospace;font-size:0.95rem;background:#eef2ff;padding:8px 16px;border-radius:8px;color:#4338ca;display:inline-block;margin-top:4px;}
+
+    /* tip */
+    .tip-box{background:#fffbeb;border:2px solid #fde68a;border-radius:14px;padding:16px 22px;margin-bottom:22px;}
+    .tip-box h4{font-size:0.92rem;font-weight:800;color:#92400e;margin-bottom:6px;}
+    .tip-box p{font-size:0.87rem;color:#78350f;}
+
+    /* quiz */
+    .quiz-section{background:linear-gradient(135deg,#1e3a5f,#1e40af);border-radius:20px;padding:32px;color:white;}
+    .quiz-section h3{font-size:1.3rem;font-weight:900;margin-bottom:6px;}
+    .quiz-section p{font-size:0.88rem;opacity:0.75;margin-bottom:24px;}
+    .quiz-q{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:18px 22px;margin-bottom:14px;}
+    .quiz-q .qtext{font-size:0.95rem;margin-bottom:14px;font-weight:700;}
+    .options{display:flex;flex-wrap:wrap;gap:10px;}
+    .opt-btn{background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);color:white;font-family:'Nunito',sans-serif;font-size:0.88rem;font-weight:700;padding:8px 16px;border-radius:30px;cursor:pointer;transition:all 0.2s;}
+    .opt-btn:hover{background:rgba(255,255,255,0.2);transform:scale(1.04);}
+    .opt-btn.correct{background:#22c55e;border-color:#22c55e;animation:popIn 0.3s ease;}
+    .opt-btn.wrong{background:#ef4444;border-color:#ef4444;}
+    .feedback{font-size:0.85rem;margin-top:10px;padding:8px 14px;border-radius:8px;display:none;}
+    .feedback.show{display:block;}
+    .feedback.ok{background:rgba(34,197,94,0.2);color:#bbf7d0;}
+    .feedback.bad{background:rgba(239,68,68,0.2);color:#fecaca;}
+    @keyframes popIn{0%{transform:scale(0.9);}60%{transform:scale(1.1);}100%{transform:scale(1);}}
+    footer{text-align:center;padding:32px 20px;font-size:0.85rem;color:var(--muted);}
+  </style>
+</head>
+<body>
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="star" style="width:3px;height:3px;top:12%;left:8%;animation-delay:0s"></div>
+  <div class="star" style="width:2px;height:2px;top:25%;left:15%;animation-delay:0.5s"></div>
+  <div class="star" style="width:4px;height:4px;top:10%;left:32%;animation-delay:1s"></div>
+  <div class="star" style="width:3px;height:3px;top:68%;left:22%;animation-delay:0.3s"></div>
+  <div class="star" style="width:2px;height:2px;top:18%;left:76%;animation-delay:0.8s"></div>
+  <div class="chip">⚛️ Physics · High School · Lab Skills</div>
+  <h1>Graphing with Logger Pro</h1>
+  <p class="subtitle">Enter data, label axes, set error bars, add best-fit lines, and create calculated columns — the complete IB Physics workflow</p>
+</header>
+
+<main>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#dbeafe;">💻</div>
+    <h2>What is Logger Pro?</h2>
+  </div>
+  <div class="intro-card">
+    <p><strong>Logger Pro</strong> is a data analysis application used in IB Physics labs. It lets you enter experimental data into a spreadsheet-style table, automatically plots points on a graph, and provides tools for adding error bars, drawing best-fit lines, and creating new calculated columns from your data.</p>
+    <p>When you open Logger Pro you see two panels: a <strong>Data Set table</strong> on the left (where you enter X and Y values) and a <strong>graph</strong> on the right that auto-updates as you type. The default columns are labelled X and Y — you will rename these to match your experiment.</p>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#e0e7ff;">📝</div>
+    <h2>Step-by-Step: Entering and Labelling Data</h2>
+  </div>
+
+  <div class="step-flow">
+    <div class="step-item">
+      <div class="step-num-col"><div class="step-circle">1</div><div class="step-line"></div></div>
+      <div class="step-content">
+        <h4>Open Logger Pro — default view</h4>
+        <p>You see a blank data table (columns X and Y) and an empty graph. The graph axes are labelled X and Y until you rename them. No device needs to be connected for manual data entry.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num-col"><div class="step-circle">2</div><div class="step-line"></div></div>
+      <div class="step-content">
+        <h4>Rename the X column — double-click the header</h4>
+        <p>Double-click on the "X" column header to open <strong>Manual Column Options</strong>. Fill in:</p>
+        <div class="menu-path">Name: Time &nbsp;|&nbsp; Short Name: t &nbsp;|&nbsp; Units: s</div>
+        <p class="note">The graph x-axis will automatically update to show "Time (s)".</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num-col"><div class="step-circle">3</div><div class="step-line"></div></div>
+      <div class="step-content">
+        <h4>Rename the Y column — double-click the header</h4>
+        <p>Double-click the "Y" header and rename to match your DV. Example:</p>
+        <div class="menu-path">Name: Position &nbsp;|&nbsp; Short Name: p &nbsp;|&nbsp; Units: m</div>
+        <p class="note">The y-axis label updates to "Position (m)".</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num-col"><div class="step-circle">4</div><div class="step-line"></div></div>
+      <div class="step-content">
+        <h4>Enter your data — type into the cells</h4>
+        <p>Click a cell and type values. Press Enter to move to the next row. As you enter data, points appear on the graph automatically.</p>
+        <div class="screen-mock">
+          <table>
+            <tr><th>Time (s)</th><th>Position (m)</th></tr>
+            <tr><td class="data-val">1</td><td class="data-val">4</td></tr>
+            <tr><td class="data-val">2</td><td class="data-val">8</td></tr>
+            <tr><td class="data-val">3</td><td class="data-val">12</td></tr>
+            <tr><td class="data-val">4</td><td class="data-val">16</td></tr>
+            <tr><td class="data-val">5</td><td class="data-val">20</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fee2e2;">📏</div>
+    <h2>Adding Error Bars</h2>
+  </div>
+
+  <div class="error-bar-panel">
+    <h3>How to Set Error Bars in Logger Pro</h3>
+    <p>Go to <strong>Data → Column Options</strong> (or double-click a column header and go to the Options tab). Look for the <strong>Error Bar Calculations</strong> section. You can set errors as:</p>
+    <div class="setting">Percentage</div>
+    <div class="setting">Fixed Value</div>
+    <div class="setting">Fixed Value (from another column)</div>
+    <p style="margin-top:10px;">For IB Physics you typically use <strong>Fixed Value</strong> and type in your error bar value from your data table. X-axis error bars come from your IV uncertainty; Y-axis error bars come from the Error Bar column in your data table.</p>
+  </div>
+
+  <div class="col-options-card">
+    <h3>Manual Column Options — Fields Explained</h3>
+    <div class="options-grid">
+      <div class="opt-field">
+        <h5>Name</h5>
+        <p>Full variable name as it appears in the column header and axis label.</p>
+        <div class="eg">Position</div>
+      </div>
+      <div class="opt-field">
+        <h5>Short Name</h5>
+        <p>Abbreviated symbol used in formulas and axis tick labels.</p>
+        <div class="eg">p</div>
+      </div>
+      <div class="opt-field">
+        <h5>Units</h5>
+        <p>The SI unit (or other unit) for this quantity. Appears in axis labels automatically.</p>
+        <div class="eg">m</div>
+      </div>
+      <div class="opt-field">
+        <h5>Error Bar Calculations</h5>
+        <p>Set as Fixed Value = your error bar from the data table. Both axes can have independent error bars.</p>
+        <div class="eg">± 0.002</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <h4>X-axis vs Y-axis error bars in Logger Pro</h4>
+    <p>Set the X column error bar = your IV measurement uncertainty. Set the Y column error bar = the Error Bar column value from your data table (the larger of measurement and statistical uncertainty). If all rows have the same error bar, use Fixed Value. If they differ, you may need a separate error bar column.</p>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fef3c7;">📈</div>
+    <h2>Best-Fit Lines — Min, Max, and Best</h2>
+  </div>
+  <div class="intro-card" style="border-left-color:#d97706;">
+    <p>In IB Physics you draw <strong>three lines of best fit</strong> through your error bars: a <strong>minimum slope line</strong>, a <strong>maximum slope line</strong>, and a <strong>best-fit line</strong>. These are used to calculate the uncertainty in the gradient (slope) and y-intercept of your graph.</p>
+    <p>In Logger Pro: go to <strong>Analyze → Linear Fit</strong> to add the best-fit line. The software shows the equation (slope m, y-intercept b, and uncertainty in each). You then manually draw the min and max lines through the extremes of the error bars.</p>
+  </div>
+
+  <div class="bestfit-grid">
+    <div class="bf-card bf-best">
+      <h4>Best-Fit Line</h4>
+      <p>Passes through the middle of the data — the line that minimises the distance to all points. Logger Pro's Linear Fit gives this automatically with slope, intercept, and R² value.</p>
+    </div>
+    <div class="bf-card bf-min">
+      <h4>Minimum Slope Line</h4>
+      <p>Drawn with the smallest possible gradient that still passes through all error bars. Connects the top of the first point's error bar to the bottom of the last point's error bar.</p>
+    </div>
+    <div class="bf-card bf-max">
+      <h4>Maximum Slope Line</h4>
+      <p>Drawn with the largest possible gradient that still passes through all error bars. Connects the bottom of the first point's error bar to the top of the last point's error bar.</p>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <h4>Calculating gradient uncertainty from min/max lines</h4>
+    <p><strong>Δgradient = (max slope − min slope) / 2</strong>. This gives you the uncertainty in the gradient of your best-fit line — an essential part of your IB lab analysis.</p>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#f3e8ff;">🧮</div>
+    <h2>Calculated Columns</h2>
+  </div>
+
+  <div class="calc-col-box">
+    <h3>Creating a New Calculated Column</h3>
+    <p>Go to <strong>Data → New Calculated Column</strong>. This opens a dialog where you can define a new column whose values are calculated automatically from existing columns using a formula.</p>
+    <p>Use the <strong>Variables (Columns)</strong> and <strong>Functions</strong> buttons to insert column names and mathematical functions into your expression.</p>
+    <div class="formula-eg">"Force 1" = "mass" * 9.81</div>
+    <div class="formula-eg">"v²" = "velocity"^2</div>
+    <div class="formula-eg">"1/T²" = 1 / "Period"^2</div>
+    <p style="margin-top:10px;font-size:0.88rem;color:#374151;">This is powerful for linearising graphs — for example, if you suspect y ∝ x², create a column for x² and plot y vs x². If the relationship is correct, you get a straight line.</p>
+  </div>
+
+  <div class="intro-card" style="border-left-color:#7c3aed;">
+    <p><strong>Why linearise?</strong> A straight-line graph is much easier to analyse than a curve. By plotting the right combination of variables (e.g. T² vs L for a pendulum instead of T vs L), you get a straight line whose gradient directly gives you a physical constant. Logger Pro's Calculated Column feature makes this quick and accurate.</p>
+  </div>
+</section>
+
+<section>
+  <div class="quiz-section">
+    <h3>⚡ Quick Check</h3>
+    <p>Test your Logger Pro knowledge.</p>
+    <div class="quiz-q" id="q1">
+      <div class="qtext">Where in Logger Pro do you set the error bar size for a column?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q1',false,'Analyze is for fitting lines, not for setting error bar values.')">Analyze → Linear Fit</button>
+        <button class="opt-btn" onclick="check(this,'q1',true,'Correct! Double-click the column header (or Data → Column Options), then go to the Options tab and find Error Bar Calculations.')">Data → Column Options (or double-click header → Options tab)</button>
+        <button class="opt-btn" onclick="check(this,'q1',false,'Insert is for adding new rows/columns, not error bar settings.')">Insert → Error Bars</button>
+      </div>
+      <div class="feedback" id="q1-fb"></div>
+    </div>
+    <div class="quiz-q" id="q2">
+      <div class="qtext">You plot Period (s) vs Length (m) and get a curve. You want to linearise it. What calculated column should you create?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q2',false,'Period² vs Length gives a straight line because T = 2π√(L/g) → T² = (4π²/g)·L, which is linear.')">1/Length</button>
+        <button class="opt-btn" onclick="check(this,'q2',true,'Correct! T = 2π√(L/g) → T² = (4π²/g)·L. So T² vs L is a straight line with gradient 4π²/g.')">Period²</button>
+        <button class="opt-btn" onclick="check(this,'q2',false,'√Length would give T vs √L which is also linear, but Period² vs L is the more standard linearisation.')">√Period</button>
+      </div>
+      <div class="feedback" id="q2-fb"></div>
+    </div>
+    <div class="quiz-q" id="q3">
+      <div class="qtext">The maximum slope line has gradient 4.8 and the minimum slope line has gradient 3.2. What is the uncertainty in the gradient?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q3',false,'The uncertainty = (max−min)/2 = (4.8−3.2)/2 = 0.8, not 1.6.')">± 1.6</button>
+        <button class="opt-btn" onclick="check(this,'q3',true,'Correct! Δgradient = (max−min)/2 = (4.8−3.2)/2 = 1.6/2 = ±0.8')">± 0.8</button>
+        <button class="opt-btn" onclick="check(this,'q3',false,'4.0 is the average gradient (best fit), not the uncertainty.')">± 4.0</button>
+      </div>
+      <div class="feedback" id="q3-fb"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer>Physics · High School &nbsp;·&nbsp; Unit 15: Graphing with Logger Pro · IB Physics Lab Skills</footer>
+<script>
+function check(btn,qid,correct,msg){
+  var q=document.getElementById(qid);var fb=document.getElementById(qid+'-fb');
+  q.querySelectorAll('.opt-btn').forEach(function(b){b.disabled=true;b.style.opacity='0.55';b.style.cursor='default';});
+  btn.style.opacity='1';btn.classList.add(correct?'correct':'wrong');
+  fb.textContent=(correct?'✅ ':'❌ ')+msg;fb.className='feedback show '+(correct?'ok':'bad');
+}
+</script>
+</body>
+</html>

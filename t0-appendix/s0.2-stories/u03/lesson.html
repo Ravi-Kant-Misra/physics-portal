@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chapter 3 – Michael Faraday | IB Physics Stories</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',Arial,sans-serif;background:#f1f5f9;color:#1f2937;line-height:1.7;}
+  .hero{background:linear-gradient(135deg,#78350f,#92400e,#d97706);color:white;padding:64px 24px 52px;text-align:center;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 70%,rgba(251,191,36,.3) 0%,transparent 55%);pointer-events:none;}
+  .hero-chip{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:5px 18px;font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;}
+  .hero h1{font-size:2.8rem;font-weight:900;letter-spacing:-1px;margin-bottom:10px;}
+  .hero .hook{font-size:1.2rem;color:rgba(255,255,255,.88);max-width:700px;margin:0 auto;font-style:italic;}
+  .wrap{max-width:1100px;margin:0 auto;padding:40px 24px 80px;}
+  .card{background:white;border-radius:18px;padding:28px 26px;margin:24px 0;box-shadow:0 6px 20px rgba(0,0,0,.07);}
+  .grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:28px;align-items:start;}
+  h2{font-size:1.55rem;font-weight:900;color:#92400e;margin-bottom:14px;}
+  h3{font-size:1.1rem;font-weight:800;color:#b45309;margin:16px 0 8px;}
+  p{margin-bottom:12px;}
+  ul,ol{padding-left:22px;margin-bottom:12px;}
+  li{margin-bottom:7px;}
+  img{max-width:100%;border-radius:14px;display:block;}
+  .img-cap{font-size:.8rem;color:#6b7280;margin-top:7px;font-style:italic;text-align:center;}
+  .timeline{list-style:none;padding:0;border-left:3px solid #fde68a;margin:16px 0;}
+  .timeline li{padding:8px 0 8px 24px;position:relative;}
+  .timeline li::before{content:'';width:12px;height:12px;border-radius:50%;background:#d97706;border:3px solid white;box-shadow:0 0 0 2px #d97706;position:absolute;left:-7.5px;top:14px;}
+  .timeline .yr{font-weight:900;color:#92400e;margin-right:8px;}
+  .ib-box{background:#fffbeb;border-left:5px solid #d97706;border-radius:12px;padding:18px 20px;margin:20px 0;}
+  .ib-box-label{font-size:.72rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#92400e;margin-bottom:8px;}
+  .quote{background:linear-gradient(135deg,#fffbeb,#fef3c7);border-left:5px solid #d97706;border-radius:12px;padding:20px 22px;margin:20px 0;}
+  .quote p{font-size:1.05rem;font-style:italic;color:#92400e;margin:0;}
+  .quote span{display:block;font-size:.83rem;font-weight:700;color:#d97706;margin-top:7px;}
+  .moral{background:linear-gradient(135deg,#fef9ec,#fff8f0);border:2px solid #f59e0b;border-radius:16px;padding:26px;margin:26px 0;}
+  .moral-label{font-size:.72rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#b45309;margin-bottom:10px;}
+  .moral p{font-size:1.08rem;color:#78350f;margin:0;font-weight:600;}
+  .tag{display:inline-block;background:#fef3c7;color:#92400e;padding:5px 14px;border-radius:999px;font-size:.8rem;font-weight:700;margin-right:6px;}
+  .disc-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0;}
+  .disc-card{background:#fffbeb;border:2px solid #fde68a;border-radius:14px;padding:18px;}
+  .disc-card h4{color:#92400e;font-size:1rem;font-weight:800;margin-bottom:6px;}
+  .disc-card p{font-size:.88rem;margin:0;}
+  .page-nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:40px;}
+  .nav-btn{background:#92400e;color:white;text-decoration:none;border-radius:10px;padding:10px 22px;font-weight:800;font-size:.92rem;}
+  footer{text-align:center;padding:26px;color:#6b7280;font-size:.87rem;background:white;border-top:1px solid #e2e8f0;}
+  @media(max-width:700px){.grid{grid-template-columns:1fr;}.hero h1{font-size:2rem;}.disc-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-chip">Chapter 3 · Electricity &amp; Magnetism</div>
+  <h1>Michael Faraday</h1>
+  <p class="hook">"He could barely read properly as a child, had no university degree, could not do advanced mathematics — and became the greatest experimental scientist who ever lived."</p>
+</header>
+
+<main class="wrap">
+
+  <div style="margin-bottom:20px;">
+    <span class="tag">1791 – 1867</span>
+    <span class="tag">Electromagnetism</span>
+    <span class="tag">IB Theme 4</span>
+    <span class="tag">England</span>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+      <div>
+        <h2>From Poverty to the Royal Institution</h2>
+        <p>Michael Faraday was born in 1791 in Newington Butts, Surrey — the son of a blacksmith. His family was poor. He received little formal education, and at age 14 he was apprenticed to a bookbinder in London. For seven years, he bound books. But he also <em>read</em> them. He read everything he could find about science, especially about electricity. He attended lectures by the great chemist Humphry Davy at the Royal Institution, took meticulous notes, and then did something bold: he sent Davy a beautifully bound copy of his notes and asked for a job.</p>
+        <p>Davy hired him as a lab assistant. It was the beginning of one of the most remarkable careers in scientific history. Davy later said, with unusual self-awareness, that his greatest discovery was Michael Faraday.</p>
+        <h3>A Complicated Relationship with Davy</h3>
+        <p>Their relationship was not simple. Davy was brilliant and generous at first, but eventually grew jealous of Faraday's rising reputation. When Faraday was nominated for the Royal Society, Davy — the society's President — was the only member to vote against him. Despite this betrayal, Faraday never publicly criticised Davy. He simply kept working.</p>
+      </div>
+      <div>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Michael_Faraday_-_By_Thomas_Phillips_c1841-2.jpg/400px-Michael_Faraday_-_By_Thomas_Phillips_c1841-2.jpg" alt="Portrait of Michael Faraday"/>
+        <p class="img-cap">Michael Faraday, painted by Thomas Phillips c.1841. He spent almost his entire career at the Royal Institution in London.</p>
+        <div class="ib-box" style="margin-top:18px;">
+          <div class="ib-box-label">IB Physics Connection</div>
+          <p style="margin:0;font-size:.92rem;"><strong>Theme 4 — Fields:</strong> Faraday's law of electromagnetic induction is core IB content. The concept of field lines, Faraday's cage, and electromagnetic induction underpin electric generators and transformers.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Faraday's Greatest Discoveries</h2>
+    <div class="disc-grid">
+      <div class="disc-card">
+        <h4>⚡ Electromagnetic Induction (1831)</h4>
+        <p>Faraday discovered that moving a magnet near a wire generates an electric current. This is the principle behind every electric generator and transformer ever built. Without this discovery, there is no electrical power grid.</p>
+      </div>
+      <div class="disc-card">
+        <h4>🔁 The Electric Motor (1821)</h4>
+        <p>He built the world's first electric motor — a wire that rotated continuously around a magnet when current flowed through it. He was the first to convert electrical energy into continuous mechanical motion.</p>
+      </div>
+      <div class="disc-card">
+        <h4>🌐 Field Theory</h4>
+        <p>Faraday invented the concept of the <em>field</em>. He visualised invisible lines of force spreading through space around magnets and charges. This was revolutionary — action at a distance through a medium. Maxwell later gave these fields mathematical form.</p>
+      </div>
+      <div class="disc-card">
+        <h4>🧲 Faraday's Cage</h4>
+        <p>He showed that a conductor shields its interior from external electric fields. The Faraday cage is used today in MRI machines, microwave ovens, and to protect electronics from lightning.</p>
+      </div>
+    </div>
+    <div class="quote">
+      <p>"Nothing is too wonderful to be true, if it be consistent with the laws of nature; and in such things as these, experiment is the best test of such consistency."</p>
+      <span>— Michael Faraday</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>The Man Who Could Not Do the Maths</h2>
+    <p>One of the most remarkable things about Faraday is that he could not do higher mathematics. He had no calculus, no algebra beyond the basics. He worked entirely with <em>physical intuition and experiment</em>. He described electromagnetic fields through pictures of field lines rather than equations.</p>
+    <p>This made him look slightly eccentric to the mathematically trained physicists of his day. But his physical intuition was correct. When James Clerk Maxwell — a brilliant mathematician — picked up Faraday's work, he translated the field lines into differential equations and produced the famous Maxwell's equations. He wrote that he was doing nothing more than giving mathematical form to what Faraday had already seen.</p>
+    <p>Faraday showed that you can arrive at profound physical truth through careful observation and deep intuition, even without formal mathematical tools. Maxwell gave that truth its language.</p>
+  </div>
+
+  <div class="card">
+    <h2>Timeline</h2>
+    <ul class="timeline">
+      <li><span class="yr">1791</span> Born in Newington Butts, Surrey.</li>
+      <li><span class="yr">1805</span> Apprenticed to bookbinder George Riebau; begins reading science books.</li>
+      <li><span class="yr">1812</span> Attends Humphry Davy's lectures at the Royal Institution; sends him bound notes.</li>
+      <li><span class="yr">1813</span> Hired as Davy's lab assistant. Travels Europe with Davy, meeting leading scientists.</li>
+      <li><span class="yr">1821</span> Demonstrates electromagnetic rotation — the first electric motor.</li>
+      <li><span class="yr">1824</span> Elected Fellow of the Royal Society (Davy votes against him).</li>
+      <li><span class="yr">1831</span> Discovers electromagnetic induction — the principle of the generator.</li>
+      <li><span class="yr">1833–34</span> Develops laws of electrolysis; introduces terms: anode, cathode, ion, electrode.</li>
+      <li><span class="yr">1845</span> Discovers the Faraday effect (magnetism affects light polarisation) — first link between electromagnetism and optics.</li>
+      <li><span class="yr">1867</span> Dies in Hampton Court, age 75.</li>
+    </ul>
+  </div>
+
+  <div class="moral">
+    <div class="moral-label">Moral of the Story</div>
+    <p>Faraday had every reason to fail. He was poor. He was not formally educated. He was not from the right class. His most important patron eventually turned against him. And yet he became one of the most important scientists in history, because he was gifted with curiosity, possessed of extraordinary experimental skill, and never stopped looking carefully at the world. <strong>Your background does not determine your destination. Your dedication does.</strong></p>
+  </div>
+
+  <div class="page-nav">
+    <a href="02-newton.html" class="nav-btn">← Chapter 2: Newton</a>
+    <a href="04-light-wave-particle.html" class="nav-btn">Next: The Light Debate →</a>
+  </div>
+
+</main>
+
+<footer>IB Physics Storytelling Series &nbsp;|&nbsp; Chapter 3: Michael Faraday</footer>
+</body>
+</html>

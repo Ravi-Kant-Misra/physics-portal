@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>X and Y Components of Vectors — Physics Lesson</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root{
+      --teal-dark:#164e63;--teal-mid:#0e7490;--teal-light:#0891b2;
+      --cyan:#06b6d4;--sky:#38bdf8;--blue:#3b82f6;--indigo:#6366f1;
+      --green:#22c55e;--amber:#f59e0b;--red:#ef4444;--pink:#ec4899;
+      --purple:#a855f7;--dark:#0f172a;--card:#ffffff;--bg:#f0fdff;--muted:#94a3b8;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:17px;line-height:1.75;background-image:radial-gradient(circle,#a5f3fc 1px,transparent 1px);background-size:28px 28px;}
+
+    /* HEADER */
+    header{background:linear-gradient(135deg,#164e63 0%,#0e7490 50%,#0891b2 100%);color:white;padding:52px 60px 48px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(6,182,212,0.35) 0%,transparent 60%),radial-gradient(ellipse at 80% 30%,rgba(14,116,144,0.4) 0%,transparent 55%),radial-gradient(ellipse at 60% 80%,rgba(8,145,178,0.2) 0%,transparent 50%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.4);}}
+    header .chip{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px;position:relative;}
+    header h1{font-size:3rem;font-weight:900;letter-spacing:-1px;position:relative;margin-bottom:10px;background:linear-gradient(90deg,#a5f3fc,#e0f2fe,#cffafe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1.1rem;color:rgba(255,255,255,0.8);position:relative;max-width:540px;margin:0 auto;}
+
+    main{max-width:900px;margin:48px auto;padding:0 24px 80px;}
+    section{margin-bottom:60px;}
+
+    /* SECTION LABELS */
+    .section-label{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+    .section-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    .section-label h2{font-size:1.5rem;font-weight:900;color:var(--dark);}
+
+    /* INTRO */
+    .intro-split{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;}
+    @media(max-width:640px){.intro-split{grid-template-columns:1fr;}}
+    .def-card{border-radius:18px;padding:26px 28px;}
+    .def-card.xcomp{background:linear-gradient(135deg,#ecfeff,#cffafe);border:2px solid #67e8f9;}
+    .def-card.ycomp{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #86efac;}
+    .def-card h3{font-size:1.2rem;font-weight:900;margin-bottom:10px;}
+    .def-card.xcomp h3{color:#0e7490;}
+    .def-card.ycomp h3{color:#15803d;}
+    .def-card .def-body{font-size:0.93rem;color:#374151;line-height:1.7;}
+    .def-card .pill{display:inline-block;margin-top:12px;padding:6px 14px;border-radius:20px;font-size:0.85rem;font-weight:700;}
+    .def-card.xcomp .pill{background:#0e7490;color:white;}
+    .def-card.ycomp .pill{background:#15803d;color:white;}
+
+    /* KEY CONCEPT BOX */
+    .concept-box{background:linear-gradient(135deg,#fef9c3,#fef3c7);border:2px solid #fbbf24;border-radius:16px;padding:22px 28px;margin-bottom:28px;display:flex;gap:18px;align-items:flex-start;}
+    .concept-box .cb-icon{font-size:2rem;flex-shrink:0;}
+    .concept-box .cb-text h4{font-weight:900;font-size:1rem;color:#78350f;margin-bottom:6px;}
+    .concept-box .cb-text p{font-size:0.92rem;color:#92400e;line-height:1.65;}
+
+    /* NOTATION BOX */
+    .notation-box{background:white;border-radius:18px;padding:24px 28px;box-shadow:0 4px 20px rgba(0,0,0,0.07);margin-bottom:28px;border-left:5px solid var(--teal-mid);}
+    .notation-box h4{font-weight:900;font-size:1.05rem;color:var(--teal-dark);margin-bottom:14px;}
+    .notation-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    @media(max-width:580px){.notation-grid{grid-template-columns:1fr;}}
+    .notation-item{background:#f0fdff;border-radius:10px;padding:12px 16px;font-size:0.92rem;color:#164e63;}
+    .notation-item .sym{font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:700;color:#0e7490;display:block;margin-bottom:4px;}
+
+    /* DIAGRAM CARDS */
+    .diagram-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;}
+    @media(max-width:600px){.diagram-row{grid-template-columns:1fr;}}
+    .diagram-card{background:white;border-radius:18px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,0.07);text-align:center;}
+    .diagram-card h4{font-size:1rem;font-weight:800;margin-bottom:14px;color:#0e7490;}
+    .diagram-card .caption{font-size:0.83rem;color:#64748b;margin-top:12px;line-height:1.5;}
+
+    /* QUADRANT GRID */
+    .quad-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;}
+    @media(max-width:600px){.quad-grid{grid-template-columns:1fr;}}
+    .quad-card{background:white;border-radius:16px;padding:20px 24px;box-shadow:0 4px 20px rgba(0,0,0,0.07);text-align:center;}
+    .quad-card h4{font-size:0.95rem;font-weight:800;margin-bottom:12px;}
+    .quad-card .comp-tags{display:flex;justify-content:center;gap:10px;margin-top:10px;flex-wrap:wrap;}
+    .comp-tag{padding:4px 12px;border-radius:20px;font-size:0.8rem;font-weight:700;}
+    .tag-x{background:#cffafe;color:#0e7490;}
+    .tag-y{background:#dcfce7;color:#15803d;}
+
+    /* RULES SECTION */
+    .rules-area{display:grid;gap:20px;margin-bottom:28px;}
+    .rule-block{background:white;border-radius:18px;padding:24px 28px;box-shadow:0 4px 20px rgba(0,0,0,0.07);display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;}
+    .rule-badge{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.5rem;color:white;flex-shrink:0;}
+    .rb-teal{background:linear-gradient(135deg,#0e7490,#06b6d4);}
+    .rb-purple{background:linear-gradient(135deg,#7c3aed,#a855f7);}
+    .rule-content h4{font-weight:900;font-size:1.1rem;color:var(--dark);margin-bottom:8px;}
+    .rule-content p{font-size:0.92rem;color:#374151;margin-bottom:10px;}
+    .formula-box{font-family:'Space Mono',monospace;font-size:1.2rem;font-weight:700;padding:10px 18px;border-radius:10px;display:inline-block;margin-bottom:10px;}
+    .fb-teal{background:#cffafe;color:#0e7490;}
+    .fb-purple{background:#f3e8ff;color:#7e22ce;}
+    .rule-sub{font-size:0.85rem;color:#64748b;font-style:italic;}
+
+    /* WARNING BOX */
+    .warning-box{background:#fff7ed;border:2px solid #fb923c;border-radius:14px;padding:18px 24px;margin-bottom:20px;display:flex;gap:14px;align-items:flex-start;}
+    .warning-box .wb-icon{font-size:1.5rem;flex-shrink:0;}
+    .warning-box .wb-text h4{font-weight:900;font-size:0.95rem;color:#9a3412;margin-bottom:6px;}
+    .warning-box .wb-text p{font-size:0.88rem;color:#c2410c;line-height:1.6;}
+    .strike{text-decoration:line-through;color:#ef4444;}
+
+    /* WORKED EXAMPLE */
+    .example-block{background:white;border-radius:18px;box-shadow:0 4px 20px rgba(0,0,0,0.07);overflow:hidden;margin-bottom:28px;}
+    .example-header{background:linear-gradient(135deg,#0e7490,#0891b2);padding:16px 24px;color:white;display:flex;align-items:center;gap:12px;}
+    .example-header .ex-badge{width:36px;height:36px;background:rgba(255,255,255,0.25);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;}
+    .example-header h4{font-size:1rem;font-weight:800;}
+    .example-body{padding:22px 26px;}
+    .ex-given{background:#f0fdff;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.92rem;color:#164e63;}
+    .ex-given strong{display:block;margin-bottom:6px;color:#0e7490;}
+    .ex-steps{list-style:none;counter-reset:steps;}
+    .ex-steps li{counter-increment:steps;display:flex;gap:14px;margin-bottom:12px;align-items:flex-start;}
+    .ex-steps li::before{content:counter(steps);width:28px;height:28px;background:var(--teal-mid);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.85rem;flex-shrink:0;margin-top:2px;}
+    .ex-steps .step-text{font-size:0.92rem;color:#374151;line-height:1.6;}
+    .ex-steps .step-text .mono{font-family:'Space Mono',monospace;font-size:0.9rem;background:#f1f5f9;padding:2px 6px;border-radius:4px;color:#0e7490;}
+    .ex-result{background:linear-gradient(135deg,#ecfeff,#cffafe);border:2px solid #67e8f9;border-radius:12px;padding:14px 18px;margin-top:14px;font-size:0.95rem;font-weight:700;color:#0e7490;text-align:center;}
+
+    /* SPECIAL CASES TABLE */
+    .cases-table{background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.07);margin-bottom:28px;}
+    .ct-head{display:grid;grid-template-columns:2fr 1fr 1fr 2fr;background:var(--teal-mid);color:white;font-weight:800;font-size:0.88rem;padding:12px 20px;gap:10px;}
+    .ct-row{display:grid;grid-template-columns:2fr 1fr 1fr 2fr;padding:12px 20px;gap:10px;border-bottom:1px solid #e2e8f0;font-size:0.9rem;align-items:center;}
+    .ct-row:last-child{border-bottom:none;}
+    .ct-row:nth-child(even){background:#f8feff;}
+    .ct-row .mono{font-family:'Space Mono',monospace;font-size:0.88rem;color:#0e7490;font-weight:700;}
+    @media(max-width:640px){.ct-head,.ct-row{grid-template-columns:1fr 1fr;}.ct-head span:last-child,.ct-row span:last-child{display:none;}}
+
+    /* QUIZ */
+    .quiz-block{background:white;border-radius:18px;padding:28px 32px;box-shadow:0 4px 20px rgba(0,0,0,0.07);}
+    .quiz-block h3{font-weight:900;font-size:1.15rem;color:var(--teal-dark);margin-bottom:6px;}
+    .quiz-block .quiz-sub{font-size:0.88rem;color:#64748b;margin-bottom:22px;}
+    .quiz-q{margin-bottom:24px;padding:18px 20px;background:#f8fafc;border-radius:12px;border-left:4px solid var(--teal-mid);}
+    .quiz-q .q-num{font-size:0.78rem;font-weight:800;text-transform:uppercase;color:var(--teal-mid);margin-bottom:8px;letter-spacing:0.5px;}
+    .quiz-q .q-text{font-size:0.95rem;font-weight:700;color:var(--dark);margin-bottom:14px;}
+    .quiz-q .options{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    @media(max-width:540px){.quiz-q .options{grid-template-columns:1fr;}}
+    .quiz-q .opt{padding:10px 14px;background:white;border:2px solid #e2e8f0;border-radius:8px;font-size:0.88rem;cursor:pointer;transition:all 0.15s;display:flex;gap:8px;align-items:center;}
+    .quiz-q .opt:hover{border-color:var(--teal-mid);background:#f0fdff;}
+    .quiz-q .opt.correct{background:#dcfce7;border-color:#22c55e;color:#15803d;}
+    .quiz-q .opt.wrong{background:#fef2f2;border-color:#ef4444;color:#991b1b;}
+    .quiz-q .opt .ol{width:22px;height:22px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;flex-shrink:0;}
+    .quiz-feedback{display:none;margin-top:12px;padding:10px 14px;border-radius:8px;font-size:0.88rem;font-weight:700;}
+    .qf-correct{background:#dcfce7;color:#15803d;display:flex;gap:8px;align-items:center;}
+    .qf-wrong{background:#fef2f2;color:#991b1b;display:flex;gap:8px;align-items:center;}
+
+    /* PASSWORD */
+    .lock-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.95);display:flex;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(8px);}
+    .lock-box{background:white;border-radius:24px;padding:48px 40px;max-width:400px;width:90%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,0.4);}
+    .lock-box .lock-icon{font-size:3rem;margin-bottom:16px;}
+    .lock-box h2{font-size:1.6rem;font-weight:900;color:var(--dark);margin-bottom:8px;}
+    .lock-box p{font-size:0.92rem;color:#64748b;margin-bottom:24px;}
+    .lock-box input{width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:10px;font-size:1rem;font-family:inherit;margin-bottom:14px;outline:none;transition:border-color 0.2s;}
+    .lock-box input:focus{border-color:var(--teal-mid);}
+    .lock-box button{width:100%;padding:12px;background:linear-gradient(135deg,#0e7490,#0891b2);color:white;border:none;border-radius:10px;font-size:1rem;font-weight:800;cursor:pointer;font-family:inherit;transition:opacity 0.2s;}
+    .lock-box button:hover{opacity:0.9;}
+    .lock-box .err{color:#ef4444;font-size:0.85rem;margin-top:8px;display:none;}
+    .content-hidden{filter:blur(8px);pointer-events:none;user-select:none;}
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD LOCK -->
+<div class="lock-overlay" id="lockOverlay">
+  <div class="lock-box">
+    <div class="lock-icon">&#128274;</div>
+    <h2>Physics Lesson</h2>
+    <p>Enter the class password to access this lesson.</p>
+    <input type="password" id="pwInput" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()">
+    <button onclick="checkPw()">Unlock</button>
+    <div class="err" id="pwErr">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<div id="mainContent" class="content-hidden">
+
+<!-- STARS in header (JS adds them) -->
+<header>
+  <div id="stars"></div>
+  <div class="chip">IB Physics &nbsp;&#183;&nbsp; Unit 21</div>
+  <h1>X and Y Components<br>of Vectors</h1>
+  <p class="subtitle">Decomposing any vector into its horizontal and vertical parts</p>
+</header>
+
+<main>
+
+  <!-- SECTION 1: WHAT ARE COMPONENTS -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:linear-gradient(135deg,#cffafe,#a5f3fc);">&#128203;</div>
+      <h2>What Are Vector Components?</h2>
+    </div>
+
+    <div class="concept-box">
+      <div class="cb-icon">&#128161;</div>
+      <div class="cb-text">
+        <h4>Big Idea</h4>
+        <p>Every vector — no matter which direction it points — can be broken into <strong>exactly two perpendicular parts</strong>: one pointing purely horizontal (x) and one pointing purely vertical (y). These parts are called the <em>components</em> of the vector.</p>
+      </div>
+    </div>
+
+    <div class="intro-split">
+      <div class="def-card xcomp">
+        <h3>&#8594; X-Component (A&#x2C7;&#x2093;)</h3>
+        <div class="def-body">How far the vector travels in the <strong>horizontal</strong> direction — left or right. X-components are always drawn as horizontal arrows.</div>
+        <span class="pill">Left &#8592; or Right &#8594;</span>
+      </div>
+      <div class="def-card ycomp">
+        <h3>&#8593; Y-Component (A&#x2C7;&#x1D67;)</h3>
+        <div class="def-body">How far the vector travels in the <strong>vertical</strong> direction — up or down. Y-components are always drawn as vertical arrows.</div>
+        <span class="pill">Down &#8595; or Up &#8593;</span>
+      </div>
+    </div>
+
+    <div class="notation-box">
+      <h4>Official Notation</h4>
+      <div class="notation-grid">
+        <div class="notation-item"><span class="sym">&#8594;A</span>The original (resultant) vector</div>
+        <div class="notation-item"><span class="sym">&#8594;A&#x2C7;&#x2093;</span>X-component of &#8594;A (horizontal part)</div>
+        <div class="notation-item"><span class="sym">&#8594;A&#x2C7;&#x1D67;</span>Y-component of &#8594;A (vertical part)</div>
+        <div class="notation-item"><span class="sym">A&#x2C7;&#x2093; &amp; A&#x2C7;&#x1D67;</span>Scalar magnitudes (just the size)</div>
+      </div>
+    </div>
+
+    <!-- Bird diagram -->
+    <div style="background:white;border-radius:18px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,0.07);margin-bottom:28px;text-align:center;">
+      <h4 style="font-weight:800;color:#0e7490;margin-bottom:16px;">Bird Flying Diagonally — Decomposed into Components</h4>
+      <svg width="100%" viewBox="0 0 480 280" xmlns="http://www.w3.org/2000/svg" style="max-width:480px;">
+        <!-- grid lines -->
+        <line x1="60" y1="220" x2="420" y2="220" stroke="#e2e8f0" stroke-width="1.5"/>
+        <line x1="60" y1="60" x2="60" y2="220" stroke="#e2e8f0" stroke-width="1.5"/>
+        <!-- axes -->
+        <line x1="50" y1="230" x2="430" y2="230" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#axHead)"/>
+        <line x1="50" y1="240" x2="50" y2="40" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#axHead)"/>
+        <text x="440" y="234" font-family="Nunito" font-size="14" fill="#94a3b8" font-weight="700">x</text>
+        <text x="44" y="35" font-family="Nunito" font-size="14" fill="#94a3b8" font-weight="700">y</text>
+        <!-- dashed guide lines -->
+        <line x1="60" y1="80" x2="360" y2="80" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <line x1="360" y1="80" x2="360" y2="220" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <!-- Ax: horizontal red arrow -->
+        <defs>
+          <marker id="axHead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+          </marker>
+          <marker id="redHead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L10,3 z" fill="#ef4444"/>
+          </marker>
+          <marker id="blueHead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L10,3 z" fill="#0e7490"/>
+          </marker>
+          <marker id="darkHead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L10,3 z" fill="#0f172a"/>
+          </marker>
+        </defs>
+        <line x1="60" y1="220" x2="354" y2="220" stroke="#ef4444" stroke-width="3" marker-end="url(#redHead)"/>
+        <!-- Ay: vertical blue arrow -->
+        <line x1="360" y1="220" x2="360" y2="86" stroke="#0e7490" stroke-width="3" marker-end="url(#blueHead)"/>
+        <!-- A: diagonal black arrow -->
+        <line x1="60" y1="220" x2="354" y2="86" stroke="#0f172a" stroke-width="3.5" marker-end="url(#darkHead)"/>
+        <!-- Origin dot -->
+        <circle cx="60" cy="220" r="5" fill="#0f172a"/>
+        <!-- Labels -->
+        <text x="200" y="245" font-family="Nunito" font-size="14" fill="#ef4444" font-weight="800" text-anchor="middle">&#8594;Ax (horizontal)</text>
+        <text x="390" y="155" font-family="Nunito" font-size="14" fill="#0e7490" font-weight="800">&#8594;Ay</text>
+        <text x="185" y="130" font-family="Nunito" font-size="16" fill="#0f172a" font-weight="900">&#8594;A</text>
+        <!-- Bird emoji substitute -->
+        <text x="348" y="78" font-family="Nunito" font-size="22" fill="#0f172a">&#128375;</text>
+      </svg>
+      <p class="caption" style="font-size:0.85rem;color:#64748b;margin-top:8px;">The diagonal vector <strong>&#8594;A</strong> is made up of a red horizontal part (<strong>&#8594;Ax</strong>) and a blue vertical part (<strong>&#8594;Ay</strong>).</p>
+    </div>
+  </section>
+
+  <!-- SECTION 2: SPECIAL CASES -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:linear-gradient(135deg,#e0f2fe,#bae6fd);">&#127919;</div>
+      <h2>Special Cases: Horizontal, Vertical, Diagonal</h2>
+    </div>
+
+    <div class="cases-table">
+      <div class="ct-head">
+        <span>Vector Direction</span>
+        <span>Ax value</span>
+        <span>Ay value</span>
+        <span>Reason</span>
+      </div>
+      <div class="ct-row">
+        <span>&#8594; Purely Horizontal</span>
+        <span class="mono">Ax = A</span>
+        <span class="mono">Ay = 0</span>
+        <span>No vertical travel at all</span>
+      </div>
+      <div class="ct-row">
+        <span>&#8593; Purely Vertical</span>
+        <span class="mono">Ax = 0</span>
+        <span class="mono">Ay = A</span>
+        <span>No horizontal travel at all</span>
+      </div>
+      <div class="ct-row">
+        <span>&#8599; Diagonal (any angle)</span>
+        <span class="mono">Ax &#8800; 0</span>
+        <span class="mono">Ay &#8800; 0</span>
+        <span>Travels both horizontally and vertically</span>
+      </div>
+    </div>
+
+    <div class="concept-box">
+      <div class="cb-icon">&#128204;</div>
+      <div class="cb-text">
+        <h4>Key Insight</h4>
+        <p>A horizontal vector has <strong>all</strong> of its magnitude in Ax and <strong>none</strong> in Ay. A vertical vector is the opposite. Only a diagonal vector shares its magnitude between both components.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: FOUR QUADRANT DIAGRAMS -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:linear-gradient(135deg,#f3e8ff,#e9d5ff);">&#9992;</div>
+      <h2>Vectors in All Four Quadrants</h2>
+    </div>
+
+    <p style="margin-bottom:20px;color:#374151;font-size:0.95rem;">Every quadrant produces a different combination of x and y component <em>directions</em>. The components are always perpendicular to each other.</p>
+
+    <div class="quad-grid">
+      <!-- Q1: top-right -->
+      <div class="quad-card" style="border-top:4px solid #0e7490;">
+        <h4 style="color:#0e7490;">Quadrant I — Top-Right</h4>
+        <svg viewBox="0 0 160 160" width="140" height="140" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="r1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#ef4444"/></marker>
+            <marker id="b1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#0e7490"/></marker>
+            <marker id="d1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#0f172a"/></marker>
+          </defs>
+          <!-- axes -->
+          <line x1="80" y1="10" x2="80" y2="150" stroke="#e2e8f0" stroke-width="1.5"/>
+          <line x1="10" y1="80" x2="150" y2="80" stroke="#e2e8f0" stroke-width="1.5"/>
+          <!-- dashed -->
+          <line x1="80" y1="80" x2="130" y2="80" stroke="#fca5a5" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <line x1="130" y1="80" x2="130" y2="35" stroke="#7dd3fc" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <!-- Ax -->
+          <line x1="80" y1="130" x2="124" y2="130" stroke="#ef4444" stroke-width="2.5" marker-end="url(#r1)"/>
+          <!-- Ay -->
+          <line x1="130" y1="130" x2="130" y2="41" stroke="#0e7490" stroke-width="2.5" marker-end="url(#b1)"/>
+          <!-- A -->
+          <line x1="80" y1="130" x2="124" y2="41" stroke="#0f172a" stroke-width="3" marker-end="url(#d1)"/>
+          <circle cx="80" cy="130" r="4" fill="#0f172a"/>
+          <text x="96" y="148" font-family="Nunito" font-size="11" fill="#ef4444" font-weight="800">Ax &#8594;</text>
+          <text x="136" y="85" font-family="Nunito" font-size="11" fill="#0e7490" font-weight="800">Ay &#8593;</text>
+          <text x="88" y="78" font-family="Nunito" font-size="12" fill="#0f172a" font-weight="900">A</text>
+        </svg>
+        <div class="comp-tags">
+          <span class="comp-tag tag-x">Ax points RIGHT (+)</span>
+          <span class="comp-tag tag-y">Ay points UP (+)</span>
+        </div>
+      </div>
+
+      <!-- Q2: top-left -->
+      <div class="quad-card" style="border-top:4px solid #7c3aed;">
+        <h4 style="color:#7c3aed;">Quadrant II — Top-Left</h4>
+        <svg viewBox="0 0 160 160" width="140" height="140" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="r2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#ef4444"/></marker>
+            <marker id="b2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#0e7490"/></marker>
+            <marker id="d2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#7c3aed"/></marker>
+          </defs>
+          <line x1="80" y1="10" x2="80" y2="150" stroke="#e2e8f0" stroke-width="1.5"/>
+          <line x1="10" y1="80" x2="150" y2="80" stroke="#e2e8f0" stroke-width="1.5"/>
+          <line x1="80" y1="80" x2="30" y2="80" stroke="#fca5a5" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <line x1="30" y1="80" x2="30" y2="35" stroke="#7dd3fc" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <!-- Ax left -->
+          <line x1="80" y1="130" x2="36" y2="130" stroke="#ef4444" stroke-width="2.5" marker-end="url(#r2)"/>
+          <!-- Ay up -->
+          <line x1="30" y1="130" x2="30" y2="41" stroke="#0e7490" stroke-width="2.5" marker-end="url(#b2)"/>
+          <!-- A -->
+          <line x1="80" y1="130" x2="36" y2="41" stroke="#7c3aed" stroke-width="3" marker-end="url(#d2)"/>
+          <circle cx="80" cy="130" r="4" fill="#0f172a"/>
+          <text x="42" y="148" font-family="Nunito" font-size="11" fill="#ef4444" font-weight="800">&#8592; Ax</text>
+          <text x="34" y="85" font-family="Nunito" font-size="11" fill="#0e7490" font-weight="800">Ay &#8593;</text>
+          <text x="56" y="78" font-family="Nunito" font-size="12" fill="#7c3aed" font-weight="900">A</text>
+        </svg>
+        <div class="comp-tags">
+          <span class="comp-tag tag-x">Ax points LEFT (−)</span>
+          <span class="comp-tag tag-y">Ay points UP (+)</span>
+        </div>
+      </div>
+
+      <!-- Q3: bottom-left -->
+      <div class="quad-card" style="border-top:4px solid #b45309;">
+        <h4 style="color:#b45309;">Quadrant III — Bottom-Left</h4>
+        <svg viewBox="0 0 160 160" width="140" height="140" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="r3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#ef4444"/></marker>
+            <marker id="b3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#0e7490"/></marker>
+            <marker id="d3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#b45309"/></marker>
+          </defs>
+          <line x1="80" y1="10" x2="80" y2="150" stroke="#e2e8f0" stroke-width="1.5"/>
+          <line x1="10" y1="80" x2="150" y2="80" stroke="#e2e8f0" stroke-width="1.5"/>
+          <!-- A goes bottom-left -->
+          <line x1="80" y1="30" x2="36" y2="119" stroke="#b45309" stroke-width="3" marker-end="url(#d3)"/>
+          <line x1="80" y1="30" x2="36" y2="30" stroke="#fca5a5" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <!-- Ax left -->
+          <line x1="80" y1="120" x2="36" y2="120" stroke="#ef4444" stroke-width="2.5" marker-end="url(#r3)"/>
+          <!-- Ay down -->
+          <line x1="30" y1="30" x2="30" y2="119" stroke="#0e7490" stroke-width="2.5" marker-end="url(#b3)"/>
+          <circle cx="80" cy="30" r="4" fill="#0f172a"/>
+          <text x="42" y="138" font-family="Nunito" font-size="11" fill="#ef4444" font-weight="800">&#8592; Ax</text>
+          <text x="34" y="80" font-family="Nunito" font-size="11" fill="#0e7490" font-weight="800">Ay &#8595;</text>
+          <text x="57" y="80" font-family="Nunito" font-size="12" fill="#b45309" font-weight="900">A</text>
+        </svg>
+        <div class="comp-tags">
+          <span class="comp-tag tag-x">Ax points LEFT (−)</span>
+          <span class="comp-tag tag-y">Ay points DOWN (−)</span>
+        </div>
+      </div>
+
+      <!-- Q4: bottom-right -->
+      <div class="quad-card" style="border-top:4px solid #15803d;">
+        <h4 style="color:#15803d;">Quadrant IV — Bottom-Right</h4>
+        <svg viewBox="0 0 160 160" width="140" height="140" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="r4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#ef4444"/></marker>
+            <marker id="b4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#0e7490"/></marker>
+            <marker id="d4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#15803d"/></marker>
+          </defs>
+          <line x1="80" y1="10" x2="80" y2="150" stroke="#e2e8f0" stroke-width="1.5"/>
+          <line x1="10" y1="80" x2="150" y2="80" stroke="#e2e8f0" stroke-width="1.5"/>
+          <!-- A goes bottom-right -->
+          <line x1="80" y1="30" x2="124" y2="119" stroke="#15803d" stroke-width="3" marker-end="url(#d4)"/>
+          <line x1="80" y1="30" x2="130" y2="30" stroke="#fca5a5" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <!-- Ax right -->
+          <line x1="80" y1="120" x2="124" y2="120" stroke="#ef4444" stroke-width="2.5" marker-end="url(#r4)"/>
+          <!-- Ay down -->
+          <line x1="130" y1="30" x2="130" y2="119" stroke="#0e7490" stroke-width="2.5" marker-end="url(#b4)"/>
+          <circle cx="80" cy="30" r="4" fill="#0f172a"/>
+          <text x="90" y="138" font-family="Nunito" font-size="11" fill="#ef4444" font-weight="800">Ax &#8594;</text>
+          <text x="133" y="80" font-family="Nunito" font-size="11" fill="#0e7490" font-weight="800">Ay &#8595;</text>
+          <text x="88" y="80" font-family="Nunito" font-size="12" fill="#15803d" font-weight="900">A</text>
+        </svg>
+        <div class="comp-tags">
+          <span class="comp-tag tag-x">Ax points RIGHT (+)</span>
+          <span class="comp-tag tag-y">Ay points DOWN (−)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: THE 2 RULES -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:linear-gradient(135deg,#fef3c7,#fde68a);">&#128203;</div>
+      <h2>The 2 Fundamental Rules</h2>
+    </div>
+
+    <div class="rules-area">
+      <!-- Rule 1 -->
+      <div class="rule-block">
+        <div class="rule-badge rb-teal">1</div>
+        <div class="rule-content">
+          <h4>Vector Addition Rule</h4>
+          <div class="formula-box fb-teal">&#8594;A = &#8594;Ax + &#8594;Ay</div>
+          <p>Every vector equals the <strong>vector sum</strong> of its x-component and y-component. This is a vector equation — the arrows matter. You add them tip-to-tail and they reconstruct the original vector.</p>
+          <p class="rule-sub">Think of it as: "The original vector IS its two perpendicular parts combined."</p>
+        </div>
+      </div>
+
+      <!-- Rule 2 -->
+      <div class="rule-block">
+        <div class="rule-badge rb-purple">2</div>
+        <div class="rule-content">
+          <h4>Pythagorean Theorem Rule</h4>
+          <div class="formula-box fb-purple">Ax&#178; + Ay&#178; = A&#178;</div>
+          <p>The <strong>scalar magnitudes</strong> of the components satisfy the Pythagorean theorem, because Ax and Ay are always perpendicular to each other. This lets you find any missing magnitude if you know the other two.</p>
+          <p class="rule-sub">Note: A is the hypotenuse; Ax and Ay are the two legs of a right triangle.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Warning box -->
+    <div class="warning-box">
+      <div class="wb-icon">&#9888;&#65039;</div>
+      <div class="wb-text">
+        <h4>Common Mistake — Do NOT write this!</h4>
+        <p><span class="strike">A = Ax + Ay</span> &nbsp;&#8592; This is <strong>wrong</strong> for most vectors! Scalar magnitudes do NOT add like regular numbers unless the vectors happen to be along the same axis. Always use the Pythagorean theorem: Ax&#178; + Ay&#178; = A&#178;</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: WORKED EXAMPLES -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0);">&#128296;</div>
+      <h2>Worked Examples</h2>
+    </div>
+
+    <!-- Example 1 -->
+    <div class="example-block">
+      <div class="example-header">
+        <div class="ex-badge">1</div>
+        <h4>Horizontal Vector — A = 5 m horizontally to the right</h4>
+      </div>
+      <div class="example-body">
+        <div class="ex-given">
+          <strong>Given:</strong>
+          Vector &#8594;A points purely to the right. Magnitude A = 5 m.
+        </div>
+        <ul class="ex-steps">
+          <li><div class="step-text">The vector is horizontal, so it has <strong>no vertical travel</strong>. Therefore <span class="mono">Ay = 0</span>.</div></li>
+          <li><div class="step-text">All of the magnitude is in the horizontal direction: <span class="mono">Ax = 5 m</span>.</div></li>
+          <li><div class="step-text">Check with Pythagorean theorem: <span class="mono">5&#178; + 0&#178; = 5&#178;</span> &rarr; <span class="mono">25 = 25</span> &#10003;</div></li>
+        </ul>
+        <div class="ex-result">Ax = 5 m &nbsp;(right) &nbsp;&nbsp;|&nbsp;&nbsp; Ay = 0 m</div>
+      </div>
+    </div>
+
+    <!-- Example 2 -->
+    <div class="example-block">
+      <div class="example-header">
+        <div class="ex-badge">2</div>
+        <h4>Pythagorean Check — A = 5 m, Ax = 3 m, Ay = 4 m</h4>
+      </div>
+      <div class="example-body">
+        <div class="ex-given">
+          <strong>Given:</strong>
+          A diagonal vector with Ax = 3 m and Ay = 4 m. Find the magnitude A and verify.
+        </div>
+        <ul class="ex-steps">
+          <li><div class="step-text">Apply Rule 2: <span class="mono">Ax&#178; + Ay&#178; = A&#178;</span></div></li>
+          <li><div class="step-text">Substitute: <span class="mono">3&#178; + 4&#178; = A&#178;</span> &rarr; <span class="mono">9 + 16 = A&#178;</span></div></li>
+          <li><div class="step-text">Solve: <span class="mono">A&#178; = 25</span> &rarr; <span class="mono">A = 5 m</span></div></li>
+          <li><div class="step-text">Check: <span class="mono">3&#178; + 4&#178; = 9 + 16 = 25 = 5&#178;</span> &#10003; (the classic 3-4-5 right triangle)</div></li>
+        </ul>
+        <div class="ex-result">A = 5 m &nbsp;&nbsp;|&nbsp;&nbsp; 3&#178; + 4&#178; = 5&#178; &nbsp;&#10003;</div>
+      </div>
+    </div>
+
+    <!-- Example 3 -->
+    <div class="example-block">
+      <div class="example-header">
+        <div class="ex-badge">3</div>
+        <h4>Find Missing Component — A = 13 m, Ax = 5 m, find Ay</h4>
+      </div>
+      <div class="example-body">
+        <div class="ex-given">
+          <strong>Given:</strong>
+          Vector magnitude A = 13 m, x-component Ax = 5 m. Find Ay.
+        </div>
+        <ul class="ex-steps">
+          <li><div class="step-text">Write Rule 2: <span class="mono">Ax&#178; + Ay&#178; = A&#178;</span></div></li>
+          <li><div class="step-text">Rearrange for Ay: <span class="mono">Ay&#178; = A&#178; &#8722; Ax&#178;</span></div></li>
+          <li><div class="step-text">Substitute: <span class="mono">Ay&#178; = 13&#178; &#8722; 5&#178; = 169 &#8722; 25 = 144</span></div></li>
+          <li><div class="step-text">Take square root: <span class="mono">Ay = 12 m</span> (the 5-12-13 Pythagorean triple)</div></li>
+        </ul>
+        <div class="ex-result">Ay = 12 m &nbsp;&nbsp;|&nbsp;&nbsp; 5&#178; + 12&#178; = 13&#178; &nbsp;&#10003;</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: QUICK QUIZ -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:linear-gradient(135deg,#fce7f3,#fbcfe8);">&#127942;</div>
+      <h2>Quick Quiz</h2>
+    </div>
+
+    <div class="quiz-block">
+      <h3>Check Your Understanding</h3>
+      <p class="quiz-sub">Click an answer — you'll get instant feedback.</p>
+
+      <!-- Q1 -->
+      <div class="quiz-q" id="qq1">
+        <div class="q-num">Question 1</div>
+        <div class="q-text">A vector points straight up (vertically). What are its components?</div>
+        <div class="options">
+          <div class="opt" onclick="checkQ('qq1','A')"><span class="ol">A</span>Ax = A, Ay = 0</div>
+          <div class="opt" onclick="checkQ('qq1','B')"><span class="ol">B</span>Ax = 0, Ay = A</div>
+          <div class="opt" onclick="checkQ('qq1','C')"><span class="ol">C</span>Ax = A/2, Ay = A/2</div>
+          <div class="opt" onclick="checkQ('qq1','D')"><span class="ol">D</span>Ax = Ay = 0</div>
+        </div>
+        <div class="quiz-feedback qf-correct" id="qq1-fb-correct">&#10003; Correct! A vertical vector has Ax = 0 (no horizontal travel) and Ay = A (all vertical).</div>
+        <div class="quiz-feedback qf-wrong" id="qq1-fb-wrong">&#10007; Not quite. A vertical vector moves only up/down — so there is no horizontal component (Ax = 0) and all of the magnitude is vertical (Ay = A).</div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-q" id="qq2">
+        <div class="q-num">Question 2</div>
+        <div class="q-text">If Ax = 6 m and Ay = 8 m, what is the magnitude A?</div>
+        <div class="options">
+          <div class="opt" onclick="checkQ('qq2','A')"><span class="ol">A</span>A = 14 m</div>
+          <div class="opt" onclick="checkQ('qq2','B')"><span class="ol">B</span>A = 7 m</div>
+          <div class="opt" onclick="checkQ('qq2','C')"><span class="ol">C</span>A = 10 m</div>
+          <div class="opt" onclick="checkQ('qq2','D')"><span class="ol">D</span>A = 48 m</div>
+        </div>
+        <div class="quiz-feedback qf-correct" id="qq2-fb-correct">&#10003; Correct! 6&#178; + 8&#178; = 36 + 64 = 100 = 10&#178;, so A = 10 m. Classic 6-8-10 (scaled 3-4-5) triple!</div>
+        <div class="quiz-feedback qf-wrong" id="qq2-fb-wrong">&#10007; Use the Pythagorean theorem: Ax&#178; + Ay&#178; = A&#178; → 36 + 64 = 100 → A = 10 m. Remember: you CANNOT just add Ax + Ay!</div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-q" id="qq3">
+        <div class="q-num">Question 3</div>
+        <div class="q-text">Vector &#8594;A points diagonally to the bottom-right. Which statement about its components is correct?</div>
+        <div class="options">
+          <div class="opt" onclick="checkQ('qq3','A')"><span class="ol">A</span>Ax points right, Ay points up</div>
+          <div class="opt" onclick="checkQ('qq3','B')"><span class="ol">B</span>Ax points right, Ay points down</div>
+          <div class="opt" onclick="checkQ('qq3','C')"><span class="ol">C</span>Ax points left, Ay points down</div>
+          <div class="opt" onclick="checkQ('qq3','D')"><span class="ol">D</span>Ax = 0, Ay points down</div>
+        </div>
+        <div class="quiz-feedback qf-correct" id="qq3-fb-correct">&#10003; Correct! Bottom-right = Quadrant IV. Horizontal part goes right (+Ax), vertical part goes down (−Ay).</div>
+        <div class="quiz-feedback qf-wrong" id="qq3-fb-wrong">&#10007; Bottom-right is Quadrant IV. The x-component always matches horizontal direction (right = +), and y-component matches vertical (down = −).</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+</div><!-- end mainContent -->
+
+<script>
+  // PASSWORD
+  function checkPw(){
+    const v=document.getElementById('pwInput').value;
+    if(v==='physics2024'){
+      document.getElementById('lockOverlay').style.display='none';
+      document.getElementById('mainContent').classList.remove('content-hidden');
+    } else {
+      document.getElementById('pwErr').style.display='block';
+      document.getElementById('pwInput').value='';
+    }
+  }
+  document.getElementById('pwInput').addEventListener('keydown',function(e){if(e.key==='Enter')checkPw();});
+
+  // STARS
+  const sh=document.querySelector('header');
+  for(let i=0;i<18;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=Math.random()*3+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*3}s;`;
+    sh.appendChild(s);
+  }
+
+  // QUIZ ANSWERS
+  const answers={qq1:'B',qq2:'C',qq3:'B'};
+  function checkQ(qid,chosen){
+    const container=document.getElementById(qid);
+    if(container.dataset.answered) return;
+    container.dataset.answered='1';
+    const opts=container.querySelectorAll('.opt');
+    const correct=answers[qid];
+    const letters=['A','B','C','D'];
+    opts.forEach((opt,i)=>{
+      if(letters[i]===correct) opt.classList.add('correct');
+      else if(letters[i]===chosen) opt.classList.add('wrong');
+    });
+    if(chosen===correct){
+      document.getElementById(qid+'-fb-correct').style.display='flex';
+    } else {
+      document.getElementById(qid+'-fb-wrong').style.display='flex';
+    }
+  }
+</script>
+</body>
+</html>

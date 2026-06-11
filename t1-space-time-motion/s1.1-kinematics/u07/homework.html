@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Unit 7 — VT Graphs Part 2 — Homework</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --blue:#3b82f6;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+    --dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;
+    --radius:14px;--shadow:0 4px 24px rgba(0,0,0,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Nunito',sans-serif;
+    background-color:var(--bg);
+    background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);
+    background-size:28px 28px;
+    color:var(--dark);min-height:100vh;
+  }
+  /* Gate */
+  #gate{
+    position:fixed;inset:0;z-index:9999;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(15,23,42,.85);backdrop-filter:blur(6px);
+  }
+  .gate-card{
+    background:#fff;border-radius:20px;padding:2.5rem 2rem;
+    width:min(360px,92vw);text-align:center;
+    box-shadow:0 8px 40px rgba(0,0,0,.25);
+  }
+  .gate-card h2{font-size:1.4rem;margin-bottom:.5rem;}
+  .gate-card p{color:var(--muted);font-size:.95rem;margin-bottom:1.4rem;}
+  .gate-card input{
+    width:100%;padding:.7rem 1rem;border:2px solid #e2e8f0;border-radius:10px;
+    font-family:'Space Mono',monospace;font-size:1rem;margin-bottom:.8rem;outline:none;transition:border-color .2s;
+  }
+  .gate-card input:focus{border-color:var(--blue);}
+  .gate-card button{
+    width:100%;padding:.75rem;background:var(--blue);color:#fff;
+    border:none;border-radius:10px;font-family:'Nunito',sans-serif;
+    font-size:1rem;font-weight:700;cursor:pointer;
+  }
+  #gate-err{color:var(--red);font-size:.875rem;min-height:1.2em;margin-top:.3rem;}
+  /* Header */
+  header{
+    background:linear-gradient(135deg,#1e40af 0%,#2563eb 100%);
+    color:#fff;padding:2.5rem 2rem 2rem;position:relative;overflow:hidden;
+  }
+  .chip{
+    display:inline-block;background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.35);border-radius:999px;
+    font-size:.78rem;font-weight:700;letter-spacing:.08em;
+    padding:.28rem .9rem;margin-bottom:.8rem;text-transform:uppercase;
+  }
+  header h1{
+    font-size:clamp(1.4rem,3.5vw,2rem);font-weight:900;line-height:1.2;color:#fff;margin-bottom:.4rem;
+  }
+  header .type-badge{
+    display:inline-block;background:#f59e0b;color:#78350f;
+    border-radius:999px;font-size:.8rem;font-weight:800;
+    padding:.25rem .9rem;margin-bottom:.7rem;
+  }
+  .info-bar{display:flex;flex-wrap:wrap;gap:1rem;margin-top:1.2rem;}
+  .info-field{flex:1;min-width:140px;}
+  .info-field label{display:block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.6);margin-bottom:.3rem;}
+  .info-field .line{border:none;border-bottom:2px solid rgba(255,255,255,.5);width:100%;height:28px;background:transparent;}
+  /* Layout */
+  main{max-width:860px;margin:0 auto;padding:2.5rem 1.25rem 4rem;}
+  /* Ref + Tip */
+  .ref-box{
+    background:linear-gradient(135deg,#eff6ff,#dbeafe);
+    border:2px solid #93c5fd;border-radius:var(--radius);
+    padding:1.2rem 1.5rem;margin-bottom:1rem;
+  }
+  .ref-box h3{font-size:.9rem;font-weight:800;color:#1d4ed8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.8rem;}
+  .ref-grid{display:flex;flex-wrap:wrap;gap:.6rem;}
+  .ref-pill{background:#fff;border:1.5px solid #93c5fd;border-radius:9px;padding:.4rem .9rem;font-family:'Space Mono',monospace;font-size:.85rem;font-weight:700;color:#1d4ed8;}
+  .tip-box{
+    background:#fef3c7;border:2px solid #f59e0b;border-radius:var(--radius);
+    padding:1rem 1.4rem;margin-bottom:2rem;
+    display:flex;gap:.8rem;align-items:flex-start;
+  }
+  .tip-icon{font-size:1.3rem;flex-shrink:0;margin-top:.05rem;}
+  .tip-box p{font-size:.93rem;line-height:1.5;}
+  /* Part headers */
+  .part-header{display:flex;align-items:center;gap:.75rem;margin:2rem 0 1.1rem;}
+  .part-badge{background:var(--blue);color:#fff;border-radius:10px;font-size:.85rem;font-weight:800;padding:.3rem .9rem;white-space:nowrap;}
+  .part-badge.green{background:var(--green);}
+  .part-badge.amber{background:var(--amber);color:#78350f;}
+  .part-badge.red{background:var(--red);}
+  .part-header h2{font-size:1.1rem;font-weight:800;}
+  /* Problem cards */
+  .prob-card{
+    background:#fff;border-radius:var(--radius);padding:1.3rem 1.5rem;
+    box-shadow:var(--shadow);margin-bottom:1rem;border-left:4px solid var(--blue);
+  }
+  .prob-card.green{border-left-color:var(--green);}
+  .prob-card.amber{border-left-color:var(--amber);}
+  .prob-card.red{border-left-color:var(--red);}
+  .prob-card.purple{border-left-color:#8b5cf6;}
+  .prob-num{
+    display:inline-block;background:var(--blue);color:#fff;border-radius:50%;
+    width:1.6rem;height:1.6rem;font-size:.8rem;font-weight:800;text-align:center;line-height:1.6rem;
+    margin-right:.5rem;vertical-align:middle;
+  }
+  .prob-num.green{background:var(--green);}
+  .prob-num.amber{background:var(--amber);}
+  .prob-num.red{background:var(--red);}
+  .prob-num.purple{background:#8b5cf6;}
+  .prob-q{font-size:.97rem;line-height:1.6;margin-bottom:.8rem;font-weight:600;}
+  /* Work lines */
+  .work-lines{display:flex;flex-direction:column;gap:.6rem;margin-top:.6rem;}
+  .work-line{border:none;border-bottom:1.5px solid #e2e8f0;height:36px;background:transparent;width:100%;font-family:'Nunito',sans-serif;font-size:.93rem;color:var(--dark);outline:none;padding:0 .2rem;}
+  .work-box{
+    border:2px dashed #cbd5e1;border-radius:10px;
+    height:90px;background:#f8faff;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--muted);font-size:.82rem;margin-top:.6rem;
+  }
+  .ans-line-wrap{margin-top:.7rem;}
+  .ans-line-wrap label{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);}
+  .ans-line{border:none;border-bottom:2.5px solid var(--blue);width:100%;height:32px;background:transparent;font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;color:var(--blue);outline:none;margin-top:.2rem;}
+  /* True/False */
+  .tf-item{
+    background:#fff;border-radius:var(--radius);padding:1.1rem 1.4rem;
+    box-shadow:var(--shadow);margin-bottom:1rem;border-left:4px solid var(--green);
+  }
+  .tf-item.f{border-left-color:var(--red);}
+  .tf-statement{font-size:.97rem;font-weight:600;margin-bottom:.6rem;}
+  .tf-options{display:flex;gap:2rem;margin-bottom:.5rem;}
+  .tf-options label{display:flex;align-items:center;gap:.45rem;font-weight:700;font-size:.95rem;cursor:pointer;}
+  .tf-options input{accent-color:var(--blue);width:1.1rem;height:1.1rem;}
+  .corr-label{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-top:.4rem;display:block;}
+  .corr-line{border:none;border-bottom:1.5px solid #e2e8f0;width:100%;height:30px;background:transparent;font-family:'Nunito',sans-serif;font-size:.9rem;outline:none;}
+  /* Challenge box */
+  .challenge-banner{
+    background:linear-gradient(135deg,#f5f3ff,#ede9fe);
+    border:2px solid #8b5cf6;border-radius:var(--radius);
+    padding:1rem 1.4rem;margin-bottom:1rem;
+    display:flex;gap:.7rem;align-items:flex-start;
+  }
+  .chall-icon{font-size:1.2rem;flex-shrink:0;}
+  .chall-text{font-size:.9rem;line-height:1.5;color:#4c1d95;font-weight:600;}
+  /* Answer key */
+  #answer-key{
+    display:none;margin-top:2.5rem;background:#fff;border-radius:var(--radius);
+    border:3px solid var(--green);padding:1.6rem 1.8rem;box-shadow:var(--shadow);
+  }
+  #answer-key h2{font-size:1.1rem;font-weight:800;color:var(--green);margin-bottom:1.2rem;}
+  .ak-section{margin-bottom:1.4rem;}
+  .ak-section h3{font-size:.88rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.6rem;}
+  .ak-item{display:flex;gap:.7rem;align-items:flex-start;background:#f0fdf4;border-radius:8px;padding:.55rem .8rem;margin-bottom:.5rem;font-size:.93rem;}
+  .ak-num{font-weight:800;color:var(--green);min-width:2rem;}
+  .ak-work{font-family:'Space Mono',monospace;font-size:.82rem;color:#374151;margin-top:.25rem;}
+  .ak-item.red-bg{background:#fff1f2;}
+  .ak-item.red-bg .ak-num{color:var(--red);}
+  #toggle-key-btn{
+    display:block;margin:2rem auto 0;
+    padding:.7rem 2rem;background:#fff;color:var(--green);
+    border:2px solid var(--green);border-radius:10px;
+    font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;
+  }
+  #toggle-key-btn:hover{background:var(--green);color:#fff;}
+  .mono{font-family:'Space Mono',monospace;font-weight:700;}
+  svg.prob-graph{display:block;max-width:100%;height:auto;margin:.6rem 0;}
+  @media(max-width:520px){header{padding:1.8rem 1rem 1.5rem;}}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="gate-card">
+    <h2>🔒 Homework Access</h2>
+    <p>Enter the class password to continue.</p>
+    <input type="password" id="gate-pwd" placeholder="Password" autocomplete="current-password"/>
+    <div id="gate-err"></div>
+    <button onclick="checkPwd()">Unlock</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="chip">Kinematics &middot; Unit 7</div>
+  <div class="type-badge">Homework</div>
+  <h1>Velocity-Time Graphs Part 2<br/>Graphs of Changing Velocity</h1>
+  <div class="info-bar">
+    <div class="info-field">
+      <label>Name</label>
+      <div class="line"></div>
+    </div>
+    <div class="info-field">
+      <label>Date</label>
+      <div class="line"></div>
+    </div>
+    <div class="info-field" style="max-width:120px;">
+      <label>Period</label>
+      <div class="line"></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- REFERENCE BOX -->
+  <div class="ref-box">
+    <h3>Key Formulae — VT Graphs</h3>
+    <div class="ref-grid">
+      <div class="ref-pill">a = ΔV / Δt</div>
+      <div class="ref-pill">Area (▲) = ½ × b × h</div>
+      <div class="ref-pill">Area (▭) = b × h</div>
+      <div class="ref-pill">Y-intercept = U (initial V)</div>
+      <div class="ref-pill">Slope = acceleration</div>
+      <div class="ref-pill">Area under graph = displacement</div>
+    </div>
+  </div>
+
+  <!-- TIP BOX -->
+  <div class="tip-box">
+    <div class="tip-icon">💡</div>
+    <p><strong>Study Tip:</strong> Always label your working clearly — state the formula first, then substitute values, then state the answer with units. Show <em>every</em> step to earn full marks.</p>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- PART A: Calculation Problems            -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="part-header">
+    <div class="part-badge">Part A</div>
+    <h2>Calculation Problems — Show Full Working</h2>
+  </div>
+
+  <!-- A1 -->
+  <div class="prob-card">
+    <span class="prob-num">1</span>
+    <span class="prob-q">A VT graph shows a straight line from <strong>V = +3 ms&#8315;&#185;</strong> at t = 0 to <strong>V = +15 ms&#8315;&#185;</strong> at t = 6 s.
+    <br/>(a) Calculate the acceleration. &nbsp; (b) Calculate the displacement during these 6 seconds.</span>
+    <div class="work-lines">
+      <input class="work-line" type="text" placeholder="(a) Formula:"/>
+      <input class="work-line" type="text" placeholder="Substitution:"/>
+      <div class="ans-line-wrap"><label>(a) Answer</label><input class="ans-line" type="text" placeholder="a = _____ ms⁻²"/></div>
+      <input class="work-line" type="text" placeholder="(b) Formula:"/>
+      <input class="work-line" type="text" placeholder="Substitution:"/>
+      <div class="ans-line-wrap"><label>(b) Answer</label><input class="ans-line" type="text" placeholder="s = _____ m"/></div>
+    </div>
+  </div>
+
+  <!-- A2 -->
+  <div class="prob-card">
+    <span class="prob-num">2</span>
+    <span class="prob-q">A bicycle decelerates uniformly from <strong>+18 ms&#8315;&#185;</strong> to <strong>+6 ms&#8315;&#185;</strong> over <strong>4 seconds</strong>.
+    <br/>(a) Find the acceleration. &nbsp; (b) Find the displacement during braking.</span>
+    <div class="work-lines">
+      <input class="work-line" type="text" placeholder="(a) Working:"/>
+      <div class="ans-line-wrap"><label>(a) Answer</label><input class="ans-line" type="text" placeholder="a = _____ ms⁻²"/></div>
+      <input class="work-line" type="text" placeholder="(b) Shape of area:"/>
+      <input class="work-line" type="text" placeholder="(b) Working:"/>
+      <div class="ans-line-wrap"><label>(b) Answer</label><input class="ans-line" type="text" placeholder="s = _____ m"/></div>
+    </div>
+  </div>
+
+  <!-- A3 -->
+  <div class="prob-card">
+    <span class="prob-num">3</span>
+    <span class="prob-q">A VT graph has two sections:
+    <br/>• Section 1: V rises from <strong>0</strong> to <strong>+10 ms&#8315;&#185;</strong> over <strong>5 s</strong>
+    <br/>• Section 2: V stays constant at <strong>+10 ms&#8315;&#185;</strong> for <strong>8 s</strong>
+    <br/>Calculate the total displacement for the full 13 seconds.</span>
+    <div class="work-lines">
+      <input class="work-line" type="text" placeholder="Section 1 area:"/>
+      <input class="work-line" type="text" placeholder="Section 2 area:"/>
+      <div class="ans-line-wrap"><label>Total Displacement</label><input class="ans-line" type="text" placeholder="s = _____ m"/></div>
+    </div>
+  </div>
+
+  <!-- A4 -->
+  <div class="prob-card">
+    <span class="prob-num">4</span>
+    <span class="prob-q">A car starts at rest and accelerates at <strong>5 ms&#8315;&#178;</strong> for <strong>6 seconds</strong>, then immediately decelerates at <strong>3 ms&#8315;&#178;</strong> until it stops.
+    <br/>(a) Find the velocity at the end of the first phase.
+    <br/>(b) Find the time taken to decelerate to rest.
+    <br/>(c) Find the total displacement for the whole journey.</span>
+    <div class="work-lines">
+      <input class="work-line" type="text" placeholder="(a) V = Slope × Δt = ..."/>
+      <div class="ans-line-wrap"><label>(a) Answer</label><input class="ans-line" type="text" placeholder="V = _____ ms⁻¹"/></div>
+      <input class="work-line" type="text" placeholder="(b) Δt = ΔV/|a| = ..."/>
+      <div class="ans-line-wrap"><label>(b) Answer</label><input class="ans-line" type="text" placeholder="t = _____ s"/></div>
+      <input class="work-line" type="text" placeholder="(c) Area 1 + Area 2 = ..."/>
+      <div class="ans-line-wrap"><label>(c) Answer</label><input class="ans-line" type="text" placeholder="s = _____ m"/></div>
+    </div>
+  </div>
+
+  <!-- A5 -->
+  <div class="prob-card">
+    <span class="prob-num">5</span>
+    <span class="prob-q">A VT graph shows V going from <strong>+20 ms&#8315;&#185;</strong> at t = 0 down to <strong>−4 ms&#8315;&#185;</strong> at t = 12 s in a straight line.
+    <br/>(a) Calculate the acceleration.
+    <br/>(b) At what time does the object momentarily stop?
+    <br/>(c) Describe the motion after that moment.</span>
+    <div class="work-lines">
+      <input class="work-line" type="text" placeholder="(a) Working:"/>
+      <div class="ans-line-wrap"><label>(a) Acceleration</label><input class="ans-line" type="text" placeholder="a = _____ ms⁻²"/></div>
+      <input class="work-line" type="text" placeholder="(b) When V=0: t = ..."/>
+      <div class="ans-line-wrap"><label>(b) Time V = 0</label><input class="ans-line" type="text" placeholder="t = _____ s"/></div>
+      <input class="work-line" type="text" placeholder="(c) Describe:"/>
+    </div>
+  </div>
+
+  <!-- A6 -->
+  <div class="prob-card">
+    <span class="prob-num">6</span>
+    <span class="prob-q">The VT graph below shows a three-section journey. Calculate:
+    <br/>(a) The acceleration in each section.
+    <br/>(b) The total displacement for the full journey.</span>
+    <svg class="prob-graph" viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="gridA6hw" width="27" height="22" patternUnits="userSpaceOnUse">
+          <path d="M 27 0 L 0 0 0 22" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+        </pattern>
+      </defs>
+      <rect x="45" y="10" width="295" height="132" fill="url(#gridA6hw)"/>
+      <line x1="45" y1="10" x2="45" y2="142" stroke="#334155" stroke-width="1.5"/>
+      <line x1="45" y1="142" x2="340" y2="142" stroke="#334155" stroke-width="1.5"/>
+      <!-- zero line -->
+      <line x1="45" y1="142" x2="340" y2="142" stroke="#334155" stroke-width="1.5"/>
+      <!-- y: 0 at y=120, unit=22px. V range 0..6, x range 0..11s (295/11=26.8px/s) -->
+      <!-- Labels -->
+      <text x="38" y="124" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="end">0</text>
+      <line x1="42" y1="120" x2="48" y2="120" stroke="#334155" stroke-width="1"/>
+      <text x="38" y="102" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="end">1</text>
+      <line x1="42" y1="98" x2="48" y2="98" stroke="#334155" stroke-width="1"/>
+      <text x="38" y="80" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="end">2</text>
+      <line x1="42" y1="76" x2="48" y2="76" stroke="#334155" stroke-width="1"/>
+      <text x="38" y="58" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="end">3</text>
+      <line x1="42" y1="54" x2="48" y2="54" stroke="#334155" stroke-width="1"/>
+      <text x="38" y="36" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="end">4</text>
+      <line x1="42" y1="32" x2="48" y2="32" stroke="#334155" stroke-width="1"/>
+      <!-- x ticks: 0..11s, 26.8px/s -->
+      <text x="45" y="156" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">0</text>
+      <text x="72" y="156" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">1</text>
+      <line x1="72" y1="139" x2="72" y2="145" stroke="#334155" stroke-width="1"/>
+      <text x="98" y="156" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">2</text>
+      <line x1="98" y1="139" x2="98" y2="145" stroke="#334155" stroke-width="1"/>
+      <text x="125" y="156" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">3</text>
+      <line x1="125" y1="139" x2="125" y2="145" stroke="#334155" stroke-width="1"/>
+      <text x="152" y="156" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">4</text>
+      <line x1="152" y1="139" x2="152" y2="145" stroke="#334155" stroke-width="1"/>
+      <text x="205" y="156" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">6</text>
+      <line x1="205" y1="139" x2="205" y2="145" stroke="#334155" stroke-width="1"/>
+      <text x="340" y="156" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">11</text>
+      <line x1="340" y1="139" x2="340" y2="145" stroke="#334155" stroke-width="1"/>
+      <!-- Section 1: t=0→4, V=0→4 (x:45→152, y:120→32) -->
+      <polygon points="45,120 152,120 152,32" fill="#dbeafe" opacity="0.45"/>
+      <line x1="45" y1="120" x2="152" y2="32" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Section 2: t=4→6, V=4 constant (x:152→205, y:32) -->
+      <polygon points="152,32 205,32 205,120 152,120" fill="#dcfce7" opacity="0.4"/>
+      <line x1="152" y1="32" x2="205" y2="32" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Section 3: t=6→11, V=4→0 (x:205→340, y:32→120) -->
+      <polygon points="205,32 340,32 340,120 205,120" fill="#fef9c3" opacity="0.45"/>
+      <line x1="205" y1="32" x2="340" y2="120" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- dots -->
+      <circle cx="45" cy="120" r="4" fill="#3b82f6"/>
+      <circle cx="152" cy="32" r="4" fill="#3b82f6"/>
+      <circle cx="205" cy="32" r="4" fill="#22c55e"/>
+      <circle cx="340" cy="120" r="4" fill="#f59e0b"/>
+      <!-- labels -->
+      <text x="90" y="105" font-family="Nunito,sans-serif" font-size="12" fill="#1d4ed8" font-weight="800">①</text>
+      <text x="178" y="22" font-family="Nunito,sans-serif" font-size="12" fill="#15803d" font-weight="800">②</text>
+      <text x="280" y="60" font-family="Nunito,sans-serif" font-size="12" fill="#92400e" font-weight="800">③</text>
+      <text x="10" y="76" font-family="Space Mono,monospace" font-size="8" fill="#334155" transform="rotate(-90,10,76)" text-anchor="middle">V / ms⁻¹</text>
+      <text x="192" y="172" font-family="Space Mono,monospace" font-size="8" fill="#334155" text-anchor="middle">t / s</text>
+    </svg>
+    <div class="work-lines">
+      <input class="work-line" type="text" placeholder="① a = ΔV/Δt = ..."/>
+      <input class="work-line" type="text" placeholder="② a = ..."/>
+      <input class="work-line" type="text" placeholder="③ a = ..."/>
+      <input class="work-line" type="text" placeholder="(b) Area ① = ...  Area ② = ...  Area ③ = ..."/>
+      <div class="ans-line-wrap"><label>(b) Total Displacement</label><input class="ans-line" type="text" placeholder="s = _____ m"/></div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- PART B: True / False                    -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="part-header">
+    <div class="part-badge green">Part B</div>
+    <h2>True or False — Correct Any False Statements</h2>
+  </div>
+  <p style="font-size:.92rem;color:var(--muted);margin-bottom:1rem;">Circle True or False. If the statement is <strong>False</strong>, write a corrected version on the line below.</p>
+
+  <!-- TF1 -->
+  <div class="tf-item">
+    <div class="tf-statement">1. The slope of a VT graph always equals the distance travelled.</div>
+    <div class="tf-options">
+      <label><input type="radio" name="tf1" value="T"/> True</label>
+      <label><input type="radio" name="tf1" value="F"/> False</label>
+    </div>
+    <span class="corr-label">Correction (if false):</span>
+    <input class="corr-line" type="text" placeholder="Write correction here..."/>
+  </div>
+
+  <!-- TF2 -->
+  <div class="tf-item">
+    <div class="tf-statement">2. A horizontal line on a VT graph means the object has zero acceleration.</div>
+    <div class="tf-options">
+      <label><input type="radio" name="tf2" value="T"/> True</label>
+      <label><input type="radio" name="tf2" value="F"/> False</label>
+    </div>
+    <span class="corr-label">Correction (if false):</span>
+    <input class="corr-line" type="text" placeholder="Write correction here..."/>
+  </div>
+
+  <!-- TF3 -->
+  <div class="tf-item f">
+    <div class="tf-statement">3. The area under a VT graph always gives a positive value for displacement, even when the line is below the time axis.</div>
+    <div class="tf-options">
+      <label><input type="radio" name="tf3" value="T"/> True</label>
+      <label><input type="radio" name="tf3" value="F"/> False</label>
+    </div>
+    <span class="corr-label">Correction (if false):</span>
+    <input class="corr-line" type="text" placeholder="Write correction here..."/>
+  </div>
+
+  <!-- TF4 -->
+  <div class="tf-item">
+    <div class="tf-statement">4. If the y-intercept of a VT graph is at V = +5 ms&#8315;&#185;, the initial velocity of the object is +5 ms&#8315;&#185;.</div>
+    <div class="tf-options">
+      <label><input type="radio" name="tf4" value="T"/> True</label>
+      <label><input type="radio" name="tf4" value="F"/> False</label>
+    </div>
+    <span class="corr-label">Correction (if false):</span>
+    <input class="corr-line" type="text" placeholder="Write correction here..."/>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- PART C: Challenge                       -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="part-header">
+    <div class="part-badge purple" style="background:#8b5cf6;">Part C</div>
+    <h2>Challenge Problems</h2>
+  </div>
+
+  <div class="challenge-banner">
+    <div class="chall-icon">⭐</div>
+    <div class="chall-text">These questions require combining multiple steps. Take your time and show all working carefully.</div>
+  </div>
+
+  <!-- C1 -->
+  <div class="prob-card purple">
+    <span class="prob-num purple">1</span>
+    <span class="prob-q">A runner completes a race with the following VT profile:
+    <br/>• Phase 1: Accelerates from rest to <strong>+8 ms&#8315;&#185;</strong> in <strong>4 s</strong>
+    <br/>• Phase 2: Maintains <strong>+8 ms&#8315;&#185;</strong> for <strong>10 s</strong>
+    <br/>• Phase 3: Decelerates from <strong>+8 ms&#8315;&#185;</strong> to <strong>+2 ms&#8315;&#185;</strong> in <strong>6 s</strong>
+    <br/><br/>(a) Find the acceleration in Phase 1 and Phase 3.
+    <br/>(b) Find the total displacement for the full 20 seconds.
+    <br/>(c) What is the average velocity for the whole run?</span>
+    <div class="work-lines">
+      <input class="work-line" type="text" placeholder="(a) Phase 1 acceleration:"/>
+      <input class="work-line" type="text" placeholder="(a) Phase 3 acceleration:"/>
+      <input class="work-line" type="text" placeholder="(b) Area Phase 1 (triangle):"/>
+      <input class="work-line" type="text" placeholder="(b) Area Phase 2 (rectangle):"/>
+      <input class="work-line" type="text" placeholder="(b) Area Phase 3 (trapezoid):"/>
+      <div class="ans-line-wrap"><label>(b) Total Displacement</label><input class="ans-line" type="text" placeholder="s = _____ m"/></div>
+      <input class="work-line" type="text" placeholder="(c) Average velocity = total displacement / total time = ..."/>
+      <div class="ans-line-wrap"><label>(c) Average Velocity</label><input class="ans-line" type="text" placeholder="v_avg = _____ ms⁻¹"/></div>
+    </div>
+  </div>
+
+  <!-- C2 -->
+  <div class="prob-card purple">
+    <span class="prob-num purple">2</span>
+    <span class="prob-q">Two objects, A and B, start at the same position at t = 0.
+    <br/>• Object A: moves at a constant <strong>+6 ms&#8315;&#185;</strong> for <strong>8 s</strong>
+    <br/>• Object B: starts from rest and accelerates at <strong>3 ms&#8315;&#178;</strong>
+    <br/><br/>(a) How far has Object A travelled after 8 s?
+    <br/>(b) After how many seconds does Object B have the same velocity as Object A?
+    <br/>(c) At the moment they have the same velocity, how far apart are A and B?
+    <br/>(d) Will B ever catch up with A? Explain using displacement values.</span>
+    <div class="work-lines">
+      <input class="work-line" type="text" placeholder="(a) Distance A:"/>
+      <div class="ans-line-wrap"><label>(a) Distance A</label><input class="ans-line" type="text" placeholder="s_A = _____ m"/></div>
+      <input class="work-line" type="text" placeholder="(b) Time B reaches v=6: t = ΔV/a = 6/3 = ..."/>
+      <div class="ans-line-wrap"><label>(b) Time</label><input class="ans-line" type="text" placeholder="t = _____ s"/></div>
+      <input class="work-line" type="text" placeholder="(c) s_A at t=2s: ...   s_B at t=2s: ...   gap = ..."/>
+      <div class="ans-line-wrap"><label>(c) Gap</label><input class="ans-line" type="text" placeholder="gap = _____ m"/></div>
+      <input class="work-line" type="text" placeholder="(d) Explain:"/>
+      <input class="work-line" type="text" placeholder="(d) Continue:"/>
+    </div>
+  </div>
+
+  <!-- ANSWER KEY TOGGLE -->
+  <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key (Teacher Use)</button>
+
+  <div id="answer-key">
+    <h2>Answer Key — Homework Unit 7</h2>
+
+    <div class="ak-section">
+      <h3>Part A — Calculations</h3>
+
+      <div class="ak-item">
+        <div class="ak-num">A1a</div>
+        <div>
+          <div>a = <strong>+2 ms&#8315;&#178;</strong></div>
+          <div class="ak-work">ΔV = 15−3 = 12 ms⁻¹ | Δt = 6 s | a = 12/6 = +2 ms⁻²</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">A1b</div>
+        <div>
+          <div>s = <strong>54 m</strong></div>
+          <div class="ak-work">Trapezoid: ½ × (3+15) × 6 = ½ × 18 × 6 = 54 m</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">A2a</div>
+        <div>
+          <div>a = <strong>−3 ms&#8315;&#178;</strong></div>
+          <div class="ak-work">ΔV = 6−18 = −12 ms⁻¹ | Δt = 4 s | a = −12/4 = −3 ms⁻²</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">A2b</div>
+        <div>
+          <div>s = <strong>48 m</strong></div>
+          <div class="ak-work">Trapezoid: ½ × (18+6) × 4 = ½ × 24 × 4 = 48 m (or rect 6×4=24 + tri ½×4×12=24 = 48 m)</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">A3</div>
+        <div>
+          <div>Total s = <strong>105 m</strong></div>
+          <div class="ak-work">Section 1 (triangle): ½ × 5 × 10 = 25 m | Section 2 (rectangle): 8 × 10 = 80 m | Total = 25 + 80 = 105 m</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">A4a</div>
+        <div>
+          <div>V = <strong>+30 ms&#8315;&#185;</strong></div>
+          <div class="ak-work">V = Slope × Δt = 5 ms⁻² × 6 s = 30 ms⁻¹</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">A4b</div>
+        <div>
+          <div>Decel time = <strong>10 s</strong></div>
+          <div class="ak-work">Δt = ΔV/|a| = 30/3 = 10 s</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">A4c</div>
+        <div>
+          <div>Total s = <strong>240 m</strong></div>
+          <div class="ak-work">Phase 1 (triangle): ½ × 6 × 30 = 90 m | Phase 2 (triangle): ½ × 10 × 30 = 150 m | Total = 90 + 150 = 240 m</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">A5a</div>
+        <div>
+          <div>a = <strong>−2 ms&#8315;&#178;</strong></div>
+          <div class="ak-work">ΔV = −4−20 = −24 ms⁻¹ | Δt = 12 s | a = −24/12 = −2 ms⁻²</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">A5b</div>
+        <div>
+          <div>V = 0 at t = <strong>10 s</strong></div>
+          <div class="ak-work">Starting V=20, a=−2 → time to reach 0: 0 = 20 + (−2)t → t = 20/2 = 10 s</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">A5c</div>
+        <div>
+          <div>After t = 10 s the object moves in the <strong>negative direction</strong>, velocity becomes increasingly negative (speeding up backwards).</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">A6a</div>
+        <div>
+          <div>① a = <strong>+1 ms&#8315;&#178;</strong> &nbsp;|&nbsp; ② a = <strong>0 ms&#8315;&#178;</strong> &nbsp;|&nbsp; ③ a = <strong>−0.8 ms&#8315;&#178;</strong></div>
+          <div class="ak-work">① ΔV=4−0=4, Δt=4→ a=+1 | ② horizontal | ③ ΔV=0−4=−4, Δt=5→ a=−4/5=−0.8</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">A6b</div>
+        <div>
+          <div>Total s = <strong>38 m</strong></div>
+          <div class="ak-work">① triangle: ½×4×4=8 m | ② rect: 2×4=8 m | ③ triangle: ½×5×4=10 m... wait ③ is trapezoid V:4→0: ½×(4+0)×5=10m. Or ③ rect 5×4=20? No V goes 4→0 so triangle ½×5×4=10. Rect for ②: 2×4=8. ① tri: ½×4×4=8. Total=8+8+10=26m. Re-check: ③ has V going from 4 to 0 linearly → triangle area = ½ × base × height = ½ × 5 × 4 = 10 m. Total = 8 + 8 + 10 = 26 m.</div>
+          <div class="ak-work">Corrected total: 8 + 8 + 10 = <strong>26 m</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ak-section">
+      <h3>Part B — True / False</h3>
+
+      <div class="ak-item red-bg">
+        <div class="ak-num">TF1</div>
+        <div>
+          <div><strong>FALSE.</strong> The slope of a VT graph equals the <em>acceleration</em>, not the distance travelled. The area under the graph equals displacement.</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">TF2</div>
+        <div>
+          <div><strong>TRUE.</strong> A horizontal line means ΔV = 0, so a = ΔV/Δt = 0.</div>
+        </div>
+      </div>
+
+      <div class="ak-item red-bg">
+        <div class="ak-num">TF3</div>
+        <div>
+          <div><strong>FALSE.</strong> Area below the time axis represents <em>negative</em> displacement. It should be subtracted when calculating total displacement.</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">TF4</div>
+        <div>
+          <div><strong>TRUE.</strong> The y-intercept is the value of V when t = 0, which is the initial velocity U = +5 ms&#8315;&#185;.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ak-section">
+      <h3>Part C — Challenge</h3>
+
+      <div class="ak-item">
+        <div class="ak-num">C1a</div>
+        <div>
+          <div>Phase 1: a = <strong>+2 ms&#8315;&#178;</strong> &nbsp;|&nbsp; Phase 3: a = <strong>−1 ms&#8315;&#178;</strong></div>
+          <div class="ak-work">Phase 1: ΔV=8−0=8, Δt=4 → a=2 | Phase 3: ΔV=2−8=−6, Δt=6 → a=−1</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">C1b</div>
+        <div>
+          <div>Total s = <strong>126 m</strong></div>
+          <div class="ak-work">P1 triangle: ½×4×8=16 m | P2 rectangle: 10×8=80 m | P3 trapezoid: ½×(8+2)×6=30 m | Total=16+80+30=126 m</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">C1c</div>
+        <div>
+          <div>v&#818; = <strong>6.3 ms&#8315;&#185;</strong></div>
+          <div class="ak-work">v_avg = total displacement / total time = 126 / 20 = 6.3 ms⁻¹</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">C2a</div>
+        <div>
+          <div>s&#8321; = <strong>48 m</strong> after 8 s</div>
+          <div class="ak-work">Rectangle: 6 × 8 = 48 m</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">C2b</div>
+        <div>
+          <div>t = <strong>2 s</strong></div>
+          <div class="ak-work">B reaches V=6: t = ΔV/a = 6/3 = 2 s</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">C2c</div>
+        <div>
+          <div>Gap = <strong>6 m</strong></div>
+          <div class="ak-work">s_A at t=2: 6×2=12 m | s_B at t=2: ½×2×6=6 m | Gap = 12−6 = 6 m</div>
+        </div>
+      </div>
+
+      <div class="ak-item">
+        <div class="ak-num">C2d</div>
+        <div>
+          <div><strong>Yes, B will eventually catch and overtake A.</strong> After t = 2 s, B continues to accelerate while A moves at constant velocity. B's displacement grows as t² while A's grows as 6t. Set equal: ½×3×t² = 6t → 1.5t = 6 → t = 4 s. At t=4s: s_A=24m, s_B=½×3×16=24m. They are at the same position at t = 4 s, so B catches A exactly at t = 4 s and then pulls ahead.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+(function(){
+  const KEY='pg_ok',HASH=btoa('physics2024');
+  if(localStorage.getItem(KEY)===HASH){document.getElementById('gate').style.display='none';}
+  document.getElementById('gate-pwd').addEventListener('keydown',function(e){if(e.key==='Enter')checkPwd();});
+})();
+function checkPwd(){
+  const val=document.getElementById('gate-pwd').value;
+  const HASH=btoa('physics2024');
+  if(btoa(val)===HASH){
+    localStorage.setItem('pg_ok',HASH);
+    document.getElementById('gate').style.display='none';
+  } else {
+    document.getElementById('gate-err').textContent='Incorrect password. Try again.';
+    document.getElementById('gate-pwd').value='';
+  }
+}
+function toggleKey(){
+  const key=document.getElementById('answer-key');
+  const btn=document.getElementById('toggle-key-btn');
+  if(key.style.display==='none'||key.style.display===''){
+    key.style.display='block';
+    btn.textContent='Hide Answer Key';
+  } else {
+    key.style.display='none';
+    btn.textContent='Show Answer Key (Teacher Use)';
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propagating Uncertainty in Physics Problems — Lesson</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root {
+      --navy:#0f172a;--indigo:#1e3a5f;--blue:#1d4ed8;--lblue:#3b82f6;--vblue:#dbeafe;
+      --green:#22c55e;--amber:#f59e0b;--red:#ef4444;--muted:#94a3b8;--card:#ffffff;--bg:#f0f4ff;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--bg);color:var(--navy);font-size:17px;line-height:1.75;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;}
+
+    /* HEADER */
+    header{background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#1d4ed8 100%);color:white;padding:52px 60px 48px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(99,102,241,0.35) 0%,transparent 60%),radial-gradient(ellipse at 80% 30%,rgba(59,130,246,0.3) 0%,transparent 55%),radial-gradient(ellipse at 60% 80%,rgba(15,23,42,0.4) 0%,transparent 50%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.5);}}
+    .chip{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px;position:relative;}
+    header h1{font-size:2.8rem;font-weight:900;letter-spacing:-1px;position:relative;margin-bottom:10px;background:linear-gradient(90deg,#bfdbfe,#c7d2fe,#e0e7ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1.05rem;color:rgba(255,255,255,0.82);position:relative;max-width:640px;margin:0 auto;}
+
+    main{max-width:940px;margin:48px auto;padding:0 24px 80px;}
+    section{margin-bottom:60px;}
+    .section-label{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+    .section-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    .section-label h2{font-size:1.5rem;font-weight:900;color:var(--navy);}
+
+    /* THREE RULES BANNER */
+    .rules-banner{background:linear-gradient(135deg,#0f172a,#1e3a5f,#1d4ed8);border-radius:22px;padding:36px 40px;color:white;margin-bottom:36px;}
+    .rules-banner .rb-title{text-align:center;font-size:0.8rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;opacity:0.7;margin-bottom:24px;}
+    .rules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+    @media(max-width:680px){.rules-grid{grid-template-columns:1fr;}}
+    .rule-tile{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:16px;padding:20px 18px;text-align:center;}
+    .rule-tile .rt-num{background:rgba(255,255,255,0.15);color:#bfdbfe;font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;padding:3px 12px;border-radius:20px;display:inline-block;margin-bottom:10px;}
+    .rule-tile .rt-name{font-size:0.88rem;font-weight:800;color:rgba(255,255,255,0.9);margin-bottom:8px;}
+    .rule-tile .rt-formula{font-family:'Space Mono',monospace;font-size:0.95rem;background:rgba(255,255,255,0.12);border-radius:10px;padding:10px 14px;margin-bottom:8px;color:#e0e7ff;line-height:1.7;}
+    .rule-tile .rt-key{font-size:0.78rem;color:rgba(255,255,255,0.6);font-style:italic;}
+    .chain-note{background:rgba(255,255,255,0.07);border:1px dashed rgba(255,255,255,0.25);border-radius:12px;padding:14px 20px;text-align:center;margin-top:18px;font-size:0.9rem;color:rgba(255,255,255,0.82);}
+    .chain-note strong{color:#93c5fd;}
+
+    /* INTRO */
+    .intro-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-bottom:28px;}
+    @media(max-width:640px){.intro-grid{grid-template-columns:1fr;}}
+    .intro-text{background:white;border-radius:16px;padding:24px 28px;box-shadow:0 4px 20px rgba(29,78,216,0.10);border:2px solid #bfdbfe;}
+    .intro-text p{margin-bottom:12px;color:#374151;}
+    .intro-text p:last-child{margin-bottom:0;}
+    .chain-visual{background:linear-gradient(135deg,#eff6ff,#dbeafe);border-radius:16px;padding:22px 18px;border:2px solid #93c5fd;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;}
+    .chain-visual .cv-title{font-size:0.88rem;font-weight:800;color:#1e3a5f;margin-bottom:6px;text-align:center;}
+    .chain-step{background:white;border:1px solid #bfdbfe;border-radius:10px;padding:8px 16px;font-family:'Space Mono',monospace;font-size:0.78rem;font-weight:700;color:#1d4ed8;text-align:center;width:100%;}
+    .chain-arrow{font-size:1.2rem;color:#3b82f6;}
+
+    /* EXAMPLE CARDS */
+    .subsection-head{display:flex;align-items:center;gap:12px;margin-bottom:18px;margin-top:32px;}
+    .sub-badge{background:linear-gradient(135deg,#1e3a5f,#1d4ed8);color:white;font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:5px 14px;border-radius:20px;}
+    .sub-title{font-size:1.15rem;font-weight:900;color:var(--navy);}
+
+    .example-card{background:white;border-radius:18px;margin-bottom:24px;box-shadow:0 4px 20px rgba(0,0,0,0.07);overflow:hidden;border:1px solid #e0e7ff;}
+    .ex-header{display:flex;align-items:center;gap:14px;padding:16px 24px;background:linear-gradient(90deg,#eff6ff,#e0e7ff);border-bottom:2px solid #bfdbfe;}
+    .ex-num{background:var(--navy);color:white;font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:4px 14px;border-radius:20px;}
+    .ex-concept{font-size:0.82rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+    .ex-body{padding:22px 26px;}
+    .problem-stmt{background:linear-gradient(135deg,#f0f9ff,#eff6ff);border:1.5px solid #bae6fd;border-radius:12px;padding:14px 18px;margin-bottom:18px;font-size:0.95rem;color:#1e3a5f;line-height:1.7;}
+    .problem-stmt strong{color:#1d4ed8;}
+    .given-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
+    .given-chip{background:#dbeafe;border:1px solid #93c5fd;border-radius:8px;padding:6px 14px;font-family:'Space Mono',monospace;font-size:0.95rem;font-weight:700;color:#1e3a5f;}
+    .steps{display:flex;flex-direction:column;gap:10px;}
+    .step{display:flex;gap:12px;align-items:flex-start;font-size:0.92rem;color:#374151;}
+    .step-dot{width:26px;height:26px;border-radius:50%;background:#dbeafe;color:#1d4ed8;font-weight:800;font-size:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+    .step code{font-family:'Space Mono',monospace;font-size:0.88rem;font-weight:700;background:#f8fafc;border:1px solid #e2e8f0;border-radius:5px;padding:2px 7px;color:#1e293b;}
+    .step .rule-tag{display:inline-block;background:#1d4ed8;color:white;font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;padding:2px 8px;border-radius:10px;margin-left:6px;}
+    .step .rule-tag.r1{background:#7c3aed;}
+    .step .rule-tag.r2{background:#0891b2;}
+    .step .rule-tag.r3{background:#059669;}
+    .result-box{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:2px solid #93c5fd;border-radius:12px;padding:14px 20px;margin-top:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+    .rb-label{font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#1e3a5f;}
+    .rb-value{font-family:'Space Mono',monospace;font-size:1.2rem;font-weight:700;color:#1d4ed8;}
+    .rb-note{font-size:0.82rem;color:#64748b;font-style:italic;}
+    .explanation{font-size:0.9rem;color:#475569;line-height:1.65;padding:12px 16px;background:#f8fafc;border-radius:10px;border-left:4px solid #3b82f6;margin-top:14px;}
+
+    /* INSIGHT STRIP */
+    .insight-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px;}
+    @media(max-width:640px){.insight-strip{grid-template-columns:1fr;}}
+    .is-card{background:white;border-radius:14px;padding:18px 16px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,0.07);border-top:4px solid #1d4ed8;}
+    .is-card:nth-child(2){border-top-color:#7c3aed;}
+    .is-card:nth-child(3){border-top-color:#059669;}
+    .is-card .isc-icon{font-size:2rem;margin-bottom:8px;}
+    .is-card h4{font-size:0.88rem;font-weight:900;color:var(--navy);margin-bottom:6px;}
+    .is-card p{font-size:0.78rem;color:#64748b;line-height:1.5;}
+
+    /* SPECIAL CASE: CORRELATED */
+    .corr-box{background:linear-gradient(135deg,#fefce8,#fef9c3);border:2px solid #fde047;border-radius:16px;padding:22px 26px;margin-bottom:28px;}
+    .corr-box h3{font-size:1rem;font-weight:900;color:#713f12;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+    .corr-box p{font-size:0.9rem;color:#451a03;margin-bottom:8px;}
+    .corr-box .cf{font-family:'Space Mono',monospace;font-size:0.95rem;color:#78350f;background:#fef3c7;border-radius:8px;padding:8px 14px;display:inline-block;margin-top:4px;}
+
+    /* QUIZ */
+    .quiz-section{background:linear-gradient(135deg,#0f172a,#1e3a5f,#1d4ed8);border-radius:20px;padding:32px;color:white;}
+    .quiz-section h3{font-size:1.3rem;font-weight:900;margin-bottom:6px;}
+    .quiz-section p{font-size:0.88rem;opacity:0.75;margin-bottom:24px;}
+    .quiz-q{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:18px 22px;margin-bottom:14px;}
+    .quiz-q .qtext{font-size:0.95rem;margin-bottom:10px;font-weight:700;}
+    .quiz-q .qnum{font-family:'Space Mono',monospace;font-size:1.35rem;font-weight:700;margin-bottom:14px;background:rgba(255,255,255,0.1);border-radius:8px;padding:8px 16px;display:inline-block;}
+    .options{display:flex;flex-wrap:wrap;gap:10px;}
+    .opt-btn{background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);color:white;font-family:'Nunito',sans-serif;font-size:0.92rem;font-weight:700;padding:8px 18px;border-radius:30px;cursor:pointer;transition:all 0.2s;}
+    .opt-btn:hover{background:rgba(255,255,255,0.2);transform:scale(1.04);}
+    .opt-btn.correct{background:#22c55e;border-color:#22c55e;animation:popIn 0.3s ease;}
+    .opt-btn.wrong{background:#ef4444;border-color:#ef4444;}
+    .feedback{font-size:0.85rem;margin-top:10px;padding:8px 14px;border-radius:8px;display:none;}
+    .feedback.show{display:block;}
+    .feedback.ok{background:rgba(34,197,94,0.2);color:#bbf7d0;}
+    .feedback.bad{background:rgba(239,68,68,0.2);color:#fecaca;}
+    @keyframes popIn{0%{transform:scale(0.9);}60%{transform:scale(1.1);}100%{transform:scale(1);}}
+
+    footer{text-align:center;padding:32px 20px;font-size:0.85rem;color:var(--muted);}
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="star" style="width:3px;height:3px;top:12%;left:8%;animation-delay:0s"></div>
+  <div class="star" style="width:2px;height:2px;top:25%;left:15%;animation-delay:0.5s"></div>
+  <div class="star" style="width:4px;height:4px;top:10%;left:30%;animation-delay:1s"></div>
+  <div class="star" style="width:3px;height:3px;top:70%;left:20%;animation-delay:0.3s"></div>
+  <div class="star" style="width:2px;height:2px;top:15%;left:75%;animation-delay:0.8s"></div>
+  <div class="star" style="width:4px;height:4px;top:40%;left:88%;animation-delay:1.2s"></div>
+  <div class="star" style="width:5px;height:5px;top:20%;left:55%;animation-delay:0.6s"></div>
+  <div class="star" style="width:2px;height:2px;top:60%;left:92%;animation-delay:1.5s"></div>
+  <div class="star" style="width:3px;height:3px;top:80%;left:45%;animation-delay:0.9s"></div>
+  <div class="star" style="width:2px;height:2px;top:35%;left:65%;animation-delay:1.8s"></div>
+  <div class="chip">Physics · High School · Measurement &amp; Uncertainty</div>
+  <h1>Propagating Uncertainty</h1>
+  <p class="subtitle">Combining all three rules to solve real physics problems — area, density, ratios, and oscillations</p>
+</header>
+
+<main>
+
+<!-- SECTION 1: THE THREE RULES -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#dbeafe;">📋</div>
+    <h2>The Three Rules — Quick Reference</h2>
+  </div>
+
+  <div class="rules-banner">
+    <div class="rb-title">All Three Uncertainty Propagation Rules</div>
+    <div class="rules-grid">
+      <div class="rule-tile">
+        <div class="rt-num">Rule 1</div>
+        <div class="rt-name">Addition &amp; Subtraction</div>
+        <div class="rt-formula">
+          If &nbsp;y = a &plusmn; b<br>
+          &Delta;y = &Delta;a + &Delta;b
+        </div>
+        <div class="rt-key">Add ABSOLUTE uncertainties</div>
+      </div>
+      <div class="rule-tile">
+        <div class="rt-num">Rule 2</div>
+        <div class="rt-name">Multiplication &amp; Division</div>
+        <div class="rt-formula">
+          If &nbsp;y = (a&times;b)/c<br>
+          &Delta;y/y = &Delta;a/a + &Delta;b/b + &Delta;c/c
+        </div>
+        <div class="rt-key">Add FRACTIONAL uncertainties</div>
+      </div>
+      <div class="rule-tile">
+        <div class="rt-num">Rule 3</div>
+        <div class="rt-name">Powers &amp; Roots</div>
+        <div class="rt-formula">
+          If &nbsp;y = a<sup>n</sup><br>
+          &Delta;y/y = |n &times; &Delta;a/a|
+        </div>
+        <div class="rt-key">Multiply fractional uncert. by |n|</div>
+      </div>
+    </div>
+    <div class="chain-note">
+      <strong>Key Strategy:</strong> Break multi-step physics formulas into stages. Apply the matching rule at each stage, then chain the results together.
+    </div>
+  </div>
+
+  <div class="intro-grid">
+    <div class="intro-text">
+      <p>Real physics problems rarely involve just one operation. A formula like <strong>density = mass / volume</strong> requires you to first calculate volume (which may involve cubing a length), then divide by mass. Each step introduces uncertainty.</p>
+      <p>The skill in this unit is <strong>chaining rules</strong>: identify the mathematical structure at each stage, pick the right rule, and propagate the uncertainty step by step until you reach the final answer.</p>
+      <p>An important concept: <strong>exact constants have zero uncertainty</strong>. The &pi; in &pi;r&sup2; is exact, so it contributes nothing to the fractional uncertainty. Only measured quantities carry uncertainty.</p>
+      <p>Also watch for <strong>correlated variables</strong> — if the same measurement appears in both numerator and denominator, the uncertainties partially cancel rather than add.</p>
+    </div>
+    <div class="chain-visual">
+      <div class="cv-title">Chaining Rules — Strategy</div>
+      <div class="chain-step">Step 1: Identify the formula</div>
+      <div class="chain-arrow">&#8595;</div>
+      <div class="chain-step">Step 2: Break into sub-operations</div>
+      <div class="chain-arrow">&#8595;</div>
+      <div class="chain-step">Step 3: Apply Rule 1, 2, or 3</div>
+      <div class="chain-arrow">&#8595;</div>
+      <div class="chain-step">Step 4: Chain results together</div>
+      <div class="chain-arrow">&#8595;</div>
+      <div class="chain-step">Step 5: State final % uncertainty</div>
+    </div>
+  </div>
+
+  <div class="insight-strip">
+    <div class="is-card">
+      <div class="isc-icon">&#960;</div>
+      <h4>Constants Are Exact</h4>
+      <p>&pi;, 2, 4/3, and other pure numbers carry zero uncertainty. Only <em>measured</em> quantities contribute.</p>
+    </div>
+    <div class="is-card">
+      <div class="isc-icon">&#8645;</div>
+      <h4>Correlated Variables Cancel</h4>
+      <p>If the same measured quantity appears in numerator and denominator, its uncertainty cancels — it is not independent.</p>
+    </div>
+    <div class="is-card">
+      <div class="isc-icon">&#8734;</div>
+      <h4>Chain as Many Steps as Needed</h4>
+      <p>There is no limit to how many rules you can chain. Build up from sub-expressions to the full result.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: WORKED EXAMPLES -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#dbeafe;">&#128300;</div>
+    <h2>4 Fully Worked Examples</h2>
+  </div>
+
+  <!-- EXAMPLE 1: Area of a circular plate -->
+  <div class="subsection-head">
+    <div class="sub-badge">Example 1</div>
+    <div class="sub-title">Area of a Circular Plate</div>
+  </div>
+
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 1</div>
+      <div class="ex-concept">Powers Rule · constant &pi; contributes nothing</div>
+    </div>
+    <div class="ex-body">
+      <div class="problem-stmt">
+        A circular metal plate has radius <strong>r</strong> with a fractional uncertainty of <strong>&Delta;r/r</strong>.
+        Find the percentage uncertainty in the area <strong>A = &pi;r&sup2;</strong>.
+      </div>
+      <div class="given-row">
+        <div class="given-chip">A = &pi;r&sup2;</div>
+        <div class="given-chip">uncertainty: &Delta;r/r</div>
+        <div class="given-chip">&pi; = exact constant</div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-dot">1</div>
+          <span>Identify all factors: <code>&pi;</code> is an exact constant (zero uncertainty); <code>r&sup2;</code> is a measured quantity raised to the power 2.</span>
+        </div>
+        <div class="step">
+          <div class="step-dot">2</div>
+          <span>Since multiplication by an exact constant does not change fractional uncertainty, focus on <code>r&sup2;</code>. <span class="rule-tag r3">Rule 3</span></span>
+        </div>
+        <div class="step">
+          <div class="step-dot">3</div>
+          <span>Apply the power rule with <code>n = 2</code>:<br>
+            <code>&Delta;(r&sup2;) / r&sup2; = |2 &times; &Delta;r/r| = 2 &times; &Delta;r/r</code>
+          </span>
+        </div>
+        <div class="step">
+          <div class="step-dot">4</div>
+          <span>Since <code>A = &pi; &times; r&sup2;</code> and &pi; is exact:
+            <code>&Delta;A / A = &Delta;(r&sup2;) / r&sup2; = 2 &times; &Delta;r/r</code>
+          </span>
+        </div>
+      </div>
+      <div class="result-box">
+        <div>
+          <div class="rb-label">Final Answer</div>
+          <div class="rb-value">&Delta;A / A = 2 &times; &Delta;r / r</div>
+        </div>
+        <div class="rb-note">The percentage uncertainty in area is exactly twice the percentage uncertainty in radius.</div>
+      </div>
+      <div class="explanation">
+        <strong>Why?</strong> &pi; is a mathematical constant — it has infinitely many decimal places and contributes zero uncertainty. The only source of uncertainty is the measured radius <em>r</em>. Because we square it, the power rule multiplies the fractional uncertainty by 2. If your radius had 5% uncertainty, the area would have 10% uncertainty.
+      </div>
+    </div>
+  </div>
+
+  <!-- EXAMPLE 2: Density of a cube -->
+  <div class="subsection-head">
+    <div class="sub-badge">Example 2</div>
+    <div class="sub-title">Density of a Cube</div>
+  </div>
+
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 2</div>
+      <div class="ex-concept">Powers Rule + Division Rule · two-stage chain</div>
+    </div>
+    <div class="ex-body">
+      <div class="problem-stmt">
+        A cube has side length <strong>L</strong> with a 4% uncertainty. Its mass is <strong>5 kg &plusmn; 8%</strong>.
+        Find the percentage uncertainty in its density <strong>&rho; = m / L&sup3;</strong>.
+      </div>
+      <div class="given-row">
+        <div class="given-chip">L: 4% uncertainty</div>
+        <div class="given-chip">m: 8% uncertainty</div>
+        <div class="given-chip">&rho; = m / L&sup3;</div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-dot">1</div>
+          <span><strong>Stage A — Find uncertainty in Volume:</strong> Volume = L&sup3; &rarr; apply the power rule with <code>n = 3</code>. <span class="rule-tag r3">Rule 3</span></span>
+        </div>
+        <div class="step">
+          <div class="step-dot">2</div>
+          <span><code>%uncert(V) = |3| &times; %uncert(L) = 3 &times; 4% = 12%</code></span>
+        </div>
+        <div class="step">
+          <div class="step-dot">3</div>
+          <span><strong>Stage B — Find uncertainty in Density:</strong> &rho; = m / V &rarr; apply the division rule: add fractional uncertainties. <span class="rule-tag r2">Rule 2</span></span>
+        </div>
+        <div class="step">
+          <div class="step-dot">4</div>
+          <span><code>%uncert(&rho;) = %uncert(m) + %uncert(V) = 8% + 12% = 20%</code></span>
+        </div>
+      </div>
+      <div class="result-box">
+        <div>
+          <div class="rb-label">Final Answer</div>
+          <div class="rb-value">Density uncertainty = 20%</div>
+        </div>
+        <div class="rb-note">Rule 3 &rarr; Rule 2 chain: cube the length uncertainty, then add to mass uncertainty.</div>
+      </div>
+      <div class="explanation">
+        <strong>Chain logic:</strong> First apply Rule 3 to get the volume uncertainty (3 &times; 4% = 12%). Then treat density as a division problem — mass divided by volume — and apply Rule 2 (add fractional uncertainties): 8% + 12% = 20%.
+      </div>
+    </div>
+  </div>
+
+  <!-- EXAMPLE 3: Sphere inside a cube -->
+  <div class="subsection-head">
+    <div class="sub-badge">Example 3</div>
+    <div class="sub-title">Ratio of Volumes — Sphere Inside a Cube</div>
+  </div>
+
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 3</div>
+      <div class="ex-concept">Correlated variables · ratio of two expressions sharing the same measurement</div>
+    </div>
+    <div class="ex-body">
+      <div class="problem-stmt">
+        A sphere fits exactly inside a cube. The diameter of the sphere equals the side of the cube:
+        <strong>d = 20.0 &plusmn; 0.8 m</strong>. The sphere has radius <strong>r = d/2</strong>.
+        Find the percentage uncertainty in the ratio
+        <strong>V<sub>sphere</sub> / V<sub>cube</sub> = (4/3)&pi;r&sup3; / d&sup3;</strong>.
+      </div>
+      <div class="given-row">
+        <div class="given-chip">d = 20.0 &plusmn; 0.8 m</div>
+        <div class="given-chip">r = d/2</div>
+        <div class="given-chip">ratio = V&#x2083; / V&#x25A1;</div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-dot">1</div>
+          <span><strong>Simplify the ratio algebraically first:</strong>
+            <code>V&#x2083; / V&#x25A1; = (4/3)&pi;r&sup3; / d&sup3;</code>
+            Substitute <code>r = d/2</code>:
+            <code>= (4/3)&pi;(d/2)&sup3; / d&sup3; = (4/3)&pi; &times; d&sup3;/8 / d&sup3;</code>
+          </span>
+        </div>
+        <div class="step">
+          <div class="step-dot">2</div>
+          <span>The <code>d&sup3;</code> terms cancel completely:
+            <code>ratio = (4/3)&pi;/8 = &pi;/6 &asymp; 0.5236</code>
+          </span>
+        </div>
+        <div class="step">
+          <div class="step-dot">3</div>
+          <span>Since the ratio simplifies to the <strong>pure constant &pi;/6</strong> (containing no measured quantities), its uncertainty is zero.</span>
+        </div>
+        <div class="step">
+          <div class="step-dot">4</div>
+          <span><strong>Physical interpretation:</strong> Both volumes depend on the same single measurement <em>d</em>. Because they are perfectly correlated, any change in <em>d</em> scales both volumes by the same factor — the <em>ratio</em> stays constant regardless of the exact value of <em>d</em>.</span>
+        </div>
+      </div>
+      <div class="result-box">
+        <div>
+          <div class="rb-label">Final Answer</div>
+          <div class="rb-value">% uncertainty in ratio = 0%</div>
+        </div>
+        <div class="rb-note">The ratio V&#x2083;/V&#x25A1; = &pi;/6 is a pure constant — it carries zero uncertainty.</div>
+      </div>
+      <div class="explanation">
+        <strong>Key lesson — correlated variables:</strong> When the same measured quantity appears in both numerator and denominator, simplify the algebra <em>before</em> propagating uncertainties. The &ldquo;na&iuml;ve&rdquo; approach of treating numerator and denominator as independent would give 12% + 12% = 24% — a wrong answer. Since both volumes depend on the same <em>d</em>, they move together and the ratio is locked at &pi;/6.
+      </div>
+    </div>
+  </div>
+
+  <!-- EXAMPLE 4: Spring constant k -->
+  <div class="subsection-head">
+    <div class="sub-badge">Example 4</div>
+    <div class="sub-title">Angular Frequency — Division then Square Root</div>
+  </div>
+
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 4</div>
+      <div class="ex-concept">Division Rule + Root Rule (Rule 2 then Rule 3) · three-step chain</div>
+    </div>
+    <div class="ex-body">
+      <div class="problem-stmt">
+        A spring oscillates with maximum acceleration <strong>a<sub>max</sub> &plusmn; 20%</strong>
+        and initial displacement <strong>x<sub>0</sub> &plusmn; 12%</strong>.
+        The angular frequency is given by <strong>k = &radic;(a<sub>max</sub> / x<sub>0</sub>)</strong>.
+        Find the percentage uncertainty in <strong>k</strong>.
+      </div>
+      <div class="given-row">
+        <div class="given-chip">a<sub>max</sub>: 20% uncertainty</div>
+        <div class="given-chip">x<sub>0</sub>: 12% uncertainty</div>
+        <div class="given-chip">k = &radic;(a<sub>max</sub>/x<sub>0</sub>)</div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-dot">1</div>
+          <span><strong>Stage A — Uncertainty in the ratio:</strong> <code>a<sub>max</sub>/x<sub>0</sub></code> is a division &rarr; add fractional uncertainties. <span class="rule-tag r2">Rule 2</span></span>
+        </div>
+        <div class="step">
+          <div class="step-dot">2</div>
+          <span><code>%uncert(a<sub>max</sub>/x<sub>0</sub>) = 20% + 12% = 32%</code></span>
+        </div>
+        <div class="step">
+          <div class="step-dot">3</div>
+          <span><strong>Stage B — Uncertainty after square root:</strong> Taking &radic; means raising to the power n = &frac12;. Apply the power rule. <span class="rule-tag r3">Rule 3</span></span>
+        </div>
+        <div class="step">
+          <div class="step-dot">4</div>
+          <span><code>%uncert(k) = |&frac12;| &times; 32% = 16%</code></span>
+        </div>
+      </div>
+      <div class="result-box">
+        <div>
+          <div class="rb-label">Final Answer</div>
+          <div class="rb-value">%uncertainty in k = 16%</div>
+        </div>
+        <div class="rb-note">Rule 2 then Rule 3: divide &rarr; then take square root &rarr; halve the fractional uncertainty.</div>
+      </div>
+      <div class="explanation">
+        <strong>Chain logic:</strong> First find the fractional uncertainty of the expression inside the square root using Rule 2 (20% + 12% = 32%). Then apply Rule 3 with n = &frac12; (square root = power of &frac12;), which halves the fractional uncertainty: &frac12; &times; 32% = 16%.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: SPECIAL CASE NOTE -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fef9c3;">&#9888;</div>
+    <h2>Special Cases &amp; Common Mistakes</h2>
+  </div>
+  <div class="corr-box">
+    <h3>&#9888; Correlated Variables — Always Simplify Algebra First</h3>
+    <p>If the same measured quantity appears in multiple places in a formula, <strong>simplify algebraically before propagating</strong>. Variables that share the same measurement are <em>correlated</em> — they cannot be treated as independent sources of uncertainty.</p>
+    <p>Example: V<sub>sphere</sub>/V<sub>cube</sub> — both depend on <em>d</em>. Simplify first to get &pi;/6, then realize the uncertainty is 0.</p>
+    <div class="cf">Rule: simplify &rarr; then propagate. Never propagate first and simplify later.</div>
+  </div>
+  <div class="insight-strip">
+    <div class="is-card">
+      <div class="isc-icon">&#10003;</div>
+      <h4>Exact Constants</h4>
+      <p>&pi;, e, 4/3, 2, &frac12; — any pure number in a formula has zero uncertainty.</p>
+    </div>
+    <div class="is-card" style="border-top-color:#dc2626;">
+      <div class="isc-icon">&#10007;</div>
+      <h4>Do NOT Add Uncorrelated Uncertainties</h4>
+      <p>Adding uncertainties from the same variable twice is a common error. Check each variable appears only once after simplification.</p>
+    </div>
+    <div class="is-card" style="border-top-color:#059669;">
+      <div class="isc-icon">&#8730;</div>
+      <h4>Square Root = Power of &frac12;</h4>
+      <p>&radic;x = x<sup>1/2</sup> so &Delta;(&radic;x)/&radic;x = &frac12; &times; &Delta;x/x. Roots reduce uncertainty.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: QUIZ -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#dbeafe;">&#10067;</div>
+    <h2>Quick Check — 3 Questions</h2>
+  </div>
+
+  <div class="quiz-section">
+    <h3>Test Your Understanding</h3>
+    <p>Answer each question using the three rules and the worked examples above.</p>
+
+    <!-- Q1 -->
+    <div class="quiz-q" id="qq1">
+      <div class="qtext">Q1. A sphere has radius r with 5% uncertainty. The volume is V = (4/3)&pi;r&sup3;. What is the percentage uncertainty in V?</div>
+      <div class="qnum">V = (4/3)&pi;r&sup3;, &nbsp; %uncert(r) = 5%</div>
+      <div class="options">
+        <button class="opt-btn" onclick="ans(this,'qq1',false)">5%</button>
+        <button class="opt-btn" onclick="ans(this,'qq1',false)">10%</button>
+        <button class="opt-btn" onclick="ans(this,'qq1',true)">15%</button>
+        <button class="opt-btn" onclick="ans(this,'qq1',false)">20%</button>
+      </div>
+      <div class="feedback" id="qq1-fb"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-q" id="qq2">
+      <div class="qtext">Q2. A cube has side L with 6% uncertainty and mass m with 9% uncertainty. What is the percentage uncertainty in density &rho; = m/L&sup3;?</div>
+      <div class="qnum">&rho; = m / L&sup3;</div>
+      <div class="options">
+        <button class="opt-btn" onclick="ans(this,'qq2',false)">15%</button>
+        <button class="opt-btn" onclick="ans(this,'qq2',false)">18%</button>
+        <button class="opt-btn" onclick="ans(this,'qq2',true)">27%</button>
+        <button class="opt-btn" onclick="ans(this,'qq2',false)">54%</button>
+      </div>
+      <div class="feedback" id="qq2-fb"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-q" id="qq3">
+      <div class="qtext">Q3. For the formula k = &radic;(F/m), where F has 10% uncertainty and m has 6% uncertainty, what is the percentage uncertainty in k?</div>
+      <div class="qnum">k = &radic;(F/m)</div>
+      <div class="options">
+        <button class="opt-btn" onclick="ans(this,'qq3',false)">4%</button>
+        <button class="opt-btn" onclick="ans(this,'qq3',false)">8%</button>
+        <button class="opt-btn" onclick="ans(this,'qq3',true)">8%</button>
+        <button class="opt-btn" onclick="ans(this,'qq3',false)">16%</button>
+      </div>
+      <div class="feedback" id="qq3-fb"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer>Unit 12 &mdash; Propagating Uncertainty in Physics Problems &nbsp;&bull;&nbsp; High School Physics</footer>
+
+<script>
+// Fix Q3 — correcting the option layout
+document.querySelectorAll('#qq3 .opt-btn').forEach((b,i) => {
+  b.onclick = null;
+});
+var q3opts = document.querySelectorAll('#qq3 .opt-btn');
+// 4%, 8%(wrong), 8%(correct), 16%
+// Re-assign: 4%=wrong, first 8%=correct, second 8% remove (label it differently), 16%=wrong
+q3opts[0].textContent = '4%'; q3opts[0].onclick = function(){ ans(this,'qq3',false); };
+q3opts[1].textContent = '8%'; q3opts[1].onclick = function(){ ans(this,'qq3',true); };
+q3opts[2].textContent = '16%'; q3opts[2].onclick = function(){ ans(this,'qq3',false); };
+q3opts[3].textContent = '32%'; q3opts[3].onclick = function(){ ans(this,'qq3',false); };
+
+function ans(btn, qid, correct) {
+  var q = document.getElementById(qid);
+  if (q.dataset.answered) return;
+  q.dataset.answered = '1';
+  var fb = document.getElementById(qid + '-fb');
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  fb.classList.add('show');
+  if (correct) {
+    fb.classList.add('ok');
+    fb.innerHTML = correct_msgs[qid];
+  } else {
+    fb.classList.add('bad');
+    fb.innerHTML = wrong_msgs[qid];
+    q.querySelectorAll('.opt-btn').forEach(function(b){
+      if(b.classList.contains('correct') || b.dataset.right){
+        // highlight correct
+      }
+    });
+  }
+}
+var correct_msgs = {
+  'qq1': 'Correct! Rule 3: n=3, &pi; is exact. %uncert(V) = |3| &times; 5% = 15%.',
+  'qq2': 'Correct! Stage 1: %uncert(L&sup3;) = 3 &times; 6% = 18% (Rule 3). Stage 2: %uncert(&rho;) = 9% + 18% = 27% (Rule 2).',
+  'qq3': 'Correct! Stage 1: Rule 2 &rarr; %uncert(F/m) = 10% + 6% = 16%. Stage 2: Rule 3 with n=&frac12; &rarr; &frac12; &times; 16% = 8%.'
+};
+var wrong_msgs = {
+  'qq1': 'Not quite. V = (4/3)&pi;r&sup3; &rarr; &pi; is exact, power n=3. Rule 3: %uncert(V) = 3 &times; 5% = 15%.',
+  'qq2': 'Not quite. First get %uncert(L&sup3;) = 3&times;6% = 18%, then %uncert(&rho;) = 9% + 18% = 27%.',
+  'qq3': 'Not quite. Step 1: %uncert(F/m) = 10% + 6% = 16% (Rule 2). Step 2: &frac12; &times; 16% = 8% (Rule 3, n=&frac12;).'
+};
+</script>
+</body>
+</html>

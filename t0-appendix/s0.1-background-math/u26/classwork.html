@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inverse Trig Functions — Classwork</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#faf5ff;background-image:radial-gradient(circle,#e9d5ff 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#581c87 0%,#7e22ce 50%,#9333ea 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:820px;margin:36px auto;padding:0 24px 60px;}
+    .ref-box{background:white;border:2px solid #e9d5ff;border-radius:10px;padding:18px 22px;margin-bottom:36px;box-shadow:0 2px 8px rgba(147,51,234,0.08);}
+    .ref-box h3{color:#581c87;font-size:1rem;margin-bottom:12px;font-weight:800;}
+    .ref-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+    @media(max-width:580px){.ref-grid{grid-template-columns:1fr;}}
+    .ref-item{background:linear-gradient(135deg,#faf5ff,#f3e8ff);border:1px solid #c4b5fd;border-radius:8px;padding:10px 14px;text-align:center;}
+    .ref-item .ri-type{font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
+    .ref-item .ri-formula{font-family:'Space Mono',monospace;font-size:0.85rem;font-weight:700;}
+    .ri-sin .ri-type{color:#be185d;} .ri-sin .ri-formula{color:#9d174d;}
+    .ri-cos .ri-type{color:#1d4ed8;} .ri-cos .ri-formula{color:#1e3a8a;}
+    .ri-tan .ri-type{color:#15803d;} .ri-tan .ri-formula{color:#14532d;}
+    section{margin-bottom:44px;}
+    h2{font-size:1.2rem;font-weight:800;color:#581c87;border-left:5px solid #9333ea;padding-left:12px;margin-bottom:18px;}
+    .instructions{color:#4b5563;font-size:0.92rem;margin-bottom:18px;font-style:italic;}
+    /* Problem cards */
+    .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    @media(max-width:600px){.problem-grid{grid-template-columns:1fr;}}
+    .problem-card{background:white;border-radius:12px;padding:18px 20px;box-shadow:0 1px 6px rgba(147,51,234,0.08);border:1px solid #f3e8ff;}
+    .problem-num{font-size:0.75rem;font-weight:800;text-transform:uppercase;color:#9333ea;margin-bottom:8px;letter-spacing:0.5px;}
+    .tri-row{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+    .problem-given{font-size:0.88rem;color:#374151;margin-bottom:10px;line-height:1.5;}
+    .problem-given strong{color:#581c87;}
+    .answer-area{display:flex;flex-direction:column;gap:6px;}
+    .answer-row{display:flex;align-items:center;gap:8px;font-size:0.88rem;color:#4b5563;}
+    .answer-line{border-bottom:2px solid #c4b5fd;min-height:24px;flex:1;max-width:180px;display:inline-block;}
+    .pill-sin{display:inline-block;background:#fce7f3;color:#be185d;border-radius:12px;padding:2px 10px;font-size:0.75rem;font-weight:700;}
+    .pill-cos{display:inline-block;background:#dbeafe;color:#1d4ed8;border-radius:12px;padding:2px 10px;font-size:0.75rem;font-weight:700;}
+    .pill-tan{display:inline-block;background:#dcfce7;color:#15803d;border-radius:12px;padding:2px 10px;font-size:0.75rem;font-weight:700;}
+    /* Show answer key button */
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:linear-gradient(135deg,#581c87,#9333ea);color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #toggle-key-btn:hover{opacity:0.9;}
+    #answer-key{display:none;background:#faf5ff;border:2px solid #c4b5fd;border-radius:12px;padding:28px 32px;}
+    #answer-key h2{color:#581c87;border-left-color:#9333ea;margin-bottom:22px;}
+    .key-section{margin-bottom:28px;}
+    .key-section h3{font-size:1rem;font-weight:800;color:#7e22ce;margin-bottom:12px;}
+    .key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    @media(max-width:580px){.key-grid{grid-template-columns:1fr;}}
+    .key-item{background:white;border-radius:8px;padding:12px 16px;border:1px solid #e9d5ff;font-size:0.92rem;}
+    .key-item .k-num{font-weight:800;color:#9333ea;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;}
+    .key-item .k-formula{font-family:'Space Mono',monospace;font-size:0.88rem;color:#374151;margin-bottom:4px;}
+    .key-item .k-ans{font-family:'Space Mono',monospace;font-weight:700;color:#581c87;font-size:1.05rem;}
+    .key-item .k-note{font-size:0.78rem;color:#6b7280;margin-top:2px;}
+    /* Select problems (part B) */
+    .select-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;}
+    .sel-card{background:white;border-radius:10px;padding:14px 18px;flex:1;min-width:200px;box-shadow:0 1px 4px rgba(147,51,234,0.07);border:1px solid #f3e8ff;}
+    .sel-card .sel-given{font-size:0.9rem;color:#374151;margin-bottom:8px;}
+    .sel-option{display:flex;align-items:center;gap:8px;font-size:0.88rem;margin-bottom:4px;}
+    .sel-option input[type=radio]{accent-color:#9333ea;width:14px;height:14px;}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#2e1065,#4c1d95,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#9333ea,#6366f1);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">Physics · High School · In-Class Activity</div>
+  <h1>Inverse Trig Functions — Classwork</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+
+  <!-- Quick Reference -->
+  <div class="ref-box">
+    <h3>Formula Reference</h3>
+    <div class="ref-grid">
+      <div class="ref-item ri-sin">
+        <div class="ri-type">sin⁻¹ — use when you have Opp + Hyp</div>
+        <div class="ri-formula">θ = sin⁻¹(Opp / Hyp)</div>
+      </div>
+      <div class="ref-item ri-cos">
+        <div class="ri-type">cos⁻¹ — use when you have Adj + Hyp</div>
+        <div class="ri-formula">θ = cos⁻¹(Adj / Hyp)</div>
+      </div>
+      <div class="ref-item ri-tan">
+        <div class="ri-type">tan⁻¹ — use when you have Opp + Adj</div>
+        <div class="ri-formula">θ = tan⁻¹(Opp / Adj)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Part A: Write the expression -->
+  <section>
+    <h2>Part A — Write the Inverse Trig Expression</h2>
+    <p class="instructions">For each triangle, identify the two known sides, choose the correct inverse trig function, and write the full expression (e.g. sin⁻¹(3/5) = θ). Do not solve yet.</p>
+    <div class="problem-grid">
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 1 <span class="pill-sin">sin⁻¹ ?</span></div>
+        <div class="problem-given"><strong>Opposite = 3</strong><br><strong>Hypotenuse = 5</strong><br>Adjacent = unknown</div>
+        <div class="answer-area">
+          <div class="answer-row">Expression: <span class="answer-line"></span></div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 2 <span class="pill-cos">cos⁻¹ ?</span></div>
+        <div class="problem-given"><strong>Adjacent = 7</strong><br><strong>Hypotenuse = 25</strong><br>Opposite = unknown</div>
+        <div class="answer-area">
+          <div class="answer-row">Expression: <span class="answer-line"></span></div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 3 <span class="pill-tan">tan⁻¹ ?</span></div>
+        <div class="problem-given"><strong>Opposite = 9</strong><br><strong>Adjacent = 4</strong><br>Hypotenuse = unknown</div>
+        <div class="answer-area">
+          <div class="answer-row">Expression: <span class="answer-line"></span></div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 4 <span class="pill-sin">sin⁻¹ ?</span></div>
+        <div class="problem-given"><strong>Opposite = 15</strong><br><strong>Hypotenuse = 17</strong><br>Adjacent = unknown</div>
+        <div class="answer-area">
+          <div class="answer-row">Expression: <span class="answer-line"></span></div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 5 <span class="pill-cos">cos⁻¹ ?</span></div>
+        <div class="problem-given"><strong>Adjacent = 6</strong><br><strong>Hypotenuse = 10</strong><br>Opposite = unknown</div>
+        <div class="answer-area">
+          <div class="answer-row">Expression: <span class="answer-line"></span></div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 6 <span class="pill-tan">tan⁻¹ ?</span></div>
+        <div class="problem-given"><strong>Opposite = 11</strong><br><strong>Adjacent = 6</strong><br>Hypotenuse = unknown</div>
+        <div class="answer-area">
+          <div class="answer-row">Expression: <span class="answer-line"></span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Part B: Choose the correct function -->
+  <section>
+    <h2>Part B — Choose the Correct Inverse Trig Function</h2>
+    <p class="instructions">Circle or tick the correct inverse trig function for each problem. No calculation needed.</p>
+    <div class="problem-grid">
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 7</div>
+        <div class="problem-given">Known sides: <strong>Opposite = 4, Hypotenuse = 13</strong></div>
+        <div class="sel-option"><input type="radio" name="p7" id="p7a"><label for="p7a">sin⁻¹(4/13)</label></div>
+        <div class="sel-option"><input type="radio" name="p7" id="p7b"><label for="p7b">cos⁻¹(4/13)</label></div>
+        <div class="sel-option"><input type="radio" name="p7" id="p7c"><label for="p7c">tan⁻¹(4/13)</label></div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 8</div>
+        <div class="problem-given">Known sides: <strong>Adjacent = 5, Hypotenuse = 12</strong></div>
+        <div class="sel-option"><input type="radio" name="p8" id="p8a"><label for="p8a">sin⁻¹(5/12)</label></div>
+        <div class="sel-option"><input type="radio" name="p8" id="p8b"><label for="p8b">cos⁻¹(5/12)</label></div>
+        <div class="sel-option"><input type="radio" name="p8" id="p8c"><label for="p8c">tan⁻¹(5/12)</label></div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 9</div>
+        <div class="problem-given">Known sides: <strong>Opposite = 7, Adjacent = 24</strong></div>
+        <div class="sel-option"><input type="radio" name="p9" id="p9a"><label for="p9a">sin⁻¹(7/24)</label></div>
+        <div class="sel-option"><input type="radio" name="p9" id="p9b"><label for="p9b">cos⁻¹(7/24)</label></div>
+        <div class="sel-option"><input type="radio" name="p9" id="p9c"><label for="p9c">tan⁻¹(7/24)</label></div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 10</div>
+        <div class="problem-given">Known sides: <strong>Adjacent = 8, Hypotenuse = 17</strong></div>
+        <div class="sel-option"><input type="radio" name="p10" id="p10a"><label for="p10a">sin⁻¹(8/17)</label></div>
+        <div class="sel-option"><input type="radio" name="p10" id="p10b"><label for="p10b">cos⁻¹(8/17)</label></div>
+        <div class="sel-option"><input type="radio" name="p10" id="p10c"><label for="p10c">tan⁻¹(8/17)</label></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Part C: Solve for the angle -->
+  <section>
+    <h2>Part C — Solve for the Angle</h2>
+    <p class="instructions">Use your calculator to find angle θ. Round to 1 decimal place. Show your expression and your answer.</p>
+    <div class="problem-grid">
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 11</div>
+        <div class="problem-given"><strong>Opposite = 5, Hypotenuse = 13</strong></div>
+        <div class="answer-area">
+          <div class="answer-row">Expression: <span class="answer-line"></span></div>
+          <div class="answer-row">θ = <span class="answer-line" style="max-width:80px;"></span> °</div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 12</div>
+        <div class="problem-given"><strong>Adjacent = 4, Hypotenuse = 10</strong></div>
+        <div class="answer-area">
+          <div class="answer-row">Expression: <span class="answer-line"></span></div>
+          <div class="answer-row">θ = <span class="answer-line" style="max-width:80px;"></span> °</div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 13</div>
+        <div class="problem-given"><strong>Opposite = 6, Adjacent = 8</strong></div>
+        <div class="answer-area">
+          <div class="answer-row">Expression: <span class="answer-line"></span></div>
+          <div class="answer-row">θ = <span class="answer-line" style="max-width:80px;"></span> °</div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 14</div>
+        <div class="problem-given"><strong>Opposite = 12, Hypotenuse = 20</strong></div>
+        <div class="answer-area">
+          <div class="answer-row">Expression: <span class="answer-line"></span></div>
+          <div class="answer-row">θ = <span class="answer-line" style="max-width:80px;"></span> °</div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 15</div>
+        <div class="problem-given"><strong>Adjacent = 9, Hypotenuse = 15</strong></div>
+        <div class="answer-area">
+          <div class="answer-row">Expression: <span class="answer-line"></span></div>
+          <div class="answer-row">θ = <span class="answer-line" style="max-width:80px;"></span> °</div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 16</div>
+        <div class="problem-given"><strong>Opposite = 20, Adjacent = 15</strong></div>
+        <div class="answer-area">
+          <div class="answer-row">Expression: <span class="answer-line"></span></div>
+          <div class="answer-row">θ = <span class="answer-line" style="max-width:80px;"></span> °</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Part D: Concept check -->
+  <section>
+    <h2>Part D — Concept Check</h2>
+    <p class="instructions">Answer the following questions in full sentences.</p>
+    <div style="display:flex;flex-direction:column;gap:18px;">
+      <div style="background:white;border-radius:10px;padding:18px 22px;border:1px solid #e9d5ff;">
+        <div style="font-weight:700;margin-bottom:12px;color:#374151;">17. In your own words, what is the difference between sin(θ) and sin⁻¹(θ)?</div>
+        <div style="border-bottom:2px solid #c4b5fd;min-height:28px;margin-bottom:10px;"></div>
+        <div style="border-bottom:2px solid #c4b5fd;min-height:28px;"></div>
+      </div>
+      <div style="background:white;border-radius:10px;padding:18px 22px;border:1px solid #e9d5ff;">
+        <div style="font-weight:700;margin-bottom:12px;color:#374151;">18. You are told a triangle has Opposite = 3 and Hypotenuse = 4. Can you use tan⁻¹ to find the angle? Explain why or why not.</div>
+        <div style="border-bottom:2px solid #c4b5fd;min-height:28px;margin-bottom:10px;"></div>
+        <div style="border-bottom:2px solid #c4b5fd;min-height:28px;"></div>
+      </div>
+      <div style="background:white;border-radius:10px;padding:18px 22px;border:1px solid #e9d5ff;">
+        <div style="font-weight:700;margin-bottom:12px;color:#374151;">19. What keys on your calculator do you press to evaluate cos⁻¹(0.6)?</div>
+        <div style="border-bottom:2px solid #c4b5fd;min-height:28px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Answer Key Toggle -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="document.getElementById('answer-key').style.display=(document.getElementById('answer-key').style.display==='none'?'block':'none');this.textContent=(document.getElementById('answer-key').style.display==='none'?'Show Answer Key':'Hide Answer Key');">Show Answer Key</button>
+  </div>
+
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A — Expressions</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="k-num">Problem 1</div><div class="k-formula">sin⁻¹(3/5) = θ</div><div class="k-note">Opp/Hyp → sin⁻¹</div></div>
+        <div class="key-item"><div class="k-num">Problem 2</div><div class="k-formula">cos⁻¹(7/25) = θ</div><div class="k-note">Adj/Hyp → cos⁻¹</div></div>
+        <div class="key-item"><div class="k-num">Problem 3</div><div class="k-formula">tan⁻¹(9/4) = θ</div><div class="k-note">Opp/Adj → tan⁻¹</div></div>
+        <div class="key-item"><div class="k-num">Problem 4</div><div class="k-formula">sin⁻¹(15/17) = θ</div><div class="k-note">Opp/Hyp → sin⁻¹</div></div>
+        <div class="key-item"><div class="k-num">Problem 5</div><div class="k-formula">cos⁻¹(6/10) = θ</div><div class="k-note">Adj/Hyp → cos⁻¹</div></div>
+        <div class="key-item"><div class="k-num">Problem 6</div><div class="k-formula">tan⁻¹(11/6) = θ</div><div class="k-note">Opp/Adj → tan⁻¹</div></div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B — Correct Function</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="k-num">Problem 7</div><div class="k-ans">sin⁻¹(4/13)</div><div class="k-note">Opp=4, Hyp=13 → sin⁻¹</div></div>
+        <div class="key-item"><div class="k-num">Problem 8</div><div class="k-ans">cos⁻¹(5/12)</div><div class="k-note">Adj=5, Hyp=12 → cos⁻¹</div></div>
+        <div class="key-item"><div class="k-num">Problem 9</div><div class="k-ans">tan⁻¹(7/24)</div><div class="k-note">Opp=7, Adj=24 → tan⁻¹</div></div>
+        <div class="key-item"><div class="k-num">Problem 10</div><div class="k-ans">cos⁻¹(8/17)</div><div class="k-note">Adj=8, Hyp=17 → cos⁻¹</div></div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C — Angles</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="k-num">Problem 11</div><div class="k-formula">sin⁻¹(5/13)</div><div class="k-ans">θ = 22.6°</div></div>
+        <div class="key-item"><div class="k-num">Problem 12</div><div class="k-formula">cos⁻¹(4/10)</div><div class="k-ans">θ = 66.4°</div></div>
+        <div class="key-item"><div class="k-num">Problem 13</div><div class="k-formula">tan⁻¹(6/8)</div><div class="k-ans">θ = 36.9°</div></div>
+        <div class="key-item"><div class="k-num">Problem 14</div><div class="k-formula">sin⁻¹(12/20)</div><div class="k-ans">θ = 36.9°</div></div>
+        <div class="key-item"><div class="k-num">Problem 15</div><div class="k-formula">cos⁻¹(9/15)</div><div class="k-ans">θ = 53.1°</div></div>
+        <div class="key-item"><div class="k-num">Problem 16</div><div class="k-formula">tan⁻¹(20/15)</div><div class="k-ans">θ = 53.1°</div></div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part D — Concept Check (Sample Answers)</h3>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="background:white;border-radius:8px;padding:14px 18px;border:1px solid #e9d5ff;font-size:0.92rem;">
+          <strong style="color:#7e22ce;">Q17:</strong> sin(θ) takes an angle as input and outputs a ratio of sides (Opp/Hyp). sin⁻¹(θ) is the inverse — it takes a ratio of sides as input and outputs an angle. They undo each other.
+        </div>
+        <div style="background:white;border-radius:8px;padding:14px 18px;border:1px solid #e9d5ff;font-size:0.92rem;">
+          <strong style="color:#7e22ce;">Q18:</strong> No. tan⁻¹ requires the Opposite and Adjacent sides. Here we have Opposite and Hypotenuse — that requires sin⁻¹(3/4) = 48.6°.
+        </div>
+        <div style="background:white;border-radius:8px;padding:14px 18px;border:1px solid #e9d5ff;font-size:0.92rem;">
+          <strong style="color:#7e22ce;">Q19:</strong> Press SHIFT (or 2nd) → cos → type 0.6 → close bracket ) → press = (or EXE). The answer is 53.1°.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</body>
+</html>

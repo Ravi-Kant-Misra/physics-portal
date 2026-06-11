@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Variables, Units &amp; Prefixes — Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#4c1d95 0%,#7c3aed 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:820px;margin:36px auto;padding:0 24px 60px;}
+    .ref-box{background:white;border:2px solid #ede9fe;border-radius:10px;padding:18px 22px;margin-bottom:36px;}
+    .ref-box h3{color:#4c1d95;font-size:1rem;margin-bottom:12px;}
+    .ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    @media(max-width:560px){.ref-grid{grid-template-columns:1fr;}}
+    .ref-item{background:#faf5ff;border-radius:8px;padding:10px 14px;font-size:0.88rem;}
+    .ref-item .sym{font-family:'Space Mono',monospace;font-weight:700;color:#7c3aed;font-size:1rem;}
+    .ref-prefix{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;}
+    @media(max-width:560px){.ref-prefix{grid-template-columns:repeat(2,1fr);}}
+    .ref-prefix .p-cell{background:#faf5ff;border-radius:6px;padding:6px 10px;font-size:0.82rem;text-align:center;}
+    .ref-prefix .p-sym{font-family:'Space Mono',monospace;font-weight:700;color:#7c3aed;}
+    .ref-box .tip{margin-top:12px;padding:10px 14px;background:#f3e8ff;border-left:4px solid #7c3aed;border-radius:4px;font-size:0.85rem;color:#4c1d95;}
+    section{margin-bottom:44px;}
+    h2{font-size:1.2rem;font-weight:700;color:#4c1d95;border-left:5px solid #7c3aed;padding-left:12px;margin-bottom:18px;}
+    .instructions{color:#4b5563;font-size:0.9rem;margin-bottom:16px;font-style:italic;}
+    .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    @media(max-width:600px){.problem-grid{grid-template-columns:1fr;}}
+    .problem-card{background:white;border-radius:8px;padding:16px 20px;box-shadow:0 1px 5px rgba(0,0,0,0.07);}
+    .problem-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:4px;}
+    .number-display{font-family:'Space Mono',monospace;font-size:1.6rem;font-weight:700;color:#1a1a2e;margin-bottom:8px;}
+    .answer-line{border-bottom:2px solid #d1d5db;min-height:28px;width:200px;display:inline-block;}
+    .problem-wide{background:white;border-radius:8px;padding:16px 20px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .field-set{display:flex;flex-direction:column;gap:8px;}
+    .field-row{display:flex;align-items:center;gap:8px;font-size:0.88rem;}
+    .short-line{border-bottom:2px solid #d1d5db;min-height:24px;width:100px;display:inline-block;}
+    .long-line{border-bottom:2px solid #d1d5db;min-height:24px;width:200px;display:inline-block;}
+    .two-fields{display:flex;gap:32px;flex-wrap:wrap;margin-top:10px;}
+    /* true/false */
+    .tf-card{background:white;border-radius:8px;padding:14px 20px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:10px;display:flex;align-items:flex-start;gap:16px;}
+    .tf-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#6b7280;min-width:30px;}
+    .tf-stmt{flex:1;font-size:0.93rem;}
+    .tf-circles{display:flex;gap:12px;flex-shrink:0;align-items:center;margin-top:2px;}
+    .tf-circle{width:28px;height:28px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#9ca3af;}
+    /* derived unit matching */
+    .match-row{display:flex;align-items:center;gap:14px;margin-bottom:10px;flex-wrap:wrap;}
+    .match-q{font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;background:#f3f4f6;padding:6px 14px;border-radius:8px;min-width:140px;}
+    .match-line{border-bottom:2px solid #d1d5db;min-height:24px;width:180px;display:inline-block;}
+    /* short answer */
+    .short-answer{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .short-answer .q{font-weight:600;margin-bottom:10px;font-size:0.95rem;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+    /* answer key */
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#4c1d95;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #toggle-key-btn:hover{background:#5b21b6;}
+    #answer-key{display:none;background:#faf5ff;border:2px solid #c4b5fd;border-radius:12px;padding:28px 32px;}
+    #answer-key h2{color:#4c1d95;border-left-color:#7c3aed;margin-bottom:22px;}
+    .key-section{margin-bottom:28px;}
+    .key-section h3{font-size:1rem;font-weight:700;color:#4c1d95;margin-bottom:12px;}
+    .key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    .key-item{background:white;border-radius:6px;padding:10px 14px;font-size:0.92rem;}
+    .key-item .kq{font-size:0.82rem;color:#6b7280;margin-bottom:2px;}
+    .key-item .kans{color:#5b21b6;font-weight:700;font-family:'Space Mono',monospace;}
+    .key-item .kexpl{color:#4b5563;font-size:0.82rem;margin-top:2px;}
+    .short-ans-key{background:white;border-radius:6px;padding:12px 16px;font-size:0.92rem;margin-bottom:10px;}
+    .short-ans-key strong{color:#5b21b6;}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">Physics · High School · Homework Assignment</div>
+  <h1>Variables, Units &amp; Prefixes — Homework</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+  <div class="ref-box">
+    <h3>Quick Reference</h3>
+    <div class="ref-grid">
+      <div class="ref-item"><span class="sym">m</span> — Meter (Length)</div>
+      <div class="ref-item"><span class="sym">kg</span> — Kilogram (Mass)</div>
+      <div class="ref-item"><span class="sym">s</span> — Second (Time)</div>
+      <div class="ref-item"><span class="sym">K</span> — Kelvin (Temperature)</div>
+      <div class="ref-item"><span class="sym">mol</span> — Mole (# Particles)</div>
+      <div class="ref-item"><span class="sym">A</span> — Ampere (Current)</div>
+      <div class="ref-item"><span class="sym">cd</span> — Candela (Luminosity)</div>
+    </div>
+    <div style="margin-top:14px;font-size:0.85rem;font-weight:700;color:#4c1d95;margin-bottom:8px;">Prefixes:</div>
+    <div class="ref-prefix">
+      <div class="p-cell"><span class="p-sym">G</span><br>Giga 10⁹</div>
+      <div class="p-cell"><span class="p-sym">M</span><br>Mega 10⁶</div>
+      <div class="p-cell"><span class="p-sym">k</span><br>kilo 10³</div>
+      <div class="p-cell"><span class="p-sym">c</span><br>centi 10⁻²</div>
+      <div class="p-cell"><span class="p-sym">m</span><br>milli 10⁻³</div>
+      <div class="p-cell"><span class="p-sym">μ</span><br>micro 10⁻⁶</div>
+      <div class="p-cell"><span class="p-sym">n</span><br>nano 10⁻⁹</div>
+    </div>
+    <div class="tip">Remember: Variable = Number × Unit &nbsp;|&nbsp; Units behave like algebraic variables &nbsp;|&nbsp; Only add/subtract same units</div>
+  </div>
+
+  <!-- Part A: Identifying Physical Quantities -->
+  <section>
+    <h2>Part A — Identifying Physical Quantities</h2>
+    <p class="instructions">For each quantity, state whether it is a complete physical quantity (yes/no) and if yes, identify the variable type and unit.</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-num">Question 1</div>
+        <div class="number-display" style="font-size:1.4rem;">9.81</div>
+        <div class="field-set" style="margin-top:8px;gap:8px;">
+          <div class="field-row" style="font-size:0.85rem;">Complete? <span class="short-line" style="width:60px;"></span></div>
+          <div class="field-row" style="font-size:0.85rem;">If yes, variable: <span class="short-line"></span></div>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">Question 2</div>
+        <div class="number-display" style="font-size:1.4rem;">9.81 m·s⁻²</div>
+        <div class="field-set" style="margin-top:8px;gap:8px;">
+          <div class="field-row" style="font-size:0.85rem;">Complete? <span class="short-line" style="width:60px;"></span></div>
+          <div class="field-row" style="font-size:0.85rem;">Variable type: <span class="short-line"></span></div>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">Question 3</div>
+        <div class="number-display" style="font-size:1.4rem;">m·s⁻¹</div>
+        <div class="field-set" style="margin-top:8px;gap:8px;">
+          <div class="field-row" style="font-size:0.85rem;">Complete? <span class="short-line" style="width:60px;"></span></div>
+          <div class="field-row" style="font-size:0.85rem;">What it measures: <span class="short-line"></span></div>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">Question 4</div>
+        <div class="number-display" style="font-size:1.4rem;">3.00 × 10⁸ m·s⁻¹</div>
+        <div class="field-set" style="margin-top:8px;gap:8px;">
+          <div class="field-row" style="font-size:0.85rem;">Complete? <span class="short-line" style="width:60px;"></span></div>
+          <div class="field-row" style="font-size:0.85rem;">Variable type: <span class="short-line"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Part B: Unit Arithmetic — harder problems -->
+  <section>
+    <h2>Part B — Unit Arithmetic</h2>
+    <p class="instructions">Simplify fully. Express compound units using negative exponents (no fractions in denominator).</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-num">Question 5</div>
+        <div class="number-display" style="font-size:1.2rem;">8 m ÷ 2 s ÷ 1 s</div>
+        <div style="font-size:0.82rem;color:#64748b;margin-bottom:8px;">(acceleration!)</div>
+        <div class="field-set" style="gap:6px;">
+          <div class="field-row" style="font-size:0.85rem;">Result: <span class="long-line"></span></div>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">Question 6</div>
+        <div class="number-display" style="font-size:1.2rem;">4 kg × 2 m × 3 s⁻²</div>
+        <div style="font-size:0.82rem;color:#64748b;margin-bottom:8px;">(what unit does this simplify to?)</div>
+        <div class="field-set" style="gap:6px;">
+          <div class="field-row" style="font-size:0.85rem;">Result: <span class="long-line"></span></div>
+          <div class="field-row" style="font-size:0.85rem;">Common name: <span class="short-line"></span></div>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">Question 7</div>
+        <div class="number-display" style="font-size:1.2rem;">(2 m)³</div>
+        <div class="field-set" style="gap:6px;margin-top:8px;">
+          <div class="field-row" style="font-size:0.85rem;">Result: <span class="long-line"></span></div>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">Question 8</div>
+        <div class="number-display" style="font-size:1.2rem;">15 m·s⁻¹ − 10 m·s⁻¹</div>
+        <div class="field-set" style="gap:6px;margin-top:8px;">
+          <div class="field-row" style="font-size:0.85rem;">Result: <span class="long-line"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="problem-wide" style="margin-top:14px;">
+      <div class="problem-num">Question 9 — IB Notation challenge</div>
+      <div class="number-display" style="font-size:1.1rem;">12 kg · 5 N · m²  ÷  (6 m · 2 A²)</div>
+      <div style="font-size:0.85rem;color:#475569;margin:6px 0 10px;">Rewrite with no fraction (use negative exponents for denominator units). Show your steps.</div>
+      <div class="field-set" style="gap:10px;">
+        <div class="field-row" style="font-size:0.85rem;">Step 1 (multiply/divide numbers): <span class="long-line"></span></div>
+        <div class="field-row" style="font-size:0.85rem;">Step 2 (move denom units to neg exp): <span class="long-line"></span></div>
+        <div class="field-row" style="font-size:0.85rem;">Final answer: <span class="long-line"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Part C: True or False -->
+  <section>
+    <h2>Part C — True or False</h2>
+    <p class="instructions">Circle T (True) or F (False) for each statement. If false, write a corrected version on the line.</p>
+
+    <div class="tf-card">
+      <div class="tf-num">10.</div>
+      <div>
+        <div class="tf-stmt">The kilogram is the only fundamental SI unit that has a prefix in its name.</div>
+        <div style="margin-top:6px;font-size:0.85rem;color:#6b7280;">If false, correction: <span class="long-line"></span></div>
+      </div>
+      <div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div>
+    </div>
+    <div class="tf-card">
+      <div class="tf-num">11.</div>
+      <div>
+        <div class="tf-stmt">You can add 5 kg + 3 m because they are both SI units.</div>
+        <div style="margin-top:6px;font-size:0.85rem;color:#6b7280;">If false, correction: <span class="long-line"></span></div>
+      </div>
+      <div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div>
+    </div>
+    <div class="tf-card">
+      <div class="tf-num">12.</div>
+      <div>
+        <div class="tf-stmt">1 nanometer = 10⁻⁹ meters.</div>
+        <div style="margin-top:6px;font-size:0.85rem;color:#6b7280;">If false, correction: <span class="long-line"></span></div>
+      </div>
+      <div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div>
+    </div>
+    <div class="tf-card">
+      <div class="tf-num">13.</div>
+      <div>
+        <div class="tf-stmt">A Newton (N) is a fundamental SI unit.</div>
+        <div style="margin-top:6px;font-size:0.85rem;color:#6b7280;">If false, correction: <span class="long-line"></span></div>
+      </div>
+      <div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div>
+    </div>
+    <div class="tf-card">
+      <div class="tf-num">14.</div>
+      <div>
+        <div class="tf-stmt">The symbol "M" (capital M) represents the prefix "milli" (10⁻³).</div>
+        <div style="margin-top:6px;font-size:0.85rem;color:#6b7280;">If false, correction: <span class="long-line"></span></div>
+      </div>
+      <div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div>
+    </div>
+  </section>
+
+  <!-- Part D: Prefix Conversions (harder) -->
+  <section>
+    <h2>Part D — Prefix Conversions</h2>
+    <p class="instructions">Convert to base SI units. Write in scientific notation. Show your reasoning.</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-num">Question 15</div>
+        <div class="number-display">8.5 GHz</div>
+        <div class="field-set" style="margin-top:8px;gap:8px;">
+          <div class="field-row" style="font-size:0.85rem;">= <span class="long-line"></span></div>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">Question 16</div>
+        <div class="number-display">0.35 mm</div>
+        <div class="field-set" style="margin-top:8px;gap:8px;">
+          <div class="field-row" style="font-size:0.85rem;">= <span class="long-line"></span></div>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">Question 17</div>
+        <div class="number-display">6.2 μm</div>
+        <div class="field-set" style="margin-top:8px;gap:8px;">
+          <div class="field-row" style="font-size:0.85rem;">= <span class="long-line"></span></div>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">Question 18</div>
+        <div class="number-display">500 mA</div>
+        <div class="field-set" style="margin-top:8px;gap:8px;">
+          <div class="field-row" style="font-size:0.85rem;">= <span class="long-line"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="problem-wide" style="margin-top:14px;">
+      <div class="problem-num">Question 19 — Reverse conversion</div>
+      <div style="font-size:0.95rem;font-weight:600;margin-bottom:8px;">Express 0.0000045 m using the most appropriate prefix. Show your reasoning.</div>
+      <div class="field-set" style="gap:10px;">
+        <div class="field-row" style="font-size:0.85rem;">Scientific notation: <span class="long-line"></span></div>
+        <div class="field-row" style="font-size:0.85rem;">Best prefix: <span class="short-line"></span></div>
+        <div class="field-row" style="font-size:0.85rem;">Final answer with prefix: <span class="long-line"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Part E: Derived Units -->
+  <section>
+    <h2>Part E — Derived Units</h2>
+    <p class="instructions">Match each compound unit expression to what physical quantity it measures. Write the quantity name on the line.</p>
+    <div class="match-row"><div class="match-q">kg·m·s⁻²</div> → <span class="match-line"></span></div>
+    <div class="match-row"><div class="match-q">kg·m²·s⁻²</div> → <span class="match-line"></span></div>
+    <div class="match-row"><div class="match-q">m·s⁻¹</div> → <span class="match-line"></span></div>
+    <div class="match-row"><div class="match-q">m·s⁻²</div> → <span class="match-line"></span></div>
+    <div class="match-row"><div class="match-q">kg·m⁻³</div> → <span class="match-line"></span></div>
+    <div style="margin-top:6px;font-size:0.82rem;color:#64748b;font-style:italic;">Word bank: Force &nbsp;|&nbsp; Energy (Joule) &nbsp;|&nbsp; Speed/Velocity &nbsp;|&nbsp; Acceleration &nbsp;|&nbsp; Density</div>
+  </section>
+
+  <!-- Part F: Extended Response -->
+  <section>
+    <h2>Part F — Extended Response</h2>
+    <div class="short-answer">
+      <div class="q">24. A physics student measures the speed of light as 300,000,000 m·s⁻¹ and a wavelength of visible light as 0.0000007 m.<br><br>
+      (a) Express both values in scientific notation.<br>
+      (b) Express the wavelength using an appropriate prefix.<br>
+      (c) Are these complete physical quantities? Explain.</div>
+      <div class="write-lines">
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+    <div class="short-answer">
+      <div class="q">25. Explain why the SI system is more convenient for scientists than the Imperial system. Give two specific examples using prefixes to support your answer.</div>
+      <div class="write-lines">
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+    <div class="short-answer">
+      <div class="q">26. A student claims that speed has units of m/s, which can also be written as m·s. Is the student correct? Explain the difference between m·s and m·s⁻¹.</div>
+      <div class="write-lines">
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Answer Key Toggle -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+  </div>
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A — Physical Quantities</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="kq">Q1: 9.81</div>
+          <div class="kans">NO — incomplete</div>
+          <div class="kexpl">No unit — could mean anything</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Q2: 9.81 m·s⁻²</div>
+          <div class="kans">YES — Acceleration</div>
+          <div class="kexpl">Complete: number + unit (gravitational acceleration)</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Q3: m·s⁻¹</div>
+          <div class="kans">NO — unit only, no number</div>
+          <div class="kexpl">Measures speed/velocity</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Q4: 3.00 × 10⁸ m·s⁻¹</div>
+          <div class="kans">YES — Speed (of light)</div>
+          <div class="kexpl">Complete quantity: speed of light in vacuum</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B — Unit Arithmetic</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="kq">Q5: 8 m ÷ 2 s ÷ 1 s</div>
+          <div class="kans">4 m·s⁻²</div>
+          <div class="kexpl">8÷2=4; m/s/s = m·s⁻²</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Q6: 4 kg × 2 m × 3 s⁻²</div>
+          <div class="kans">24 kg·m·s⁻² = 24 N</div>
+          <div class="kexpl">4×2×3=24; unit = Newton (force)</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Q7: (2 m)³</div>
+          <div class="kans">8 m³</div>
+          <div class="kexpl">2³=8; m³ = volume unit</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Q8: 15 m·s⁻¹ − 10 m·s⁻¹</div>
+          <div class="kans">5 m·s⁻¹</div>
+          <div class="kexpl">Same units — subtract numbers only</div>
+        </div>
+        <div class="key-item" style="grid-column:span 2;">
+          <div class="kq">Q9: 12 kg·5 N·m² ÷ (6 m·2 A²)</div>
+          <div class="kans">5 kg·N·m·A⁻²</div>
+          <div class="kexpl">Numbers: 12×5/(6×2)=5. Move denom units: m⁻¹·A⁻². Combine: kg·N·m²·m⁻¹·A⁻² = 5 kg·N·m·A⁻²</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C — True or False</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="kq">Q10</div>
+          <div class="kans">TRUE</div>
+          <div class="kexpl">kg is the only fundamental unit with a prefix</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Q11</div>
+          <div class="kans">FALSE</div>
+          <div class="kexpl">Correction: Cannot add — kg and m are different unit types</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Q12</div>
+          <div class="kans">TRUE</div>
+          <div class="kexpl">nano = 10⁻⁹, so 1 nm = 10⁻⁹ m ✓</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Q13</div>
+          <div class="kans">FALSE</div>
+          <div class="kexpl">Correction: Newton is a DERIVED unit = kg·m·s⁻²</div>
+        </div>
+        <div class="key-item" style="grid-column:span 2;">
+          <div class="kq">Q14</div>
+          <div class="kans">FALSE</div>
+          <div class="kexpl">Correction: Capital M = Mega (10⁶). Lowercase m = milli (10⁻³). Case matters!</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part D — Prefix Conversions</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="kq">Q15: 8.5 GHz</div>
+          <div class="kans">8.5 × 10⁹ Hz</div>
+          <div class="kexpl">Giga = 10⁹</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Q16: 0.35 mm</div>
+          <div class="kans">3.5 × 10⁻⁴ m</div>
+          <div class="kexpl">0.35 × 10⁻³ = 3.5 × 10⁻⁴ m</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Q17: 6.2 μm</div>
+          <div class="kans">6.2 × 10⁻⁶ m</div>
+          <div class="kexpl">micro = 10⁻⁶</div>
+        </div>
+        <div class="key-item">
+          <div class="kq">Q18: 500 mA</div>
+          <div class="kans">5.0 × 10⁻¹ A = 0.5 A</div>
+          <div class="kexpl">milli = 10⁻³; 500 × 10⁻³ = 0.5 A</div>
+        </div>
+        <div class="key-item" style="grid-column:span 2;">
+          <div class="kq">Q19: 0.0000045 m</div>
+          <div class="kans">4.5 × 10⁻⁶ m = 4.5 μm (micrometers)</div>
+          <div class="kexpl">10⁻⁶ = micro (μ). 4.5 × 10⁻⁶ m → best prefix is μ → 4.5 μm</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part E — Derived Units Matching</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="kq">kg·m·s⁻²</div><div class="kans">Force (Newton)</div></div>
+        <div class="key-item"><div class="kq">kg·m²·s⁻²</div><div class="kans">Energy (Joule)</div></div>
+        <div class="key-item"><div class="kq">m·s⁻¹</div><div class="kans">Speed / Velocity</div></div>
+        <div class="key-item"><div class="kq">m·s⁻²</div><div class="kans">Acceleration</div></div>
+        <div class="key-item"><div class="kq">kg·m⁻³</div><div class="kans">Density</div></div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part F — Extended Response</h3>
+      <div class="short-ans-key">
+        <strong>Q24:</strong><br>
+        (a) Speed of light: 3.00 × 10⁸ m·s⁻¹. Wavelength: 7.0 × 10⁻⁷ m.<br>
+        (b) 7.0 × 10⁻⁷ m = 700 × 10⁻⁹ m = <strong>700 nm</strong> (nanometers — the most natural prefix for visible light).<br>
+        (c) Yes, both are complete. Each has a number AND a unit, so we know exactly what quantity is described and its magnitude.
+      </div>
+      <div class="short-ans-key">
+        <strong>Q25:</strong> SI is more convenient because all conversions between units are powers of 10 (multiply/divide by 10, 100, 1000 etc.), unlike Imperial where conversions are irregular (1 mile = 5,280 ft; 1 gallon = 128 fl oz). Example 1: 1 kilometer = 1,000 meters (just move the decimal) vs. 1 mile = 5,280 feet. Example 2: We can scale units with prefixes — 1 nanometer = 10⁻⁹ m — all using the same unit and simple powers of 10.
+      </div>
+      <div class="short-ans-key">
+        <strong>Q26:</strong> The student is wrong. m·s means meters multiplied by seconds (not divided). Speed is distance divided by time, which is m/s = m·s⁻¹. The negative exponent (⁻¹) on s is what creates the division — it is the IB/scientific way of writing "per second." m·s would have units of meter-seconds, which is not a standard physical quantity.
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+function toggleKey(){
+  var k=document.getElementById('answer-key');
+  var b=document.getElementById('toggle-key-btn');
+  if(k.style.display==='none'||k.style.display===''){
+    k.style.display='block';b.textContent='Hide Answer Key';
+  }else{
+    k.style.display='none';b.textContent='Show Answer Key';
+  }
+}
+</script>
+</body>
+</html>

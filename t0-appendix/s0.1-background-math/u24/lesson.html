@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review of Trig — Triangle Sides &amp; Identities | IB Physics Lesson</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root {
+      --amber:#d97706;--amber-dark:#78350f;--amber-mid:#b45309;
+      --orange:#ea580c;--gold:#fbbf24;--red:#ef4444;
+      --green:#22c55e;--blue:#3b82f6;--dark:#1c1917;--bg:#fffbf5;--muted:#a8a29e;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:17px;line-height:1.75;background-image:radial-gradient(circle,#fed7aa 1px,transparent 1px);background-size:28px 28px;}
+
+    /* ── HEADER ── */
+    header{background:linear-gradient(135deg,#78350f 0%,#b45309 50%,#d97706 100%);color:white;padding:52px 60px 48px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(251,191,36,0.35) 0%,transparent 60%),radial-gradient(ellipse at 80% 30%,rgba(217,119,6,0.35) 0%,transparent 55%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:rgba(255,255,255,0.9);animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.5);}}
+    header .chip{display:inline-block;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px;position:relative;}
+    header h1{font-size:3rem;font-weight:900;letter-spacing:-1px;position:relative;margin-bottom:10px;background:linear-gradient(90deg,#fef3c7,#fde68a,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1.1rem;color:rgba(255,255,255,0.8);position:relative;max-width:540px;margin:0 auto;}
+
+    /* ── LAYOUT ── */
+    main{max-width:920px;margin:48px auto;padding:0 24px 80px;}
+    section{margin-bottom:64px;}
+    .section-label{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+    .section-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    .section-label h2{font-size:1.55rem;font-weight:900;color:var(--dark);}
+
+    /* ── INTRO BANNER ── */
+    .intro-banner{background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:20px;padding:28px 32px;border:2px solid #fbbf24;margin-bottom:28px;}
+    .intro-banner p{color:#78350f;font-size:1rem;margin-bottom:10px;}
+    .intro-banner p:last-child{margin-bottom:0;}
+    .intro-banner strong{color:#451a03;}
+
+    /* ── DEFINITION CARDS ── */
+    .def-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;}
+    @media(max-width:640px){.def-grid{grid-template-columns:1fr;}}
+    .def-card{border-radius:16px;padding:20px 18px;text-align:center;box-shadow:0 3px 14px rgba(0,0,0,0.07);}
+    .dc-opp{background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #fbbf24;}
+    .dc-adj{background:linear-gradient(135deg,#dbeafe,#bfdbfe);border:2px solid #93c5fd;}
+    .dc-hyp{background:linear-gradient(135deg,#dcfce7,#bbf7d0);border:2px solid #86efac;}
+    .def-card .def-name{font-size:1.05rem;font-weight:900;margin-bottom:6px;}
+    .dc-opp .def-name{color:#92400e;}
+    .dc-adj .def-name{color:#1d4ed8;}
+    .dc-hyp .def-name{color:#166534;}
+    .def-card p{font-size:0.88rem;font-weight:600;color:#374151;}
+
+    /* ── RATIO CARDS ── */
+    .ratio-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:24px;}
+    @media(max-width:640px){.ratio-grid{grid-template-columns:1fr;}}
+    .ratio-card{border-radius:18px;padding:22px 18px;text-align:center;box-shadow:0 4px 18px rgba(0,0,0,0.09);background:white;}
+    .rc1{border-top:5px solid #d97706;}
+    .rc2{border-top:5px solid #3b82f6;}
+    .rc3{border-top:5px solid #22c55e;}
+    .ratio-label{font-size:0.8rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;}
+    .rc1 .ratio-label{color:#b45309;}
+    .rc2 .ratio-label{color:#1d4ed8;}
+    .rc3 .ratio-label{color:#166534;}
+    .ratio-formula{font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;color:#1c1917;background:#f5f5f4;border-radius:10px;padding:10px 14px;display:inline-block;margin-bottom:10px;}
+    .ratio-soh{font-size:0.82rem;font-weight:700;color:#78716c;letter-spacing:1px;}
+
+    /* ── DIAGRAM AREA ── */
+    .diagram-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0;}
+    @media(max-width:600px){.diagram-row{grid-template-columns:1fr;}}
+    .diagram-card{background:white;border-radius:16px;padding:20px;box-shadow:0 3px 14px rgba(0,0,0,0.07);text-align:center;}
+    .diagram-card h4{font-size:0.92rem;font-weight:800;color:#374151;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;}
+    .diagram-card svg{width:100%;max-width:280px;}
+
+    /* ── STEPS ── */
+    .steps-list{display:grid;gap:14px;}
+    .step-card{background:white;border-radius:16px;padding:20px 24px;box-shadow:0 3px 14px rgba(0,0,0,0.07);display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start;border-left:5px solid transparent;transition:transform 0.15s,box-shadow 0.15s;}
+    .step-card:hover{transform:translateX(4px);box-shadow:0 6px 24px rgba(0,0,0,0.11);}
+    .sc1{border-left-color:#d97706;}.sc2{border-left-color:#3b82f6;}.sc3{border-left-color:#22c55e;}
+    .step-badge{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.4rem;color:white;flex-shrink:0;}
+    .sb1{background:linear-gradient(135deg,#78350f,#d97706);}
+    .sb2{background:linear-gradient(135deg,#1d4ed8,#3b82f6);}
+    .sb3{background:linear-gradient(135deg,#166534,#22c55e);}
+    .step-body strong{color:var(--dark);display:block;font-size:1.05rem;margin-bottom:5px;}
+    .step-body p{font-size:0.92rem;color:#57534e;}
+    .step-formula{font-family:'Space Mono',monospace;font-size:0.97rem;font-weight:700;background:#fef3c7;color:#78350f;padding:5px 12px;border-radius:8px;display:inline-block;margin-top:8px;}
+
+    /* ── WORKED EXAMPLES ── */
+    .example-block{background:white;border-radius:20px;margin-bottom:32px;box-shadow:0 4px 22px rgba(0,0,0,0.08);overflow:hidden;}
+    .ex-header{padding:18px 28px;display:flex;align-items:center;gap:14px;}
+    .ex1-header{background:linear-gradient(135deg,#78350f,#d97706);}
+    .ex2-header{background:linear-gradient(135deg,#0c4a6e,#0369a1);}
+    .ex3-header{background:linear-gradient(135deg,#14532d,#16a34a);}
+    .ex4-header{background:linear-gradient(135deg,#4c0519,#be123c);}
+    .ex-num{font-size:0.75rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;background:rgba(255,255,255,0.2);border-radius:20px;padding:3px 12px;color:white;}
+    .ex-title{font-size:1.1rem;font-weight:800;color:white;}
+    .ex-body{padding:24px 28px;}
+    .ex-given{background:#fef9ee;border-radius:12px;padding:14px 18px;margin-bottom:20px;border-left:4px solid #d97706;}
+    .ex-given p{font-size:0.93rem;color:#374151;margin-bottom:6px;}
+    .ex-given p:last-child{margin-bottom:0;}
+    .ex-given strong{color:#78350f;}
+    .ex-steps{display:grid;gap:12px;margin-bottom:22px;}
+    .ex-step{display:grid;grid-template-columns:26px 1fr;gap:12px;align-items:start;}
+    .ex-step-num{width:26px;height:26px;border-radius:50%;background:#d97706;color:white;font-size:0.78rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+    .ex-step p{font-size:0.92rem;color:#374151;}
+    .ex-step .mono{font-family:'Space Mono',monospace;font-weight:700;color:#78350f;font-size:0.95rem;}
+    .ex-answer{background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:14px;padding:16px 20px;border:2px solid #fbbf24;display:flex;gap:24px;flex-wrap:wrap;margin-top:6px;}
+    .ex-answer-item{text-align:center;}
+    .ex-answer-item .label{font-size:0.75rem;font-weight:800;color:#92400e;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+    .ex-answer-item .value{font-family:'Space Mono',monospace;font-size:1.5rem;font-weight:700;color:#451a03;}
+
+    /* ── NOTE BOX ── */
+    .note-box{background:white;border-radius:14px;padding:18px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border-left:4px solid #d97706;margin-bottom:18px;}
+    .note-box p{font-size:0.93rem;color:#374151;}
+    .note-box strong{color:#92400e;}
+
+    /* ── QUIZ ── */
+    .quiz-block{background:white;border-radius:20px;padding:28px 32px;box-shadow:0 4px 20px rgba(0,0,0,0.08);}
+    .quiz-block h3{font-size:1.2rem;font-weight:800;color:var(--dark);margin-bottom:22px;display:flex;align-items:center;gap:10px;}
+    .quiz-q{margin-bottom:24px;padding:18px 20px;background:#fef9ee;border-radius:14px;border-left:4px solid #d97706;}
+    .quiz-q p{font-size:0.95rem;color:#334155;font-weight:600;margin-bottom:14px;}
+    .quiz-options{display:grid;gap:8px;}
+    .quiz-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;border:2px solid #fed7aa;background:white;cursor:pointer;transition:all 0.2s;font-size:0.92rem;color:#374151;font-weight:600;text-align:left;width:100%;}
+    .quiz-opt:hover{background:#fef3c7;border-color:#fbbf24;}
+    .quiz-opt.correct{background:#dcfce7;border-color:#86efac;color:#14532d;}
+    .quiz-opt.wrong{background:#fee2e2;border-color:#fca5a5;color:#991b1b;}
+    .quiz-opt .opt-letter{width:28px;height:28px;border-radius:8px;background:#fef3c7;color:#78350f;font-weight:800;font-size:0.85rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .quiz-feedback{margin-top:10px;padding:10px 14px;border-radius:10px;font-size:0.88rem;font-weight:700;display:none;}
+    .fb-correct{background:#dcfce7;color:#166534;}
+    .fb-wrong{background:#fee2e2;color:#991b1b;}
+    .quiz-score-bar{background:#fef3c7;border-radius:12px;padding:16px 20px;text-align:center;margin-top:22px;display:none;}
+    .quiz-score-bar p{font-weight:800;color:#78350f;font-size:1.1rem;}
+    .btn-check{margin-top:18px;background:linear-gradient(135deg,#78350f,#d97706);color:white;border:none;border-radius:12px;padding:12px 28px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:opacity 0.2s;}
+    .btn-check:hover{opacity:0.88;}
+
+    /* ── PASSWORD GATE ── */
+    #gate{position:fixed;inset:0;background:linear-gradient(135deg,#78350f 0%,#b45309 50%,#d97706 100%);display:flex;align-items:center;justify-content:center;z-index:9999;}
+    .gate-box{background:white;border-radius:24px;padding:40px 44px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.35);}
+    .gate-icon{font-size:3rem;margin-bottom:14px;}
+    .gate-box h2{font-size:1.6rem;font-weight:900;color:#78350f;margin-bottom:8px;}
+    .gate-box p{font-size:0.95rem;color:#78716c;margin-bottom:24px;}
+    .gate-input{width:100%;border:2px solid #fed7aa;border-radius:12px;padding:12px 16px;font-size:1.1rem;font-family:'Space Mono',monospace;font-weight:700;color:#78350f;outline:none;text-align:center;transition:border-color 0.2s;}
+    .gate-input:focus{border-color:#d97706;}
+    .gate-btn{margin-top:16px;width:100%;background:linear-gradient(135deg,#78350f,#d97706);color:white;border:none;border-radius:12px;padding:13px;font-size:1.05rem;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:opacity 0.2s;}
+    .gate-btn:hover{opacity:0.88;}
+    .gate-error{color:#dc2626;font-size:0.88rem;margin-top:10px;font-weight:700;display:none;}
+
+    /* ── SOH-CAH-TOA MNEMONIC ── */
+    .sohcahtoa{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:20px 0;}
+    .sct-part{border-radius:14px;padding:14px 20px;text-align:center;min-width:130px;}
+    .sct-s{background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #fbbf24;}
+    .sct-c{background:linear-gradient(135deg,#dbeafe,#bfdbfe);border:2px solid #93c5fd;}
+    .sct-t{background:linear-gradient(135deg,#dcfce7,#bbf7d0);border:2px solid #86efac;}
+    .sct-word{font-size:1.35rem;font-weight:900;margin-bottom:2px;}
+    .sct-s .sct-word{color:#92400e;}
+    .sct-c .sct-word{color:#1d4ed8;}
+    .sct-t .sct-word{color:#166534;}
+    .sct-meaning{font-size:0.8rem;font-weight:700;color:#57534e;}
+
+    /* TABLE */
+    .table-wrap{background:white;border-radius:18px;padding:24px 28px;box-shadow:0 4px 20px rgba(0,0,0,0.07);margin-bottom:24px;overflow-x:auto;}
+    .table-wrap h3{font-size:1.05rem;font-weight:800;color:var(--dark);margin-bottom:14px;}
+    table.trig-table{border-collapse:collapse;width:100%;}
+    table.trig-table th,table.trig-table td{border:2px solid #fed7aa;padding:11px 16px;text-align:center;font-size:0.95rem;}
+    table.trig-table thead th{background:linear-gradient(135deg,#78350f,#d97706);color:white;font-weight:700;}
+    table.trig-table tbody tr:nth-child(odd){background:#fef9ee;}
+    table.trig-table tbody tr:nth-child(even){background:#fef3c7;}
+    table.trig-table .mono{font-family:'Space Mono',monospace;font-weight:700;}
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-icon">&#128274;</div>
+    <h2>IB Physics</h2>
+    <p>Enter the password to access this lesson.</p>
+    <input class="gate-input" type="password" id="pwInput" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="gate-btn" onclick="checkPw()">Unlock</button>
+    <p class="gate-error" id="pwErr">Incorrect password. Try again.</p>
+  </div>
+</div>
+<script>
+  function checkPw(){
+    const v=document.getElementById('pwInput').value;
+    if(v==='physics2024'){document.getElementById('gate').style.display='none';}
+    else{document.getElementById('pwErr').style.display='block';}
+  }
+</script>
+
+<!-- SPARKLES IN HEADER -->
+<script>
+  document.addEventListener('DOMContentLoaded',()=>{
+    const h=document.querySelector('header');
+    for(let i=0;i<22;i++){
+      const s=document.createElement('div');
+      s.className='star';
+      const sz=Math.random()*3+1;
+      s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*3}s;`;
+      h.appendChild(s);
+    }
+  });
+</script>
+
+<header>
+  <div class="chip">IB Physics &mdash; Unit 24</div>
+  <h1>Review of Trigonometry</h1>
+  <p class="subtitle">Triangle Sides &amp; Trig Identities &mdash; SOH CAH TOA</p>
+</header>
+
+<main>
+
+  <!-- INTRO -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#fef3c7;">&#128338;</div>
+      <h2>What is Trigonometry?</h2>
+    </div>
+    <div class="intro-banner">
+      <p><strong>Trigonometry</strong> is the study of the relationships between the angles and side lengths of triangles.</p>
+      <p>In IB Physics, we use three key trig functions &mdash; <strong>Sin</strong>, <strong>Cos</strong>, and <strong>Tan</strong> &mdash; to find unknown side lengths or angles in right triangles. These functions are simply <em>fractions</em> formed by pairing different side lengths.</p>
+      <p>The most important skill is correctly labelling the sides of a triangle <em>relative to the angle you are using</em>. The labels change depending on which angle you choose!</p>
+    </div>
+  </section>
+
+  <!-- LABELLING SIDES -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#fde68a;">&#128204;</div>
+      <h2>Labelling the Three Sides</h2>
+    </div>
+    <p style="font-size:0.97rem;color:#57534e;margin-bottom:20px;">Every side of a right triangle gets a name that <strong>depends on which angle (&theta;) you are working with</strong>. Choose an angle (not the right angle), and then label the three sides:</p>
+    <div class="def-grid">
+      <div class="def-card dc-opp">
+        <div class="def-name">Opposite</div>
+        <p>The side <strong>directly across</strong> the triangle from the angle &theta;. It does not touch &theta;.</p>
+      </div>
+      <div class="def-card dc-adj">
+        <div class="def-name">Adjacent</div>
+        <p>The side that <strong>sits right next to</strong> the angle &theta;. It forms one side of the angle.</p>
+      </div>
+      <div class="def-card dc-hyp">
+        <div class="def-name">Hypotenuse</div>
+        <p>Always the <strong>longest side</strong>, opposite the 90&#176; right angle. Never changes.</p>
+      </div>
+    </div>
+
+    <!-- SVG diagrams side by side -->
+    <div class="diagram-row">
+      <!-- Angle at bottom-left -->
+      <div class="diagram-card">
+        <h4>Angle &theta; at Bottom-Left</h4>
+        <svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Triangle: BL(30,170), BR(230,170), TL(30,50) -->
+          <polygon points="30,170 230,170 30,50" fill="#fef9ee" stroke="#d97706" stroke-width="2.5"/>
+          <!-- Right angle marker at TL (30,50) ... actually right angle is at bottom-left if sides are 3(vert) 4(horiz)-->
+          <!-- Right angle: base corner = BL(30,170), so right angle at (30,170)? No: 3-4-5 right angle is between opposite(3,vertical) and adjacent(4,horizontal). -->
+          <!-- Actually right angle at bottom-right... wait: opposite=3(vertical left), adjacent=4(bottom), hyp=5(diagonal). So right angle between vertical and horizontal = bottom-left. -->
+          <!-- Right angle marker at bottom-left (30,170) -->
+          <rect x="30" y="150" width="18" height="18" fill="none" stroke="#78350f" stroke-width="1.8"/>
+          <!-- Angle arc at bottom-left -->
+          <path d="M 30,170 L 55,170 A 25,25 0 0,0 30,145 Z" fill="rgba(217,119,6,0.25)" stroke="#d97706" stroke-width="1.5"/>
+          <text x="52" y="164" font-size="14" font-weight="700" fill="#78350f" font-family="Nunito,sans-serif">&#952;</text>
+          <!-- Labels -->
+          <!-- Opposite = vertical left side (30,170)-(30,50) -->
+          <text x="8" y="115" font-size="13" font-weight="800" fill="#92400e" font-family="Nunito,sans-serif" transform="rotate(-90,15,115)">Opposite</text>
+          <!-- Adjacent = bottom (30,170)-(230,170) -->
+          <text x="115" y="192" font-size="13" font-weight="800" fill="#1d4ed8" font-family="Nunito,sans-serif" text-anchor="middle">Adjacent</text>
+          <!-- Hypotenuse = diagonal (230,170)-(30,50) -->
+          <text x="150" y="100" font-size="13" font-weight="800" fill="#166534" font-family="Nunito,sans-serif" transform="rotate(-53,150,110)" text-anchor="middle">Hypotenuse</text>
+          <!-- Side length hints -->
+          <text x="4" y="175" font-size="11" fill="#92400e" font-family="Space Mono,monospace" font-weight="700" transform="rotate(-90,10,130)">3</text>
+          <text x="125" y="168" font-size="11" fill="#1d4ed8" font-family="Space Mono,monospace" font-weight="700" text-anchor="middle">4</text>
+          <text x="148" y="84" font-size="11" fill="#166534" font-family="Space Mono,monospace" font-weight="700">5</text>
+        </svg>
+      </div>
+      <!-- Angle at top-right -->
+      <div class="diagram-card">
+        <h4>Angle &theta; at Top-Right (same triangle, labels change!)</h4>
+        <svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Same triangle: BL(30,170), BR(230,170), TR(230,50) -->
+          <!-- Right angle at BR: between vertical right and bottom -->
+          <polygon points="30,170 230,170 230,50" fill="#eff6ff" stroke="#3b82f6" stroke-width="2.5"/>
+          <!-- Right angle marker at BR (230,170) -->
+          <rect x="212" y="150" width="18" height="18" fill="none" stroke="#1d4ed8" stroke-width="1.8"/>
+          <!-- Angle arc at TR (230,50) -->
+          <path d="M 230,50 L 205,50 A 25,25 0 0,1 230,75 Z" fill="rgba(59,130,246,0.25)" stroke="#3b82f6" stroke-width="1.5"/>
+          <text x="192" y="68" font-size="14" font-weight="700" fill="#1d4ed8" font-family="Nunito,sans-serif">&#952;</text>
+          <!-- Opposite = horizontal bottom (30,170)-(230,170) label changed to Opposite -->
+          <text x="115" y="192" font-size="13" font-weight="800" fill="#92400e" font-family="Nunito,sans-serif" text-anchor="middle">Opposite</text>
+          <!-- Adjacent = vertical right (230,50)-(230,170) -->
+          <text x="248" y="120" font-size="13" font-weight="800" fill="#1d4ed8" font-family="Nunito,sans-serif" transform="rotate(90,248,120)" text-anchor="middle">Adjacent</text>
+          <!-- Hypotenuse = diagonal (30,170)-(230,50) -->
+          <text x="105" y="100" font-size="13" font-weight="800" fill="#166534" font-family="Nunito,sans-serif" transform="rotate(-53,120,115)" text-anchor="middle">Hypotenuse</text>
+          <!-- Side length hints -->
+          <text x="115" y="168" font-size="11" fill="#92400e" font-family="Space Mono,monospace" font-weight="700" text-anchor="middle">4</text>
+          <text x="244" y="120" font-size="11" fill="#1d4ed8" font-family="Space Mono,monospace" font-weight="700" transform="rotate(90,244,120)" text-anchor="middle">3</text>
+          <text x="100" y="95" font-size="11" fill="#166534" font-family="Space Mono,monospace" font-weight="700">5</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="note-box">
+      <p><strong>Key takeaway:</strong> The <em>Hypotenuse</em> is always the longest side (opposite the right angle) and never changes. But <em>Opposite</em> and <em>Adjacent</em> swap depending on which non-right angle you call &theta;. In the 3-4-5 triangle above, moving &theta; from the bottom-left corner to the top-right corner causes opposite and adjacent to exchange their values.</p>
+    </div>
+  </section>
+
+  <!-- TRIG IDENTITIES -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#dcfce7;">&#128200;</div>
+      <h2>The Three Trig Identities</h2>
+    </div>
+    <p style="font-size:0.97rem;color:#57534e;margin-bottom:18px;">Once you have labelled the sides, you can write the three trig ratios. These are always ratios (fractions) of two side lengths.</p>
+
+    <div class="ratio-grid">
+      <div class="ratio-card rc1">
+        <div class="ratio-label">Sine</div>
+        <div class="ratio-formula">Sin(&theta;) = <sup>Opp</sup>&frasl;<sub>Hyp</sub></div>
+        <div class="ratio-soh">S &mdash; O/H</div>
+      </div>
+      <div class="ratio-card rc2">
+        <div class="ratio-label">Cosine</div>
+        <div class="ratio-formula">Cos(&theta;) = <sup>Adj</sup>&frasl;<sub>Hyp</sub></div>
+        <div class="ratio-soh">C &mdash; A/H</div>
+      </div>
+      <div class="ratio-card rc3">
+        <div class="ratio-label">Tangent</div>
+        <div class="ratio-formula">Tan(&theta;) = <sup>Opp</sup>&frasl;<sub>Adj</sub></div>
+        <div class="ratio-soh">T &mdash; O/A</div>
+      </div>
+    </div>
+
+    <!-- SOH-CAH-TOA mnemonic -->
+    <div class="sohcahtoa">
+      <div class="sct-part sct-s">
+        <div class="sct-word">SOH</div>
+        <div class="sct-meaning">Sin = Opp/Hyp</div>
+      </div>
+      <div class="sct-part sct-c">
+        <div class="sct-word">CAH</div>
+        <div class="sct-meaning">Cos = Adj/Hyp</div>
+      </div>
+      <div class="sct-part sct-t">
+        <div class="sct-word">TOA</div>
+        <div class="sct-meaning">Tan = Opp/Adj</div>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:0.88rem;font-weight:700;color:#78716c;margin-top:-6px;margin-bottom:20px;">Mnemonic: <em>SOH&ndash;CAH&ndash;TOA</em></p>
+  </section>
+
+  <!-- WORKED EXAMPLE 1: 3-4-5 angle at bottom left -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#fde68a;">&#128221;</div>
+      <h2>Worked Examples &mdash; 3-4-5 Triangle</h2>
+    </div>
+
+    <div class="example-block">
+      <div class="ex-header ex1-header">
+        <span class="ex-num">Example 1</span>
+        <span class="ex-title">3-4-5 Triangle &mdash; Angle &theta; at Bottom-Left</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-given">
+          <p><strong>Given:</strong> Right triangle with sides 3, 4, and 5. Angle &theta; is at the bottom-left corner.</p>
+          <p><strong>From that angle:</strong> Opposite = 3 (vertical side), Adjacent = 4 (horizontal side), Hypotenuse = 5</p>
+        </div>
+        <div class="ex-steps">
+          <div class="ex-step">
+            <div class="ex-step-num">1</div>
+            <div>
+              <p>Write Sin(&theta;):</p>
+              <p class="mono">Sin(&theta;) = Opp/Hyp = 3/5 = 0.6</p>
+            </div>
+          </div>
+          <div class="ex-step">
+            <div class="ex-step-num">2</div>
+            <div>
+              <p>Write Cos(&theta;):</p>
+              <p class="mono">Cos(&theta;) = Adj/Hyp = 4/5 = 0.8</p>
+            </div>
+          </div>
+          <div class="ex-step">
+            <div class="ex-step-num">3</div>
+            <div>
+              <p>Write Tan(&theta;):</p>
+              <p class="mono">Tan(&theta;) = Opp/Adj = 3/4 = 0.75</p>
+            </div>
+          </div>
+        </div>
+        <div class="ex-answer">
+          <div class="ex-answer-item"><div class="label">Sin(&theta;)</div><div class="value">0.6</div></div>
+          <div class="ex-answer-item"><div class="label">Cos(&theta;)</div><div class="value">0.8</div></div>
+          <div class="ex-answer-item"><div class="label">Tan(&theta;)</div><div class="value">0.75</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-block">
+      <div class="ex-header ex2-header">
+        <span class="ex-num">Example 2</span>
+        <span class="ex-title">Same 3-4-5 Triangle &mdash; Angle &theta; at Top-Right</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-given">
+          <p><strong>Same triangle, different angle!</strong> Now &theta; is at the top-right corner.</p>
+          <p><strong>From that angle:</strong> Opposite = 4 (horizontal base), Adjacent = 3 (vertical side), Hypotenuse = 5 (unchanged)</p>
+          <p><strong>Notice:</strong> Opposite and Adjacent have swapped compared to Example 1!</p>
+        </div>
+        <div class="ex-steps">
+          <div class="ex-step">
+            <div class="ex-step-num">1</div>
+            <div>
+              <p>Write Sin(&theta;):</p>
+              <p class="mono">Sin(&theta;) = Opp/Hyp = 4/5 = 0.8</p>
+            </div>
+          </div>
+          <div class="ex-step">
+            <div class="ex-step-num">2</div>
+            <div>
+              <p>Write Cos(&theta;):</p>
+              <p class="mono">Cos(&theta;) = Adj/Hyp = 3/5 = 0.6</p>
+            </div>
+          </div>
+          <div class="ex-step">
+            <div class="ex-step-num">3</div>
+            <div>
+              <p>Write Tan(&theta;):</p>
+              <p class="mono">Tan(&theta;) = Opp/Adj = 4/3 &asymp; 1.33</p>
+            </div>
+          </div>
+        </div>
+        <div class="ex-answer">
+          <div class="ex-answer-item"><div class="label">Sin(&theta;)</div><div class="value">0.8</div></div>
+          <div class="ex-answer-item"><div class="label">Cos(&theta;)</div><div class="value">0.6</div></div>
+          <div class="ex-answer-item"><div class="label">Tan(&theta;)</div><div class="value">1.33</div></div>
+        </div>
+        <div class="note-box" style="margin-top:16px;margin-bottom:0;">
+          <p><strong>Observation:</strong> Sin and Cos have swapped. This happens because the two non-right angles are <em>complementary</em> (they add to 90&#176;). So Sin of one angle equals Cos of the other.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3-STEP METHOD FOR SOLVING -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#dbeafe;">&#128269;</div>
+      <h2>Solving for a Missing Side &mdash; 3-Step Method</h2>
+    </div>
+    <p style="font-size:0.97rem;color:#57534e;margin-bottom:20px;">When you know one side and one angle of a right triangle, you can find any other side using trig. Follow these three steps every time.</p>
+    <div class="steps-list">
+      <div class="step-card sc1">
+        <div class="step-badge sb1">1</div>
+        <div class="step-body">
+          <strong>Choose the right trig identity</strong>
+          <p>Look at which sides you <em>know</em> and which side you <em>want</em>. Pick the trig function (Sin, Cos, or Tan) whose formula contains <em>both</em> of those sides.</p>
+          <div><span class="step-formula">Know Adj, want Hyp &rarr; Cos &nbsp;|&nbsp; Know Adj, want Opp &rarr; Tan</span></div>
+        </div>
+      </div>
+      <div class="step-card sc2">
+        <div class="step-badge sb2">2</div>
+        <div class="step-body">
+          <strong>Rearrange the formula</strong>
+          <p>Isolate the unknown side on one side of the equation using algebra (multiply or divide both sides).</p>
+          <div><span class="step-formula">Cos(&theta;) = A/H &rarr; H = A / Cos(&theta;)</span></div>
+        </div>
+      </div>
+      <div class="step-card sc3">
+        <div class="step-badge sb3">3</div>
+        <div class="step-body">
+          <strong>Substitute and calculate</strong>
+          <p>Plug in the known values and compute. Make sure your calculator is in <em>degree mode</em>!</p>
+          <div><span class="step-formula">H = 50 / Cos(15&#176;) = 50 / 0.97 &asymp; 51.5</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORKED EXAMPLES 5 & 6 -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#dcfce7;">&#9998;</div>
+      <h2>Worked Examples &mdash; Finding Missing Sides</h2>
+    </div>
+
+    <div class="example-block">
+      <div class="ex-header ex3-header">
+        <span class="ex-num">Example 5</span>
+        <span class="ex-title">Find the Hypotenuse (angle = 15&#176;, adjacent = 50)</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-given">
+          <p><strong>Given:</strong> Angle &theta; = 15&#176;, Adjacent side = 50</p>
+          <p><strong>Find:</strong> Hypotenuse H</p>
+          <p><strong>Sides involved:</strong> Adjacent and Hypotenuse &rarr; use <strong>Cosine</strong></p>
+        </div>
+        <div class="ex-steps">
+          <div class="ex-step">
+            <div class="ex-step-num">1</div>
+            <div>
+              <p><strong>Choose identity:</strong> We know Adjacent (A) and want Hypotenuse (H). Both appear in Cos.</p>
+              <p class="mono">Cos(&theta;) = A / H</p>
+            </div>
+          </div>
+          <div class="ex-step">
+            <div class="ex-step-num">2</div>
+            <div>
+              <p><strong>Rearrange:</strong> Multiply both sides by H, then divide by Cos(&theta;).</p>
+              <p class="mono">H &times; Cos(&theta;) = A &nbsp;&nbsp;&rarr;&nbsp;&nbsp; H = A / Cos(&theta;)</p>
+            </div>
+          </div>
+          <div class="ex-step">
+            <div class="ex-step-num">3</div>
+            <div>
+              <p><strong>Substitute:</strong> A = 50, &theta; = 15&#176;, Cos(15&#176;) &asymp; 0.966</p>
+              <p class="mono">H = 50 / 0.966 &asymp; 51.8</p>
+            </div>
+          </div>
+        </div>
+        <div class="ex-answer">
+          <div class="ex-answer-item"><div class="label">Hypotenuse</div><div class="value">H &asymp; 51.8</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-block">
+      <div class="ex-header ex4-header">
+        <span class="ex-num">Example 6</span>
+        <span class="ex-title">Find the Opposite side (angle = 15&#176;, adjacent = 50)</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-given">
+          <p><strong>Given:</strong> Angle &theta; = 15&#176;, Adjacent side = 50</p>
+          <p><strong>Find:</strong> Opposite side O</p>
+          <p><strong>Sides involved:</strong> Adjacent and Opposite &rarr; use <strong>Tangent</strong></p>
+        </div>
+        <div class="ex-steps">
+          <div class="ex-step">
+            <div class="ex-step-num">1</div>
+            <div>
+              <p><strong>Choose identity:</strong> We know Adjacent (A) and want Opposite (O). Both appear in Tan.</p>
+              <p class="mono">Tan(&theta;) = O / A</p>
+            </div>
+          </div>
+          <div class="ex-step">
+            <div class="ex-step-num">2</div>
+            <div>
+              <p><strong>Rearrange:</strong> Multiply both sides by A.</p>
+              <p class="mono">O = A &times; Tan(&theta;)</p>
+            </div>
+          </div>
+          <div class="ex-step">
+            <div class="ex-step-num">3</div>
+            <div>
+              <p><strong>Substitute:</strong> A = 50, &theta; = 15&#176;, Tan(15&#176;) &asymp; 0.268</p>
+              <p class="mono">O = 50 &times; 0.268 &asymp; 13.4</p>
+            </div>
+          </div>
+        </div>
+        <div class="ex-answer">
+          <div class="ex-answer-item"><div class="label">Opposite</div><div class="value">O &asymp; 13.4</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick-reference table -->
+    <div class="table-wrap">
+      <h3>Quick-Reference: Choosing the Trig Function</h3>
+      <table class="trig-table">
+        <thead>
+          <tr><th>Sides Involved</th><th>Function to Use</th><th>Formula</th><th>Rearranged</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Opposite &amp; Hypotenuse</td>
+            <td><strong>Sin</strong></td>
+            <td class="mono">Sin(&theta;) = O/H</td>
+            <td class="mono">O = H&middot;Sin &nbsp; or &nbsp; H = O/Sin</td>
+          </tr>
+          <tr>
+            <td>Adjacent &amp; Hypotenuse</td>
+            <td><strong>Cos</strong></td>
+            <td class="mono">Cos(&theta;) = A/H</td>
+            <td class="mono">A = H&middot;Cos &nbsp; or &nbsp; H = A/Cos</td>
+          </tr>
+          <tr>
+            <td>Opposite &amp; Adjacent</td>
+            <td><strong>Tan</strong></td>
+            <td class="mono">Tan(&theta;) = O/A</td>
+            <td class="mono">O = A&middot;Tan &nbsp; or &nbsp; A = O/Tan</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section>
+    <div class="section-label">
+      <div class="section-icon" style="background:#fef3c7;">&#127919;</div>
+      <h2>Quick Check Quiz</h2>
+    </div>
+    <div class="quiz-block">
+      <h3>Test Your Understanding <span style="font-size:0.85rem;font-weight:600;color:#78716c;">(click an answer)</span></h3>
+
+      <!-- Q1 -->
+      <div class="quiz-q" id="q1">
+        <p>1. In a right triangle, the angle &theta; is at the bottom-left corner. Which side is the <em>Adjacent</em>?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q1','wrong')"><span class="opt-letter">A</span> The longest side, opposite the right angle</button>
+          <button class="quiz-opt" onclick="answer(this,'q1','correct')"><span class="opt-letter">B</span> The side next to &theta; (not the hypotenuse)</button>
+          <button class="quiz-opt" onclick="answer(this,'q1','wrong')"><span class="opt-letter">C</span> The side across the triangle from &theta;</button>
+          <button class="quiz-opt" onclick="answer(this,'q1','wrong')"><span class="opt-letter">D</span> It depends on the triangle&#39;s dimensions</button>
+        </div>
+        <div class="quiz-feedback fb-correct" id="q1-correct">Correct! The Adjacent is always the side right next to the angle (forming one side of the angle) &mdash; not the hypotenuse.</div>
+        <div class="quiz-feedback fb-wrong" id="q1-wrong">Not quite. The Adjacent side is the one that sits right next to angle &theta; (other than the hypotenuse). Review the definitions above.</div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-q" id="q2">
+        <p>2. For a 3-4-5 right triangle with &theta; at the bottom-left (Opp = 3, Adj = 4, Hyp = 5), what is Tan(&theta;)?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q2','wrong')"><span class="opt-letter">A</span> 0.6</button>
+          <button class="quiz-opt" onclick="answer(this,'q2','wrong')"><span class="opt-letter">B</span> 0.8</button>
+          <button class="quiz-opt" onclick="answer(this,'q2','correct')"><span class="opt-letter">C</span> 0.75</button>
+          <button class="quiz-opt" onclick="answer(this,'q2','wrong')"><span class="opt-letter">D</span> 1.33</button>
+        </div>
+        <div class="quiz-feedback fb-correct" id="q2-correct">Correct! Tan(&theta;) = Opp/Adj = 3/4 = 0.75.</div>
+        <div class="quiz-feedback fb-wrong" id="q2-wrong">Not quite. Tan(&theta;) = Opposite / Adjacent = 3/4 = 0.75. Remember SOH-CAH-<strong>TOA</strong>.</div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-q" id="q3">
+        <p>3. A right triangle has &theta; = 30&#176; and Adjacent = 20 m. You want to find the Opposite side. Which step 2 rearrangement is correct?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q3','wrong')"><span class="opt-letter">A</span> O = 20 / Sin(30&#176;)</button>
+          <button class="quiz-opt" onclick="answer(this,'q3','wrong')"><span class="opt-letter">B</span> O = 20 / Cos(30&#176;)</button>
+          <button class="quiz-opt" onclick="answer(this,'q3','correct')"><span class="opt-letter">C</span> O = 20 &times; Tan(30&#176;)</button>
+          <button class="quiz-opt" onclick="answer(this,'q3','wrong')"><span class="opt-letter">D</span> O = 20 &times; Cos(30&#176;)</button>
+        </div>
+        <div class="quiz-feedback fb-correct" id="q3-correct">Correct! Adjacent and Opposite &rarr; use Tan. Tan(&theta;) = O/A, so O = A &times; Tan(&theta;) = 20 &times; Tan(30&#176;) &asymp; 11.5 m.</div>
+        <div class="quiz-feedback fb-wrong" id="q3-wrong">Not quite. When the known side is Adjacent and you want Opposite, use <strong>Tangent</strong>: Tan(&theta;) = O/A, so O = A &times; Tan(&theta;).</div>
+      </div>
+
+      <div class="quiz-score-bar" id="scoreBar"><p id="scoreText"></p></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+const results={};
+function answer(btn,qid,outcome){
+  const q=document.getElementById(qid);
+  if(q.dataset.done) return;
+  q.dataset.done='1';
+  const btns=q.querySelectorAll('.quiz-opt');
+  btns.forEach(b=>b.disabled=true);
+  btn.classList.add(outcome);
+  document.getElementById(qid+'-'+outcome).style.display='block';
+  results[qid]=outcome==='correct';
+  if(Object.keys(results).length===3){
+    const score=Object.values(results).filter(Boolean).length;
+    const bar=document.getElementById('scoreBar');
+    bar.style.display='block';
+    document.getElementById('scoreText').textContent=`You scored ${score}/3 — ${score===3?'Perfect! Great work!':score===2?'Almost there — review the missed question.':'Keep practising — re-read the notes above.'}`;
+  }
+}
+</script>
+
+</body>
+</html>

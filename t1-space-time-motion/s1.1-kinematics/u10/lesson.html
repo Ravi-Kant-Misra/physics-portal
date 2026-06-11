@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Unit 10 · Translating Kinematics Graphs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --blue:#3b82f6;
+    --green:#22c55e;
+    --amber:#f59e0b;
+    --red:#ef4444;
+    --dark:#0f172a;
+    --bg:#f8faff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Nunito',sans-serif;
+    background-color:var(--bg);
+    background-image:radial-gradient(circle,#cbd5e1 1px,transparent 1px);
+    background-size:28px 28px;
+    color:var(--dark);
+    min-height:100vh;
+  }
+
+  /* ---- Password Gate ---- */
+  #gate{
+    position:fixed;inset:0;
+    background:linear-gradient(135deg,#0f172a,#1e3a5f);
+    display:flex;align-items:center;justify-content:center;
+    z-index:9999;
+  }
+  .gate-card{
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:20px;
+    padding:48px 56px;
+    text-align:center;
+    max-width:420px;width:90%;
+  }
+  .gate-card h2{color:#e2e8f0;font-size:1.5rem;margin-bottom:8px;}
+  .gate-card p{color:#94a3b8;font-size:.9rem;margin-bottom:28px;}
+  .gate-card input{
+    width:100%;padding:12px 16px;
+    border-radius:10px;border:1px solid rgba(255,255,255,.2);
+    background:rgba(255,255,255,.1);color:#f1f5f9;
+    font-family:'Space Mono',monospace;font-size:1rem;
+    outline:none;margin-bottom:16px;text-align:center;letter-spacing:3px;
+  }
+  .gate-card input::placeholder{letter-spacing:normal;color:#64748b;}
+  .gate-btn{
+    width:100%;padding:13px;
+    background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+    color:#fff;border:none;border-radius:10px;
+    font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;
+    cursor:pointer;transition:opacity .2s;
+  }
+  .gate-btn:hover{opacity:.85;}
+  .gate-err{color:#f87171;font-size:.85rem;margin-top:12px;min-height:20px;}
+
+  /* ---- HERO ---- */
+  .hero{
+    background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 60%,#1e40af 100%);
+    padding:72px 24px 60px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .stars{position:absolute;inset:0;pointer-events:none;}
+  .star{
+    position:absolute;
+    background:#fff;
+    border-radius:50%;
+    animation:twinkle var(--dur,2s) ease-in-out infinite alternate;
+  }
+  @keyframes twinkle{from{opacity:.2;}to{opacity:1;}}
+  .chip{
+    display:inline-block;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.25);
+    border-radius:999px;
+    padding:5px 18px;
+    color:#bfdbfe;
+    font-family:'Space Mono',monospace;
+    font-size:.75rem;
+    letter-spacing:.08em;
+    margin-bottom:22px;
+  }
+  .hero h1{
+    font-size:clamp(2rem,5vw,3.2rem);
+    font-weight:900;
+    background:linear-gradient(90deg,#bfdbfe,#ffffff,#bfdbfe);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    line-height:1.15;
+    max-width:760px;margin:0 auto 14px;
+  }
+  .hero-sub{color:#93c5fd;font-size:1.05rem;font-weight:600;}
+
+  /* ---- MAIN LAYOUT ---- */
+  .main{max-width:960px;margin:0 auto;padding:40px 20px 80px;}
+
+  /* ---- SECTION HEADER ---- */
+  .sec-head{
+    display:flex;align-items:center;gap:12px;
+    margin:44px 0 18px;
+  }
+  .sec-icon{
+    width:38px;height:38px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.2rem;flex-shrink:0;
+  }
+  .sec-head h2{font-size:1.25rem;font-weight:800;}
+
+  /* ---- CARDS ---- */
+  .card{
+    background:#fff;
+    border-radius:16px;
+    padding:28px 30px;
+    box-shadow:0 2px 12px rgba(15,23,42,.08);
+    margin-bottom:24px;
+  }
+
+  /* ---- SUMMARY RULES ---- */
+  .rules-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:16px;
+  }
+  .rule-card{
+    border-radius:14px;
+    padding:22px 20px;
+    position:relative;
+    overflow:hidden;
+  }
+  .rule-card.blue{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px solid #bfdbfe;}
+  .rule-card.green{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #bbf7d0;}
+  .rule-card.amber{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1.5px solid #fde68a;}
+  .rule-label{
+    font-family:'Space Mono',monospace;
+    font-size:.7rem;font-weight:700;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  .rule-card.blue .rule-label{color:#1d4ed8;}
+  .rule-card.green .rule-label{color:#15803d;}
+  .rule-card.amber .rule-label{color:#b45309;}
+  .rule-eq{
+    font-family:'Space Mono',monospace;
+    font-size:1.05rem;
+    font-weight:700;
+    margin-bottom:8px;
+  }
+  .rule-card.blue .rule-eq{color:#1e40af;}
+  .rule-card.green .rule-eq{color:#166534;}
+  .rule-card.amber .rule-eq{color:#92400e;}
+  .rule-desc{font-size:.85rem;color:#475569;line-height:1.5;}
+
+  /* ---- SLOPE TABLE ---- */
+  .slope-table{width:100%;border-collapse:separate;border-spacing:0 6px;}
+  .slope-table th{
+    font-family:'Space Mono',monospace;font-size:.72rem;
+    text-transform:uppercase;letter-spacing:.08em;
+    color:#64748b;padding:4px 12px;text-align:left;
+  }
+  .slope-table td{
+    padding:10px 14px;
+    background:#f8fafc;
+    font-size:.9rem;
+  }
+  .slope-table td:first-child{border-radius:8px 0 0 8px;}
+  .slope-table td:last-child{border-radius:0 8px 8px 0;}
+  .slope-bar{
+    height:4px;border-radius:4px;
+    display:inline-block;
+    vertical-align:middle;margin-right:8px;
+  }
+  .pill{
+    display:inline-block;
+    border-radius:999px;
+    padding:3px 12px;
+    font-family:'Space Mono',monospace;
+    font-size:.78rem;
+    font-weight:700;
+  }
+
+  /* ---- SVG GRAPH PAIRS ---- */
+  .graph-section{margin-bottom:36px;}
+  .graph-section h3{
+    font-size:1rem;font-weight:800;
+    margin-bottom:16px;
+    padding-bottom:8px;
+    border-bottom:2px solid #e2e8f0;
+  }
+  .graph-pairs{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:20px;
+  }
+  .graph-pair{
+    background:#fff;
+    border-radius:14px;
+    border:1px solid #e2e8f0;
+    padding:20px;
+    box-shadow:0 1px 6px rgba(15,23,42,.05);
+  }
+  .graph-pair-title{
+    font-family:'Space Mono',monospace;
+    font-size:.72rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.08em;
+    color:#64748b;margin-bottom:12px;
+  }
+  .graph-row{
+    display:flex;
+    gap:12px;
+    align-items:flex-end;
+    justify-content:center;
+  }
+  .graph-wrap{text-align:center;}
+  .graph-wrap p{font-size:.72rem;color:#64748b;margin-top:6px;font-weight:700;}
+  .arrow-icon{
+    font-size:1.4rem;color:#94a3b8;
+    align-self:center;
+    padding-bottom:10px;
+  }
+  svg.mini{display:block;}
+
+  /* ---- TRIPLE SETS ---- */
+  .triple-set{
+    background:#fff;
+    border-radius:14px;
+    border:1px solid #e2e8f0;
+    padding:24px;
+    margin-bottom:20px;
+    box-shadow:0 1px 8px rgba(15,23,42,.06);
+  }
+  .triple-label{
+    font-family:'Space Mono',monospace;
+    font-size:.72rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.08em;
+    color:#64748b;margin-bottom:14px;
+  }
+  .triple-graphs{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .triple-item{text-align:center;}
+  .triple-item p{font-size:.75rem;color:#475569;margin-top:6px;font-weight:700;}
+  .triple-desc{
+    margin-top:14px;
+    font-size:.88rem;
+    color:#475569;
+    line-height:1.6;
+    background:#f8fafc;
+    border-radius:8px;
+    padding:12px 16px;
+    border-left:3px solid var(--blue);
+  }
+
+  /* ---- QUIZ ---- */
+  .quiz-q{margin-bottom:32px;}
+  .quiz-q p{font-weight:700;margin-bottom:14px;font-size:.97rem;line-height:1.6;}
+  .quiz-opts{display:flex;flex-direction:column;gap:8px;}
+  .quiz-opt{
+    display:flex;align-items:center;gap:10px;
+    background:#f8fafc;border:2px solid #e2e8f0;
+    border-radius:10px;padding:11px 16px;
+    cursor:pointer;transition:border-color .2s,background .2s;
+    font-size:.9rem;
+  }
+  .quiz-opt:hover{border-color:var(--blue);background:#eff6ff;}
+  .quiz-opt.correct{border-color:var(--green);background:#f0fdf4;}
+  .quiz-opt.wrong{border-color:var(--red);background:#fef2f2;}
+  .quiz-opt input[type=radio]{accent-color:var(--blue);}
+  .quiz-feedback{
+    margin-top:10px;
+    font-size:.88rem;
+    font-weight:700;
+    min-height:22px;
+  }
+  .quiz-feedback.ok{color:var(--green);}
+  .quiz-feedback.no{color:var(--red);}
+  .check-btn{
+    background:linear-gradient(135deg,var(--blue),#1d4ed8);
+    color:#fff;border:none;border-radius:10px;
+    padding:10px 28px;font-family:'Nunito',sans-serif;
+    font-size:.95rem;font-weight:700;cursor:pointer;
+    margin-top:12px;transition:opacity .2s;
+  }
+  .check-btn:hover{opacity:.85;}
+  .quiz-score{
+    text-align:center;padding:28px;
+    background:linear-gradient(135deg,#eff6ff,#dbeafe);
+    border-radius:14px;border:1.5px solid #bfdbfe;
+    display:none;
+  }
+  .quiz-score h3{font-size:1.4rem;color:#1e40af;}
+  .quiz-score p{color:#475569;margin-top:8px;}
+  #quiz-submit{
+    display:block;margin:28px auto 0;
+    background:linear-gradient(135deg,#1d4ed8,#1e40af);
+    color:#fff;border:none;border-radius:12px;
+    padding:13px 40px;font-family:'Nunito',sans-serif;
+    font-size:1.05rem;font-weight:800;cursor:pointer;
+    transition:opacity .2s;
+  }
+  #quiz-submit:hover{opacity:.85;}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="gate-card">
+    <h2>Physics Portal</h2>
+    <p>Enter the class password to access this lesson.</p>
+    <input type="password" id="pw-input" placeholder="Enter password" autofocus/>
+    <button class="gate-btn" onclick="checkPW()">Unlock</button>
+    <div class="gate-err" id="pw-err"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const key='pg_ok';
+  const encoded=btoa('physics2024');
+  if(localStorage.getItem(key)===encoded){
+    document.getElementById('gate').style.display='none';
+  }
+  window.checkPW=function(){
+    const v=document.getElementById('pw-input').value;
+    if(btoa(v)===encoded){
+      localStorage.setItem(key,encoded);
+      document.getElementById('gate').style.display='none';
+    } else {
+      document.getElementById('pw-err').textContent='Incorrect password. Try again.';
+    }
+  };
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Enter'&&document.getElementById('gate').style.display!=='none') checkPW();
+  });
+})();
+</script>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="stars" id="stars"></div>
+  <div class="chip">Kinematics · Unit 10</div>
+  <h1>Translating Position, Velocity &amp; Acceleration Graphs</h1>
+  <p class="hero-sub">Reading and converting between all three motion graphs</p>
+</header>
+
+<script>
+// Generate twinkling stars
+(function(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<55;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=Math.random()*3+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${(Math.random()*2.5+1.2).toFixed(1)}s;opacity:${Math.random()*.6+.2};`;
+    c.appendChild(s);
+  }
+})();
+</script>
+
+<main class="main">
+
+  <!-- ===== SUMMARY RULES ===== -->
+  <div class="sec-head">
+    <div class="sec-icon" style="background:#eff6ff;">📋</div>
+    <h2>Core Summary Rules</h2>
+  </div>
+  <div class="rules-grid">
+    <div class="rule-card blue">
+      <div class="rule-label">Position vs Time</div>
+      <div class="rule-eq">Slope = Velocity</div>
+      <div class="rule-desc">The steepness (slope) of the p–t graph at any point tells you the instantaneous velocity at that moment. Steeper = faster.</div>
+    </div>
+    <div class="rule-card green">
+      <div class="rule-label">Velocity vs Time</div>
+      <div class="rule-eq">Slope = Acceleration</div>
+      <div class="rule-eq" style="font-size:.9rem;">Area = ΔPosition</div>
+      <div class="rule-desc">The slope of the v–t graph gives acceleration. The area between the curve and the time axis equals the displacement.</div>
+    </div>
+    <div class="rule-card amber">
+      <div class="rule-label">Acceleration vs Time</div>
+      <div class="rule-eq">Area = ΔVelocity</div>
+      <div class="rule-desc">The area between the a–t graph and the time axis equals the change in velocity over that time interval.</div>
+    </div>
+  </div>
+
+  <!-- ===== SLOPE REFERENCE ===== -->
+  <div class="sec-head">
+    <div class="sec-icon" style="background:#f0fdf4;">📐</div>
+    <h2>Slope Reference Guide</h2>
+  </div>
+  <div class="card">
+    <p style="font-size:.88rem;color:#475569;margin-bottom:16px;">
+      When translating graphs, first identify the slope of each segment. The slope becomes the <em>value</em> on the next graph down.
+    </p>
+    <table class="slope-table">
+      <thead>
+        <tr>
+          <th>Slope Type</th>
+          <th>Visual</th>
+          <th>Resulting Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Steep positive</strong></td>
+          <td><span class="slope-bar" style="width:40px;background:#1d4ed8;transform:rotate(-40deg);"></span></td>
+          <td><span class="pill" style="background:#dbeafe;color:#1e40af;">Large positive (+)</span></td>
+        </tr>
+        <tr>
+          <td><strong>Gentle positive</strong></td>
+          <td><span class="slope-bar" style="width:40px;background:#3b82f6;transform:rotate(-15deg);"></span></td>
+          <td><span class="pill" style="background:#eff6ff;color:#1d4ed8;">Small positive (+)</span></td>
+        </tr>
+        <tr>
+          <td><strong>Horizontal (flat)</strong></td>
+          <td><span class="slope-bar" style="width:40px;background:#64748b;"></span></td>
+          <td><span class="pill" style="background:#f1f5f9;color:#475569;">Zero (0)</span></td>
+        </tr>
+        <tr>
+          <td><strong>Gentle negative</strong></td>
+          <td><span class="slope-bar" style="width:40px;background:#f59e0b;transform:rotate(15deg);"></span></td>
+          <td><span class="pill" style="background:#fef3c7;color:#92400e;">Small negative (−)</span></td>
+        </tr>
+        <tr>
+          <td><strong>Steep negative</strong></td>
+          <td><span class="slope-bar" style="width:40px;background:#ef4444;transform:rotate(40deg);"></span></td>
+          <td><span class="pill" style="background:#fee2e2;color:#991b1b;">Large negative (−)</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== PT → VT ===== -->
+  <div class="sec-head">
+    <div class="sec-icon" style="background:#dbeafe;">→</div>
+    <h2>Converting: Position–Time → Velocity–Time</h2>
+  </div>
+  <p style="font-size:.9rem;color:#475569;margin-bottom:20px;line-height:1.7;">
+    Find the <strong>slope of each segment</strong> on the p–t graph. That slope becomes a <strong>constant horizontal value</strong> on the v–t graph.
+    Curved p–t segments produce slanted (linear) v–t segments.
+  </p>
+  <div class="graph-pairs" id="pt-vt-pairs">
+
+    <!-- Pair 1: Piecewise linear -->
+    <div class="graph-pair">
+      <div class="graph-pair-title">1 · Piecewise linear PT → step VT</div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">p</text>
+            <!-- 3 segments: steep up, flat, gentle down -->
+            <polyline points="15,70 40,30 60,30 100,58" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linejoin="round"/>
+          </svg>
+          <p>p vs t</p>
+        </div>
+        <div class="arrow-icon">→</div>
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="45" x2="100" y2="45" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+            <!-- step function: positive, zero, negative -->
+            <polyline points="15,28 40,28 40,45 60,45 60,56 100,56" fill="none" stroke="#22c55e" stroke-width="2.5"/>
+          </svg>
+          <p>v vs t</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pair 2: Constant positive slope -->
+    <div class="graph-pair">
+      <div class="graph-pair-title">2 · Constant positive slope PT → constant VT</div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">p</text>
+            <line x1="15" y1="72" x2="100" y2="18" stroke="#3b82f6" stroke-width="2.5"/>
+          </svg>
+          <p>p vs t</p>
+        </div>
+        <div class="arrow-icon">→</div>
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+            <line x1="15" y1="32" x2="100" y2="32" stroke="#22c55e" stroke-width="2.5"/>
+          </svg>
+          <p>v vs t</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pair 3: V-shape PT -->
+    <div class="graph-pair">
+      <div class="graph-pair-title">3 · V-shape PT → pos then neg VT</div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">p</text>
+            <polyline points="15,65 55,22 100,65" fill="none" stroke="#3b82f6" stroke-width="2.5"/>
+          </svg>
+          <p>p vs t</p>
+        </div>
+        <div class="arrow-icon">→</div>
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="45" x2="100" y2="45" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+            <polyline points="15,28 55,28 55,62 100,62" fill="none" stroke="#22c55e" stroke-width="2.5"/>
+          </svg>
+          <p>v vs t</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pair 4: Curve upward PT -->
+    <div class="graph-pair">
+      <div class="graph-pair-title">4 · Curve upward (increasing slope) → rising VT</div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">p</text>
+            <path d="M15,75 Q55,72 100,18" fill="none" stroke="#3b82f6" stroke-width="2.5"/>
+          </svg>
+          <p>p vs t</p>
+        </div>
+        <div class="arrow-icon">→</div>
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+            <line x1="15" y1="70" x2="100" y2="20" stroke="#22c55e" stroke-width="2.5"/>
+          </svg>
+          <p>v vs t</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pair 5: Curve downward PT -->
+    <div class="graph-pair">
+      <div class="graph-pair-title">5 · Curve downward (decreasing slope) → falling VT</div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">p</text>
+            <path d="M15,18 Q60,70 100,72" fill="none" stroke="#3b82f6" stroke-width="2.5"/>
+          </svg>
+          <p>p vs t</p>
+        </div>
+        <div class="arrow-icon">→</div>
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+            <line x1="15" y1="18" x2="100" y2="68" stroke="#22c55e" stroke-width="2.5"/>
+          </svg>
+          <p>v vs t</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pair 6: Bell curve PT -->
+    <div class="graph-pair">
+      <div class="graph-pair-title">6 · Bell-curve PT → pos-neg VT crossing zero</div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">p</text>
+            <path d="M15,65 Q35,10 55,15 Q75,20 100,65" fill="none" stroke="#3b82f6" stroke-width="2.5"/>
+          </svg>
+          <p>p vs t</p>
+        </div>
+        <div class="arrow-icon">→</div>
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="45" x2="100" y2="45" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+            <line x1="15" y1="22" x2="55" y2="45" stroke="#22c55e" stroke-width="2.5"/>
+            <line x1="55" y1="45" x2="100" y2="68" stroke="#22c55e" stroke-width="2.5"/>
+          </svg>
+          <p>v vs t</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VT → PT ===== -->
+  <div class="sec-head">
+    <div class="sec-icon" style="background:#f0fdf4;">→</div>
+    <h2>Converting: Velocity–Time → Position–Time</h2>
+  </div>
+  <p style="font-size:.9rem;color:#475569;margin-bottom:20px;line-height:1.7;">
+    The value on the v–t graph becomes the <strong>slope</strong> on the p–t graph.
+    Positive v → p increasing. Negative v → p decreasing. Changing v → curved p (parabola).
+  </p>
+  <div class="graph-pairs">
+
+    <!-- VT→PT 1 -->
+    <div class="graph-pair">
+      <div class="graph-pair-title">1 · Constant pos V → straight pos slope PT</div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+            <line x1="15" y1="30" x2="100" y2="30" stroke="#22c55e" stroke-width="2.5"/>
+          </svg>
+          <p>v vs t</p>
+        </div>
+        <div class="arrow-icon">→</div>
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">p</text>
+            <line x1="15" y1="70" x2="100" y2="22" stroke="#3b82f6" stroke-width="2.5"/>
+          </svg>
+          <p>p vs t</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VT→PT 2 -->
+    <div class="graph-pair">
+      <div class="graph-pair-title">2 · Constant neg V → straight neg slope PT</div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="45" x2="100" y2="45" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+            <line x1="15" y1="62" x2="100" y2="62" stroke="#22c55e" stroke-width="2.5"/>
+          </svg>
+          <p>v vs t</p>
+        </div>
+        <div class="arrow-icon">→</div>
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">p</text>
+            <line x1="15" y1="22" x2="100" y2="70" stroke="#3b82f6" stroke-width="2.5"/>
+          </svg>
+          <p>p vs t</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VT→PT 3 -->
+    <div class="graph-pair">
+      <div class="graph-pair-title">3 · Decreasing pos V (neg slope) → concave-down PT</div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+            <line x1="15" y1="22" x2="100" y2="62" stroke="#22c55e" stroke-width="2.5"/>
+          </svg>
+          <p>v vs t</p>
+        </div>
+        <div class="arrow-icon">→</div>
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">p</text>
+            <path d="M15,60 Q50,15 100,25" fill="none" stroke="#3b82f6" stroke-width="2.5"/>
+          </svg>
+          <p>p vs t</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VT→PT 4 -->
+    <div class="graph-pair">
+      <div class="graph-pair-title">4 · Increasing V (pos slope) → concave-up PT</div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+            <line x1="15" y1="65" x2="100" y2="22" stroke="#22c55e" stroke-width="2.5"/>
+          </svg>
+          <p>v vs t</p>
+        </div>
+        <div class="arrow-icon">→</div>
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">p</text>
+            <path d="M15,65 Q55,60 100,18" fill="none" stroke="#3b82f6" stroke-width="2.5"/>
+          </svg>
+          <p>p vs t</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VT → AT ===== -->
+  <div class="sec-head">
+    <div class="sec-icon" style="background:#fef3c7;">→</div>
+    <h2>Converting: Velocity–Time → Acceleration–Time</h2>
+  </div>
+  <p style="font-size:.9rem;color:#475569;margin-bottom:20px;line-height:1.7;">
+    The <strong>slope</strong> of the v–t graph becomes the <strong>value</strong> on the a–t graph.
+    Constant v → zero acceleration. Linearly changing v → constant nonzero acceleration.
+  </p>
+  <div class="graph-pairs">
+
+    <!-- VT→AT 1 -->
+    <div class="graph-pair">
+      <div class="graph-pair-title">1 · Constant pos V → a = 0</div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+            <line x1="15" y1="32" x2="100" y2="32" stroke="#22c55e" stroke-width="2.5"/>
+          </svg>
+          <p>v vs t</p>
+        </div>
+        <div class="arrow-icon">→</div>
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">a</text>
+            <line x1="15" y1="45" x2="100" y2="45" stroke="#f59e0b" stroke-width="2.5"/>
+          </svg>
+          <p>a vs t</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VT→AT 2 -->
+    <div class="graph-pair">
+      <div class="graph-pair-title">2 · Multiple constant segments → AT steps</div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+            <polyline points="15,65 40,65 40,32 70,32 70,50 100,50" fill="none" stroke="#22c55e" stroke-width="2.5"/>
+          </svg>
+          <p>v vs t</p>
+        </div>
+        <div class="arrow-icon">→</div>
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="45" x2="100" y2="45" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">a</text>
+            <polyline points="15,45 40,45 40,28 70,28 70,45 100,45" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+          </svg>
+          <p>a vs t</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VT→AT 3 -->
+    <div class="graph-pair">
+      <div class="graph-pair-title">3 · Decreasing then increasing V → neg then pos AT</div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+            <polyline points="15,22 55,65 100,22" fill="none" stroke="#22c55e" stroke-width="2.5"/>
+          </svg>
+          <p>v vs t</p>
+        </div>
+        <div class="arrow-icon">→</div>
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="45" x2="100" y2="45" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">a</text>
+            <polyline points="15,62 55,62 55,28 100,28" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+          </svg>
+          <p>a vs t</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VT→AT 4 -->
+    <div class="graph-pair">
+      <div class="graph-pair-title">4 · V crosses zero (neg → pos) → neg/pos AT blocks</div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="45" x2="100" y2="45" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+            <polyline points="15,65 45,65 45,25 100,25" fill="none" stroke="#22c55e" stroke-width="2.5"/>
+          </svg>
+          <p>v vs t</p>
+        </div>
+        <div class="arrow-icon">→</div>
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="45" x2="100" y2="45" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">a</text>
+            <polyline points="15,45 45,45 45,28 100,28" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+          </svg>
+          <p>a vs t</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== AT → VT ===== -->
+  <div class="sec-head">
+    <div class="sec-icon" style="background:#fce7f3;">→</div>
+    <h2>Converting: Acceleration–Time → Velocity–Time</h2>
+  </div>
+  <p style="font-size:.9rem;color:#475569;margin-bottom:20px;line-height:1.7;">
+    The value on the a–t graph becomes the <strong>slope</strong> on the v–t graph.
+    Also: <strong>area</strong> under the a–t graph = ΔVelocity.
+  </p>
+  <div class="graph-pairs">
+
+    <!-- AT→VT 1 -->
+    <div class="graph-pair">
+      <div class="graph-pair-title">1 · Positive AT block → rising VT line</div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">a</text>
+            <polyline points="15,45 15,28 100,28 100,45" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+            <rect x="15" y="28" width="85" height="17" fill="#fef3c7" opacity=".5"/>
+          </svg>
+          <p>a vs t</p>
+        </div>
+        <div class="arrow-icon">→</div>
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+            <line x1="15" y1="65" x2="100" y2="22" stroke="#22c55e" stroke-width="2.5"/>
+          </svg>
+          <p>v vs t</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AT→VT 2 -->
+    <div class="graph-pair">
+      <div class="graph-pair-title">2 · Pos then neg AT → VT rises then falls (tent)</div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="45" x2="100" y2="45" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">a</text>
+            <polyline points="15,45 15,28 55,28 55,62 100,62 100,45" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+            <rect x="15" y="28" width="40" height="17" fill="#fef3c7" opacity=".5"/>
+            <rect x="55" y="45" width="45" height="17" fill="#fee2e2" opacity=".5"/>
+          </svg>
+          <p>a vs t</p>
+        </div>
+        <div class="arrow-icon">→</div>
+        <div class="graph-wrap">
+          <svg class="mini" width="110" height="90" viewBox="0 0 110 90">
+            <line x1="10" y1="80" x2="100" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="10" y1="10" x2="10" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="88" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+            <text x="6" y="45" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+            <polyline points="15,65 55,22 100,65" fill="none" stroke="#22c55e" stroke-width="2.5"/>
+          </svg>
+          <p>v vs t</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== COMPLETE P/V/A TRIPLES ===== -->
+  <div class="sec-head">
+    <div class="sec-icon" style="background:#ede9fe;">3</div>
+    <h2>Complete P / V / A Graph Sets</h2>
+  </div>
+  <p style="font-size:.9rem;color:#475569;margin-bottom:20px;line-height:1.7;">
+    These three scenarios show all graphs together. Notice how each graph is consistent with the rules above.
+  </p>
+
+  <!-- Triple 1: Decelerating object -->
+  <div class="triple-set">
+    <div class="triple-label">Scenario A · Object decelerating (slowing down)</div>
+    <div class="triple-graphs">
+      <div class="triple-item">
+        <svg width="130" height="105" viewBox="0 0 130 105">
+          <line x1="12" y1="95" x2="120" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="12" y1="10" x2="12" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <text x="66" y="103" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+          <text x="7" y="55" text-anchor="middle" font-size="9" fill="#94a3b8">p</text>
+          <!-- Concave down curve: increasing but bending over -->
+          <path d="M15,85 Q60,18 118,30" fill="none" stroke="#3b82f6" stroke-width="2.5"/>
+        </svg>
+        <p>p vs t</p>
+      </div>
+      <div class="triple-item">
+        <svg width="130" height="105" viewBox="0 0 130 105">
+          <line x1="12" y1="95" x2="120" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="12" y1="10" x2="12" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <text x="66" y="103" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+          <text x="7" y="55" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+          <!-- Positive but decreasing velocity (neg slope) -->
+          <line x1="15" y1="28" x2="118" y2="75" stroke="#22c55e" stroke-width="2.5"/>
+        </svg>
+        <p>v vs t</p>
+      </div>
+      <div class="triple-item">
+        <svg width="130" height="105" viewBox="0 0 130 105">
+          <line x1="12" y1="95" x2="120" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="12" y1="10" x2="12" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="12" y1="53" x2="120" y2="53" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+          <text x="66" y="103" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+          <text x="7" y="55" text-anchor="middle" font-size="9" fill="#94a3b8">a</text>
+          <!-- Constant negative acceleration -->
+          <line x1="15" y1="70" x2="118" y2="70" stroke="#f59e0b" stroke-width="2.5"/>
+        </svg>
+        <p>a vs t</p>
+      </div>
+    </div>
+    <div class="triple-desc">
+      The p–t graph is concave downward (slope decreasing), telling us the object is slowing.
+      The v–t graph has a negative slope, confirming deceleration. The a–t graph shows a
+      constant negative acceleration — the force opposing motion is steady.
+    </div>
+  </div>
+
+  <!-- Triple 2: Up and back -->
+  <div class="triple-set">
+    <div class="triple-label">Scenario B · Object goes up then comes back (e.g. tossed ball)</div>
+    <div class="triple-graphs">
+      <div class="triple-item">
+        <svg width="130" height="105" viewBox="0 0 130 105">
+          <line x1="12" y1="95" x2="120" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="12" y1="10" x2="12" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <text x="66" y="103" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+          <text x="7" y="55" text-anchor="middle" font-size="9" fill="#94a3b8">p</text>
+          <!-- Bell/parabola: up then back down -->
+          <path d="M15,82 Q65,10 118,82" fill="none" stroke="#3b82f6" stroke-width="2.5"/>
+        </svg>
+        <p>p vs t</p>
+      </div>
+      <div class="triple-item">
+        <svg width="130" height="105" viewBox="0 0 130 105">
+          <line x1="12" y1="95" x2="120" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="12" y1="10" x2="12" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="12" y1="53" x2="120" y2="53" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+          <text x="66" y="103" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+          <text x="7" y="55" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+          <!-- Positive to negative: line crossing zero -->
+          <line x1="15" y1="22" x2="118" y2="82" stroke="#22c55e" stroke-width="2.5"/>
+        </svg>
+        <p>v vs t</p>
+      </div>
+      <div class="triple-item">
+        <svg width="130" height="105" viewBox="0 0 130 105">
+          <line x1="12" y1="95" x2="120" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="12" y1="10" x2="12" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="12" y1="53" x2="120" y2="53" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+          <text x="66" y="103" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+          <text x="7" y="55" text-anchor="middle" font-size="9" fill="#94a3b8">a</text>
+          <!-- Constant negative acceleration (gravity) -->
+          <line x1="15" y1="70" x2="118" y2="70" stroke="#f59e0b" stroke-width="2.5"/>
+        </svg>
+        <p>a vs t</p>
+      </div>
+    </div>
+    <div class="triple-desc">
+      The p–t is a symmetric parabola (peak = highest point). The v–t is a straight line
+      crossing zero at the peak — positive on the way up, negative on the way down.
+      The a–t is constant and negative throughout (gravity never changes).
+    </div>
+  </div>
+
+  <!-- Triple 3: V-shape then plateau -->
+  <div class="triple-set">
+    <div class="triple-label">Scenario C · Object decelerates, stops, then moves forward at constant speed</div>
+    <div class="triple-graphs">
+      <div class="triple-item">
+        <svg width="130" height="105" viewBox="0 0 130 105">
+          <line x1="12" y1="95" x2="120" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="12" y1="10" x2="12" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <text x="66" y="103" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+          <text x="7" y="55" text-anchor="middle" font-size="9" fill="#94a3b8">p</text>
+          <!-- Drop then flat then rise -->
+          <polyline points="15,18 55,72 118,72" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linejoin="round"/>
+        </svg>
+        <p>p vs t</p>
+      </div>
+      <div class="triple-item">
+        <svg width="130" height="105" viewBox="0 0 130 105">
+          <line x1="12" y1="95" x2="120" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="12" y1="10" x2="12" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="12" y1="53" x2="120" y2="53" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+          <text x="66" y="103" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+          <text x="7" y="55" text-anchor="middle" font-size="9" fill="#94a3b8">v</text>
+          <!-- Negative constant then zero -->
+          <polyline points="15,28 55,28 55,53 118,53" fill="none" stroke="#22c55e" stroke-width="2.5"/>
+        </svg>
+        <p>v vs t</p>
+      </div>
+      <div class="triple-item">
+        <svg width="130" height="105" viewBox="0 0 130 105">
+          <line x1="12" y1="95" x2="120" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="12" y1="10" x2="12" y2="95" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="12" y1="53" x2="120" y2="53" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+          <text x="66" y="103" text-anchor="middle" font-size="9" fill="#94a3b8">t</text>
+          <text x="7" y="55" text-anchor="middle" font-size="9" fill="#94a3b8">a</text>
+          <!-- Zero then zero with spike at transition (idealized) -->
+          <polyline points="15,53 55,53 55,53 118,53" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+        </svg>
+        <p>a vs t</p>
+      </div>
+    </div>
+    <div class="triple-desc">
+      The p–t falls linearly (negative slope = negative velocity), then flattens to horizontal
+      (zero slope = at rest). The v–t is constant negative, then drops to zero and stays.
+      The a–t is zero throughout each phase (no acceleration during constant velocity or rest).
+    </div>
+  </div>
+
+  <!-- ===== QUIZ ===== -->
+  <div class="sec-head">
+    <div class="sec-icon" style="background:#fce7f3;">?</div>
+    <h2>Quick Check Quiz</h2>
+  </div>
+  <div class="card" id="quiz-container">
+
+    <!-- Q1 -->
+    <div class="quiz-q" id="q1">
+      <p>1. A position–time graph shows a straight line with a positive slope. What does the velocity–time graph look like?</p>
+      <div class="quiz-opts">
+        <label class="quiz-opt"><input type="radio" name="q1" value="a"/> A) A straight line with a positive slope</label>
+        <label class="quiz-opt"><input type="radio" name="q1" value="b"/> B) A horizontal line above the time axis</label>
+        <label class="quiz-opt"><input type="radio" name="q1" value="c"/> C) A horizontal line on the time axis (v = 0)</label>
+        <label class="quiz-opt"><input type="radio" name="q1" value="d"/> D) A curve bending upward</label>
+      </div>
+      <div class="quiz-feedback" id="fb1"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-q" id="q2">
+      <p>2. The velocity–time graph shows a straight line with a negative slope. What is happening to the acceleration?</p>
+      <div class="quiz-opts">
+        <label class="quiz-opt"><input type="radio" name="q2" value="a"/> A) Acceleration is zero</label>
+        <label class="quiz-opt"><input type="radio" name="q2" value="b"/> B) Acceleration is positive and constant</label>
+        <label class="quiz-opt"><input type="radio" name="q2" value="c"/> C) Acceleration is negative and constant</label>
+        <label class="quiz-opt"><input type="radio" name="q2" value="d"/> D) Acceleration is increasing over time</label>
+      </div>
+      <div class="quiz-feedback" id="fb2"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-q" id="q3">
+      <p>3. On an acceleration–time graph, the area of a rectangle from t = 0 to t = 4 s has a value of +12 m/s². If the initial velocity was 3 m/s, what is the final velocity?</p>
+      <div class="quiz-opts">
+        <label class="quiz-opt"><input type="radio" name="q3" value="a"/> A) 12 m/s</label>
+        <label class="quiz-opt"><input type="radio" name="q3" value="b"/> B) 15 m/s</label>
+        <label class="quiz-opt"><input type="radio" name="q3" value="c"/> C) 48 m/s</label>
+        <label class="quiz-opt"><input type="radio" name="q3" value="d"/> D) 9 m/s</label>
+      </div>
+      <div class="quiz-feedback" id="fb3"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="quiz-q" id="q4">
+      <p>4. A velocity–time graph shows a horizontal line at v = 5 m/s for 6 seconds. What is the displacement of the object?</p>
+      <div class="quiz-opts">
+        <label class="quiz-opt"><input type="radio" name="q4" value="a"/> A) 5 m</label>
+        <label class="quiz-opt"><input type="radio" name="q4" value="b"/> B) 1.2 m</label>
+        <label class="quiz-opt"><input type="radio" name="q4" value="c"/> C) 11 m</label>
+        <label class="quiz-opt"><input type="radio" name="q4" value="d"/> D) 30 m</label>
+      </div>
+      <div class="quiz-feedback" id="fb4"></div>
+    </div>
+
+    <button class="check-btn" id="quiz-submit" onclick="submitQuiz()">Check Answers</button>
+    <div class="quiz-score" id="quiz-score">
+      <h3 id="score-text"></h3>
+      <p id="score-msg"></p>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const answers={q1:'b',q2:'c',q3:'b',q4:'d'};
+const explanations={
+  q1:'A constant slope on p–t means a constant velocity, so v–t is a horizontal line above the axis.',
+  q2:'The slope of v–t equals acceleration. A negative slope → constant negative acceleration.',
+  q3:'Area under a–t = ΔV. Area = 3 m/s² × 4 s = 12 m/s. Final v = 3 + 12 = 15 m/s.',
+  q4:'Area under v–t = displacement. Area = 5 m/s × 6 s = 30 m.'
+};
+
+function submitQuiz(){
+  let score=0;
+  ['q1','q2','q3','q4'].forEach(function(q,i){
+    const sel=document.querySelector('input[name="'+q+'"]:checked');
+    const fb=document.getElementById('fb'+(i+1));
+    const opts=document.querySelectorAll('input[name="'+q+'"]');
+    opts.forEach(function(o){
+      o.disabled=true;
+      const lbl=o.parentElement;
+      lbl.style.cursor='default';
+      if(o.value===answers[q]) lbl.classList.add('correct');
+    });
+    if(sel){
+      if(sel.value===answers[q]){
+        score++;
+        fb.textContent='Correct! '+explanations[q];
+        fb.className='quiz-feedback ok';
+        sel.parentElement.classList.add('correct');
+      } else {
+        fb.textContent='Not quite. '+explanations[q];
+        fb.className='quiz-feedback no';
+        sel.parentElement.classList.add('wrong');
+      }
+    } else {
+      fb.textContent='No answer selected. '+explanations[q];
+      fb.className='quiz-feedback no';
+    }
+  });
+  const sc=document.getElementById('quiz-score');
+  sc.style.display='block';
+  document.getElementById('score-text').textContent=score+' / 4 Correct';
+  const msgs=['Keep reviewing the rules above!','Good start — review the missed questions.','Almost there — check the explanations.','Perfect score! Great work!'];
+  document.getElementById('score-msg').textContent=msgs[score];
+  document.getElementById('quiz-submit').style.display='none';
+}
+</script>
+</body>
+</html>

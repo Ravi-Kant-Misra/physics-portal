@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Kinematics Unit 6 – Velocity-Time Graphs I | Classwork</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+    --dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+  body::before{
+    content:'';position:fixed;inset:0;z-index:-1;
+    background-image:radial-gradient(circle,#cbd5e1 1px,transparent 1px);
+    background-size:28px 28px;opacity:.55;
+  }
+
+  /* PASSWORD GATE */
+  #gate{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#1e3a5f,#1d4ed8);}
+  .gate-box{background:#fff;border-radius:20px;padding:2.5rem 2rem;text-align:center;max-width:340px;width:90%;box-shadow:0 25px 60px rgba(0,0,0,.3);}
+  .gate-box h2{font-size:1.4rem;font-weight:800;color:var(--dark);margin-bottom:.5rem;}
+  .gate-box p{color:var(--muted);font-size:.9rem;margin-bottom:1.2rem;}
+  .gate-box input{width:100%;padding:.75rem 1rem;border:2px solid #e2e8f0;border-radius:10px;font-family:'Nunito',sans-serif;font-size:1rem;outline:none;transition:border .2s;}
+  .gate-box input:focus{border-color:var(--blue);}
+  .gate-box button{margin-top:.9rem;width:100%;padding:.75rem;background:var(--blue);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:background .2s;}
+  .gate-box button:hover{background:#2563eb;}
+  .gate-err{color:var(--red);font-size:.85rem;margin-top:.6rem;display:none;}
+
+  /* HEADER */
+  header{
+    background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 100%);
+    padding:3rem 1.5rem 2.5rem;text-align:center;position:relative;overflow:hidden;
+  }
+  .stars{position:absolute;inset:0;pointer-events:none;}
+  .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 3s infinite alternate;}
+  @keyframes twinkle{0%{opacity:.2;transform:scale(1);}100%{opacity:.9;transform:scale(1.4);}}
+  .chip{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+    color:#e0eaff;font-family:'Space Mono',monospace;font-size:.75rem;letter-spacing:.08em;
+    padding:.3rem .9rem;border-radius:999px;margin-bottom:1rem;}
+  header h1{font-size:clamp(1.6rem,4vw,2.6rem);font-weight:900;
+    background:linear-gradient(90deg,#e0f2fe,#bfdbfe,#c7d2fe);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    line-height:1.2;margin-bottom:.5rem;}
+  header p.sub{color:#bfdbfe;font-size:1rem;font-weight:600;}
+
+  /* MAIN */
+  main{max-width:900px;margin:0 auto;padding:2rem 1.2rem 4rem;}
+
+  /* REFERENCE BOX */
+  .ref-box{background:linear-gradient(135deg,#1e293b,#1e3a5f);color:#e0f2fe;border-radius:16px;
+    padding:1.4rem 1.6rem;margin-bottom:2rem;box-shadow:0 4px 20px rgba(0,0,0,.2);}
+  .ref-box h3{font-size:.95rem;font-weight:800;color:#7dd3fc;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.8rem;}
+  .ref-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.5rem;}
+  .ref-item{font-family:'Space Mono',monospace;font-size:.82rem;color:#bfdbfe;padding:.3rem .5rem;
+    background:rgba(255,255,255,.06);border-radius:6px;}
+
+  /* SECTION HEADERS */
+  .section-hdr{display:flex;align-items:center;gap:.8rem;margin:2rem 0 1rem;}
+  .section-hdr .badge{font-family:'Space Mono',monospace;font-size:.72rem;font-weight:700;letter-spacing:.08em;
+    padding:.35rem .8rem;border-radius:8px;color:#fff;}
+  .badge-a{background:var(--blue);}
+  .badge-b{background:var(--indigo);}
+  .badge-c{background:var(--green);color:var(--dark)!important;}
+  .section-hdr h2{font-size:1.1rem;font-weight:800;color:var(--dark);}
+
+  /* PROBLEM GRID */
+  .prob-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.1rem;margin-bottom:1rem;}
+  @media(max-width:600px){.prob-grid{grid-template-columns:1fr;}}
+  .prob-card{background:#fff;border-radius:14px;padding:1.2rem 1.3rem;border:1px solid #e0e7ff;
+    box-shadow:0 2px 10px rgba(59,130,246,.07);}
+  .prob-card .pnum{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--blue);font-weight:700;margin-bottom:.4rem;letter-spacing:.06em;}
+  .prob-card p{font-size:.95rem;line-height:1.7;color:#334155;}
+  .prob-card .work-space{margin-top:.8rem;border-top:1px dashed #e2e8f0;padding-top:.8rem;}
+  .work-line{height:28px;border-bottom:1px solid #e2e8f0;margin-bottom:2px;}
+
+  /* FULL-WIDTH PROBLEM */
+  .prob-full{background:#fff;border-radius:14px;padding:1.2rem 1.5rem;border:1px solid #e0e7ff;
+    box-shadow:0 2px 10px rgba(59,130,246,.07);margin-bottom:1.1rem;}
+  .prob-full .pnum{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--indigo);font-weight:700;margin-bottom:.4rem;letter-spacing:.06em;}
+  .prob-full p{font-size:.95rem;line-height:1.7;color:#334155;}
+  .graph-container{border:1.5px solid #e0e7ff;border-radius:10px;padding:.8rem;margin:.8rem 0;background:#fafbff;text-align:center;}
+
+  /* SHORT ANSWER */
+  .sa-card{background:#fff;border-radius:14px;padding:1.2rem 1.5rem;border:1px solid #e0e7ff;
+    box-shadow:0 2px 10px rgba(59,130,246,.07);margin-bottom:1rem;}
+  .sa-card .pnum{font-family:'Space Mono',monospace;font-size:.7rem;color:#16a34a;font-weight:700;margin-bottom:.4rem;letter-spacing:.06em;}
+  .sa-card p{font-size:.95rem;line-height:1.7;color:#334155;margin-bottom:.6rem;}
+  .sa-line{height:30px;border-bottom:1.5px solid #e2e8f0;margin-bottom:4px;}
+
+  /* ANSWER KEY */
+  .key-toggle{display:flex;justify-content:flex-end;margin:1.5rem 0 .5rem;}
+  #toggle-key-btn{background:var(--dark);color:#fff;border:none;border-radius:10px;padding:.65rem 1.4rem;
+    font-family:'Nunito',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:background .2s;display:flex;align-items:center;gap:.5rem;}
+  #toggle-key-btn:hover{background:#1e3a5f;}
+  #answer-key{display:none;}
+  .key-section{background:linear-gradient(135deg,#1e293b,#0f172a);border-radius:16px;padding:1.5rem;color:#e2e8f0;}
+  .key-section h3{font-size:1rem;font-weight:800;color:#7dd3fc;margin-bottom:1rem;text-transform:uppercase;letter-spacing:.07em;}
+  .key-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.7rem;}
+  .key-item{background:rgba(255,255,255,.06);border-radius:10px;padding:.8rem 1rem;}
+  .key-item .knum{font-family:'Space Mono',monospace;font-size:.7rem;color:#94a3b8;margin-bottom:.3rem;}
+  .key-item p{font-size:.88rem;line-height:1.6;color:#e0f2fe;}
+  .key-item .kans{font-family:'Space Mono',monospace;color:#34d399;font-weight:700;font-size:.9rem;margin-top:.3rem;}
+
+  /* VT Graph SVG helper */
+  .graph-wrap{text-align:center;margin:.5rem 0;}
+  .graph-wrap svg{max-width:100%;height:auto;}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <h2>Enter Password</h2>
+    <p>This classwork sheet is password protected.</p>
+    <input type="password" id="pwd-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPwd()"/>
+    <button onclick="checkPwd()">Unlock</button>
+    <div class="gate-err" id="gate-err">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const KEY='cw_auth_vtg1';
+  const CORRECT=btoa('physics2024');
+  if(localStorage.getItem(KEY)===CORRECT){document.getElementById('gate').style.display='none';}
+  window.checkPwd=function(){
+    const val=document.getElementById('pwd-input').value;
+    if(btoa(val)===CORRECT){
+      localStorage.setItem(KEY,CORRECT);
+      document.getElementById('gate').style.display='none';
+    } else {
+      document.getElementById('gate-err').style.display='block';
+    }
+  };
+})();
+</script>
+
+<!-- HEADER -->
+<header>
+  <div class="stars" id="stars"></div>
+  <div class="chip">Kinematics · Unit 6</div>
+  <h1>Velocity-Time Graphs I</h1>
+  <p class="sub">Classwork — Constant Velocity V-T Graphs</p>
+</header>
+
+<script>
+(function(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<45;i++){
+    const s=document.createElement('div');s.className='star';
+    const sz=Math.random()*2.5+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*3}s;`;
+    c.appendChild(s);
+  }
+})();
+</script>
+
+<main>
+
+  <!-- REFERENCE BOX -->
+  <div class="ref-box">
+    <h3>Key Reference — Velocity-Time Graphs (Unit 6)</h3>
+    <div class="ref-grid">
+      <div class="ref-item">s = V × t &nbsp; (displacement)</div>
+      <div class="ref-item">Horizontal line → constant velocity</div>
+      <div class="ref-item">Area above x-axis → +ve displacement</div>
+      <div class="ref-item">Area below x-axis → −ve displacement</div>
+      <div class="ref-item">V = 0 on x-axis → stationary</div>
+      <div class="ref-item">y-intercept → initial velocity (u)</div>
+      <div class="ref-item">V below x-axis → moving backwards</div>
+      <div class="ref-item">Total s = sum of all signed areas</div>
+    </div>
+  </div>
+
+  <!-- PART A -->
+  <div class="section-hdr">
+    <span class="badge badge-a">PART A</span>
+    <h2>Reading and Calculating — Basic Problems</h2>
+  </div>
+
+  <div class="prob-grid">
+
+    <div class="prob-card">
+      <div class="pnum">A1 — DISPLACEMENT CALCULATION</div>
+      <p>An object travels at a constant velocity of <strong>+5 ms⁻¹</strong> for <strong>4 seconds</strong>. Calculate its displacement.</p>
+      <div class="work-space">
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+      </div>
+    </div>
+
+    <div class="prob-card">
+      <div class="pnum">A2 — DISPLACEMENT CALCULATION</div>
+      <p>An object travels at a constant velocity of <strong>+3 ms⁻¹</strong> for <strong>5 seconds</strong>. What is its displacement?</p>
+      <div class="work-space">
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+      </div>
+    </div>
+
+    <div class="prob-card">
+      <div class="pnum">A3 — NEGATIVE VELOCITY</div>
+      <p>An object moves at <strong>−2 ms⁻¹</strong> for <strong>6 seconds</strong>. Calculate its displacement. What does the negative sign tell you?</p>
+      <div class="work-space">
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+      </div>
+    </div>
+
+    <div class="prob-card">
+      <div class="pnum">A4 — ZERO VELOCITY</div>
+      <p>An object is stationary (V = 0 ms⁻¹) for <strong>7 seconds</strong>. How much displacement does it have during this interval? What does this segment look like on a v-t graph?</p>
+      <div class="work-space">
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+      </div>
+    </div>
+
+    <div class="prob-card">
+      <div class="pnum">A5 — IDENTIFYING VELOCITY FROM GRAPH</div>
+      <p>A horizontal line on a v-t graph sits at V = <strong>+4 ms⁻¹</strong>. Is the object moving forward or backward? Is it accelerating? How do you know?</p>
+      <div class="work-space">
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+      </div>
+    </div>
+
+    <div class="prob-card">
+      <div class="pnum">A6 — Y-INTERCEPT</div>
+      <p>A v-t graph has its line crossing the y-axis at V = <strong>+6 ms⁻¹</strong>. What does this tell you about the object's motion at t = 0? What is the initial velocity?</p>
+      <div class="work-space">
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+        <div class="work-line"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PART B -->
+  <div class="section-hdr">
+    <span class="badge badge-b">PART B</span>
+    <h2>Graph-Based Problems — Area and Displacement</h2>
+  </div>
+
+  <!-- B1 -->
+  <div class="prob-full">
+    <div class="pnum">B1 — MULTI-SEGMENT DISPLACEMENT</div>
+    <p>The v-t graph below shows an object's motion. Calculate the displacement for <strong>each segment</strong> and the <strong>total displacement</strong>.</p>
+    <div class="graph-container">
+      <svg viewBox="0 0 480 220" width="480" xmlns="http://www.w3.org/2000/svg" font-family="Nunito, sans-serif">
+        <!-- axes -->
+        <line x1="50" y1="20" x2="50" y2="195" stroke="#334155" stroke-width="2"/>
+        <line x1="50" y1="120" x2="450" y2="120" stroke="#334155" stroke-width="2"/>
+        <polygon points="450,120 440,116 440,124" fill="#334155"/>
+        <polygon points="50,20 46,30 54,30" fill="#334155"/>
+        <text x="456" y="124" font-size="11" fill="#334155" font-weight="700">t/s</text>
+        <text x="20"  y="22"  font-size="11" fill="#334155" font-weight="700">V/ms⁻¹</text>
+        <!-- y ticks: V=0 at y=120, scale 35px/unit -->
+        <g font-size="10" fill="#64748b" text-anchor="end">
+          <text x="45" y="124">0</text>
+          <text x="45" y="89">1</text><line x1="47" y1="85" x2="53" y2="85" stroke="#334155" stroke-width="1"/>
+          <text x="45" y="54">2</text><line x1="47" y1="50" x2="53" y2="50" stroke="#334155" stroke-width="1"/>
+          <text x="45" y="19">3</text><line x1="47" y1="15" x2="53" y2="15" stroke="#334155" stroke-width="1"/>
+          <text x="45" y="159">-1</text><line x1="47" y1="155" x2="53" y2="155" stroke="#334155" stroke-width="1"/>
+        </g>
+        <!-- x ticks: t=1..10, scale 40px/unit, start x=50 -->
+        <g font-size="10" fill="#64748b" text-anchor="middle">
+          <text x="90"  y="207">1</text><line x1="90"  y1="118" x2="90"  y2="122" stroke="#334155" stroke-width="1"/>
+          <text x="130" y="207">2</text><line x1="130" y1="118" x2="130" y2="122" stroke="#334155" stroke-width="1"/>
+          <text x="170" y="207">3</text><line x1="170" y1="118" x2="170" y2="122" stroke="#334155" stroke-width="1"/>
+          <text x="210" y="207">4</text><line x1="210" y1="118" x2="210" y2="122" stroke="#334155" stroke-width="1"/>
+          <text x="250" y="207">5</text><line x1="250" y1="118" x2="250" y2="122" stroke="#334155" stroke-width="1"/>
+          <text x="290" y="207">6</text><line x1="290" y1="118" x2="290" y2="122" stroke="#334155" stroke-width="1"/>
+          <text x="330" y="207">7</text><line x1="330" y1="118" x2="330" y2="122" stroke="#334155" stroke-width="1"/>
+          <text x="370" y="207">8</text><line x1="370" y1="118" x2="370" y2="122" stroke="#334155" stroke-width="1"/>
+          <text x="410" y="207">9</text><line x1="410" y1="118" x2="410" y2="122" stroke="#334155" stroke-width="1"/>
+          <text x="450" y="207">10</text><line x1="450" y1="118" x2="450" y2="122" stroke="#334155" stroke-width="1"/>
+        </g>
+        <!-- gridlines faint -->
+        <line x1="50" y1="85"  x2="450" y2="85"  stroke="#e2e8f0" stroke-width="0.6"/>
+        <line x1="50" y1="50"  x2="450" y2="50"  stroke="#e2e8f0" stroke-width="0.6"/>
+        <line x1="50" y1="155" x2="450" y2="155" stroke="#e2e8f0" stroke-width="0.6"/>
+        <!-- Segments -->
+        <!-- Seg A: t=1 to t=4, V=+2 → y=50 -->
+        <line x1="90"  y1="50"  x2="210" y2="50"  stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="90"  cy="50" r="4" fill="#ef4444"/>
+        <circle cx="210" cy="50" r="4" fill="#ef4444"/>
+        <!-- Seg B: t=4 to t=6, V=0 → y=120 -->
+        <line x1="210" y1="120" x2="290" y2="120" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="210" cy="120" r="4" fill="#ef4444"/>
+        <circle cx="290" cy="120" r="4" fill="#ef4444"/>
+        <!-- Seg C: t=6 to t=10, V=-1 → y=155 -->
+        <line x1="290" y1="155" x2="450" y2="155" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="290" cy="155" r="4" fill="#ef4444"/>
+        <circle cx="450" cy="155" r="4" fill="#ef4444"/>
+      </svg>
+    </div>
+    <p><strong>Segment labels:</strong> Segment A (t = 1–4 s), Segment B (t = 4–6 s), Segment C (t = 6–10 s)</p>
+    <div class="work-space" style="margin-top:.8rem;">
+      <div class="work-line"></div>
+      <div class="work-line"></div>
+      <div class="work-line"></div>
+      <div class="work-line"></div>
+    </div>
+  </div>
+
+  <!-- B2 -->
+  <div class="prob-full">
+    <div class="pnum">B2 — POSITIVE AND NEGATIVE AREAS</div>
+    <p>An object's v-t graph has two segments: <strong>V = +3 ms⁻¹ for 4 s</strong>, then <strong>V = −2 ms⁻¹ for 3 s</strong>. Calculate: (a) the displacement during each segment, and (b) the total displacement.</p>
+    <div class="work-space" style="margin-top:.6rem;">
+      <div class="work-line"></div>
+      <div class="work-line"></div>
+      <div class="work-line"></div>
+      <div class="work-line"></div>
+    </div>
+  </div>
+
+  <!-- B3 -->
+  <div class="prob-full">
+    <div class="pnum">B3 — THREE-SEGMENT GRAPH</div>
+    <p>A v-t graph shows: <strong>V = +5 ms⁻¹ for 2 s</strong>, then <strong>V = 0 for 3 s</strong>, then <strong>V = +2 ms⁻¹ for 4 s</strong>. Find the total displacement.</p>
+    <div class="work-space" style="margin-top:.6rem;">
+      <div class="work-line"></div>
+      <div class="work-line"></div>
+      <div class="work-line"></div>
+      <div class="work-line"></div>
+    </div>
+  </div>
+
+  <!-- B4: PPT Worked Example -->
+  <div class="prob-full">
+    <div class="pnum">B4 — PPT WORKED EXAMPLE (FULL GRAPH)</div>
+    <p>Using the values from the lesson graph: <strong>V = +3 ms⁻¹ for 5 s</strong>, then <strong>V = 0 for 3 s</strong>, then <strong>+1 ms⁻¹ giving +3 m</strong>, then <strong>−1 ms⁻¹ giving −4 m</strong>. Verify that the total displacement equals <strong>+14 m</strong> by showing full working.</p>
+    <div class="work-space" style="margin-top:.6rem;">
+      <div class="work-line"></div>
+      <div class="work-line"></div>
+      <div class="work-line"></div>
+      <div class="work-line"></div>
+      <div class="work-line"></div>
+    </div>
+  </div>
+
+  <!-- PART C -->
+  <div class="section-hdr">
+    <span class="badge badge-c">PART C</span>
+    <h2>Short Answer — Concepts and Interpretation</h2>
+  </div>
+
+  <div class="sa-card">
+    <div class="pnum">C1 — CONCEPT</div>
+    <p>Explain in your own words why the area under a velocity-time graph gives displacement. Include the formula and the unit check (ms⁻¹ × s = m).</p>
+    <div class="sa-line"></div><div class="sa-line"></div><div class="sa-line"></div><div class="sa-line"></div>
+  </div>
+
+  <div class="sa-card">
+    <div class="pnum">C2 — INTERPRETATION</div>
+    <p>A v-t graph has a segment that lies entirely <em>below</em> the x-axis. What does this mean for the object's motion and displacement? Can the distance travelled during this segment be zero? Explain.</p>
+    <div class="sa-line"></div><div class="sa-line"></div><div class="sa-line"></div><div class="sa-line"></div>
+  </div>
+
+  <div class="sa-card">
+    <div class="pnum">C3 — DISTINGUISH</div>
+    <p>Two objects have v-t graphs. Object X has V = +4 ms⁻¹; Object Y has V = −4 ms⁻¹. Both travel for 5 seconds. Compare their <em>displacements</em> and their <em>distances travelled</em>. Are these the same or different? Explain.</p>
+    <div class="sa-line"></div><div class="sa-line"></div><div class="sa-line"></div><div class="sa-line"></div>
+  </div>
+
+  <!-- ANSWER KEY TOGGLE -->
+  <div class="key-toggle">
+    <button id="toggle-key-btn" onclick="toggleKey()">
+      <span id="key-btn-icon">&#128274;</span> Show Answer Key
+    </button>
+  </div>
+
+  <div id="answer-key">
+    <div class="key-section">
+      <h3>Answer Key — Classwork Unit 6</h3>
+      <div class="key-grid">
+
+        <div class="key-item">
+          <div class="knum">A1</div>
+          <p>s = V × t = 5 ms⁻¹ × 4 s</p>
+          <div class="kans">s = +20 m</div>
+        </div>
+
+        <div class="key-item">
+          <div class="knum">A2</div>
+          <p>s = V × t = 3 ms⁻¹ × 5 s</p>
+          <div class="kans">s = +15 m</div>
+        </div>
+
+        <div class="key-item">
+          <div class="knum">A3</div>
+          <p>s = V × t = (−2) × 6</p>
+          <div class="kans">s = −12 m (moving in the negative/backward direction)</div>
+        </div>
+
+        <div class="key-item">
+          <div class="knum">A4</div>
+          <p>s = 0 × 7 = 0 m. The segment lies ON the x-axis (a horizontal line at V = 0).</p>
+          <div class="kans">s = 0 m (stationary)</div>
+        </div>
+
+        <div class="key-item">
+          <div class="knum">A5</div>
+          <p>V = +4 ms⁻¹ → moving forward (positive direction). Line is horizontal → constant velocity → zero acceleration.</p>
+          <div class="kans">Forward motion, no acceleration</div>
+        </div>
+
+        <div class="key-item">
+          <div class="knum">A6</div>
+          <p>y-intercept = initial velocity. The object was already moving at +6 ms⁻¹ when t = 0 (timing began).</p>
+          <div class="kans">u = +6 ms⁻¹ (initial velocity)</div>
+        </div>
+
+        <div class="key-item">
+          <div class="knum">B1</div>
+          <p>Seg A: s = +2 × 3 = +6 m | Seg B: s = 0 × 2 = 0 m | Seg C: s = (−1) × 4 = −4 m</p>
+          <div class="kans">Total s = +6 + 0 + (−4) = +2 m</div>
+        </div>
+
+        <div class="key-item">
+          <div class="knum">B2</div>
+          <p>(a) Seg 1: s = +3 × 4 = +12 m; Seg 2: s = (−2) × 3 = −6 m</p>
+          <div class="kans">(b) Total s = +12 + (−6) = +6 m</div>
+        </div>
+
+        <div class="key-item">
+          <div class="knum">B3</div>
+          <p>s₁ = +5 × 2 = +10 m | s₂ = 0 × 3 = 0 m | s₃ = +2 × 4 = +8 m</p>
+          <div class="kans">Total s = 10 + 0 + 8 = +18 m</div>
+        </div>
+
+        <div class="key-item">
+          <div class="knum">B4</div>
+          <p>+15 m + 0 m + 3 m + (−4 m) = ?</p>
+          <div class="kans">Total s = +14 m ✓ (matches PPT)</div>
+        </div>
+
+        <div class="key-item">
+          <div class="knum">C1</div>
+          <p>Displacement = velocity × time. On a v-t graph, a constant velocity segment forms a rectangle. Area = base × height = t × V = s. Unit check: ms⁻¹ × s = m (metres). Area above x-axis = positive s; area below = negative s.</p>
+          <div class="kans">s = V × t; area gives displacement, not distance.</div>
+        </div>
+
+        <div class="key-item">
+          <div class="knum">C2</div>
+          <p>Below x-axis → negative velocity → object moves backward. Displacement is negative. Distance cannot be zero if V ≠ 0 — the object is moving, just in reverse, so distance is |s| = positive.</p>
+          <div class="kans">Negative displacement; distance is still positive (|s|).</div>
+        </div>
+
+        <div class="key-item">
+          <div class="knum">C3</div>
+          <p>Object X: s = +4 × 5 = +20 m. Object Y: s = −4 × 5 = −20 m. Displacements are opposite (+20 vs −20). Distance is the same for both: 20 m (distance is always the magnitude of displacement for constant velocity).</p>
+          <div class="kans">Displacement: +20 m vs −20 m; Distance: both 20 m.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+function toggleKey(){
+  const key=document.getElementById('answer-key');
+  const btn=document.getElementById('toggle-key-btn');
+  const icon=document.getElementById('key-btn-icon');
+  if(key.style.display==='none'||key.style.display===''){
+    key.style.display='block';
+    btn.innerHTML='<span>&#128275;</span> Hide Answer Key';
+  } else {
+    key.style.display='none';
+    btn.innerHTML='<span>&#128274;</span> Show Answer Key';
+  }
+}
+</script>
+
+</body>
+</html>

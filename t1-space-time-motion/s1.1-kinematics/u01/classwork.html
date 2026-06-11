@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Distance and Displacement — Classwork</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:820px;margin:36px auto;padding:0 24px 60px;}
+    .ref-box{background:white;border:2px solid #bfdbfe;border-radius:10px;padding:18px 22px;margin-bottom:28px;}
+    .ref-box h3{color:#1e3a5f;font-size:1rem;margin-bottom:10px;}
+    .ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .ref-item{background:#eff6ff;border-radius:8px;padding:10px 14px;font-size:0.88rem;}
+    .ref-item .sym{font-family:'Space Mono',monospace;font-weight:700;color:#1d4ed8;}
+    section{margin-bottom:40px;}
+    h2{font-size:1.2rem;font-weight:700;color:#1e3a5f;border-left:5px solid #3b82f6;padding-left:12px;margin-bottom:16px;}
+    .instructions{color:#4b5563;font-size:0.9rem;margin-bottom:16px;font-style:italic;}
+    .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    @media(max-width:600px){.problem-grid{grid-template-columns:1fr;}}
+    .problem-card{background:white;border-radius:8px;padding:16px 20px;box-shadow:0 1px 5px rgba(0,0,0,0.07);}
+    .problem-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:6px;}
+    .scenario{font-size:0.95rem;font-weight:600;color:#1a1a2e;margin-bottom:10px;}
+    .field-set{display:flex;flex-direction:column;gap:8px;}
+    .field-row{display:flex;align-items:center;gap:8px;font-size:0.85rem;}
+    .fill-line{border-bottom:2px solid #d1d5db;min-height:24px;flex:1;}
+    .short-answer{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .short-answer .q{font-weight:600;margin-bottom:10px;font-size:0.95rem;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+    .nl-diagram{background:#f8faff;border-radius:8px;padding:14px 18px;margin-bottom:12px;overflow-x:auto;}
+    .nl-row{display:flex;align-items:flex-end;min-width:460px;justify-content:center;}
+    .tick-block{display:flex;flex-direction:column;align-items:center;}
+    .tick-val{font-family:'Space Mono',monospace;font-size:0.7rem;margin-top:2px;}
+    .tick-mark{width:2px;height:8px;background:#94a3b8;}
+    .tick-seg{width:44px;height:3px;background:#e2e8f0;margin-bottom:11px;}
+    .tick-zero{width:2px;height:12px;background:#374151;}
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#1e3a5f;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #answer-key{display:none;background:#eff6ff;border:2px solid #93c5fd;border-radius:12px;padding:28px 32px;}
+    #answer-key h2{color:#1e3a5f;border-left-color:#3b82f6;margin-bottom:22px;}
+    .key-section{margin-bottom:24px;}
+    .key-section h3{font-size:1rem;font-weight:700;color:#1e3a5f;margin-bottom:12px;}
+    .key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    .key-item{background:white;border-radius:6px;padding:10px 14px;font-size:0.92rem;}
+    .key-item .kq{font-size:0.8rem;color:#6b7280;margin-bottom:2px;}
+    .key-item .kans{color:#1d4ed8;font-weight:700;font-family:'Space Mono',monospace;font-size:0.88rem;}
+    .key-item .kexpl{color:#4b5563;font-size:0.8rem;margin-top:2px;}
+    .short-ans-key{background:white;border-radius:6px;padding:12px 16px;font-size:0.92rem;margin-bottom:10px;}
+    .short-ans-key strong{color:#1d4ed8;}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">Kinematics · Unit 1 · In-Class Activity</div>
+  <h1>Distance &amp; Displacement — Classwork</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+  <div class="ref-box">
+    <h3>Reference</h3>
+    <div class="ref-grid">
+      <div class="ref-item"><span class="sym">Distance (d)</span> — total path length, scalar, always ≥ 0</div>
+      <div class="ref-item"><span class="sym">Displacement (s)</span> — straight-line from start to end, vector, can be negative</div>
+      <div class="ref-item"><span class="sym">s = x_f − x_i</span> — on a number line</div>
+      <div class="ref-item"><span class="sym">|s| = √(x² + y²)</span> — for right-angle paths</div>
+    </div>
+  </div>
+
+  <!-- PART A: Path problems -->
+  <section>
+    <h2>Part A — Path Problems</h2>
+    <p class="instructions">For each scenario, find the total distance travelled and the displacement.</p>
+    <div class="problem-grid">
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 1</div>
+        <div class="scenario">A student walks 5m east, then 3m west.</div>
+        <div class="field-set">
+          <div class="field-row">Distance = <div class="fill-line"></div> m</div>
+          <div class="field-row">Displacement = <div class="fill-line"></div></div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 2</div>
+        <div class="scenario">A runner goes 10m north, then 10m south.</div>
+        <div class="field-set">
+          <div class="field-row">Distance = <div class="fill-line"></div> m</div>
+          <div class="field-row">Displacement = <div class="fill-line"></div></div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 3</div>
+        <div class="scenario">A car drives 6m east, then 8m north.</div>
+        <div class="field-set">
+          <div class="field-row">Distance = <div class="fill-line"></div> m</div>
+          <div class="field-row">Displacement = <div class="fill-line"></div></div>
+          <div style="font-size:0.8rem;color:#6b7280;font-style:italic;">Hint: use Pythagoras</div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 4</div>
+        <div class="scenario">A ball rolls 4m right, 4m right again, then 4m left.</div>
+        <div class="field-set">
+          <div class="field-row">Distance = <div class="fill-line"></div> m</div>
+          <div class="field-row">Displacement = <div class="fill-line"></div></div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 5</div>
+        <div class="scenario">A dog walks 2m east, 2m north, 2m west, 2m south (a square loop).</div>
+        <div class="field-set">
+          <div class="field-row">Distance = <div class="fill-line"></div> m</div>
+          <div class="field-row">Displacement = <div class="fill-line"></div></div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 6</div>
+        <div class="scenario">A boat moves 5m south, then 12m east.</div>
+        <div class="field-set">
+          <div class="field-row">Distance = <div class="fill-line"></div> m</div>
+          <div class="field-row">Displacement = <div class="fill-line"></div></div>
+          <div style="font-size:0.8rem;color:#6b7280;font-style:italic;">Hint: use Pythagoras</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PART B: Number line -->
+  <section>
+    <h2>Part B — Number Line Problems</h2>
+    <p class="instructions">Use the number line below. For each problem, calculate the distance and displacement.</p>
+
+    <div class="nl-diagram">
+      <div class="nl-row">
+        <span style="font-family:'Space Mono',monospace;font-size:0.8rem;color:#6b7280;margin-right:4px;">−</span>
+        <div class="tick-block"><div class="tick-mark"></div><div class="tick-val">−5</div></div><div class="tick-seg"></div>
+        <div class="tick-block"><div class="tick-mark"></div><div class="tick-val">−4</div></div><div class="tick-seg"></div>
+        <div class="tick-block"><div class="tick-mark"></div><div class="tick-val">−3</div></div><div class="tick-seg"></div>
+        <div class="tick-block"><div class="tick-mark"></div><div class="tick-val">−2</div></div><div class="tick-seg"></div>
+        <div class="tick-block"><div class="tick-mark"></div><div class="tick-val">−1</div></div><div class="tick-seg"></div>
+        <div class="tick-block"><div class="tick-zero"></div><div class="tick-val" style="font-weight:700;">0</div></div><div class="tick-seg"></div>
+        <div class="tick-block"><div class="tick-mark"></div><div class="tick-val">1</div></div><div class="tick-seg"></div>
+        <div class="tick-block"><div class="tick-mark"></div><div class="tick-val">2</div></div><div class="tick-seg"></div>
+        <div class="tick-block"><div class="tick-mark"></div><div class="tick-val">3</div></div><div class="tick-seg"></div>
+        <div class="tick-block"><div class="tick-mark"></div><div class="tick-val">4</div></div><div class="tick-seg"></div>
+        <div class="tick-block"><div class="tick-mark"></div><div class="tick-val">5</div></div>
+        <span style="font-family:'Space Mono',monospace;font-size:0.8rem;color:#6b7280;margin-left:4px;">+</span>
+      </div>
+    </div>
+
+    <div class="problem-grid">
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 7</div>
+        <div class="scenario">Object starts at 0, moves to +5m.</div>
+        <div class="field-set">
+          <div class="field-row">Distance = <div class="fill-line"></div> m</div>
+          <div class="field-row">Displacement = <div class="fill-line"></div> m</div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 8</div>
+        <div class="scenario">Object starts at +5m, moves to +2m.</div>
+        <div class="field-set">
+          <div class="field-row">Distance = <div class="fill-line"></div> m</div>
+          <div class="field-row">Displacement = <div class="fill-line"></div> m</div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 9</div>
+        <div class="scenario">Object starts at −3m, moves to +4m.</div>
+        <div class="field-set">
+          <div class="field-row">Distance = <div class="fill-line"></div> m</div>
+          <div class="field-row">Displacement = <div class="fill-line"></div> m</div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-num">Problem 10</div>
+        <div class="scenario">Object starts at +2m, goes to +5m, then back to −2m.</div>
+        <div class="field-set">
+          <div class="field-row">Distance = <div class="fill-line"></div> m</div>
+          <div class="field-row">Displacement = <div class="fill-line"></div> m</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PART C: Short answer -->
+  <section>
+    <h2>Part C — Short Answer</h2>
+
+    <div class="short-answer">
+      <div class="q">11. Can displacement ever be greater than distance? Explain why or why not.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="short-answer">
+      <div class="q">12. A marathon runner completes a 42 km race and crosses the finish line exactly where they started. What is (a) the distance and (b) the displacement?</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="short-answer">
+      <div class="q">13. An object's displacement is −8m. What does the negative sign tell you?</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+  </section>
+
+  <!-- ANSWER KEY -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="document.getElementById('answer-key').style.display='block';this.style.display='none';">Show Answer Key</button>
+  </div>
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A — Path Problems</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="kq">Problem 1</div><div class="kans">d = 8 m, s = 2 m east</div><div class="kexpl">5+3=8m total; ends 5−3=2m east of start</div></div>
+        <div class="key-item"><div class="kq">Problem 2</div><div class="kans">d = 20 m, s = 0 m</div><div class="kexpl">10+10=20m; returns to start, so s=0</div></div>
+        <div class="key-item"><div class="kq">Problem 3</div><div class="kans">d = 14 m, s = 10 m</div><div class="kexpl">6+8=14m; √(6²+8²)=√100=10m</div></div>
+        <div class="key-item"><div class="kq">Problem 4</div><div class="kans">d = 12 m, s = 4 m right</div><div class="kexpl">4+4+4=12m; net = 4+4−4=4m right</div></div>
+        <div class="key-item"><div class="kq">Problem 5</div><div class="kans">d = 8 m, s = 0 m</div><div class="kexpl">2+2+2+2=8m; closed loop → back to start</div></div>
+        <div class="key-item"><div class="kq">Problem 6</div><div class="kans">d = 17 m, s = 13 m</div><div class="kexpl">5+12=17m; √(5²+12²)=√169=13m</div></div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B — Number Line</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="kq">Problem 7</div><div class="kans">d = 5 m, s = +5 m</div><div class="kexpl">s = 5−0 = +5m (positive = right)</div></div>
+        <div class="key-item"><div class="kq">Problem 8</div><div class="kans">d = 3 m, s = −3 m</div><div class="kexpl">s = 2−5 = −3m (negative = left)</div></div>
+        <div class="key-item"><div class="kq">Problem 9</div><div class="kans">d = 7 m, s = +7 m</div><div class="kexpl">s = 4−(−3) = +7m</div></div>
+        <div class="key-item"><div class="kq">Problem 10</div><div class="kans">d = 10 m, s = −4 m</div><div class="kexpl">path: 3m right + 7m left = 10m; s = −2−2 = −4m</div></div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C — Short Answer</h3>
+      <div class="short-ans-key"><strong>11.</strong> No. Displacement can never be greater than distance. The straight-line path is always the shortest possible route between two points — the actual path must be equal to or longer. They are equal only when the path is a straight line with no backtracking.</div>
+      <div class="short-ans-key"><strong>12.</strong> (a) Distance = 42 km (total path covered). (b) Displacement = 0 m (they finish at the same place they started, so x_f = x_i).</div>
+      <div class="short-ans-key"><strong>13.</strong> The negative sign tells you the object ended up in the negative direction relative to where it started (e.g. to the left if positive is right, or downward if positive is up). The magnitude (8m) tells you how far from start.</div>
+    </div>
+  </div>
+
+</main>
+</body>
+</html>

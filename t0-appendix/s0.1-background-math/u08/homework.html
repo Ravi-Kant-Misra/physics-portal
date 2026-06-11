@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Absolute, Fractional &amp; Percent Uncertainty — Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#99f6e4 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#065f46 0%,#0d9488 60%,#0f766e 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:920px;margin:36px auto;padding:0 24px 60px;}
+    .rules-box{background:white;border:2px solid #ccfbf1;border-radius:10px;padding:18px 22px;margin-bottom:36px;}
+    .rules-box h3{color:#0f766e;font-size:1rem;margin-bottom:10px;}
+    .rules-box .rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    @media(max-width:600px){.rules-box .rules-grid{grid-template-columns:1fr;}}
+    .rules-box .rule-item{background:#f0fdfa;border-radius:8px;padding:10px 14px;font-size:0.88rem;color:#374151;}
+    .rules-box .rule-item strong{color:#0f766e;}
+    .rules-box .rule-item code{font-family:'Space Mono',monospace;background:#ccfbf1;padding:1px 5px;border-radius:3px;font-size:0.83rem;}
+    .tip{margin-top:10px;padding:10px 14px;background:#f0fdfa;border-left:4px solid #0d9488;border-radius:4px;font-size:0.88rem;color:#134e4a;}
+    section{margin-bottom:44px;}
+    h2{font-size:1.25rem;font-weight:700;color:#0f766e;border-left:5px solid #0d9488;padding-left:12px;margin-bottom:18px;}
+    .instructions{color:#4b5563;font-size:0.92rem;margin-bottom:18px;font-style:italic;}
+    /* Part A — multi-step table */
+    .conv-table{width:100%;border-collapse:collapse;background:white;border-radius:10px;overflow:hidden;box-shadow:0 1px 5px rgba(0,0,0,0.07);}
+    .conv-table th{background:#0f766e;color:white;font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;padding:12px 16px;text-align:center;}
+    .conv-table td{padding:12px 16px;border-bottom:1px solid #e5e7eb;text-align:center;vertical-align:middle;}
+    .conv-table tr:last-child td{border-bottom:none;}
+    .conv-table tr:nth-child(even) td{background:#f9fafb;}
+    .val{font-family:'Space Mono',monospace;font-size:1.05rem;font-weight:700;color:#0f766e;}
+    .blank-cell{display:inline-block;border-bottom:2px solid #9ca3af;min-width:120px;min-height:24px;}
+    /* Part B — rounding */
+    .problem-card-wide{background:white;border-radius:8px;padding:16px 20px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .problem-num{font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:6px;}
+    .number-display{font-family:'Space Mono',monospace;font-size:1.5rem;font-weight:700;color:#1a1a2e;margin-bottom:10px;}
+    .answer-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+    .answer-label{font-size:0.85rem;color:#6b7280;}
+    .answer-line{border-bottom:2px solid #d1d5db;min-height:28px;width:180px;display:inline-block;}
+    /* Part C — T/F */
+    .tf-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    @media(max-width:600px){.tf-grid{grid-template-columns:1fr;}}
+    .tf-card{background:white;border-radius:8px;padding:16px 18px;box-shadow:0 1px 5px rgba(0,0,0,0.07);}
+    .tf-card .tf-q{font-size:0.92rem;color:#1a1a2e;margin-bottom:10px;font-weight:600;}
+    .tf-options{display:flex;gap:12px;}
+    .tf-lbl{display:flex;align-items:center;gap:6px;font-size:0.92rem;font-weight:700;cursor:pointer;}
+    .tf-lbl input{width:16px;height:16px;accent-color:#0d9488;}
+    .tf-T{color:#065f46;}.tf-F{color:#dc2626;}
+    /* Part D — short answer */
+    .short-answer{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .short-answer .q{font-weight:600;margin-bottom:10px;font-size:0.95rem;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+    /* bonus */
+    .bonus-card{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:2px solid #6ee7b7;border-radius:10px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .bonus-card .q{font-weight:600;margin-bottom:10px;}
+    /* key */
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#0f766e;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #toggle-key-btn:hover{background:#0d6f67;}
+    #answer-key{display:none;background:#f0fdfa;border:2px solid #99f6e4;border-radius:12px;padding:28px 32px;}
+    #answer-key h2{color:#0f766e;border-left-color:#0d9488;margin-bottom:22px;}
+    .key-section{margin-bottom:28px;}
+    .key-section h3{font-size:1rem;font-weight:700;color:#0f766e;margin-bottom:12px;}
+    .key-table{width:100%;border-collapse:collapse;background:white;border-radius:8px;overflow:hidden;}
+    .key-table th{background:#0d9488;color:white;font-size:0.8rem;padding:10px 14px;text-align:center;}
+    .key-table td{padding:10px 14px;border-bottom:1px solid #e5e7eb;text-align:center;font-size:0.9rem;}
+    .key-table tr:last-child td{border-bottom:none;}
+    .key-table tr:nth-child(even) td{background:#f9fafb;}
+    .key-table .kans{font-family:'Space Mono',monospace;font-weight:700;color:#0f766e;}
+    .key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    .key-item{background:white;border-radius:6px;padding:10px 14px;font-size:0.9rem;}
+    .key-item .knum{font-family:'Space Mono',monospace;font-weight:700;font-size:0.95rem;}
+    .key-item .kans{color:#0f766e;font-weight:700;}
+    .key-item .kexpl{color:#4b5563;font-size:0.82rem;margin-top:2px;}
+    .tf-key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+    .tf-key-item{background:white;border-radius:6px;padding:8px 12px;font-size:0.88rem;}
+    .tf-key-item .kans{font-weight:700;}
+    .tf-T-ans{color:#065f46;}.tf-F-ans{color:#dc2626;}
+    .short-ans-key{background:white;border-radius:6px;padding:12px 16px;margin-bottom:10px;font-size:0.92rem;}
+    .short-ans-key strong{color:#0f766e;}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">Physics · High School · Homework Assignment</div>
+  <h1>Absolute, Fractional &amp; Percent Uncertainty — Homework</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+  <div class="rules-box">
+    <h3>Reference — Conversions &amp; Rules</h3>
+    <div class="rules-grid">
+      <div class="rule-item"><strong>Absolute → Fractional:</strong> <code>Δa / a</code></div>
+      <div class="rule-item"><strong>Fractional → Absolute:</strong> <code>(Δa/a) × a</code></div>
+      <div class="rule-item"><strong>Fractional → Percent:</strong> <code>(Δa/a) × 100%</code></div>
+      <div class="rule-item"><strong>Percent → Fractional:</strong> <code>% / 100</code></div>
+    </div>
+    <div class="tip"><strong>Rounding reminder:</strong> Match decimal places — if the uncertainty has more d.p., round the <em>number</em>; if fewer d.p., round the <em>uncertainty</em>. Unit after the uncertainty = absolute. Unit after the number only = fractional.</div>
+  </div>
+
+  <!-- Part A -->
+  <section>
+    <h2>Part A — Complete the Conversion Table</h2>
+    <p class="instructions">Fill in every blank cell. Show all working in the space below the table.</p>
+    <table class="conv-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Measurement</th>
+          <th>Absolute Uncertainty</th>
+          <th>Fractional Uncertainty</th>
+          <th>Percent Uncertainty</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td class="val">25 m</td>
+          <td class="val">5</td>
+          <td><span class="blank-cell"></span></td>
+          <td><span class="blank-cell"></span></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td class="val">80 N</td>
+          <td><span class="blank-cell"></span></td>
+          <td class="val">0.025</td>
+          <td><span class="blank-cell"></span></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td class="val">400 W</td>
+          <td><span class="blank-cell"></span></td>
+          <td><span class="blank-cell"></span></td>
+          <td class="val">2%</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td class="val">0.60 kg</td>
+          <td class="val">0.03</td>
+          <td><span class="blank-cell"></span></td>
+          <td><span class="blank-cell"></span></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td class="val">120 V</td>
+          <td><span class="blank-cell"></span></td>
+          <td><span class="blank-cell"></span></td>
+          <td class="val">3%</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td class="val">1.5 A</td>
+          <td class="val">0.15</td>
+          <td><span class="blank-cell"></span></td>
+          <td><span class="blank-cell"></span></td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td class="val">600 s</td>
+          <td><span class="blank-cell"></span></td>
+          <td class="val">0.005</td>
+          <td><span class="blank-cell"></span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px;background:white;border-radius:8px;padding:14px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+      <div style="font-size:0.82rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:6px;">Working space</div>
+      <div style="display:flex;flex-direction:column;gap:14px;"><div style="border-bottom:1px solid #e5e7eb;min-height:22px;"></div><div style="border-bottom:1px solid #e5e7eb;min-height:22px;"></div><div style="border-bottom:1px solid #e5e7eb;min-height:22px;"></div><div style="border-bottom:1px solid #e5e7eb;min-height:22px;"></div></div>
+    </div>
+  </section>
+
+  <!-- Part B -->
+  <section>
+    <h2>Part B — Round Correctly</h2>
+    <p class="instructions">Rewrite each measurement so the number and uncertainty are expressed to matching decimal places.</p>
+
+    <div class="problem-card-wide">
+      <div class="problem-num">Problem 8</div>
+      <div class="number-display">14.638 ± 0.1</div>
+      <div class="answer-row"><span class="answer-label">Correctly written:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card-wide">
+      <div class="problem-num">Problem 9</div>
+      <div class="number-display">0.0253 ± 0.002</div>
+      <div class="answer-row"><span class="answer-label">Correctly written:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card-wide">
+      <div class="problem-num">Problem 10</div>
+      <div class="number-display">870 ± 50</div>
+      <div class="answer-row"><span class="answer-label">Correctly written:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card-wide">
+      <div class="problem-num">Problem 11</div>
+      <div class="number-display">5.2 ± 0.0718</div>
+      <div class="answer-row"><span class="answer-label">Correctly written:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card-wide">
+      <div class="problem-num">Problem 12</div>
+      <div class="number-display">0.031 ± 0.4</div>
+      <div class="answer-row"><span class="answer-label">Correctly written:</span><span class="answer-line"></span></div>
+    </div>
+  </section>
+
+  <!-- Part C — True / False -->
+  <section>
+    <h2>Part C — True or False</h2>
+    <p class="instructions">Circle T (True) or F (False) for each statement.</p>
+    <div class="tf-grid">
+      <div class="tf-card">
+        <div class="tf-q">13. "4.0 m ± 0.5 m" is an example of absolute uncertainty.</div>
+        <div class="tf-options">
+          <label class="tf-lbl tf-T"><input type="radio" name="tf13" value="T"> T</label>
+          <label class="tf-lbl tf-F"><input type="radio" name="tf13" value="F"> F</label>
+        </div>
+      </div>
+      <div class="tf-card">
+        <div class="tf-q">14. Fractional and percent uncertainty have the same unit as the measurement.</div>
+        <div class="tf-options">
+          <label class="tf-lbl tf-T"><input type="radio" name="tf14" value="T"> T</label>
+          <label class="tf-lbl tf-F"><input type="radio" name="tf14" value="F"> F</label>
+        </div>
+      </div>
+      <div class="tf-card">
+        <div class="tf-q">15. To convert an absolute uncertainty to percent, you multiply it by 100 directly.</div>
+        <div class="tf-options">
+          <label class="tf-lbl tf-T"><input type="radio" name="tf15" value="T"> T</label>
+          <label class="tf-lbl tf-F"><input type="radio" name="tf15" value="F"> F</label>
+        </div>
+      </div>
+      <div class="tf-card">
+        <div class="tf-q">16. "30 kg ± 0.06" means the uncertainty is 0.06 kg — an absolute uncertainty.</div>
+        <div class="tf-options">
+          <label class="tf-lbl tf-T"><input type="radio" name="tf16" value="T"> T</label>
+          <label class="tf-lbl tf-F"><input type="radio" name="tf16" value="F"> F</label>
+        </div>
+      </div>
+      <div class="tf-card">
+        <div class="tf-q">17. A fractional uncertainty of 0.08 is the same as a percent uncertainty of 8%.</div>
+        <div class="tf-options">
+          <label class="tf-lbl tf-T"><input type="radio" name="tf17" value="T"> T</label>
+          <label class="tf-lbl tf-F"><input type="radio" name="tf17" value="F"> F</label>
+        </div>
+      </div>
+      <div class="tf-card">
+        <div class="tf-q">18. If uncertainty has fewer decimal places than the number, you should round the number to match the uncertainty.</div>
+        <div class="tf-options">
+          <label class="tf-lbl tf-T"><input type="radio" name="tf18" value="T"> T</label>
+          <label class="tf-lbl tf-F"><input type="radio" name="tf18" value="F"> F</label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Part D — Extended Response -->
+  <section>
+    <h2>Part D — Extended Response</h2>
+    <p class="instructions">Answer in 2–4 complete sentences. Show all calculations clearly.</p>
+    <div class="short-answer">
+      <div class="q">Question 19. A student measures the resistance of a resistor as 47 Ω with an absolute uncertainty of 3 Ω. (a) Convert this to fractional and percent uncertainty. (b) The student then finds a better instrument and reduces the absolute uncertainty to 0.5 Ω. By how many percentage points did the percent uncertainty decrease?</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+    <div class="short-answer">
+      <div class="q">Question 20. Explain in your own words what it means when two measurements have the same percent uncertainty but different absolute uncertainties. Give an original example using different physical quantities.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <!-- Bonus -->
+  <section>
+    <h2>🌟 Bonus Challenge</h2>
+    <div class="bonus-card">
+      <div class="q">A scientist reports a measurement as 6.674 × 10⁻¹¹ N m² kg⁻² (Newton's gravitational constant). The accepted percent uncertainty in this value is about 22 ppm (parts per million), which equals 0.0022%. <br><br>
+      (a) What is the fractional uncertainty? <br>
+      (b) What is the absolute uncertainty? <br>
+      (c) Round the constant to correctly match the uncertainty decimal places and write it as: value ± absolute uncertainty.</div>
+      <div class="write-lines" style="margin-top:12px;"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <div class="key-btn-wrap"><button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key (Teacher Use)</button></div>
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A — Conversion Table</h3>
+      <table class="key-table">
+        <thead>
+          <tr><th>#</th><th>Measurement</th><th>Absolute</th><th>Fractional</th><th>Percent</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td class="kans">25 m</td><td class="kans">5</td><td class="kans">0.2</td><td class="kans">20%</td></tr>
+          <tr><td>2</td><td class="kans">80 N</td><td class="kans">2</td><td class="kans">0.025</td><td class="kans">2.5%</td></tr>
+          <tr><td>3</td><td class="kans">400 W</td><td class="kans">8</td><td class="kans">0.02</td><td class="kans">2%</td></tr>
+          <tr><td>4</td><td class="kans">0.60 kg</td><td class="kans">0.03</td><td class="kans">0.05</td><td class="kans">5%</td></tr>
+          <tr><td>5</td><td class="kans">120 V</td><td class="kans">3.6</td><td class="kans">0.03</td><td class="kans">3%</td></tr>
+          <tr><td>6</td><td class="kans">1.5 A</td><td class="kans">0.15</td><td class="kans">0.1</td><td class="kans">10%</td></tr>
+          <tr><td>7</td><td class="kans">600 s</td><td class="kans">3</td><td class="kans">0.005</td><td class="kans">0.5%</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;font-size:0.85rem;color:#374151;background:white;border-radius:6px;padding:10px 14px;">
+        <strong>Workings:</strong><br>
+        Row 1: Frac = 5/25 = 0.2; % = 20%<br>
+        Row 2: Abs = 0.025 × 80 = 2; % = 2.5%<br>
+        Row 3: % = 2%; Frac = 0.02; Abs = 0.02 × 400 = 8<br>
+        Row 4: Frac = 0.03/0.60 = 0.05; % = 5%<br>
+        Row 5: % = 3%; Frac = 0.03; Abs = 0.03 × 120 = 3.6<br>
+        Row 6: Frac = 0.15/1.5 = 0.1; % = 10%<br>
+        Row 7: Abs = 0.005 × 600 = 3; % = 0.5%
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B — Rounding</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="knum">8. 14.638 ± 0.1</div><div class="kans">14.6 ± 0.1</div><div class="kexpl">Uncertainty to 1 d.p.; round number: 14.638 → 14.6</div></div>
+        <div class="key-item"><div class="knum">9. 0.0253 ± 0.002</div><div class="kans">0.025 ± 0.002</div><div class="kexpl">Uncertainty to 3 d.p.; round number to 3 d.p.: 0.0253 → 0.025</div></div>
+        <div class="key-item"><div class="knum">10. 870 ± 50</div><div class="kans">900 ± 50</div><div class="kexpl">Uncertainty to tens; round number to nearest 10: 870 → 870 (already ok). Wait — 870 is already at tens place. Accept 870 ± 50.</div></div>
+        <div class="key-item"><div class="knum">11. 5.2 ± 0.0718</div><div class="kans">5.2 ± 0.07</div><div class="kexpl">Number to 1 d.p.; round uncertainty to match: 0.0718 → 0.07 (2 d.p. to match significant level)</div></div>
+        <div class="key-item"><div class="knum">12. 0.031 ± 0.4</div><div class="kans">0.0 ± 0.4</div><div class="kexpl">Uncertainty to 1 d.p.; round number: 0.031 → 0.0 (uncertainty much larger)</div></div>
+      </div>
+      <div style="margin-top:8px;font-size:0.83rem;color:#374151;background:white;border-radius:6px;padding:8px 12px;"><strong>Note on #10:</strong> 870 ± 50 — both number and uncertainty are already at the tens place. 870 is correctly expressed. Accept as-is.</div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C — True or False</h3>
+      <div class="tf-key-grid">
+        <div class="tf-key-item"><strong>#13:</strong> <span class="kans tf-T-ans">TRUE</span> — Unit (m) follows both value and uncertainty. That is absolute form.</div>
+        <div class="tf-key-item"><strong>#14:</strong> <span class="kans tf-F-ans">FALSE</span> — Fractional and percent uncertainties are dimensionless (no units). Only absolute uncertainty shares the unit.</div>
+        <div class="tf-key-item"><strong>#15:</strong> <span class="kans tf-F-ans">FALSE</span> — You must first convert to fractional (÷ measurement), then multiply by 100. Multiplying the absolute uncertainty by 100 directly gives a meaningless number.</div>
+        <div class="tf-key-item"><strong>#16:</strong> <span class="kans tf-F-ans">FALSE</span> — "30 kg ± 0.06" has the unit only after 30. The 0.06 has no unit — it is a fractional uncertainty (meaning 6% of 30 kg = 1.8 kg absolute uncertainty).</div>
+        <div class="tf-key-item"><strong>#17:</strong> <span class="kans tf-T-ans">TRUE</span> — Percent = fractional × 100 = 0.08 × 100 = 8%.</div>
+        <div class="tf-key-item"><strong>#18:</strong> <span class="kans tf-T-ans">TRUE</span> — When uncertainty has fewer d.p. than the number, round the number to match. The uncertainty sets the precision limit.</div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part D — Extended Response</h3>
+      <div class="short-ans-key">
+        <strong>Q19a.</strong> Fractional = 3/47 ≈ 0.0638. Percent = 0.0638 × 100 ≈ 6.4%.<br>
+        <strong>Q19b.</strong> New fractional = 0.5/47 ≈ 0.01064. New percent ≈ 1.1%. Decrease = 6.4% − 1.1% = <strong>5.3 percentage points</strong>. The better instrument reduced the percent uncertainty from about 6.4% to about 1.1%.
+      </div>
+      <br>
+      <div class="short-ans-key">
+        <strong>Q20.</strong> When two measurements have the same percent uncertainty, they share the same relative precision — the uncertainty is the same fraction of each measurement — but because the measurements are different sizes, the raw (absolute) uncertainty values are different. For example: 10 m ± 1 m (10% uncertainty) and 500 m ± 50 m (also 10% uncertainty). Both are "equally uncertain" in relative terms, but 50 m is a much larger gap than 1 m in absolute terms. The percent form lets you compare precision across quantities of different magnitudes.
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Bonus</h3>
+      <div class="short-ans-key">
+        <strong>Bonus.</strong><br>
+        (a) Fractional = % / 100 = 0.0022 / 100 = <strong>2.2 × 10⁻⁵</strong><br>
+        (b) Absolute = fractional × value = 2.2 × 10⁻⁵ × 6.674 × 10⁻¹¹ ≈ <strong>1.5 × 10⁻¹⁵ N m² kg⁻²</strong><br>
+        (c) Value ± absolute: The absolute uncertainty is at the 15th decimal place in standard notation. Written correctly: <strong>6.674 × 10⁻¹¹ ± 1.5 × 10⁻¹⁵ N m² kg⁻²</strong> (or equivalently 6.67400 × 10⁻¹¹ ± 0.00015 × 10⁻¹¹). The extremely small fractional uncertainty (22 ppm) reflects the extraordinary precision of modern measurements of G.
+      </div>
+    </div>
+  </div>
+</main>
+<script>function toggleKey(){var k=document.getElementById('answer-key');var b=document.getElementById('toggle-key-btn');if(k.style.display==='none'||k.style.display===''){k.style.display='block';b.textContent='Hide Answer Key';}else{k.style.display='none';b.textContent='Show Answer Key (Teacher Use)';}}</script>
+</body>
+</html>

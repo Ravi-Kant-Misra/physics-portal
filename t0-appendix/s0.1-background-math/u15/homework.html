@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logger Pro — Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#1e40af 0%,#2563eb 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:820px;margin:36px auto;padding:0 24px 60px;}
+    .ref-box{background:white;border:2px solid #bfdbfe;border-radius:10px;padding:18px 22px;margin-bottom:28px;}
+    .ref-box h3{color:#1e40af;font-size:1rem;margin-bottom:8px;}
+    .ref-box .tip{font-size:0.87rem;color:#374151;padding:8px 14px;background:#eff6ff;border-left:4px solid #3b82f6;border-radius:4px;margin-top:8px;}
+    section{margin-bottom:40px;}
+    h2{font-size:1.2rem;font-weight:700;color:#1e40af;border-left:5px solid #2563eb;padding-left:12px;margin-bottom:16px;}
+    .instructions{color:#4b5563;font-size:0.9rem;margin-bottom:16px;font-style:italic;}
+    .problem-card{background:white;border-radius:10px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .problem-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:6px;}
+    .field-set{display:flex;flex-direction:column;gap:8px;}
+    .field-row{display:flex;align-items:center;gap:8px;font-size:0.85rem;}
+    .fill-line{border-bottom:2px solid #d1d5db;min-height:24px;flex:1;}
+    .short-line{border-bottom:2px solid #d1d5db;min-height:24px;width:150px;display:inline-block;}
+    .short-answer{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .short-answer .q{font-weight:600;margin-bottom:10px;font-size:0.95rem;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+    .tf-card{background:white;border-radius:8px;padding:14px 20px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:10px;display:flex;align-items:flex-start;gap:16px;}
+    .tf-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#6b7280;min-width:30px;}
+    .tf-stmt{flex:1;font-size:0.93rem;}
+    .tf-circles{display:flex;gap:10px;flex-shrink:0;}
+    .tf-circle{width:28px;height:28px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#9ca3af;}
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#1e40af;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #answer-key{display:none;background:#eff6ff;border:2px solid #93c5fd;border-radius:12px;padding:28px 32px;}
+    #answer-key h2{color:#1e40af;border-left-color:#2563eb;margin-bottom:22px;}
+    .key-section{margin-bottom:24px;}
+    .key-section h3{font-size:1rem;font-weight:700;color:#1e40af;margin-bottom:12px;}
+    .key-item{background:white;border-radius:6px;padding:10px 14px;font-size:0.92rem;margin-bottom:8px;}
+    .key-item .kq{font-size:0.8rem;color:#6b7280;margin-bottom:2px;}
+    .key-item .kans{color:#1d4ed8;font-weight:700;}
+    .key-item .kexpl{color:#4b5563;font-size:0.82rem;margin-top:2px;}
+    .short-ans-key{background:white;border-radius:6px;padding:12px 16px;font-size:0.92rem;margin-bottom:10px;}
+    .short-ans-key strong{color:#1d4ed8;}
+  </style>
+</head>
+<body>
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+<header>
+  <div class="label">Physics · High School · Homework</div>
+  <h1>Logger Pro — Homework</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+<main>
+  <div class="ref-box">
+    <h3>Quick Reference</h3>
+    <div style="font-family:'Space Mono',monospace;font-size:0.85rem;color:#1d4ed8;margin-bottom:6px;">Δm = (max slope − min slope) / 2</div>
+    <div class="tip">Rename columns: double-click header | Error bars: Data → Column Options | Best fit: Analyze → Linear Fit | Calculated columns: Data → New Calculated Column</div>
+  </div>
+
+  <section>
+    <h2>Part A — Column Setup Scenarios</h2>
+    <p class="instructions">For each experiment, write the Logger Pro column header settings AND the error bar Fixed Values for both X and Y columns.</p>
+
+    <div class="problem-card">
+      <div class="problem-num">Q1 — Resistance vs Temperature: IV = Temperature (°C) ±0.5, DV = Resistance (Ω) ±0.2, error bars from data table all = ±0.3 Ω</div>
+      <div class="field-set">
+        <div class="field-row">X: Name <span class="short-line"></span> Short <span class="short-line" style="width:60px;"></span> Units <span class="short-line" style="width:70px;"></span> Error bar value: <span class="short-line" style="width:90px;"></span></div>
+        <div class="field-row">Y: Name <span class="short-line"></span> Short <span class="short-line" style="width:60px;"></span> Units <span class="short-line" style="width:70px;"></span> Error bar value: <span class="short-line" style="width:90px;"></span></div>
+      </div>
+    </div>
+
+    <div class="problem-card">
+      <div class="problem-num">Q2 — Pressure vs Volume: IV = Volume (L) ±0.05, DV = Pressure (kPa), error bars vary by row (cannot use single fixed value)</div>
+      <div class="field-set">
+        <div class="field-row">X error bar setting to use: <span class="fill-line"></span></div>
+        <div class="field-row">For Y, since error bars vary, what should you do in Logger Pro? <span class="fill-line"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Part B — Gradient Uncertainty Problems</h2>
+    <p class="instructions">Calculate the gradient uncertainty and express the final gradient with uncertainty.</p>
+
+    <div class="problem-card">
+      <div class="problem-num">Q3 — A student plots Force (N) vs Acceleration (m/s²). Best fit gradient = 2.45 kg. Min slope = 2.20 kg. Max slope = 2.70 kg.</div>
+      <div class="field-set">
+        <div class="field-row">Gradient uncertainty Δm = <span class="fill-line"></span></div>
+        <div class="field-row">Final result (mass of object): m = <span class="fill-line"></span></div>
+        <div class="field-row">% uncertainty in m: <span class="fill-line"></span></div>
+      </div>
+    </div>
+
+    <div class="problem-card">
+      <div class="problem-num">Q4 — For a pendulum, T² vs L gives: best-fit gradient = 4.02 s²/m. Min = 3.74 s²/m. Max = 4.30 s²/m. Gradient = 4π²/g.</div>
+      <div class="field-set">
+        <div class="field-row">Δ(gradient) = <span class="fill-line"></span></div>
+        <div class="field-row">Gradient = <span class="fill-line"></span></div>
+        <div class="field-row">Calculate g from best-fit gradient (g = 4π²/gradient): g = <span class="fill-line"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Part C — Calculated Columns</h2>
+    <p class="instructions">Write the name and Logger Pro expression for each calculated column needed.</p>
+
+    <div class="problem-card">
+      <div class="problem-num">Q5 — To linearise a graph of gravitational field strength g vs distance r, you need to plot g vs 1/r². The distance column is called "r".</div>
+      <div class="field-set">
+        <div class="field-row">New column name: <span class="fill-line"></span></div>
+        <div class="field-row">Expression: <span class="fill-line"></span></div>
+      </div>
+    </div>
+
+    <div class="problem-card">
+      <div class="problem-num">Q6 — You have a column "Current" (A) and "Resistance" (Ω) and want to calculate and plot Power = I²R.</div>
+      <div class="field-set">
+        <div class="field-row">New column name: <span class="fill-line"></span></div>
+        <div class="field-row">Expression: <span class="fill-line"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Part D — True / False</h2>
+    <p class="instructions">Circle T or F. Write a correction if false.</p>
+    <div class="tf-card"><div class="tf-num">7.</div><div><div class="tf-stmt">The minimum slope line passes through the bottom of the first error bar and the top of the last error bar.</div><div style="margin-top:6px;font-size:0.85rem;color:#6b7280;">If false: <span style="border-bottom:2px solid #d1d5db;display:inline-block;width:270px;"></span></div></div><div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div></div>
+    <div class="tf-card"><div class="tf-num">8.</div><div><div class="tf-stmt">The gradient uncertainty is calculated as (max slope + min slope) / 2.</div><div style="margin-top:6px;font-size:0.85rem;color:#6b7280;">If false: <span style="border-bottom:2px solid #d1d5db;display:inline-block;width:270px;"></span></div></div><div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div></div>
+    <div class="tf-card"><div class="tf-num">9.</div><div><div class="tf-stmt">If you plot T² vs L and get a straight line, this means T ∝ √L.</div><div style="margin-top:6px;font-size:0.85rem;color:#6b7280;">If false: <span style="border-bottom:2px solid #d1d5db;display:inline-block;width:270px;"></span></div></div><div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div></div>
+    <div class="tf-card"><div class="tf-num">10.</div><div><div class="tf-stmt">Logger Pro can only show one line of best fit per graph.</div><div style="margin-top:6px;font-size:0.85rem;color:#6b7280;">If false: <span style="border-bottom:2px solid #d1d5db;display:inline-block;width:270px;"></span></div></div><div class="tf-circles"><div class="tf-circle">T</div><div class="tf-circle">F</div></div></div>
+  </section>
+
+  <section>
+    <h2>Part E — Extended Response</h2>
+    <div class="short-answer">
+      <div class="q">11. A student plots voltage V (y-axis) vs current I (x-axis) for a resistor. The best-fit gradient is 47.2 Ω, with min = 44.8 Ω and max = 49.6 Ω.<br>(a) What physical quantity does the gradient represent?<br>(b) Calculate the gradient uncertainty.<br>(c) Express the resistance with its uncertainty.<br>(d) What would the y-intercept represent physically, and ideally what should it be?</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+    <div class="short-answer">
+      <div class="q">12. Describe in your own words the complete Logger Pro workflow for an IB Physics lab, from opening the program to having a finished graph with three best-fit lines. Include all key steps.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <div class="key-btn-wrap"><button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button></div>
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+    <div class="key-section">
+      <h3>Part A</h3>
+      <div class="short-ans-key"><strong>Q1:</strong> X: Name=Temperature, Short=T (or θ), Units=°C, Error bar = ±0.5. Y: Name=Resistance, Short=R, Units=Ω, Error bar = ±0.3 (the error bar from data table, not just measurement uncertainty).</div>
+      <div class="short-ans-key"><strong>Q2:</strong> X error bar: Fixed Value = ±0.05 L. For Y varying error bars: create a separate column in the data table containing the error bar values for each row, then in Column Options select that column as the error bar source.</div>
+    </div>
+    <div class="key-section">
+      <h3>Part B</h3>
+      <div class="short-ans-key"><strong>Q3:</strong> Δm = (2.70−2.20)/2 = 0.25 kg. Final: m = 2.45 ± 0.25 kg. % uncertainty = 0.25/2.45 × 100 ≈ 10.2%</div>
+      <div class="short-ans-key"><strong>Q4:</strong> Δ(gradient) = (4.30−3.74)/2 = 0.28 s²/m. Gradient = 4.02 ± 0.28 s²/m. g = 4π²/4.02 = 39.48/4.02 ≈ <strong>9.82 m/s²</strong></div>
+    </div>
+    <div class="key-section">
+      <h3>Part C</h3>
+      <div class="short-ans-key"><strong>Q5:</strong> Name: 1/r² | Expression: 1/"r"^2</div>
+      <div class="short-ans-key"><strong>Q6:</strong> Name: Power (W) | Expression: "Current"^2 * "Resistance"</div>
+    </div>
+    <div class="key-section">
+      <h3>Part D</h3>
+      <div class="short-ans-key"><strong>7. TRUE</strong> — Min slope goes from top of first error bar to bottom of last error bar. ✓</div>
+      <div class="short-ans-key"><strong>8. FALSE</strong> — Correction: Δm = (max slope − min slope) / 2 (subtraction, not addition)</div>
+      <div class="short-ans-key"><strong>9. TRUE</strong> — T² ∝ L means T² = cL, so T = √(cL) = √c × √L → T ∝ √L ✓</div>
+      <div class="short-ans-key"><strong>10. FALSE</strong> — You can draw multiple lines. Logger Pro adds best-fit lines via Analyze → Linear Fit, and you can manually draw min/max lines using drawing tools.</div>
+    </div>
+    <div class="key-section">
+      <h3>Part E</h3>
+      <div class="short-ans-key"><strong>Q11:</strong> (a) The gradient = V/I = resistance R (Ohm's law). (b) Δm = (49.6−44.8)/2 = 2.4 Ω. (c) R = 47.2 ± 2.4 Ω. (d) The y-intercept represents voltage when current = 0. Ideally it should be 0 V (a perfect resistor with no EMF source).</div>
+      <div class="short-ans-key"><strong>Q12:</strong> Open Logger Pro → double-click X column header, enter Name/Short/Units → double-click Y column header, enter Name/Short/Units → type data into cells (points appear automatically) → double-click column header → Options tab → set Error Bar Fixed Value for X and Y → Analyze → Linear Fit for best-fit line → manually draw min and max lines through the extremes of the error bars → calculate gradient uncertainty = (max−min)/2.</div>
+    </div>
+  </div>
+</main>
+<script>function toggleKey(){var k=document.getElementById('answer-key');var b=document.getElementById('toggle-key-btn');if(k.style.display==='none'||k.style.display===''){k.style.display='block';b.textContent='Hide Answer Key';}else{k.style.display='none';b.textContent='Show Answer Key';}}</script>
+</body>
+</html>

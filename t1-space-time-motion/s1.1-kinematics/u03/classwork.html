@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Classwork — Acceleration · Kinematics Unit 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;
+    --red:#ef4444;--dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+  body::before{
+    content:'';position:fixed;inset:0;
+    background-image:radial-gradient(circle,#cbd5e1 1px,transparent 1px);
+    background-size:28px 28px;pointer-events:none;z-index:0;opacity:.55;
+  }
+  /* PASSWORD GATE */
+  #gate{
+    position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#1e3a5f,#1d4ed8 60%,#1e40af);
+  }
+  #gate-box{
+    background:#fff;border-radius:20px;padding:2.5rem 2rem;width:320px;text-align:center;
+    box-shadow:0 25px 60px rgba(0,0,0,.35);
+  }
+  #gate-box h2{font-size:1.4rem;font-weight:800;color:var(--dark);margin-bottom:.4rem;}
+  #gate-box p{font-size:.85rem;color:var(--muted);margin-bottom:1.4rem;}
+  #gate-input{
+    width:100%;padding:.7rem 1rem;border:2px solid #e2e8f0;border-radius:10px;
+    font-family:'Nunito',sans-serif;font-size:1rem;outline:none;transition:border .2s;
+  }
+  #gate-input:focus{border-color:var(--blue);}
+  #gate-btn{
+    margin-top:.9rem;width:100%;padding:.75rem;background:linear-gradient(90deg,var(--blue),var(--indigo));
+    color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;
+    font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s;
+  }
+  #gate-btn:hover{opacity:.88;}
+  #gate-err{color:var(--red);font-size:.83rem;margin-top:.55rem;min-height:1.1rem;}
+  /* MAIN */
+  #main{display:none;position:relative;z-index:1;}
+  /* HEADER */
+  header{
+    background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 100%);
+    padding:3rem 2rem 2.5rem;text-align:center;position:relative;overflow:hidden;
+  }
+  .stars{position:absolute;inset:0;pointer-events:none;}
+  .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--dur,3s) ease-in-out infinite;opacity:0;}
+  @keyframes twinkle{0%,100%{opacity:0;transform:scale(.6);}50%{opacity:.9;transform:scale(1.2);}}
+  .chip{
+    display:inline-block;background:rgba(255,255,255,.15);backdrop-filter:blur(6px);
+    border:1px solid rgba(255,255,255,.3);color:#e0e7ff;
+    font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    padding:.35rem .9rem;border-radius:999px;margin-bottom:1rem;
+  }
+  header h1{
+    font-size:clamp(1.8rem,4.5vw,2.9rem);font-weight:900;
+    background:linear-gradient(90deg,#ffffff,#bfdbfe,#a5b4fc);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    margin-bottom:.5rem;
+  }
+  header p.sub{color:#bfdbfe;font-size:.98rem;font-weight:600;}
+  /* CONTENT */
+  .content{max-width:860px;margin:0 auto;padding:2.5rem 1.25rem 4rem;}
+  /* CARDS */
+  .card{
+    background:#fff;border-radius:18px;padding:1.8rem 2rem;margin-bottom:1.8rem;
+    box-shadow:0 4px 20px rgba(59,130,246,.08);border:1px solid #e8edf5;
+  }
+  .card-title{
+    font-size:1.15rem;font-weight:800;color:var(--dark);margin-bottom:1rem;
+    display:flex;align-items:center;gap:.6rem;
+  }
+  /* REFERENCE BOX */
+  .ref-box{
+    background:linear-gradient(135deg,#eff6ff,#eef2ff);border:2px solid #c7d2fe;
+    border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:1.8rem;
+  }
+  .ref-box h3{font-size:.98rem;font-weight:800;color:var(--indigo);margin-bottom:.8rem;}
+  .ref-grid{display:flex;flex-wrap:wrap;gap:.6rem;}
+  .ref-item{
+    background:#fff;border:1.5px solid #c7d2fe;border-radius:9px;
+    padding:.4rem .8rem;font-family:'Space Mono',monospace;font-size:.84rem;font-weight:700;color:var(--dark);
+  }
+  /* PART HEADINGS */
+  .part-heading{
+    font-size:1.1rem;font-weight:900;color:#fff;
+    background:linear-gradient(90deg,var(--blue),var(--indigo));
+    border-radius:10px;padding:.55rem 1.1rem;margin-bottom:1.2rem;display:inline-block;
+  }
+  /* PROBLEM GRID */
+  .prob-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem;}
+  @media(max-width:580px){.prob-grid{grid-template-columns:1fr;}}
+  .prob-card{
+    background:#f8faff;border:2px solid #e8edf5;border-radius:14px;padding:1.1rem;
+    transition:border-color .2s;
+  }
+  .prob-card:hover{border-color:var(--blue);}
+  .prob-num{
+    display:inline-block;font-size:.78rem;font-weight:800;color:#fff;
+    background:var(--blue);border-radius:6px;padding:.15rem .55rem;margin-bottom:.6rem;
+  }
+  .prob-text{font-size:.91rem;line-height:1.6;margin-bottom:.7rem;}
+  .work-lines{border:none;border-bottom:2px dashed #e2e8f0;width:100%;padding:.3rem 0;margin-bottom:.4rem;font-family:'Nunito',sans-serif;font-size:.88rem;background:transparent;outline:none;color:var(--dark);}
+  .work-lines::placeholder{color:#c7d2fe;}
+  .ans-box{
+    display:flex;align-items:center;gap:.6rem;margin-top:.5rem;
+  }
+  .ans-label{font-size:.78rem;font-weight:700;color:var(--muted);}
+  .ans-input{
+    flex:1;border:2px solid #e2e8f0;border-radius:8px;padding:.35rem .7rem;
+    font-family:'Space Mono',monospace;font-size:.9rem;outline:none;transition:border .2s;
+  }
+  .ans-input:focus{border-color:var(--green);}
+  /* PART B — number line problems */
+  .partb-problem{
+    background:#f8faff;border:2px solid #e8edf5;border-radius:14px;padding:1.2rem 1.4rem;
+    margin-bottom:1.1rem;
+  }
+  .partb-problem:hover{border-color:var(--indigo);}
+  .partb-num{
+    display:inline-block;font-size:.78rem;font-weight:800;color:#fff;
+    background:var(--indigo);border-radius:6px;padding:.15rem .55rem;margin-bottom:.6rem;
+  }
+  /* PART C */
+  .partc-problem{
+    background:#f8faff;border:2px solid #e8edf5;border-radius:14px;padding:1.2rem 1.4rem;
+    margin-bottom:1.1rem;
+  }
+  .partc-problem:hover{border-color:var(--amber);}
+  .partc-num{
+    display:inline-block;font-size:.78rem;font-weight:800;color:#fff;
+    background:var(--amber);border-radius:6px;padding:.15rem .55rem;margin-bottom:.6rem;
+  }
+  .answer-lines-long{
+    width:100%;border:none;border-bottom:1.5px dashed #e2e8f0;
+    background:transparent;outline:none;padding:.3rem 0;font-family:'Nunito',sans-serif;font-size:.88rem;color:var(--dark);display:block;margin-bottom:.4rem;
+  }
+  /* ANSWER KEY */
+  #toggle-key-btn{
+    display:block;margin:1.5rem auto 0;padding:.7rem 2rem;
+    background:linear-gradient(90deg,var(--red),#dc2626);
+    color:#fff;border:none;border-radius:10px;
+    font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;
+    transition:opacity .2s;
+  }
+  #toggle-key-btn:hover{opacity:.88;}
+  #answer-key{display:none;margin-top:1.5rem;}
+  .key-card{
+    background:#fff;border:2px solid var(--green);border-radius:16px;
+    padding:1.5rem;margin-bottom:1.2rem;
+    box-shadow:0 4px 16px rgba(34,197,94,.1);
+  }
+  .key-card h3{font-size:1rem;font-weight:800;color:var(--green);margin-bottom:1rem;}
+  .key-item{
+    border-bottom:1px solid #e8edf5;padding:.6rem 0;font-size:.88rem;line-height:1.65;
+  }
+  .key-item:last-child{border-bottom:none;}
+  .key-item strong{color:var(--dark);font-weight:800;}
+  .key-ans{font-family:'Space Mono',monospace;font-weight:700;color:var(--green);}
+  /* SVG diagrams */
+  .svg-wrap{margin:.6rem 0;text-align:center;}
+  @media(max-width:600px){.content{padding:1.5rem .8rem 3rem;}.card{padding:1.2rem;}}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div id="gate-box">
+    <h2>Physics Portal</h2>
+    <p>Enter the class password to continue.</p>
+    <input id="gate-input" type="password" placeholder="Password" autocomplete="current-password"/>
+    <button id="gate-btn">Unlock</button>
+    <div id="gate-err"></div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main">
+  <header>
+    <div class="stars" id="stars-container"></div>
+    <div class="chip">Kinematics &middot; Unit 3</div>
+    <h1>Classwork — Acceleration</h1>
+    <p class="sub">Show full working for all calculation problems using the GESE method.</p>
+  </header>
+
+  <div class="content">
+
+    <!-- REFERENCE BOX -->
+    <div class="ref-box">
+      <h3>Reference Formulae</h3>
+      <div class="ref-grid">
+        <div class="ref-item">a = ΔV / t</div>
+        <div class="ref-item">a = (V − U) / t</div>
+        <div class="ref-item">V = U + at</div>
+        <div class="ref-item">ΔV = V − U</div>
+        <div class="ref-item">Units: a → ms⁻² | v → ms⁻¹ | t → s</div>
+      </div>
+      <div style="margin-top:.8rem;font-size:.85rem;color:var(--indigo);font-weight:700;">
+        Remember: Same sign (a and v) = getting faster &nbsp;|&nbsp; Opposite sign = getting slower
+      </div>
+    </div>
+
+    <!-- PART A -->
+    <div class="card">
+      <div class="part-heading">Part A — Calculation Problems</div>
+      <p style="font-size:.88rem;color:var(--muted);margin-bottom:1.2rem;">Use the GESE method. Show all steps. 6 problems.</p>
+
+      <div class="prob-grid">
+
+        <!-- A1 -->
+        <div class="prob-card">
+          <div class="prob-num">A1</div>
+          <div class="prob-text">A car accelerates from rest at 10 ms⁻² for 6 seconds. What is its final velocity?</div>
+          <input type="text" class="work-lines" placeholder="G: U=0, t=6s, a=10ms⁻²"/>
+          <input type="text" class="work-lines" placeholder="E: V = U + at"/>
+          <input type="text" class="work-lines" placeholder="S: V = 0 + (10)(6) = …"/>
+          <div class="ans-box"><span class="ans-label">Answer:</span><input type="text" class="ans-input" placeholder="V = ? ms⁻¹"/></div>
+        </div>
+
+        <!-- A2 -->
+        <div class="prob-card">
+          <div class="prob-num">A2</div>
+          <div class="prob-text">A cyclist reaches 15 ms⁻¹ from rest in 5 seconds. What is the acceleration?</div>
+          <input type="text" class="work-lines" placeholder="G: U=0, V=15ms⁻¹, t=5s"/>
+          <input type="text" class="work-lines" placeholder="E: a = (V − U) / t"/>
+          <input type="text" class="work-lines" placeholder="S: a = (15 − 0) / 5 = …"/>
+          <div class="ans-box"><span class="ans-label">Answer:</span><input type="text" class="ans-input" placeholder="a = ? ms⁻²"/></div>
+        </div>
+
+        <!-- A3 -->
+        <div class="prob-card">
+          <div class="prob-num">A3</div>
+          <div class="prob-text">A train travelling at 30 ms⁻¹ brakes to a stop in 10 seconds. Calculate the acceleration.</div>
+          <input type="text" class="work-lines" placeholder="G: U=30ms⁻¹, V=0, t=10s"/>
+          <input type="text" class="work-lines" placeholder="E: a = (V − U) / t"/>
+          <input type="text" class="work-lines" placeholder="S: a = (0 − 30) / 10 = …"/>
+          <div class="ans-box"><span class="ans-label">Answer:</span><input type="text" class="ans-input" placeholder="a = ? ms⁻²"/></div>
+        </div>
+
+        <!-- A4 -->
+        <div class="prob-card">
+          <div class="prob-num">A4</div>
+          <div class="prob-text">An object has U = 4 ms⁻¹, a = 3 ms⁻², and accelerates for 8 seconds. Find V.</div>
+          <input type="text" class="work-lines" placeholder="G: U=4ms⁻¹, a=3ms⁻², t=8s"/>
+          <input type="text" class="work-lines" placeholder="E: V = U + at"/>
+          <input type="text" class="work-lines" placeholder="S: V = 4 + (3)(8) = …"/>
+          <div class="ans-box"><span class="ans-label">Answer:</span><input type="text" class="ans-input" placeholder="V = ? ms⁻¹"/></div>
+        </div>
+
+        <!-- A5 -->
+        <div class="prob-card">
+          <div class="prob-num">A5</div>
+          <div class="prob-text">A ball is thrown upward at 20 ms⁻¹ and decelerates at 10 ms⁻² due to gravity. How long until it stops?</div>
+          <input type="text" class="work-lines" placeholder="G: U=20ms⁻¹, V=0, a=−10ms⁻²"/>
+          <input type="text" class="work-lines" placeholder="E: a = (V − U) / t  →  t = (V−U)/a"/>
+          <input type="text" class="work-lines" placeholder="S: t = (0 − 20) / (−10) = …"/>
+          <div class="ans-box"><span class="ans-label">Answer:</span><input type="text" class="ans-input" placeholder="t = ? s"/></div>
+        </div>
+
+        <!-- A6 -->
+        <div class="prob-card">
+          <div class="prob-num">A6</div>
+          <div class="prob-text">At t₀ = 0 s a car has velocity 10 ms⁻¹. At t₁ = 1 s its velocity is 12 ms⁻¹. What is its acceleration?</div>
+          <input type="text" class="work-lines" placeholder="G: V₀=10ms⁻¹, V₁=12ms⁻¹, t=1s"/>
+          <input type="text" class="work-lines" placeholder="E: a = ΔV / t = (V₁ − V₀) / t"/>
+          <input type="text" class="work-lines" placeholder="S: a = (12 − 10) / 1 = …"/>
+          <div class="ans-box"><span class="ans-label">Answer:</span><input type="text" class="ans-input" placeholder="a = ? ms⁻²"/></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PART B -->
+    <div class="card">
+      <div class="part-heading" style="background:linear-gradient(90deg,var(--indigo),#4338ca);">Part B — Vector Sign Analysis</div>
+      <p style="font-size:.88rem;color:var(--muted);margin-bottom:1.2rem;">For each scenario, determine whether the object is speeding up or slowing down, and justify using sign analysis. 4 problems.</p>
+
+      <!-- B1 -->
+      <div class="partb-problem">
+        <div class="partb-num">B1</div>
+        <div class="prob-text">An object moves with V = +8 ms⁻¹ and experiences a = +2 ms⁻².</div>
+        <div class="svg-wrap">
+          <svg viewBox="0 0 340 60" width="100%" style="max-width:340px;" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="bv1" markerWidth="7" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="#1e293b"/></marker>
+              <marker id="ba1" markerWidth="7" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="#ef4444"/></marker>
+            </defs>
+            <!-- number line -->
+            <line x1="20" y1="30" x2="320" y2="30" stroke="#e2e8f0" stroke-width="1.5"/>
+            <line x1="170" y1="22" x2="170" y2="38" stroke="#94a3b8" stroke-width="1.5"/>
+            <text x="168" y="50" font-family="Nunito,sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">0</text>
+            <!-- V arrow -->
+            <line x1="170" y1="18" x2="250" y2="18" stroke="#1e293b" stroke-width="2.5" marker-end="url(#bv1)"/>
+            <text x="205" y="13" font-family="Space Mono,monospace" font-size="10" fill="#1e293b" text-anchor="middle">v = +8 ms⁻¹</text>
+            <!-- a arrow -->
+            <line x1="170" y1="44" x2="220" y2="44" stroke="#ef4444" stroke-width="2.5" marker-end="url(#ba1)"/>
+            <text x="197" y="57" font-family="Space Mono,monospace" font-size="10" fill="#ef4444" text-anchor="middle">a = +2 ms⁻²</text>
+          </svg>
+        </div>
+        <div class="prob-text" style="font-weight:700;">Is the object speeding up or slowing down? Justify with sign analysis.</div>
+        <input type="text" class="answer-lines-long" placeholder="Signs of a and v: …"/>
+        <input type="text" class="answer-lines-long" placeholder="Therefore the object is …"/>
+      </div>
+
+      <!-- B2 -->
+      <div class="partb-problem">
+        <div class="partb-num">B2</div>
+        <div class="prob-text">An object moves with V = +10 ms⁻¹ and experiences a = −4 ms⁻².</div>
+        <div class="svg-wrap">
+          <svg viewBox="0 0 340 60" width="100%" style="max-width:340px;" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="bv2" markerWidth="7" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="#1e293b"/></marker>
+              <marker id="ba2l" markerWidth="7" markerHeight="6" refX="0" refY="3" orient="auto"><polygon points="7 0,0 3,7 6" fill="#ef4444"/></marker>
+            </defs>
+            <line x1="20" y1="30" x2="320" y2="30" stroke="#e2e8f0" stroke-width="1.5"/>
+            <line x1="170" y1="22" x2="170" y2="38" stroke="#94a3b8" stroke-width="1.5"/>
+            <text x="168" y="50" font-family="Nunito,sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">0</text>
+            <line x1="170" y1="18" x2="270" y2="18" stroke="#1e293b" stroke-width="2.5" marker-end="url(#bv2)"/>
+            <text x="215" y="13" font-family="Space Mono,monospace" font-size="10" fill="#1e293b" text-anchor="middle">v = +10 ms⁻¹</text>
+            <line x1="170" y1="44" x2="120" y2="44" stroke="#ef4444" stroke-width="2.5" marker-end="url(#ba2l)"/>
+            <text x="143" y="57" font-family="Space Mono,monospace" font-size="10" fill="#ef4444" text-anchor="middle">a = −4 ms⁻²</text>
+          </svg>
+        </div>
+        <div class="prob-text" style="font-weight:700;">Is the object speeding up or slowing down? Justify with sign analysis.</div>
+        <input type="text" class="answer-lines-long" placeholder="Signs of a and v: …"/>
+        <input type="text" class="answer-lines-long" placeholder="Therefore the object is …"/>
+      </div>
+
+      <!-- B3 -->
+      <div class="partb-problem">
+        <div class="partb-num">B3</div>
+        <div class="prob-text">An object moves with V = −6 ms⁻¹ and experiences a = −3 ms⁻².</div>
+        <div class="svg-wrap">
+          <svg viewBox="0 0 340 60" width="100%" style="max-width:340px;" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="bv3l" markerWidth="7" markerHeight="6" refX="0" refY="3" orient="auto"><polygon points="7 0,0 3,7 6" fill="#1e293b"/></marker>
+              <marker id="ba3l" markerWidth="7" markerHeight="6" refX="0" refY="3" orient="auto"><polygon points="7 0,0 3,7 6" fill="#ef4444"/></marker>
+            </defs>
+            <line x1="20" y1="30" x2="320" y2="30" stroke="#e2e8f0" stroke-width="1.5"/>
+            <line x1="170" y1="22" x2="170" y2="38" stroke="#94a3b8" stroke-width="1.5"/>
+            <text x="168" y="50" font-family="Nunito,sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">0</text>
+            <line x1="170" y1="18" x2="100" y2="18" stroke="#1e293b" stroke-width="2.5" marker-end="url(#bv3l)"/>
+            <text x="133" y="13" font-family="Space Mono,monospace" font-size="10" fill="#1e293b" text-anchor="middle">v = −6 ms⁻¹</text>
+            <line x1="170" y1="44" x2="125" y2="44" stroke="#ef4444" stroke-width="2.5" marker-end="url(#ba3l)"/>
+            <text x="145" y="57" font-family="Space Mono,monospace" font-size="10" fill="#ef4444" text-anchor="middle">a = −3 ms⁻²</text>
+          </svg>
+        </div>
+        <div class="prob-text" style="font-weight:700;">Is the object speeding up or slowing down? Justify.</div>
+        <input type="text" class="answer-lines-long" placeholder="Signs of a and v: …"/>
+        <input type="text" class="answer-lines-long" placeholder="Therefore the object is …"/>
+      </div>
+
+      <!-- B4 -->
+      <div class="partb-problem">
+        <div class="partb-num">B4</div>
+        <div class="prob-text">An object moves with V = −5 ms⁻¹ and experiences a = +2 ms⁻².</div>
+        <div class="svg-wrap">
+          <svg viewBox="0 0 340 60" width="100%" style="max-width:340px;" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="bv4l" markerWidth="7" markerHeight="6" refX="0" refY="3" orient="auto"><polygon points="7 0,0 3,7 6" fill="#1e293b"/></marker>
+              <marker id="ba4r" markerWidth="7" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="#ef4444"/></marker>
+            </defs>
+            <line x1="20" y1="30" x2="320" y2="30" stroke="#e2e8f0" stroke-width="1.5"/>
+            <line x1="170" y1="22" x2="170" y2="38" stroke="#94a3b8" stroke-width="1.5"/>
+            <text x="168" y="50" font-family="Nunito,sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">0</text>
+            <line x1="170" y1="18" x2="100" y2="18" stroke="#1e293b" stroke-width="2.5" marker-end="url(#bv4l)"/>
+            <text x="133" y="13" font-family="Space Mono,monospace" font-size="10" fill="#1e293b" text-anchor="middle">v = −5 ms⁻¹</text>
+            <line x1="170" y1="44" x2="210" y2="44" stroke="#ef4444" stroke-width="2.5" marker-end="url(#ba4r)"/>
+            <text x="192" y="57" font-family="Space Mono,monospace" font-size="10" fill="#ef4444" text-anchor="middle">a = +2 ms⁻²</text>
+          </svg>
+        </div>
+        <div class="prob-text" style="font-weight:700;">Is the object speeding up or slowing down? Justify.</div>
+        <input type="text" class="answer-lines-long" placeholder="Signs of a and v: …"/>
+        <input type="text" class="answer-lines-long" placeholder="Therefore the object is …"/>
+      </div>
+    </div>
+
+    <!-- PART C -->
+    <div class="card">
+      <div class="part-heading" style="background:linear-gradient(90deg,var(--amber),#d97706);">Part C — Short Answer</div>
+      <p style="font-size:.88rem;color:var(--muted);margin-bottom:1.2rem;">Answer in full sentences. 3 problems.</p>
+
+      <!-- C1 -->
+      <div class="partc-problem">
+        <div class="partc-num">C1</div>
+        <div class="prob-text">Explain, using the definition of acceleration, why a car moving in a circle at constant speed is still accelerating.</div>
+        <input type="text" class="answer-lines-long" placeholder="Acceleration is defined as …"/>
+        <input type="text" class="answer-lines-long" placeholder="Even though speed is constant, …"/>
+        <input type="text" class="answer-lines-long" placeholder="Therefore, …"/>
+      </div>
+
+      <!-- C2 -->
+      <div class="partc-problem">
+        <div class="partc-num">C2</div>
+        <div class="prob-text">A student says "My car has a negative acceleration, so it must be slowing down." Is this student correct? Use the 4-quadrant sign rule to support your answer.</div>
+        <input type="text" class="answer-lines-long" placeholder="The student is …"/>
+        <input type="text" class="answer-lines-long" placeholder="If velocity is also negative, then …"/>
+        <input type="text" class="answer-lines-long" placeholder="Therefore negative acceleration …"/>
+      </div>
+
+      <!-- C3 -->
+      <div class="partc-problem">
+        <div class="partc-num">C3</div>
+        <div class="prob-text">Name and briefly describe the 3 ways an object can accelerate.</div>
+        <input type="text" class="answer-lines-long" placeholder="1. …"/>
+        <input type="text" class="answer-lines-long" placeholder="2. …"/>
+        <input type="text" class="answer-lines-long" placeholder="3. …"/>
+      </div>
+    </div>
+
+    <!-- ANSWER KEY TOGGLE -->
+    <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+
+    <div id="answer-key">
+      <div class="key-card">
+        <h3>Part A — Answer Key</h3>
+        <div class="key-item"><strong>A1:</strong> V = U + at = 0 + (10)(6) = <span class="key-ans">60 ms⁻¹</span></div>
+        <div class="key-item"><strong>A2:</strong> a = (V − U)/t = (15 − 0)/5 = <span class="key-ans">3 ms⁻²</span></div>
+        <div class="key-item"><strong>A3:</strong> a = (V − U)/t = (0 − 30)/10 = <span class="key-ans">−3 ms⁻²</span> (deceleration)</div>
+        <div class="key-item"><strong>A4:</strong> V = U + at = 4 + (3)(8) = 4 + 24 = <span class="key-ans">28 ms⁻¹</span></div>
+        <div class="key-item"><strong>A5:</strong> t = (V − U)/a = (0 − 20)/(−10) = −20/−10 = <span class="key-ans">2 s</span></div>
+        <div class="key-item"><strong>A6:</strong> a = ΔV/t = (12 − 10)/1 = <span class="key-ans">2 ms⁻²</span> (as shown in the lesson)</div>
+      </div>
+
+      <div class="key-card">
+        <h3>Part B — Answer Key</h3>
+        <div class="key-item"><strong>B1:</strong> v = +8 (positive), a = +2 (positive) → <span class="key-ans">Same sign → Getting FASTER</span>. The acceleration acts in the same direction as motion.</div>
+        <div class="key-item"><strong>B2:</strong> v = +10 (positive), a = −4 (negative) → <span class="key-ans">Opposite signs → Getting SLOWER</span>. The acceleration opposes the direction of motion.</div>
+        <div class="key-item"><strong>B3:</strong> v = −6 (negative), a = −3 (negative) → <span class="key-ans">Same sign → Getting FASTER</span> (in the negative direction; magnitude increasing).</div>
+        <div class="key-item"><strong>B4:</strong> v = −5 (negative), a = +2 (positive) → <span class="key-ans">Opposite signs → Getting SLOWER</span>. The positive acceleration opposes the negative velocity.</div>
+      </div>
+
+      <div class="key-card">
+        <h3>Part C — Answer Key</h3>
+        <div class="key-item"><strong>C1:</strong> Acceleration is defined as a change in velocity. Velocity is a vector, so it has both magnitude (speed) and direction. A car moving in a circle has a constantly changing direction, meaning its velocity is changing even if its speed remains constant. Since velocity is changing, <span class="key-ans">the car is accelerating</span> (this is centripetal acceleration).</div>
+        <div class="key-item"><strong>C2:</strong> <span class="key-ans">The student is incorrect.</span> Whether an object speeds up or slows down depends on whether the signs of acceleration and velocity match, not on the sign of acceleration alone. If v = −5 ms⁻¹ and a = −1 ms⁻², both are negative (same sign) → the object speeds up. Negative acceleration only causes slowing down when velocity is positive (opposite sign).</div>
+        <div class="key-item"><strong>C3:</strong> (1) <span class="key-ans">Speeding up</span> — velocity magnitude increases; a and v point in the same direction. (2) <span class="key-ans">Slowing down</span> — velocity magnitude decreases; a and v point in opposite directions. (3) <span class="key-ans">Changing direction</span> — even at constant speed, a change in direction means velocity changes, so acceleration is occurring.</div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+// PASSWORD
+(function(){
+  const KEY='phys_auth';
+  const CORRECT=btoa('physics2024');
+  if(localStorage.getItem(KEY)===CORRECT){unlock();}
+  document.getElementById('gate-btn').addEventListener('click',check);
+  document.getElementById('gate-input').addEventListener('keydown',function(e){if(e.key==='Enter')check();});
+  function check(){
+    const v=document.getElementById('gate-input').value;
+    if(btoa(v)===CORRECT){localStorage.setItem(KEY,CORRECT);unlock();}
+    else{document.getElementById('gate-err').textContent='Incorrect password. Please try again.';}
+  }
+  function unlock(){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('main').style.display='block';
+  }
+})();
+
+// STARS
+(function(){
+  const c=document.getElementById('stars-container');
+  for(let i=0;i<45;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=Math.random()*3+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${2+Math.random()*4}s;animation-delay:${Math.random()*5}s;`;
+    c.appendChild(s);
+  }
+})();
+
+// ANSWER KEY TOGGLE
+var keyVisible=false;
+function toggleKey(){
+  keyVisible=!keyVisible;
+  document.getElementById('answer-key').style.display=keyVisible?'block':'none';
+  document.getElementById('toggle-key-btn').textContent=keyVisible?'Hide Answer Key':'Show Answer Key';
+  document.getElementById('toggle-key-btn').style.background=keyVisible?'linear-gradient(90deg,#64748b,#475569)':'linear-gradient(90deg,var(--red),#dc2626)';
+}
+</script>
+</body>
+</html>

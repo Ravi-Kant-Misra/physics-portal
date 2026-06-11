@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propagating Uncertainty: Adding &amp; Subtracting — Classwork</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#fffbf0;background-image:radial-gradient(circle,#fde68a 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#92400e 0%,#b45309 60%,#d97706 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:920px;margin:36px auto;padding:0 24px 60px;}
+    /* reference box */
+    .rules-box{background:white;border:2px solid #fde68a;border-radius:10px;padding:18px 22px;margin-bottom:36px;}
+    .rules-box h3{color:#78350f;font-size:1rem;margin-bottom:10px;font-weight:800;}
+    .rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    @media(max-width:600px){.rules-grid{grid-template-columns:1fr;}}
+    .rule-item{background:#fffbeb;border-radius:8px;padding:10px 14px;font-size:0.88rem;color:#374151;}
+    .rule-item strong{color:#78350f;}
+    .rule-item code{font-family:'Space Mono',monospace;background:#fef3c7;padding:1px 5px;border-radius:3px;font-size:0.83rem;color:#78350f;}
+    .tip-row{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;}
+    .tip-pill{background:#fef3c7;border:1px solid #fbbf24;border-radius:20px;padding:4px 12px;font-size:0.82rem;font-weight:700;color:#92400e;}
+    .warn-pill{background:#fee2e2;border:1px solid #fca5a5;border-radius:20px;padding:4px 12px;font-size:0.82rem;font-weight:700;color:#991b1b;}
+    /* sections */
+    section{margin-bottom:44px;}
+    h2{font-size:1.25rem;font-weight:700;color:#78350f;border-left:5px solid #d97706;padding-left:12px;margin-bottom:18px;}
+    .instructions{color:#4b5563;font-size:0.92rem;margin-bottom:18px;font-style:italic;}
+    /* problem cards */
+    .problem-card{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:16px;}
+    .problem-num{font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:6px;}
+    .problem-display{font-family:'Space Mono',monospace;font-size:1.4rem;font-weight:700;color:#1a1a2e;margin-bottom:14px;}
+    .work-space{margin-bottom:10px;}
+    .work-label{font-size:0.8rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+    .work-lines{display:flex;flex-direction:column;gap:12px;}
+    .work-line{border-bottom:2px solid #e5e7eb;min-height:26px;width:100%;}
+    .answer-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;}
+    .answer-label{font-size:0.88rem;font-weight:700;color:#78350f;}
+    .answer-line{border-bottom:2px solid #b45309;min-height:28px;width:200px;display:inline-block;}
+    /* Part B — conversion first */
+    .convert-card{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:16px;border-left:4px solid #f59e0b;}
+    .convert-badge{display:inline-block;background:#fef3c7;color:#92400e;font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+    .step-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:0.88rem;color:#374151;}
+    .step-dot{width:20px;height:20px;border-radius:50%;background:#fef3c7;color:#92400e;font-weight:800;font-size:0.72rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+    .step-blank{border-bottom:1px solid #9ca3af;display:inline-block;min-width:80px;min-height:18px;vertical-align:bottom;}
+    /* Part C — mixed */
+    .mixed-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    @media(max-width:600px){.mixed-grid{grid-template-columns:1fr;}}
+    .mixed-card{background:white;border-radius:8px;padding:16px 18px;box-shadow:0 1px 5px rgba(0,0,0,0.07);}
+    .op-badge{display:inline-block;font-size:0.75rem;font-weight:800;padding:2px 8px;border-radius:4px;margin-bottom:6px;}
+    .op-add{background:#dcfce7;color:#166534;}
+    .op-sub{background:#fee2e2;color:#991b1b;}
+    .op-mixed{background:#fef3c7;color:#92400e;}
+    /* Part D — short answer */
+    .short-answer{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .short-answer .q{font-weight:600;margin-bottom:10px;font-size:0.95rem;color:#1a1a2e;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+    /* answer key */
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#92400e;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #toggle-key-btn:hover{background:#78350f;}
+    #answer-key{display:none;background:#fffbeb;border:2px solid #fbbf24;border-radius:12px;padding:28px 32px;}
+    #answer-key h2{color:#78350f;border-left-color:#d97706;margin-bottom:22px;}
+    .key-section{margin-bottom:28px;}
+    .key-section h3{font-size:1rem;font-weight:700;color:#78350f;margin-bottom:12px;}
+    .key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    @media(max-width:500px){.key-grid{grid-template-columns:1fr;}}
+    .key-item{background:white;border-radius:6px;padding:12px 16px;font-size:0.9rem;border-left:3px solid #fbbf24;}
+    .key-item .knum{font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:4px;}
+    .key-item .kproblem{font-family:'Space Mono',monospace;font-size:0.88rem;color:#374151;margin-bottom:6px;}
+    .key-item .kans{font-family:'Space Mono',monospace;font-weight:700;color:#92400e;font-size:1rem;}
+    .key-item .kexpl{color:#4b5563;font-size:0.8rem;margin-top:4px;}
+    .short-ans-key{background:white;border-radius:6px;padding:12px 16px;margin-bottom:10px;font-size:0.92rem;border-left:3px solid #f59e0b;}
+    .short-ans-key strong{color:#78350f;}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">Physics · High School · In-Class Activity</div>
+  <h1>Propagating Uncertainty: Addition &amp; Subtraction — Classwork</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+
+  <!-- REFERENCE BOX -->
+  <div class="rules-box">
+    <h3>Reference — The Rule</h3>
+    <div class="rules-grid">
+      <div class="rule-item"><strong>For addition (y = a + b):</strong><br><code>Δy = Δa + Δb</code></div>
+      <div class="rule-item"><strong>For subtraction (y = a − b):</strong><br><code>Δy = Δa + Δb</code> &nbsp;(same rule!)</div>
+      <div class="rule-item"><strong>Percent → Absolute first:</strong><br><code>Δa = (% / 100) × a</code></div>
+      <div class="rule-item"><strong>Fractional → Absolute first:</strong><br><code>Δa = (frac) × a</code></div>
+    </div>
+    <div class="tip-row">
+      <span class="tip-pill">Uncertainties ALWAYS add</span>
+      <span class="tip-pill">Round Δ to 1 sig fig</span>
+      <span class="tip-pill">Match decimal places in final answer</span>
+      <span class="warn-pill">⚠️ Never subtract uncertainties!</span>
+    </div>
+  </div>
+
+  <!-- PART A: ADDITION PRACTICE -->
+  <section>
+    <h2>Part A — Addition Practice</h2>
+    <p class="instructions">Apply the rule Δy = Δa + Δb. Show your working in the space provided. Express your answer in the form (value ± uncertainty units).</p>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 1</div>
+      <div class="problem-display">(3 ± 1 m) + (9 ± 2 m) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working:</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 2</div>
+      <div class="problem-display">(4.5 ± 0.2 s) + (3.1 ± 0.4 s) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working:</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 3</div>
+      <div class="problem-display">(18 ± 3 N) + (11 ± 4 N) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working:</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 4</div>
+      <div class="problem-display">(0.80 ± 0.05 kg) + (1.20 ± 0.03 kg) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working:</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+  </section>
+
+  <!-- PART B: SUBTRACTION PRACTICE -->
+  <section>
+    <h2>Part B — Subtraction Practice</h2>
+    <p class="instructions">Remember: even though you subtract the values, you STILL ADD the uncertainties. Show your working.</p>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 5</div>
+      <div class="problem-display">(20 ± 4 cm) − (7 ± 1 cm) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working:</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 6</div>
+      <div class="problem-display">(300 ± 10 K) − (280 ± 5 K) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working:</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 7</div>
+      <div class="problem-display">(9.6 ± 0.4 V) − (3.2 ± 0.6 V) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working:</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 8</div>
+      <div class="problem-display">(5.00 ± 0.08 m) − (2.35 ± 0.15 m) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working:</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+  </section>
+
+  <!-- PART C: MIXED — includes percent conversion -->
+  <section>
+    <h2>Part C — Mixed Problems (includes percent uncertainty)</h2>
+    <p class="instructions">Some of these problems include percent or fractional uncertainties. Convert to absolute uncertainty first, then apply the rule.</p>
+
+    <div class="convert-card">
+      <div class="convert-badge">Convert First</div>
+      <div class="problem-num" style="margin-top:4px;">Problem 9</div>
+      <div class="problem-display">(10 ± 2 J) + (15 J ± 20%) = ?</div>
+      <div style="margin-top:10px;">
+        <div class="step-row"><div class="step-dot">1</div><div>Convert 20% of 15 J: &nbsp; 15 × 0.20 = <span class="step-blank"></span> J</div></div>
+        <div class="step-row"><div class="step-dot">2</div><div>Add values: &nbsp; 10 + 15 = <span class="step-blank"></span> J</div></div>
+        <div class="step-row"><div class="step-dot">3</div><div>Add uncertainties: &nbsp; Δy = 2 + <span class="step-blank"></span> = <span class="step-blank"></span> J</div></div>
+      </div>
+      <div class="answer-row" style="margin-top:10px;"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="convert-card">
+      <div class="convert-badge">Convert First</div>
+      <div class="problem-num" style="margin-top:4px;">Problem 10</div>
+      <div class="problem-display">(50 N ± 10%) − (30 ± 6 N) = ?</div>
+      <div style="margin-top:10px;">
+        <div class="step-row"><div class="step-dot">1</div><div>Convert 10% of 50 N: &nbsp; 50 × 0.10 = <span class="step-blank"></span> N</div></div>
+        <div class="step-row"><div class="step-dot">2</div><div>Subtract values: &nbsp; 50 − 30 = <span class="step-blank"></span> N</div></div>
+        <div class="step-row"><div class="step-dot">3</div><div>Add uncertainties: &nbsp; Δy = <span class="step-blank"></span> + 6 = <span class="step-blank"></span> N</div></div>
+      </div>
+      <div class="answer-row" style="margin-top:10px;"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="mixed-grid">
+      <div class="mixed-card">
+        <div class="op-badge op-add">Addition</div>
+        <div class="problem-num">Problem 11</div>
+        <div class="problem-display" style="font-size:1.1rem;">(6.0 ± 0.3 A) + (6.0 A ± 5%) = ?</div>
+        <div class="work-lines" style="margin-top:10px;"><div class="work-line"></div><div class="work-line"></div><div class="work-line"></div></div>
+        <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line" style="width:160px;"></span></div>
+      </div>
+      <div class="mixed-card">
+        <div class="op-badge op-sub">Subtraction</div>
+        <div class="problem-num">Problem 12</div>
+        <div class="problem-display" style="font-size:1.1rem;">(100 ± 5 W) − (40 W ± 10%) = ?</div>
+        <div class="work-lines" style="margin-top:10px;"><div class="work-line"></div><div class="work-line"></div><div class="work-line"></div></div>
+        <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line" style="width:160px;"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART D: SHORT ANSWER -->
+  <section>
+    <h2>Part D — Short Answer</h2>
+    <p class="instructions">Answer in complete sentences. Explain your reasoning.</p>
+
+    <div class="short-answer">
+      <div class="q">Question 13. A student measures the lengths of two wires: Wire A is <strong>(45 ± 3 cm)</strong> and Wire B is <strong>(45 ± 3 cm)</strong>. They join the wires end-to-end. What is the total length and uncertainty? Comment on whether the uncertainty has improved, stayed the same, or gotten worse relative to the measurement.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="short-answer">
+      <div class="q">Question 14. A student incorrectly calculates (8 ± 2 kg) − (3 ± 1 kg) as "5 ± 1 kg" (they subtracted the uncertainties). Explain why this is wrong, and give the correct answer.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="short-answer">
+      <div class="q">Question 15. Two experiments both measure the speed of sound. Experiment A gives <strong>(340 ± 2 m/s)</strong> and Experiment B gives <strong>(336 ± 8 m/s)</strong>. A student wants to find the difference in their results. Calculate the difference and its uncertainty. Can we say the two experiments gave "different" results? Explain.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <div class="key-btn-wrap"><button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key (Teacher Use)</button></div>
+
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A — Addition</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="knum">Problem 1</div>
+          <div class="kproblem">(3±1 m) + (9±2 m)</div>
+          <div class="kans">12 ± 3 m</div>
+          <div class="kexpl">Values: 3+9=12. Uncertainties: 1+2=3.</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 2</div>
+          <div class="kproblem">(4.5±0.2 s) + (3.1±0.4 s)</div>
+          <div class="kans">7.6 ± 0.6 s</div>
+          <div class="kexpl">Values: 4.5+3.1=7.6. Uncertainties: 0.2+0.4=0.6.</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 3</div>
+          <div class="kproblem">(18±3 N) + (11±4 N)</div>
+          <div class="kans">29 ± 7 N</div>
+          <div class="kexpl">Values: 18+11=29. Uncertainties: 3+4=7.</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 4</div>
+          <div class="kproblem">(0.80±0.05 kg) + (1.20±0.03 kg)</div>
+          <div class="kans">2.00 ± 0.08 kg</div>
+          <div class="kexpl">Values: 0.80+1.20=2.00. Uncertainties: 0.05+0.03=0.08.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B — Subtraction (uncertainties still ADD)</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="knum">Problem 5</div>
+          <div class="kproblem">(20±4 cm) − (7±1 cm)</div>
+          <div class="kans">13 ± 5 cm</div>
+          <div class="kexpl">Values: 20−7=13. Uncertainties: 4+1=5.</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 6</div>
+          <div class="kproblem">(300±10 K) − (280±5 K)</div>
+          <div class="kans">20 ± 15 K</div>
+          <div class="kexpl">Values: 300−280=20. Uncertainties: 10+5=15. Note: Δ is 75% of the result!</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 7</div>
+          <div class="kproblem">(9.6±0.4 V) − (3.2±0.6 V)</div>
+          <div class="kans">6.4 ± 1.0 V</div>
+          <div class="kexpl">Values: 9.6−3.2=6.4. Uncertainties: 0.4+0.6=1.0.</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 8</div>
+          <div class="kproblem">(5.00±0.08 m) − (2.35±0.15 m)</div>
+          <div class="kans">2.65 ± 0.23 m</div>
+          <div class="kexpl">Values: 5.00−2.35=2.65. Uncertainties: 0.08+0.15=0.23. Round to 1 s.f. → 2.7 ± 0.2 m also acceptable.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C — Mixed (with percent conversion)</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="knum">Problem 9</div>
+          <div class="kproblem">(10±2 J) + (15±20% J)</div>
+          <div class="kans">25 ± 5 J</div>
+          <div class="kexpl">20% of 15 = 3 J. Values: 10+15=25. Δy: 2+3=5 J.</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 10</div>
+          <div class="kproblem">(50±10% N) − (30±6 N)</div>
+          <div class="kans">20 ± 11 N</div>
+          <div class="kexpl">10% of 50 = 5 N. Values: 50−30=20. Δy: 5+6=11 N.</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 11</div>
+          <div class="kproblem">(6.0±0.3 A) + (6.0±5% A)</div>
+          <div class="kans">12.0 ± 0.6 A</div>
+          <div class="kexpl">5% of 6.0 = 0.3 A. Values: 6.0+6.0=12.0. Δy: 0.3+0.3=0.6 A.</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 12</div>
+          <div class="kproblem">(100±5 W) − (40±10% W)</div>
+          <div class="kans">60 ± 9 W</div>
+          <div class="kexpl">10% of 40 = 4 W. Values: 100−40=60. Δy: 5+4=9 W.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part D — Short Answer</h3>
+      <div class="short-ans-key">
+        <strong>Question 13:</strong> Total length = 45 + 45 = 90 cm. Total uncertainty = 3 + 3 = 6 cm. Answer: <strong>90 ± 6 cm</strong>. The percentage uncertainty of each wire was 3/45 = 6.7%, but the combined result is also 6/90 = 6.7% — the <em>relative</em> uncertainty has stayed the same. Adding identical measurements does not improve your relative uncertainty.
+      </div>
+      <div class="short-ans-key">
+        <strong>Question 14:</strong> The student made an error by subtracting the uncertainties (2 − 1 = 1). This is wrong because uncertainty represents a worst-case range — both uncertainties can act in the same direction at once, so they must always be added. The correct answer is: values 8 − 3 = <strong>5 kg</strong>, uncertainties 2 + 1 = <strong>3 kg</strong>, so the answer is <strong>5 ± 3 kg</strong>.
+      </div>
+      <div class="short-ans-key">
+        <strong>Question 15:</strong> Difference in values: 340 − 336 = 4 m/s. Uncertainty: 2 + 8 = 10 m/s. Answer: <strong>4 ± 10 m/s</strong>. The uncertainty (10 m/s) is much larger than the difference (4 m/s). This means the difference could be anywhere from −6 to +14 m/s, which includes zero. We <em>cannot</em> conclude the experiments gave different results — the results are consistent with each other within experimental uncertainty.
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+function toggleKey() {
+  var k = document.getElementById('answer-key');
+  var b = document.getElementById('toggle-key-btn');
+  if (k.style.display === 'none' || k.style.display === '') {
+    k.style.display = 'block';
+    b.textContent = 'Hide Answer Key';
+  } else {
+    k.style.display = 'none';
+    b.textContent = 'Show Answer Key (Teacher Use)';
+  }
+}
+</script>
+
+</body>
+</html>

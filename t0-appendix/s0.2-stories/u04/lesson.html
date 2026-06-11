@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chapter 4 – The Light Debate | IB Physics Stories</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',Arial,sans-serif;background:#f1f5f9;color:#1f2937;line-height:1.7;}
+  .hero{background:linear-gradient(135deg,#0c4a6e,#0369a1,#0284c7);color:white;padding:64px 24px 52px;text-align:center;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 75% 40%,rgba(186,230,253,.3) 0%,transparent 55%);pointer-events:none;}
+  .hero-chip{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:5px 18px;font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;}
+  .hero h1{font-size:2.8rem;font-weight:900;letter-spacing:-1px;margin-bottom:10px;}
+  .hero .hook{font-size:1.2rem;color:rgba(255,255,255,.88);max-width:700px;margin:0 auto;font-style:italic;}
+  .wrap{max-width:1100px;margin:0 auto;padding:40px 24px 80px;}
+  .card{background:white;border-radius:18px;padding:28px 26px;margin:24px 0;box-shadow:0 6px 20px rgba(0,0,0,.07);}
+  h2{font-size:1.55rem;font-weight:900;color:#0369a1;margin-bottom:14px;}
+  h3{font-size:1.1rem;font-weight:800;color:#0284c7;margin:16px 0 8px;}
+  p{margin-bottom:12px;}
+  ul,ol{padding-left:22px;margin-bottom:12px;}
+  li{margin-bottom:7px;}
+  img{max-width:100%;border-radius:14px;display:block;}
+  .img-cap{font-size:.8rem;color:#6b7280;margin-top:7px;font-style:italic;text-align:center;}
+  .ib-box{background:#f0f9ff;border-left:5px solid #0284c7;border-radius:12px;padding:18px 20px;margin:20px 0;}
+  .ib-box-label{font-size:.72rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#0369a1;margin-bottom:8px;}
+  .quote{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border-left:5px solid #0284c7;border-radius:12px;padding:20px 22px;margin:20px 0;}
+  .quote p{font-size:1.05rem;font-style:italic;color:#0369a1;margin:0;}
+  .quote span{display:block;font-size:.83rem;font-weight:700;color:#0284c7;margin-top:7px;}
+  .moral{background:linear-gradient(135deg,#fef9ec,#fff8f0);border:2px solid #f59e0b;border-radius:16px;padding:26px;margin:26px 0;}
+  .moral-label{font-size:.72rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#b45309;margin-bottom:10px;}
+  .moral p{font-size:1.08rem;color:#78350f;margin:0;font-weight:600;}
+  .tag{display:inline-block;background:#e0f2fe;color:#0369a1;padding:5px 14px;border-radius:999px;font-size:.8rem;font-weight:700;margin-right:6px;}
+  /* DEBATE TIMELINE */
+  .debate-row{display:grid;grid-template-columns:1fr 80px 1fr;gap:12px;align-items:center;margin:14px 0;}
+  .debate-row .side{background:#f8faff;border-radius:12px;padding:14px;font-size:.9rem;}
+  .debate-row .vs{text-align:center;font-weight:900;color:#64748b;font-size:1rem;}
+  .wave-side{border-left:4px solid #0284c7;}
+  .part-side{border-left:4px solid #d97706;}
+  .side-label{font-size:.72rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+  .side-label.wave{color:#0284c7;}
+  .side-label.particle{color:#d97706;}
+  /* EXPERIMENT BOX */
+  .exp-box{background:#f0f9ff;border:2px solid #bae6fd;border-radius:14px;padding:20px;margin:16px 0;}
+  .exp-title{font-weight:900;color:#0369a1;margin-bottom:8px;font-size:1.05rem;}
+  .page-nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:40px;}
+  .nav-btn{background:#0369a1;color:white;text-decoration:none;border-radius:10px;padding:10px 22px;font-weight:800;font-size:.92rem;}
+  footer{text-align:center;padding:26px;color:#6b7280;font-size:.87rem;background:white;border-top:1px solid #e2e8f0;}
+  @media(max-width:700px){.hero h1{font-size:2rem;}.debate-row{grid-template-columns:1fr;}.debate-row .vs{display:none;}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-chip">Chapter 4 · Wave Behaviour</div>
+  <h1>The Great Light Debate</h1>
+  <p class="hook">"Is light a wave, or is it a stream of particles? Scientists argued about this for 300 years — and then discovered that the answer was more strange than anyone had imagined."</p>
+</header>
+
+<main class="wrap">
+
+  <div style="margin-bottom:20px;">
+    <span class="tag">1600s – 1920s</span>
+    <span class="tag">Wave-Particle Duality</span>
+    <span class="tag">IB Theme 3 &amp; 5</span>
+    <span class="tag">Multi-scientist</span>
+  </div>
+
+  <div class="card">
+    <h2>The Question That Divided Physics</h2>
+    <p>Of all the debates in the history of science, the question of the nature of light is arguably the longest-running and most productive. It began in the 1600s and was not resolved — or rather, was resolved in the most unexpected way — until the 1920s. The debate generated interference patterns, electromagnetic theory, the photoelectric effect, quantum mechanics, and ultimately a completely new picture of physical reality.</p>
+    <p>The story involves at least six major scientists, spans three centuries, and ends with a twist: both sides were right.</p>
+  </div>
+
+  <div class="card">
+    <h2>Round 1: Newton vs Huygens (1670s)</h2>
+    <div class="debate-row">
+      <div class="side wave-side">
+        <div class="side-label wave">Team Wave — Huygens</div>
+        Christiaan Huygens (Dutch) argued light is a wave spreading through a medium. Waves explain reflection and refraction beautifully, using what we now call Huygens' principle: every point on a wave front is a source of a new wavelet.
+      </div>
+      <div class="vs">VS</div>
+      <div class="side part-side">
+        <div class="side-label particle">Team Particle — Newton</div>
+        Isaac Newton argued light is a stream of tiny corpuscles (particles). His argument: waves bend around corners (diffraction) — but light travels in straight lines, forming sharp shadows. So light cannot be a wave.
+      </div>
+    </div>
+    <p><strong>Round 1 winner:</strong> Newton, largely because of his enormous prestige. The particle model dominated for over a century.</p>
+  </div>
+
+  <div class="card">
+    <h2>Round 2: Young's Double-Slit Experiment (1801)</h2>
+    <div class="exp-box">
+      <div class="exp-title">Thomas Young's Double-Slit Experiment — Perhaps the Most Important Experiment in Physics</div>
+      <p>Young shone light through two narrow slits in a barrier and observed the pattern on a screen behind. If light were particles, you would expect two bright stripes. Instead, Young saw a pattern of many alternating bright and dark bands — an <strong>interference pattern</strong>. This is the unmistakable signature of waves: bright bands where wave crests overlap, dark bands where a crest meets a trough.</p>
+    </div>
+    <p>Newton's corpuscle theory had no explanation for this. Young's result strongly revived the wave model. But Newton's authority meant many refused to accept it for decades.</p>
+    <div class="ib-box">
+      <div class="ib-box-label">IB Physics Connection</div>
+      <p style="margin:0;font-size:.92rem;"><strong>Theme 3 — Wave Behaviour:</strong> Young's double-slit experiment is core IB content. You must understand how to calculate fringe spacing, explain why interference proves the wave nature of light, and connect it to diffraction gratings and single-slit diffraction.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Round 3: Maxwell's Masterwork (1865)</h2>
+    <p>James Clerk Maxwell was the greatest theoretical physicist between Newton and Einstein. He took Faraday's field lines and expressed them in four elegant differential equations. The result was stunning: his equations predicted the existence of electromagnetic waves travelling at a speed that matched the known speed of light.</p>
+    <p>His conclusion: <strong>light IS an electromagnetic wave.</strong> Not a vibration in a physical medium, but a self-sustaining oscillation of electric and magnetic fields propagating through space. He also predicted that there should be other kinds of electromagnetic waves — radio waves, X-rays, etc. — differing only in frequency. Heinrich Hertz confirmed the existence of radio waves experimentally in 1887.</p>
+    <p>By 1880, the wave model appeared to have won completely.</p>
+    <div class="quote">
+      <p>"The special theory of relativity owes its origin to Maxwell's equations of the electromagnetic field."</p>
+      <span>— Albert Einstein</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Round 4: Einstein Reopens the Question (1905)</h2>
+    <p>In 1905 — the same year he published special relativity — Einstein published a paper on the <strong>photoelectric effect</strong>. When light shines on a metal surface, electrons are emitted. Classical wave theory predicted that brighter light should always eject electrons with more energy. But experimentally, the energy of the ejected electrons depended only on the <em>frequency</em> (colour) of the light, not its brightness.</p>
+    <p>Einstein's explanation: light comes in discrete packets of energy called <strong>photons</strong>. The energy of each photon is E = hf (Planck's constant times frequency). Bright light means more photons, but each photon carries the same energy for a given frequency. Only photons above a threshold frequency have enough energy to eject an electron.</p>
+    <p>This was the particle theory of light — resurrected, strengthened, and given a precise mathematical form. It also won Einstein the Nobel Prize in 1921 (not relativity, as many people think).</p>
+    <div class="ib-box">
+      <div class="ib-box-label">IB Physics Connection</div>
+      <p style="margin:0;font-size:.92rem;"><strong>Theme 5 — Quantum Physics:</strong> The photoelectric effect is one of the most important experiments in IB HL Physics. You must explain it using the photon model, calculate stopping voltages, work functions, and maximum kinetic energies.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>The Twist: Both Sides Were Right</h2>
+    <p>By the 1920s, experiments had shown that light behaves like a wave in some situations (double-slit interference) and like a particle in others (photoelectric effect, Compton scattering). Neither model was wrong — and neither was complete.</p>
+    <p>Louis de Broglie then made an extraordinary suggestion: if light (a wave) can behave like a particle, perhaps electrons (particles) can behave like waves. He was right. Electrons were later shown to produce interference patterns when sent through double slits — one at a time.</p>
+    <p>The resolution came with quantum mechanics: light and matter are neither waves nor particles in the classical sense. They are <strong>quantum objects</strong> that exhibit one or the other aspect depending on how they are measured. The act of measurement itself determines what you see.</p>
+    <div class="quote">
+      <p>"Anyone who is not shocked by quantum theory has not understood it."</p>
+      <span>— Niels Bohr</span>
+    </div>
+  </div>
+
+  <div class="moral">
+    <div class="moral-label">Moral of the Story</div>
+    <p>The light debate teaches the most important lesson in the history of science: nature does not fit into the boxes we build for it. When the evidence says your framework is incomplete, the answer is not to discard the old framework — it is to build a larger one that contains both. Newton was not wrong. Huygens was not wrong. Einstein was not wrong. They each saw a piece of a larger truth. <strong>The best scientific minds are the ones who can hold two contradictory ideas at once and keep looking for the picture that contains both.</strong></p>
+  </div>
+
+  <div class="page-nav">
+    <a href="03-faraday.html" class="nav-btn">← Chapter 3: Faraday</a>
+    <a href="05-marie-pierre-curie.html" class="nav-btn">Next: Marie &amp; Pierre Curie →</a>
+  </div>
+
+</main>
+
+<footer>IB Physics Storytelling Series &nbsp;|&nbsp; Chapter 4: The Light Debate</footer>
+</body>
+</html>

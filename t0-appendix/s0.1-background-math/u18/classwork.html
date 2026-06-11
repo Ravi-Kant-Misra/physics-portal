@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Labeling &amp; Adding Vectors — Classwork</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#fffbeb;background-image:radial-gradient(circle,#fde68a 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#92400e 0%,#b45309 50%,#d97706 100%);color:white;padding:32px 60px 28px;position:relative;overflow:hidden;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(251,191,36,0.25) 0%,transparent 60%);pointer-events:none;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.9;font-size:0.9rem;}
+    main{max-width:820px;margin:36px auto;padding:0 24px 60px;}
+    .ref-box{background:white;border:2px solid #fde68a;border-radius:10px;padding:18px 22px;margin-bottom:36px;}
+    .ref-box h3{color:#92400e;font-size:1rem;font-weight:800;margin-bottom:10px;}
+    .ref-box ul{padding-left:22px;}.ref-box li{margin-bottom:4px;font-size:0.92rem;color:#374151;}
+    section{margin-bottom:44px;}
+    h2{font-size:1.2rem;font-weight:800;color:#92400e;border-left:5px solid #f59e0b;padding-left:12px;margin-bottom:18px;}
+    .instructions{color:#4b5563;font-size:0.92rem;margin-bottom:18px;font-style:italic;}
+    /* problem cards */
+    .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    @media(max-width:600px){.problem-grid{grid-template-columns:1fr;}}
+    .problem-card{background:white;border-radius:10px;padding:16px 20px;box-shadow:0 1px 5px rgba(180,83,9,0.1);border-top:3px solid #fbbf24;}
+    .problem-num{font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#b45309;margin-bottom:6px;}
+    .problem-text{font-size:0.92rem;color:#374151;margin-bottom:10px;}
+    .vec-display{font-family:'Space Mono',monospace;font-size:1.5rem;font-weight:700;color:#92400e;margin-bottom:8px;}
+    .answer-line{border-bottom:2px solid #d1d5db;min-height:28px;width:120px;display:inline-block;vertical-align:bottom;}
+    .answer-label{font-size:0.82rem;color:#6b7280;margin-right:8px;}
+    .draw-box{border:2px dashed #fbbf24;border-radius:8px;background:#fffbeb;height:90px;display:flex;align-items:center;justify-content:center;color:#b45309;font-size:0.8rem;font-weight:600;margin-top:8px;}
+    .draw-box-sm{border:2px dashed #fbbf24;border-radius:8px;background:#fffbeb;height:70px;display:flex;align-items:center;justify-content:center;color:#b45309;font-size:0.78rem;font-weight:600;margin-top:8px;}
+    .problem-card-wide{background:white;border-radius:10px;padding:16px 20px;box-shadow:0 1px 5px rgba(180,83,9,0.1);border-top:3px solid #fbbf24;margin-bottom:14px;}
+    .calc-area{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;margin-top:8px;}
+    .calc-area .calc-label{font-size:0.78rem;color:#b45309;font-weight:700;margin-bottom:4px;}
+    .calc-line{border-bottom:1px dashed #fde68a;min-height:24px;margin-bottom:6px;width:100%;}
+    .answer-full{border-bottom:2px solid #92400e;min-height:28px;width:180px;display:inline-block;vertical-align:bottom;}
+    /* answer key */
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#92400e;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #toggle-key-btn:hover{background:#78350f;}
+    #answer-key{display:none;background:#fffbeb;border:2px solid #fbbf24;border-radius:12px;padding:28px 32px;}
+    #answer-key h2{color:#92400e;border-left-color:#f59e0b;margin-bottom:22px;}
+    .key-section{margin-bottom:28px;}
+    .key-section h3{font-size:1rem;font-weight:700;color:#b45309;margin-bottom:12px;}
+    .key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    .key-item{background:white;border-radius:6px;padding:10px 14px;font-size:0.92rem;border-left:3px solid #fbbf24;}
+    .key-item .knum{font-family:'Space Mono',monospace;font-weight:700;font-size:0.95rem;color:#92400e;}
+    .key-item .kans{color:#059669;font-weight:700;}
+    .key-item .kexpl{color:#4b5563;font-size:0.82rem;margin-top:2px;}
+    .key-full{background:white;border-radius:6px;padding:12px 16px;font-size:0.92rem;margin-bottom:10px;border-left:3px solid #fbbf24;}
+    .key-full strong{color:#92400e;}
+    .svg-diagram{display:flex;justify-content:center;margin:8px 0;}
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">&#128274;</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">&#10060; Wrong password &mdash; try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#f59e0b,#d97706);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class &rarr;</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">Physics &middot; IB High School &middot; In-Class Activity</div>
+  <h1>Labeling &amp; Adding Vectors &mdash; Classwork</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+  <div class="ref-box">
+    <h3>Quick Reference</h3>
+    <ul>
+      <li>A <strong>vector</strong> is drawn as an arrow: length = magnitude, arrowhead = direction.</li>
+      <li>Symbol: <strong>&#8407;A</strong> = vector (has direction); <strong>A</strong> = scalar magnitude only.</li>
+      <li>Scalar mult.: positive scalar &rarr; same direction; negative scalar &rarr; <strong>flips direction</strong>.</li>
+      <li>Vector addition: use <strong>tip-to-tail</strong>. Resultant = tail of first to tip of last.</li>
+      <li>Perpendicular vectors: A&sup2; + B&sup2; = C&sup2; &nbsp;|&nbsp; Collinear: add or subtract magnitudes.</li>
+    </ul>
+  </div>
+
+  <!-- PART A: Drawing Vectors -->
+  <section>
+    <h2>Part A &mdash; Drawing Vectors</h2>
+    <p class="instructions">In each box, draw an arrow that represents the given vector. Label the magnitude above the arrow and point the arrowhead in the correct direction.</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-num">Problem 1</div>
+        <div class="problem-text">Draw a vector: <strong>8 m to the right</strong></div>
+        <div class="draw-box">Draw arrow here</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">Problem 2</div>
+        <div class="problem-text">Draw a vector: <strong>5 N downward</strong></div>
+        <div class="draw-box">Draw arrow here</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">Problem 3</div>
+        <div class="problem-text">Draw a vector: <strong>12 m/s upward</strong></div>
+        <div class="draw-box">Draw arrow here</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">Problem 4</div>
+        <div class="problem-text">Draw a vector: <strong>10 miles at a 45&deg; diagonal (up-right)</strong></div>
+        <div class="draw-box">Draw arrow here</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">Problem 5</div>
+        <div class="problem-text">&#8407;A = 6 m to the right. Draw <strong>2&#8407;A</strong> in the same box.</div>
+        <div class="draw-box">Draw both arrows — label each</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">Problem 6</div>
+        <div class="problem-text">&#8407;A = 6 m to the right. Draw <strong>&minus;&#8407;A</strong> (opposite direction).</div>
+        <div class="draw-box">Draw the flipped arrow here</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART B: Labeling -->
+  <section>
+    <h2>Part B &mdash; Labeling Vectors</h2>
+    <p class="instructions">For each vector below, write both the vector symbol (with arrow) and the scalar symbol, then state the magnitude.</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-num">Problem 7</div>
+        <div class="problem-text">A force vector with magnitude 20 Newtons pointing east.</div>
+        <div style="margin-top:8px;">
+          <span class="answer-label">Vector symbol:</span><span class="answer-line"></span><br><br>
+          <span class="answer-label">Scalar symbol:</span><span class="answer-line"></span><br><br>
+          <span class="answer-label">Magnitude:</span><span class="answer-line"></span>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">Problem 8</div>
+        <div class="problem-text">A displacement vector named &#8407;D with magnitude 15 km going south.</div>
+        <div style="margin-top:8px;">
+          <span class="answer-label">Vector symbol:</span><span class="answer-line"></span><br><br>
+          <span class="answer-label">Scalar symbol:</span><span class="answer-line"></span><br><br>
+          <span class="answer-label">Magnitude:</span><span class="answer-line"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="problem-card-wide" style="margin-top:14px;">
+      <div class="problem-num">Problem 9 &mdash; Scalar Multiplication</div>
+      <div class="problem-text">Given &#8407;A = 8 m to the right, fill in the table:</div>
+      <table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:0.9rem;">
+        <thead>
+          <tr style="background:#fef3c7;">
+            <th style="padding:8px 12px;text-align:left;border:1px solid #fde68a;color:#92400e;">Expression</th>
+            <th style="padding:8px 12px;text-align:left;border:1px solid #fde68a;color:#92400e;">Magnitude</th>
+            <th style="padding:8px 12px;text-align:left;border:1px solid #fde68a;color:#92400e;">Direction</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:10px 12px;border:1px solid #fde68a;font-family:'Space Mono',monospace;font-weight:700;color:#92400e;">&#8407;A</td><td style="padding:10px 12px;border:1px solid #fde68a;"><span class="answer-line" style="width:80px;"></span></td><td style="padding:10px 12px;border:1px solid #fde68a;"><span class="answer-line" style="width:100px;"></span></td></tr>
+          <tr style="background:#fffbeb;"><td style="padding:10px 12px;border:1px solid #fde68a;font-family:'Space Mono',monospace;font-weight:700;color:#92400e;">2&#8407;A</td><td style="padding:10px 12px;border:1px solid #fde68a;"><span class="answer-line" style="width:80px;"></span></td><td style="padding:10px 12px;border:1px solid #fde68a;"><span class="answer-line" style="width:100px;"></span></td></tr>
+          <tr><td style="padding:10px 12px;border:1px solid #fde68a;font-family:'Space Mono',monospace;font-weight:700;color:#92400e;">0.5&#8407;A</td><td style="padding:10px 12px;border:1px solid #fde68a;"><span class="answer-line" style="width:80px;"></span></td><td style="padding:10px 12px;border:1px solid #fde68a;"><span class="answer-line" style="width:100px;"></span></td></tr>
+          <tr style="background:#fffbeb;"><td style="padding:10px 12px;border:1px solid #fde68a;font-family:'Space Mono',monospace;font-weight:700;color:#92400e;">-2&#8407;A</td><td style="padding:10px 12px;border:1px solid #fde68a;"><span class="answer-line" style="width:80px;"></span></td><td style="padding:10px 12px;border:1px solid #fde68a;"><span class="answer-line" style="width:100px;"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PART C: Adding Vectors -->
+  <section>
+    <h2>Part C &mdash; Adding Vectors</h2>
+    <p class="instructions">Use the tip-to-tail method for each problem. Show your work using the Pythagorean theorem where needed. Draw the resultant.</p>
+
+    <div class="problem-card-wide">
+      <div class="problem-num">Problem 10 &mdash; Perpendicular Vectors</div>
+      <div class="problem-text">&#8407;P = 3 m East &nbsp;+&nbsp; &#8407;Q = 4 m North</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px;">
+        <div>
+          <div style="font-size:0.82rem;color:#b45309;font-weight:700;margin-bottom:4px;">Draw tip-to-tail diagram:</div>
+          <div class="draw-box" style="height:120px;">Draw vectors + resultant here</div>
+        </div>
+        <div class="calc-area">
+          <div class="calc-label">Show calculation (A&sup2; + B&sup2; = C&sup2;):</div>
+          <div class="calc-line"></div>
+          <div class="calc-line"></div>
+          <div class="calc-line"></div>
+          <div style="margin-top:8px;"><span class="answer-label">Resultant magnitude:</span><span class="answer-full"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="problem-card-wide">
+      <div class="problem-num">Problem 11 &mdash; Same Direction</div>
+      <div class="problem-text">&#8407;A = 15 m/s East &nbsp;+&nbsp; &#8407;B = 10 m/s East</div>
+      <div style="margin-top:10px;">
+        <div class="draw-box-sm">Draw the two vectors tip-to-tail, then the resultant</div>
+        <div style="margin-top:10px;"><span class="answer-label">Resultant magnitude:</span><span class="answer-full"></span> &nbsp;<span class="answer-label">Direction:</span><span class="answer-line"></span></div>
+      </div>
+    </div>
+
+    <div class="problem-card-wide">
+      <div class="problem-num">Problem 12 &mdash; Opposite Directions</div>
+      <div class="problem-text">&#8407;A = 12 m East &nbsp;+&nbsp; &#8407;B = 5 m West</div>
+      <div style="margin-top:10px;">
+        <div class="draw-box-sm">Draw the vectors tip-to-tail, then the resultant</div>
+        <div style="margin-top:10px;"><span class="answer-label">Resultant magnitude:</span><span class="answer-full"></span> &nbsp;<span class="answer-label">Direction:</span><span class="answer-line"></span></div>
+      </div>
+    </div>
+
+    <div class="problem-card-wide">
+      <div class="problem-num">Problem 13 &mdash; Perpendicular Challenge</div>
+      <div class="problem-text">&#8407;X = 5 m South &nbsp;+&nbsp; &#8407;Y = 12 m West</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px;">
+        <div>
+          <div style="font-size:0.82rem;color:#b45309;font-weight:700;margin-bottom:4px;">Draw tip-to-tail diagram:</div>
+          <div class="draw-box" style="height:120px;">Draw vectors + resultant here</div>
+        </div>
+        <div class="calc-area">
+          <div class="calc-label">Show calculation:</div>
+          <div class="calc-line"></div>
+          <div class="calc-line"></div>
+          <div class="calc-line"></div>
+          <div style="margin-top:8px;"><span class="answer-label">Resultant:</span><span class="answer-full"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART D: Commutative Property -->
+  <section>
+    <h2>Part D &mdash; Commutative Property</h2>
+    <div class="problem-card-wide">
+      <div class="problem-num">Problem 14</div>
+      <div class="problem-text">Add &#8407;A = 6 m East and &#8407;B = 8 m North in <strong>two different orders</strong>. Show both diagrams and compare the resultants.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;">
+        <div>
+          <div style="font-size:0.82rem;color:#b45309;font-weight:700;margin-bottom:4px;">Order 1: &#8407;A + &#8407;B</div>
+          <div class="draw-box" style="height:120px;">Draw here</div>
+          <div style="margin-top:8px;font-size:0.88rem;">Resultant: <span class="answer-line" style="width:80px;"></span></div>
+        </div>
+        <div>
+          <div style="font-size:0.82rem;color:#b45309;font-weight:700;margin-bottom:4px;">Order 2: &#8407;B + &#8407;A</div>
+          <div class="draw-box" style="height:120px;">Draw here</div>
+          <div style="margin-top:8px;font-size:0.88rem;">Resultant: <span class="answer-line" style="width:80px;"></span></div>
+        </div>
+      </div>
+      <div style="margin-top:14px;font-size:0.92rem;">Are the resultants the same? <span class="answer-line" style="width:200px;"></span></div>
+      <div style="margin-top:8px;font-size:0.92rem;">This demonstrates the <span class="answer-line" style="width:200px;"></span> property of vector addition.</div>
+    </div>
+  </section>
+
+  <!-- ANSWER KEY -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+  </div>
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A &mdash; Drawing Vectors</h3>
+      <div class="key-full"><strong>Problems 1–4:</strong> Arrows should point in the correct direction (right, down, up, 45&deg; up-right) with the magnitude labeled above each arrow. Longer magnitude = longer arrow.</div>
+      <div class="key-full"><strong>Problem 5 (2&#8407;A):</strong> Arrow pointing right, twice as long as &#8407;A (12 m). Original &#8407;A = 6 m right.</div>
+      <div class="key-full"><strong>Problem 6 (&minus;&#8407;A):</strong> Arrow pointing <em>left</em> with magnitude 6 m. Negative flips the direction.</div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B &mdash; Labeling</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="knum">Problem 7</div><div class="kans">&#8407;F = 20 N East; F = 20 N</div><div class="kexpl">Arrow over letter = vector; plain letter = scalar</div></div>
+        <div class="key-item"><div class="knum">Problem 8</div><div class="kans">&#8407;D = 15 km South; D = 15 km</div><div class="kexpl">Direction noted only with the vector symbol</div></div>
+      </div>
+      <div class="key-full" style="margin-top:10px;"><strong>Problem 9 — Scalar Multiplication (&#8407;A = 8 m right):</strong><br>
+        &#8407;A: magnitude 8 m, direction right &nbsp;|&nbsp;
+        2&#8407;A: magnitude 16 m, direction right &nbsp;|&nbsp;
+        0.5&#8407;A: magnitude 4 m, direction right &nbsp;|&nbsp;
+        &minus;2&#8407;A: magnitude 16 m, direction <strong>left (opposite)</strong>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C &mdash; Adding Vectors</h3>
+      <div class="key-grid">
+        <div class="key-item"><div class="knum">Problem 10</div><div class="kans">C = &radic;(3&sup2; + 4&sup2;) = &radic;25 = <strong>5 m</strong></div><div class="kexpl">Classic 3-4-5 right triangle</div></div>
+        <div class="key-item"><div class="knum">Problem 11</div><div class="kans">15 + 10 = <strong>25 m/s East</strong></div><div class="kexpl">Same direction: add magnitudes</div></div>
+        <div class="key-item"><div class="knum">Problem 12</div><div class="kans">12 &minus; 5 = <strong>7 m East</strong></div><div class="kexpl">Opposite directions: subtract; larger wins</div></div>
+        <div class="key-item"><div class="knum">Problem 13</div><div class="kans">C = &radic;(5&sup2; + 12&sup2;) = &radic;169 = <strong>13 m</strong></div><div class="kexpl">5-12-13 right triangle</div></div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part D &mdash; Commutative Property</h3>
+      <div class="key-full"><strong>Problem 14:</strong> Both orders give the same resultant: C = &radic;(6&sup2; + 8&sup2;) = &radic;100 = <strong>10 m</strong>. This demonstrates the <strong>commutative</strong> property of vector addition (&#8407;A + &#8407;B = &#8407;B + &#8407;A).</div>
+    </div>
+  </div>
+</main>
+
+<script>
+(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();
+function toggleKey(){
+  var el=document.getElementById('answer-key');
+  var btn=document.getElementById('toggle-key-btn');
+  if(el.style.display==='none'||el.style.display===''){
+    el.style.display='block';btn.textContent='Hide Answer Key';
+  } else {el.style.display='none';btn.textContent='Show Answer Key';}
+}
+</script>
+</body>
+</html>

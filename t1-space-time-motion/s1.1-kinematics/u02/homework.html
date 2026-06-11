@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speed and Velocity — Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f0f4f8;background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#1e40af 0%,#2563eb 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:820px;margin:36px auto;padding:0 24px 60px;}
+    .ref-box{background:white;border:2px solid #bfdbfe;border-radius:10px;padding:18px 22px;margin-bottom:12px;}
+    .ref-box h3{color:#1e3a5f;font-size:1rem;margin-bottom:10px;}
+    .ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    @media(max-width:600px){.ref-grid{grid-template-columns:1fr;}}
+    .ref-item{background:#eff6ff;border-radius:8px;padding:10px 14px;font-size:0.88rem;}
+    .ref-item .sym{font-family:'Space Mono',monospace;font-weight:700;color:#1d4ed8;}
+    .tip-note{background:#fffbeb;border:2px solid #fde68a;border-radius:8px;padding:12px 18px;margin-bottom:24px;font-size:0.88rem;color:#78350f;}
+    .tip-note strong{color:#92400e;}
+    section{margin-bottom:40px;}
+    h2{font-size:1.2rem;font-weight:700;color:#1e3a5f;border-left:5px solid #2563eb;padding-left:12px;margin-bottom:16px;}
+    .instructions{color:#4b5563;font-size:0.9rem;margin-bottom:16px;font-style:italic;}
+    .problem-card{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .problem-num{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:6px;}
+    .scenario{font-size:0.95rem;font-weight:600;color:#1a1a2e;margin-bottom:12px;}
+    .working-area{margin-bottom:8px;}
+    .working-area label{font-size:0.8rem;font-weight:700;color:#6b7280;display:block;margin-bottom:4px;}
+    .field-set{display:flex;flex-direction:column;gap:8px;margin-top:8px;}
+    .field-row{display:flex;align-items:center;gap:8px;font-size:0.85rem;flex-wrap:wrap;}
+    .fill-line{border-bottom:2px solid #d1d5db;min-height:24px;flex:1;min-width:60px;}
+    .work-block{border:2px dashed #d1d5db;border-radius:6px;min-height:60px;padding:10px;margin-bottom:8px;font-size:0.85rem;color:#9ca3af;}
+    .tf-card{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .tf-statement{font-size:0.95rem;font-weight:600;margin-bottom:10px;}
+    .tf-row{display:flex;align-items:center;gap:16px;margin-bottom:8px;}
+    .tf-btn-grp{display:flex;gap:8px;}
+    .tf-label{font-size:0.82rem;font-weight:700;color:#6b7280;}
+    .correction-line{border-bottom:2px solid #d1d5db;min-height:24px;width:100%;margin-top:4px;}
+    .short-answer{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .short-answer .q{font-weight:600;margin-bottom:10px;font-size:0.95rem;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#1e40af;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #answer-key{display:none;background:#eff6ff;border:2px solid #93c5fd;border-radius:12px;padding:28px 32px;}
+    #answer-key h2{color:#1e3a5f;border-left-color:#2563eb;margin-bottom:22px;}
+    .key-section{margin-bottom:24px;}
+    .key-section h3{font-size:1rem;font-weight:700;color:#1e3a5f;margin-bottom:12px;}
+    .key-item{background:white;border-radius:6px;padding:12px 16px;font-size:0.92rem;margin-bottom:10px;}
+    .key-item .kq{font-size:0.8rem;color:#6b7280;margin-bottom:4px;}
+    .key-item .kans{color:#1d4ed8;font-weight:700;font-family:'Space Mono',monospace;font-size:0.9rem;margin-bottom:4px;}
+    .key-item .kexpl{color:#374151;font-size:0.85rem;line-height:1.6;}
+    .short-ans-key{background:white;border-radius:6px;padding:12px 16px;font-size:0.92rem;margin-bottom:10px;}
+    .short-ans-key strong{color:#1d4ed8;}
+    .tf-key-row{display:flex;gap:12px;align-items:flex-start;background:white;border-radius:6px;padding:12px 16px;margin-bottom:10px;}
+    .tf-verdict{font-family:'Space Mono',monospace;font-weight:700;font-size:0.95rem;min-width:50px;}
+    .tf-verdict.true{color:#15803d;}
+    .tf-verdict.false{color:#ef4444;}
+    .tf-key-body{font-size:0.88rem;color:#374151;line-height:1.5;}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">Kinematics · Unit 2 · Take-Home Assignment</div>
+  <h1>Speed &amp; Velocity — Homework</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date Due: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+
+  <div class="ref-box">
+    <h3>Reference Formulas</h3>
+    <div class="ref-grid">
+      <div class="ref-item"><span class="sym">Speed = d/t</span> — uses distance, scalar (ms⁻¹)</div>
+      <div class="ref-item"><span class="sym">Velocity (V) = s/t</span> — uses displacement, vector (ms⁻¹)</div>
+      <div class="ref-item"><span class="sym">d</span> = total path length (always ≥ 0) &nbsp;|&nbsp; <span class="sym">s</span> = displacement (can be negative)</div>
+      <div class="ref-item"><span class="sym">ms⁻¹ = m/s</span> — unit is the same for both speed and velocity</div>
+    </div>
+  </div>
+  <div class="tip-note"><strong>Study tip:</strong> Always ask yourself — am I using distance or displacement? Is this a scalar or a vector? Show full working for every calculation.</div>
+
+  <!-- PART A: Full working calculations -->
+  <section>
+    <h2>Part A — Calculations (Show Full Working)</h2>
+    <p class="instructions">For each problem, write d and s first, then calculate speed and velocity. Show the formula, substitution, and answer with units.</p>
+
+    <!-- Problem 1 -->
+    <div class="problem-card">
+      <div class="problem-num">Problem 1</div>
+      <div class="scenario">A student walks 12m east in a straight line in 4 seconds. Calculate their speed and velocity.</div>
+      <div class="working-area">
+        <label>Working:</label>
+        <div class="work-block">Write your working here...</div>
+      </div>
+      <div class="field-set">
+        <div class="field-row">d = <div class="fill-line"></div> m &nbsp; s = <div class="fill-line"></div></div>
+        <div class="field-row">Speed = <div class="fill-line"></div> ms⁻¹</div>
+        <div class="field-row">Velocity = <div class="fill-line"></div></div>
+      </div>
+    </div>
+
+    <!-- Problem 2 -->
+    <div class="problem-card">
+      <div class="problem-num">Problem 2</div>
+      <div class="scenario">A ball rolls 18m to the right, then 6m back to the left, in 6 seconds. Calculate speed and velocity.</div>
+      <div class="working-area">
+        <label>Working:</label>
+        <div class="work-block">Write your working here...</div>
+      </div>
+      <div class="field-set">
+        <div class="field-row">d = <div class="fill-line"></div> m &nbsp; s = <div class="fill-line"></div></div>
+        <div class="field-row">Speed = <div class="fill-line"></div> ms⁻¹</div>
+        <div class="field-row">Velocity = <div class="fill-line"></div></div>
+      </div>
+    </div>
+
+    <!-- Problem 3 -->
+    <div class="problem-card">
+      <div class="problem-num">Problem 3</div>
+      <div class="scenario">A drone flies 5m north, then 5m east, then 5m south, then 5m west, completing a square back to its start. Total time = 20 seconds. Calculate speed and velocity.</div>
+      <div class="working-area">
+        <label>Working:</label>
+        <div class="work-block">Write your working here...</div>
+      </div>
+      <div class="field-set">
+        <div class="field-row">d = <div class="fill-line"></div> m &nbsp; s = <div class="fill-line"></div></div>
+        <div class="field-row">Speed = <div class="fill-line"></div> ms⁻¹</div>
+        <div class="field-row">Velocity = <div class="fill-line"></div></div>
+      </div>
+    </div>
+
+    <!-- Problem 4 -->
+    <div class="problem-card">
+      <div class="problem-num">Problem 4</div>
+      <div class="scenario">An object starts at position +14m and moves to position +2m in a straight line. Time taken = 4 seconds. (Right = positive direction.)</div>
+      <div class="working-area">
+        <label>Working:</label>
+        <div class="work-block">Write your working here...</div>
+      </div>
+      <div class="field-set">
+        <div class="field-row">d = <div class="fill-line"></div> m &nbsp; s = <div class="fill-line"></div></div>
+        <div class="field-row">Speed = <div class="fill-line"></div> ms⁻¹</div>
+        <div class="field-row">Velocity = <div class="fill-line"></div></div>
+      </div>
+    </div>
+
+    <!-- Problem 5 -->
+    <div class="problem-card">
+      <div class="problem-num">Problem 5</div>
+      <div class="scenario">A car moves at −9 ms⁻¹ for 3 seconds. Calculate the distance and displacement covered.</div>
+      <div class="working-area">
+        <label>Working (rearrange the formula):</label>
+        <div class="work-block">Write your working here...</div>
+      </div>
+      <div class="field-set">
+        <div class="field-row">Distance (d) = <div class="fill-line"></div> m</div>
+        <div class="field-row">Displacement (s) = <div class="fill-line"></div> m</div>
+      </div>
+    </div>
+
+    <!-- Problem 6 -->
+    <div class="problem-card">
+      <div class="problem-num">Problem 6</div>
+      <div class="scenario">Two objects start at the same point. Object A moves 6m right in 2s. Object B moves 6m right then 6m left in 4s. Compare their speeds and velocities at the end of their journeys.</div>
+      <div class="working-area">
+        <label>Working:</label>
+        <div class="work-block">Write your working here...</div>
+      </div>
+      <div class="field-set">
+        <div class="field-row">Object A: Speed = <div class="fill-line"></div> &nbsp; Velocity = <div class="fill-line"></div></div>
+        <div class="field-row">Object B: Speed = <div class="fill-line"></div> &nbsp; Velocity = <div class="fill-line"></div></div>
+        <div class="field-row">Comparison: <div class="fill-line"></div></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- PART B: True / False -->
+  <section>
+    <h2>Part B — True or False</h2>
+    <p class="instructions">Circle TRUE or FALSE. If the statement is FALSE, write a correction on the line below.</p>
+
+    <div class="tf-card">
+      <div class="problem-num">Statement 7</div>
+      <div class="tf-statement">"Speed and velocity always have the same numerical value."</div>
+      <div class="tf-row">
+        <div class="tf-btn-grp">
+          <span style="background:#dcfce7;border:2px solid #86efac;border-radius:6px;padding:4px 16px;font-weight:700;cursor:pointer;">TRUE</span>
+          <span style="background:#fee2e2;border:2px solid #fca5a5;border-radius:6px;padding:4px 16px;font-weight:700;cursor:pointer;">FALSE</span>
+        </div>
+      </div>
+      <div class="tf-label">Correction (if false):</div>
+      <div class="correction-line"></div>
+    </div>
+
+    <div class="tf-card">
+      <div class="problem-num">Statement 8</div>
+      <div class="tf-statement">"If an object returns to its starting position, its average velocity for that journey is 0 ms⁻¹."</div>
+      <div class="tf-row">
+        <div class="tf-btn-grp">
+          <span style="background:#dcfce7;border:2px solid #86efac;border-radius:6px;padding:4px 16px;font-weight:700;cursor:pointer;">TRUE</span>
+          <span style="background:#fee2e2;border:2px solid #fca5a5;border-radius:6px;padding:4px 16px;font-weight:700;cursor:pointer;">FALSE</span>
+        </div>
+      </div>
+      <div class="tf-label">Correction (if false):</div>
+      <div class="correction-line"></div>
+    </div>
+
+    <div class="tf-card">
+      <div class="problem-num">Statement 9</div>
+      <div class="tf-statement">"A velocity of −4 ms⁻¹ means the object is slowing down."</div>
+      <div class="tf-row">
+        <div class="tf-btn-grp">
+          <span style="background:#dcfce7;border:2px solid #86efac;border-radius:6px;padding:4px 16px;font-weight:700;cursor:pointer;">TRUE</span>
+          <span style="background:#fee2e2;border:2px solid #fca5a5;border-radius:6px;padding:4px 16px;font-weight:700;cursor:pointer;">FALSE</span>
+        </div>
+      </div>
+      <div class="tf-label">Correction (if false):</div>
+      <div class="correction-line"></div>
+    </div>
+
+    <div class="tf-card">
+      <div class="problem-num">Statement 10</div>
+      <div class="tf-statement">"Speed is a scalar because it only tells you how fast the object is moving, with no information about direction."</div>
+      <div class="tf-row">
+        <div class="tf-btn-grp">
+          <span style="background:#dcfce7;border:2px solid #86efac;border-radius:6px;padding:4px 16px;font-weight:700;cursor:pointer;">TRUE</span>
+          <span style="background:#fee2e2;border:2px solid #fca5a5;border-radius:6px;padding:4px 16px;font-weight:700;cursor:pointer;">FALSE</span>
+        </div>
+      </div>
+      <div class="tf-label">Correction (if false):</div>
+      <div class="correction-line"></div>
+    </div>
+
+  </section>
+
+  <!-- PART C: Challenge problems -->
+  <section>
+    <h2>Part C — Challenge Problems</h2>
+
+    <div class="short-answer">
+      <div class="q">11. An athlete runs a race in two stages. In Stage 1, they run 60m east in 10s. In Stage 2, they run 20m west in 5s. Calculate: (a) their speed for Stage 1, (b) their velocity for Stage 2, (c) their average speed for the whole journey, and (d) their average velocity for the whole journey.</div>
+      <div class="working-area" style="margin-top:12px;">
+        <label style="font-size:0.8rem;font-weight:700;color:#6b7280;">Working:</label>
+        <div class="work-block" style="min-height:80px;">Write your working here...</div>
+      </div>
+      <div class="field-set">
+        <div class="field-row">(a) Speed, Stage 1 = <div class="fill-line"></div> ms⁻¹</div>
+        <div class="field-row">(b) Velocity, Stage 2 = <div class="fill-line"></div> ms⁻¹</div>
+        <div class="field-row">(c) Average Speed = <div class="fill-line"></div> ms⁻¹</div>
+        <div class="field-row">(d) Average Velocity = <div class="fill-line"></div> ms⁻¹</div>
+      </div>
+    </div>
+
+    <div class="short-answer">
+      <div class="q">12. A physics student makes this claim: "An object can have a speed of 5 ms⁻¹ and a velocity of 0 ms⁻¹ at the same time." Is this statement possible? Explain your reasoning carefully, and give a specific example to support your answer. Use the formulas Speed = d/t and Velocity = s/t in your explanation.</div>
+      <div class="write-lines">
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+        <div class="write-line"></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ANSWER KEY -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="document.getElementById('answer-key').style.display='block';this.style.display='none';">Show Answer Key</button>
+  </div>
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A — Calculations</h3>
+
+      <div class="key-item">
+        <div class="kq">Problem 1 — 12m east, 4s</div>
+        <div class="kans">Speed = 3 ms⁻¹ &nbsp;|&nbsp; Velocity = 3 ms⁻¹ east</div>
+        <div class="kexpl">d = 12m, s = 12m east (straight line). Speed = 12/4 = 3 ms⁻¹. Velocity = 12/4 = 3 ms⁻¹ east. Since the path is straight and in one direction, speed = |velocity|.</div>
+      </div>
+
+      <div class="key-item">
+        <div class="kq">Problem 2 — 18m right then 6m left, 6s</div>
+        <div class="kans">Speed = 4 ms⁻¹ &nbsp;|&nbsp; Velocity = 2 ms⁻¹ right</div>
+        <div class="kexpl">d = 18+6 = 24m. s = 18−6 = 12m right. Speed = 24/6 = 4 ms⁻¹. Velocity = 12/6 = 2 ms⁻¹ right. Note: speed ≠ |velocity| because the path changed direction.</div>
+      </div>
+
+      <div class="key-item">
+        <div class="kq">Problem 3 — Square loop back to start, 20s</div>
+        <div class="kans">Speed = 1 ms⁻¹ &nbsp;|&nbsp; Velocity = 0 ms⁻¹</div>
+        <div class="kexpl">d = 5+5+5+5 = 20m. s = 0m (returns to start: N+S cancel, E+W cancel → displacement = 0). Speed = 20/20 = 1 ms⁻¹. Velocity = 0/20 = 0 ms⁻¹. Classic example of speed ≠ velocity.</div>
+      </div>
+
+      <div class="key-item">
+        <div class="kq">Problem 4 — +14m to +2m, 4s</div>
+        <div class="kans">Speed = 3 ms⁻¹ &nbsp;|&nbsp; Velocity = −3 ms⁻¹</div>
+        <div class="kexpl">d = |14−2| = 12m. s = 2−14 = −12m (moving leftward = negative). Speed = 12/4 = 3 ms⁻¹. Velocity = −12/4 = −3 ms⁻¹. Negative velocity confirms leftward motion.</div>
+      </div>
+
+      <div class="key-item">
+        <div class="kq">Problem 5 — velocity = −9 ms⁻¹ for 3s (rearranging)</div>
+        <div class="kans">Distance = 27m &nbsp;|&nbsp; Displacement = −27m</div>
+        <div class="kexpl">Rearranging V = s/t: s = V × t = −9 × 3 = −27m. Displacement = −27m (in the negative direction). Distance = |−27| = 27m (always positive). Speed = 27/3 = 9 ms⁻¹.</div>
+      </div>
+
+      <div class="key-item">
+        <div class="kq">Problem 6 — Object A vs Object B</div>
+        <div class="kans">A: 3 ms⁻¹, 3 ms⁻¹ right &nbsp;|&nbsp; B: 3 ms⁻¹, 0 ms⁻¹</div>
+        <div class="kexpl">Object A: d=6m, s=6m right, t=2s. Speed = 6/2 = 3 ms⁻¹. V = 6/2 = 3 ms⁻¹ right. Object B: d=12m (6+6), s=0m (returns to start), t=4s. Speed = 12/4 = 3 ms⁻¹. V = 0/4 = 0 ms⁻¹. Both have the same speed (3 ms⁻¹) but very different velocities!</div>
+      </div>
+
+    </div>
+
+    <div class="key-section">
+      <h3>Part B — True or False</h3>
+
+      <div class="tf-key-row">
+        <div class="tf-verdict false">FALSE</div>
+        <div class="tf-key-body"><strong>Statement 7.</strong> Speed and velocity do NOT always have the same numerical value. They are equal only when the path is a straight line in one direction. When the object changes direction, distance ≠ |displacement|, so speed ≠ |velocity|. Example: out-and-back journey — speed = 3 ms⁻¹, velocity = 0 ms⁻¹.</div>
+      </div>
+
+      <div class="tf-key-row">
+        <div class="tf-verdict true">TRUE</div>
+        <div class="tf-key-body"><strong>Statement 8.</strong> True. If the object returns to its starting position, displacement = x_f − x_i = 0. Therefore velocity = s/t = 0/t = 0 ms⁻¹. (Average speed for the same journey would be non-zero, since distance > 0.)</div>
+      </div>
+
+      <div class="tf-key-row">
+        <div class="tf-verdict false">FALSE</div>
+        <div class="tf-key-body"><strong>Statement 9.</strong> False. A velocity of −4 ms⁻¹ means the object is moving in the negative direction (e.g. leftward). It says nothing about whether the object is slowing down or speeding up. The magnitude of velocity (speed) is 4 ms⁻¹ — the object could be moving at constant speed in the negative direction.</div>
+      </div>
+
+      <div class="tf-key-row">
+        <div class="tf-verdict true">TRUE</div>
+        <div class="tf-key-body"><strong>Statement 10.</strong> True. Speed is a scalar because it only has magnitude (how fast) with no directional information. Velocity is a vector because it includes both magnitude (how fast) and direction (which way). Speed = |velocity| always.</div>
+      </div>
+
+    </div>
+
+    <div class="key-section">
+      <h3>Part C — Challenge Problems</h3>
+
+      <div class="key-item">
+        <div class="kq">Problem 11 — Two-stage athlete</div>
+        <div class="kans">(a) 6 ms⁻¹ &nbsp;(b) −4 ms⁻¹ &nbsp;(c) 5.33 ms⁻¹ &nbsp;(d) 2.67 ms⁻¹ east</div>
+        <div class="kexpl">
+          (a) Stage 1: Speed = 60/10 = 6 ms⁻¹ east.<br>
+          (b) Stage 2: s = −20m (westward = negative), t = 5s. V = −20/5 = −4 ms⁻¹ (i.e. 4 ms⁻¹ west).<br>
+          (c) Total distance = 60+20 = 80m. Total time = 10+5 = 15s. Average speed = 80/15 ≈ 5.33 ms⁻¹.<br>
+          (d) Total displacement = 60−20 = 40m east. Average velocity = 40/15 ≈ 2.67 ms⁻¹ east.
+        </div>
+      </div>
+
+      <div class="short-ans-key">
+        <strong>Problem 12.</strong> Yes, this IS possible — as an average over a complete journey. Consider an object that walks 10m right in 1s, then 10m left in 1s (returning to start). Total time = 2s. Distance = 20m, so Speed = 20/2 = 10 ms⁻¹. Displacement = 0m, so Velocity = 0/2 = 0 ms⁻¹. This shows speed = 10 ms⁻¹ while velocity = 0 ms⁻¹ simultaneously. The key: speed uses distance (path length, never zero here) while velocity uses displacement (zero when start = end). However, at any single instant where the object is moving, both |instantaneous velocity| and speed will be equal. The difference arises for averages over direction-changing journeys.
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Unit 14 – 2D Projectile Motion | Homework</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --blue:#3b82f6;--indigo:#6366f1;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+  --dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;
+  --card:#ffffff;--border:#e2e8f0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:radial-gradient(circle,#94a3b8 1px,transparent 1px);
+  background-size:28px 28px;opacity:.18;pointer-events:none;z-index:0;
+}
+
+/* PASSWORD GATE */
+#gate{position:fixed;inset:0;background:linear-gradient(135deg,#1e40af,#2563eb);
+  display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:1.5rem;}
+#gate h2{color:#fff;font-size:1.8rem;font-weight:800;}
+#gate p{color:#bfdbfe;font-size:1rem;}
+#gate input{padding:.75rem 1.25rem;border-radius:12px;border:none;font-size:1rem;
+  font-family:'Nunito',sans-serif;width:260px;text-align:center;outline:none;}
+#gate button{padding:.75rem 2rem;border-radius:12px;background:#f59e0b;color:#fff;
+  border:none;font-size:1rem;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;}
+#gate-error{color:#fca5a5;font-size:.9rem;display:none;}
+
+#main{display:none;position:relative;z-index:1;}
+
+/* HEADER */
+header{
+  background:linear-gradient(135deg,#1e40af 0%,#2563eb 100%);
+  padding:3rem 2rem 2.5rem;text-align:center;position:relative;overflow:hidden;
+}
+.stars{position:absolute;inset:0;pointer-events:none;}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 3s infinite alternate;}
+@keyframes twinkle{0%{opacity:.2;transform:scale(1);}100%{opacity:1;transform:scale(1.4);}}
+.chip{display:inline-block;background:rgba(255,255,255,.15);color:#bfdbfe;
+  border:1px solid rgba(255,255,255,.25);border-radius:999px;
+  padding:.3rem 1rem;font-size:.8rem;font-weight:700;font-family:'Space Mono',monospace;
+  letter-spacing:.05em;margin-bottom:1rem;}
+header h1{
+  font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;
+  background:linear-gradient(90deg,#fff 0%,#bfdbfe 50%,#a5f3fc 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:.5rem;
+}
+header p{color:#bfdbfe;font-size:1rem;font-weight:600;}
+
+/* LAYOUT */
+.container{max-width:1000px;margin:0 auto;padding:2.5rem 1.5rem;}
+section{margin-bottom:2.5rem;}
+section>h2{font-size:1.3rem;font-weight:800;color:var(--dark);margin-bottom:1rem;
+  display:flex;align-items:center;gap:.5rem;}
+section>h2::before{content:'';width:4px;height:1.2em;background:var(--blue);border-radius:2px;flex-shrink:0;}
+
+/* REFERENCE BOX */
+.ref-box{background:linear-gradient(135deg,#1e40af,#2563eb);border-radius:16px;
+  padding:1.5rem;margin-bottom:2rem;color:#fff;}
+.ref-box h3{color:#bfdbfe;font-size:1rem;font-weight:800;margin-bottom:.9rem;
+  font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.05em;}
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem;}
+.ref-item{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  border-radius:10px;padding:.7rem 1rem;text-align:center;}
+.ref-item .rf{font-family:'Space Mono',monospace;font-size:.95rem;font-weight:700;color:#a5f3fc;}
+.ref-item .rl{font-size:.78rem;color:#bfdbfe;margin-top:.2rem;}
+.ref-codes{margin-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
+.ref-code{background:rgba(255,255,255,.08);border-radius:8px;padding:.5rem .8rem;font-size:.82rem;color:#dbeafe;}
+.ref-code span{font-family:'Space Mono',monospace;color:#fde68a;font-weight:700;}
+.tip-banner{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);
+  border-radius:10px;padding:.8rem 1.1rem;margin-top:1rem;font-size:.88rem;color:#fef3c7;}
+.tip-banner strong{color:#fde68a;}
+
+/* PROBLEM CARDS */
+.prob-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:1.4rem;margin-bottom:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.prob-num{display:inline-block;background:var(--blue);color:#fff;border-radius:8px;
+  padding:.2rem .6rem;font-size:.8rem;font-weight:800;font-family:'Space Mono',monospace;margin-bottom:.6rem;}
+.prob-card>p,.prob-card p.q{font-size:.95rem;line-height:1.65;color:#334155;}
+.work-space{margin-top:.8rem;border-top:1px dashed var(--border);padding-top:.7rem;}
+.work-label{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.04em;margin-bottom:.4rem;}
+.lines{display:flex;flex-direction:column;gap:.5rem;}
+.line{height:1px;background:#e2e8f0;width:100%;}
+
+/* TABLE TEMPLATE */
+.table-template{margin:.6rem 0;overflow-x:auto;}
+table.blank{border-collapse:collapse;font-family:'Space Mono',monospace;font-size:.82rem;}
+table.blank th,table.blank td{border:1.5px solid #cbd5e1;padding:.4rem .8rem;text-align:center;}
+table.blank thead th{background:#1e3a5f;color:#fff;}
+table.blank td{min-width:70px;height:28px;background:#f8faff;}
+
+/* TRUE/FALSE */
+.tf-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:1.2rem;margin-bottom:1rem;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.tf-card p{font-size:.95rem;color:#334155;margin-bottom:.7rem;}
+.tf-row{display:flex;align-items:center;gap:1.5rem;margin-bottom:.5rem;}
+.tf-circle{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;
+  cursor:pointer;transition:background .15s;}
+.tf-circle.T{background:#dcfce7;border-color:var(--green);color:#166534;}
+.tf-circle.F{background:#fee2e2;border-color:var(--red);color:#991b1b;}
+.tf-blank-label{font-size:.78rem;color:var(--muted);text-transform:uppercase;font-weight:700;}
+.correction-line{height:1px;background:#e2e8f0;margin-top:.3rem;}
+
+/* CHALLENGE -->
+.challenge-card{background:linear-gradient(135deg,#fef2f2,#fee2e2);border:1px solid #fca5a5;
+  border-radius:14px;padding:1.4rem;margin-bottom:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.challenge-card h3{color:#991b1b;font-size:1rem;font-weight:800;margin-bottom:.5rem;}
+.challenge-card p{font-size:.95rem;color:#374151;margin-bottom:.6rem;}
+
+/* ANSWER KEY */
+#answer-key{display:none;background:linear-gradient(135deg,#fefce8,#fef9c3);
+  border:2px solid var(--amber);border-radius:16px;padding:1.5rem;margin-top:2rem;}
+#answer-key h3{color:#92400e;font-weight:800;margin-bottom:1.2rem;font-size:1.1rem;}
+.ak-section{margin-bottom:1.2rem;}
+.ak-section h4{font-weight:800;color:#78350f;font-size:.95rem;margin-bottom:.6rem;
+  border-bottom:1px solid #fde68a;padding-bottom:.3rem;}
+.ak-item{background:#fff;border-radius:8px;padding:.7rem 1rem;margin-bottom:.5rem;
+  border-left:3px solid var(--amber);font-size:.88rem;color:#374151;line-height:1.65;}
+.ak-item .anum{font-family:'Space Mono',monospace;font-weight:700;color:#92400e;margin-right:.4rem;}
+.ak-item .afinal{font-family:'Space Mono',monospace;font-weight:700;color:var(--green);font-size:.92rem;}
+.ak-item .tf-verdict{font-weight:800;font-size:.92rem;}
+.ak-item .tf-verdict.true{color:var(--green);}
+.ak-item .tf-verdict.false{color:var(--red);}
+#toggle-key-btn{background:var(--amber);color:#fff;border:none;border-radius:12px;
+  padding:.75rem 2rem;font-size:1rem;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;
+  display:block;margin:1.5rem auto 0;}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <h2>Physics Portal</h2>
+  <p>Enter the password to access this homework.</p>
+  <input id="pwd-input" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')checkPwd()"/>
+  <button onclick="checkPwd()">Unlock</button>
+  <span id="gate-error">Incorrect password. Try again.</span>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+<header>
+  <div class="stars" id="stars"></div>
+  <div class="chip">Kinematics · Unit 14</div>
+  <h1>2D Projectile Motion — Homework</h1>
+  <p>Show full working with X and Y tables for every calculation</p>
+</header>
+
+<div class="container">
+
+  <!-- REFERENCE BOX -->
+  <div class="ref-box">
+    <h3>Reference Sheet</h3>
+    <div class="ref-grid">
+      <div class="ref-item"><div class="rf">v = u + at</div><div class="rl">Velocity–time</div></div>
+      <div class="ref-item"><div class="rf">s = ut + ½at²</div><div class="rl">Displacement–time</div></div>
+      <div class="ref-item"><div class="rf">v² = u² + 2as</div><div class="rl">Velocity–displacement</div></div>
+      <div class="ref-item"><div class="rf">s = ½(u+v)t</div><div class="rl">Average velocity</div></div>
+      <div class="ref-item"><div class="rf">u<sub>x</sub> = u cos θ</div><div class="rl">Horizontal component</div></div>
+      <div class="ref-item"><div class="rf">u<sub>y</sub> = u sin θ</div><div class="rl">Vertical component</div></div>
+    </div>
+    <div class="ref-codes">
+      <div class="ref-code">Horizontal launch → <span>u<sub>y</sub> = 0</span></div>
+      <div class="ref-code">Highest point → <span>v<sub>y</sub> = 0</span></div>
+      <div class="ref-code">Range → <span>s<sub>x</sub></span></div>
+      <div class="ref-code">Same height landing → <span>s<sub>y</sub> = 0</span></div>
+    </div>
+    <div class="tip-banner"><strong>Tip:</strong> Always fill in both tables first, then choose which table gives you enough information to solve for time. Use Rule 3: transfer t between tables.</div>
+  </div>
+
+  <!-- PART A -->
+  <section>
+    <h2>Part A — Full Working Problems</h2>
+    <p style="font-size:.9rem;color:var(--muted);margin-bottom:1.2rem;">Draw and fill in both kinematic tables, show all equation working, and write a sentence answer for each.</p>
+
+    <!-- HW A1 -->
+    <div class="prob-card">
+      <span class="prob-num">A1</span>
+      <p class="q">A ball is kicked horizontally off a <strong>45 m</strong> high cliff at <strong>8 m/s</strong>. (a) How long does it take to hit the ground? (b) How far from the base of the cliff does it land?</p>
+      <div class="work-space">
+        <div class="work-label">Tables</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.7rem;">
+          <div>
+            <div style="font-size:.78rem;font-weight:800;color:#1d4ed8;margin-bottom:.3rem;">X-TABLE</div>
+            <div class="table-template">
+              <table class="blank"><thead><tr><th>s<sub>x</sub></th><th>u<sub>x</sub></th><th>v<sub>x</sub></th><th>a<sub>x</sub></th><th>t</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:.78rem;font-weight:800;color:#166534;margin-bottom:.3rem;">Y-TABLE</div>
+            <div class="table-template">
+              <table class="blank"><thead><tr><th>s<sub>y</sub></th><th>u<sub>y</sub></th><th>v<sub>y</sub></th><th>a<sub>y</sub></th><th>t</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+            </div>
+          </div>
+        </div>
+        <div class="work-label">Working</div>
+        <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+      </div>
+    </div>
+
+    <!-- HW A2 -->
+    <div class="prob-card">
+      <span class="prob-num">A2</span>
+      <p class="q">A ball is launched at <strong>18 m/s</strong> at <strong>35°</strong> above the horizontal from ground level. Calculate: (a) the time of flight, and (b) the range.</p>
+      <div class="work-space">
+        <div class="work-label">Tables</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.7rem;">
+          <div>
+            <div style="font-size:.78rem;font-weight:800;color:#1d4ed8;margin-bottom:.3rem;">X-TABLE</div>
+            <div class="table-template">
+              <table class="blank"><thead><tr><th>s<sub>x</sub></th><th>u<sub>x</sub></th><th>v<sub>x</sub></th><th>a<sub>x</sub></th><th>t</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:.78rem;font-weight:800;color:#166534;margin-bottom:.3rem;">Y-TABLE</div>
+            <div class="table-template">
+              <table class="blank"><thead><tr><th>s<sub>y</sub></th><th>u<sub>y</sub></th><th>v<sub>y</sub></th><th>a<sub>y</sub></th><th>t</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+            </div>
+          </div>
+        </div>
+        <div class="work-label">Working</div>
+        <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+      </div>
+    </div>
+
+    <!-- HW A3 -->
+    <div class="prob-card">
+      <span class="prob-num">A3</span>
+      <p class="q">A projectile is launched at <strong>25 m/s</strong> at <strong>50°</strong> above horizontal. What is the maximum height it reaches?</p>
+      <div class="work-space">
+        <div class="work-label">Tables</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.7rem;">
+          <div>
+            <div style="font-size:.78rem;font-weight:800;color:#1d4ed8;margin-bottom:.3rem;">X-TABLE</div>
+            <div class="table-template">
+              <table class="blank"><thead><tr><th>s<sub>x</sub></th><th>u<sub>x</sub></th><th>v<sub>x</sub></th><th>a<sub>x</sub></th><th>t</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:.78rem;font-weight:800;color:#166534;margin-bottom:.3rem;">Y-TABLE</div>
+            <div class="table-template">
+              <table class="blank"><thead><tr><th>s<sub>y</sub></th><th>u<sub>y</sub></th><th>v<sub>y</sub></th><th>a<sub>y</sub></th><th>t</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+            </div>
+          </div>
+        </div>
+        <div class="work-label">Working</div>
+        <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+      </div>
+    </div>
+
+    <!-- HW A4 -->
+    <div class="prob-card">
+      <span class="prob-num">A4</span>
+      <p class="q">A ball is thrown horizontally from a building at <strong>6 m/s</strong>. It lands <strong>18 m</strong> from the base. (a) How long was it in the air? (b) How tall is the building?</p>
+      <div class="work-space">
+        <div class="work-label">Tables</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.7rem;">
+          <div>
+            <div style="font-size:.78rem;font-weight:800;color:#1d4ed8;margin-bottom:.3rem;">X-TABLE</div>
+            <div class="table-template">
+              <table class="blank"><thead><tr><th>s<sub>x</sub></th><th>u<sub>x</sub></th><th>v<sub>x</sub></th><th>a<sub>x</sub></th><th>t</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:.78rem;font-weight:800;color:#166534;margin-bottom:.3rem;">Y-TABLE</div>
+            <div class="table-template">
+              <table class="blank"><thead><tr><th>s<sub>y</sub></th><th>u<sub>y</sub></th><th>v<sub>y</sub></th><th>a<sub>y</sub></th><th>t</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+            </div>
+          </div>
+        </div>
+        <div class="work-label">Working</div>
+        <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+      </div>
+    </div>
+
+    <!-- HW A5 -->
+    <div class="prob-card">
+      <span class="prob-num">A5</span>
+      <p class="q">A ball is launched at <strong>14 m/s</strong> at <strong>45°</strong> above horizontal. Find the total velocity (magnitude and direction) of the ball at <strong>t = 0.5 s</strong>.</p>
+      <div class="work-space">
+        <div class="work-label">Tables</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.7rem;">
+          <div>
+            <div style="font-size:.78rem;font-weight:800;color:#1d4ed8;margin-bottom:.3rem;">X-TABLE</div>
+            <div class="table-template">
+              <table class="blank"><thead><tr><th>s<sub>x</sub></th><th>u<sub>x</sub></th><th>v<sub>x</sub></th><th>a<sub>x</sub></th><th>t</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:.78rem;font-weight:800;color:#166534;margin-bottom:.3rem;">Y-TABLE</div>
+            <div class="table-template">
+              <table class="blank"><thead><tr><th>s<sub>y</sub></th><th>u<sub>y</sub></th><th>v<sub>y</sub></th><th>a<sub>y</sub></th><th>t</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+            </div>
+          </div>
+        </div>
+        <div class="work-label">Working</div>
+        <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+      </div>
+    </div>
+
+    <!-- HW A6 -->
+    <div class="prob-card">
+      <span class="prob-num">A6</span>
+      <p class="q">A ball is launched at <strong>20 m/s</strong> at <strong>30°</strong> above horizontal. It lands on a ledge that is <strong>4 m above</strong> the launch point. How far horizontally does it travel to reach the ledge?</p>
+      <div class="work-space">
+        <div class="work-label">Tables</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.7rem;">
+          <div>
+            <div style="font-size:.78rem;font-weight:800;color:#1d4ed8;margin-bottom:.3rem;">X-TABLE</div>
+            <div class="table-template">
+              <table class="blank"><thead><tr><th>s<sub>x</sub></th><th>u<sub>x</sub></th><th>v<sub>x</sub></th><th>a<sub>x</sub></th><th>t</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:.78rem;font-weight:800;color:#166534;margin-bottom:.3rem;">Y-TABLE</div>
+            <div class="table-template">
+              <table class="blank"><thead><tr><th>s<sub>y</sub></th><th>u<sub>y</sub></th><th>v<sub>y</sub></th><th>a<sub>y</sub></th><th>t</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+            </div>
+          </div>
+        </div>
+        <div class="work-label">Working</div>
+        <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- PART B: TRUE / FALSE -->
+  <section>
+    <h2>Part B — True or False</h2>
+    <p style="font-size:.9rem;color:var(--muted);margin-bottom:1rem;">Circle T or F, then if the statement is false, write a corrected version in the space provided.</p>
+
+    <!-- B1 -->
+    <div class="tf-card">
+      <p><strong>B1.</strong> The acceleration of a projectile changes direction at the highest point of its trajectory — it points upward on the way up and downward on the way down.</p>
+      <div class="tf-row">
+        <div class="tf-circle T">T</div>
+        <div class="tf-circle F">F</div>
+        <span class="tf-blank-label">Circle one</span>
+      </div>
+      <div class="tf-blank-label" style="margin-top:.5rem;">If false, write the correct statement:</div>
+      <div class="correction-line" style="margin-top:.4rem;"></div>
+      <div class="correction-line" style="margin-top:.5rem;"></div>
+      <div class="correction-line" style="margin-top:.5rem;"></div>
+    </div>
+
+    <!-- B2 -->
+    <div class="tf-card">
+      <p><strong>B2.</strong> When a ball is launched at an angle, you split the launch speed into u<sub>x</sub> = u sin θ and u<sub>y</sub> = u cos θ.</p>
+      <div class="tf-row">
+        <div class="tf-circle T">T</div>
+        <div class="tf-circle F">F</div>
+        <span class="tf-blank-label">Circle one</span>
+      </div>
+      <div class="tf-blank-label" style="margin-top:.5rem;">If false, write the correct statement:</div>
+      <div class="correction-line" style="margin-top:.4rem;"></div>
+      <div class="correction-line" style="margin-top:.5rem;"></div>
+      <div class="correction-line" style="margin-top:.5rem;"></div>
+    </div>
+
+    <!-- B3 -->
+    <div class="tf-card">
+      <p><strong>B3.</strong> If a ball is launched horizontally, its initial y-velocity is zero and the code word to remember this is "launched horizontally."</p>
+      <div class="tf-row">
+        <div class="tf-circle T">T</div>
+        <div class="tf-circle F">F</div>
+        <span class="tf-blank-label">Circle one</span>
+      </div>
+      <div class="tf-blank-label" style="margin-top:.5rem;">If false, write the correct statement:</div>
+      <div class="correction-line" style="margin-top:.4rem;"></div>
+      <div class="correction-line" style="margin-top:.5rem;"></div>
+    </div>
+
+    <!-- B4 -->
+    <div class="tf-card">
+      <p><strong>B4.</strong> Time is different in the X-table and the Y-table because the horizontal and vertical motions have different speeds, so they take different amounts of time.</p>
+      <div class="tf-row">
+        <div class="tf-circle T">T</div>
+        <div class="tf-circle F">F</div>
+        <span class="tf-blank-label">Circle one</span>
+      </div>
+      <div class="tf-blank-label" style="margin-top:.5rem;">If false, write the correct statement:</div>
+      <div class="correction-line" style="margin-top:.4rem;"></div>
+      <div class="correction-line" style="margin-top:.5rem;"></div>
+      <div class="correction-line" style="margin-top:.5rem;"></div>
+    </div>
+
+  </section>
+
+  <!-- PART C: CHALLENGE -->
+  <section>
+    <h2>Part C — Challenge Problems</h2>
+
+    <!-- C1 -->
+    <div class="challenge-card">
+      <h3>Challenge 1 — Multi-step Problem</h3>
+      <p>A ball is launched from the top of a <strong>20 m</strong> tall building at <strong>15 m/s</strong> at <strong>30° above</strong> the horizontal. Find: (a) the time it takes to hit the ground below, (b) how far from the base of the building it lands, and (c) its speed just before it hits the ground.</p>
+      <p style="font-size:.85rem;color:#7f1d1d;font-style:italic;">Hint: sy = −20 m (the ground is 20 m below the launch point, and positive is up).</p>
+      <div class="work-space">
+        <div class="work-label">Tables + Working</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.7rem;">
+          <div>
+            <div style="font-size:.78rem;font-weight:800;color:#1d4ed8;margin-bottom:.3rem;">X-TABLE</div>
+            <div class="table-template">
+              <table class="blank"><thead><tr><th>s<sub>x</sub></th><th>u<sub>x</sub></th><th>v<sub>x</sub></th><th>a<sub>x</sub></th><th>t</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:.78rem;font-weight:800;color:#166534;margin-bottom:.3rem;">Y-TABLE</div>
+            <div class="table-template">
+              <table class="blank"><thead><tr><th>s<sub>y</sub></th><th>u<sub>y</sub></th><th>v<sub>y</sub></th><th>a<sub>y</sub></th><th>t</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+            </div>
+          </div>
+        </div>
+        <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+      </div>
+    </div>
+
+    <!-- C2 -->
+    <div class="challenge-card">
+      <h3>Challenge 2 — Conceptual Extension</h3>
+      <p>Two balls are launched simultaneously from the same point. Ball A is launched horizontally at <strong>10 m/s</strong> from a height of <strong>20 m</strong>. Ball B is simply dropped (u = 0) from the same height.</p>
+      <p>(a) Which ball hits the ground first? Justify with a calculation for each.</p>
+      <p style="margin-top:.4rem;">(b) How far apart do they land from each other horizontally?</p>
+      <div class="work-space">
+        <div class="work-label">Working</div>
+        <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ANSWER KEY TOGGLE -->
+  <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+
+  <div id="answer-key">
+    <h3>Answer Key — Homework Unit 14</h3>
+
+    <div class="ak-section">
+      <h4>Part A — Full Working Problems</h4>
+
+      <div class="ak-item">
+        <span class="anum">A1.</span>
+        u<sub>x</sub>=8 m/s, u<sub>y</sub>=0 (horizontal launch), s<sub>y</sub>=45 m (+down), a<sub>y</sub>=9.8 m/s²<br/>
+        <strong>(a) Y-table, find t:</strong> s = ½at² → 45 = 4.9t² → t² = 9.184 → <span class="afinal">t = 3.03 s</span><br/>
+        <strong>(b) X-table:</strong> s<sub>x</sub> = u<sub>x</sub>×t = 8 × 3.03 = <span class="afinal">24.2 m</span> from the base of the cliff.
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">A2.</span>
+        u=18 m/s, θ=35°. u<sub>x</sub>=18cos35°=14.74 m/s, u<sub>y</sub>=18sin35°=10.32 m/s, a<sub>y</sub>=−9.8 m/s², s<sub>y</sub>=0 (lands at same height)<br/>
+        <strong>(a) Y-table, find t:</strong> 0 = 10.32t − 4.9t² → t = 10.32/4.9 = <span class="afinal">2.106 s</span><br/>
+        <strong>(b) X-table:</strong> s<sub>x</sub> = 14.74 × 2.106 = <span class="afinal">31.0 m</span>
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">A3.</span>
+        u=25 m/s, θ=50°. u<sub>y</sub>=25sin50°=19.15 m/s, v<sub>y</sub>=0 at max height, a<sub>y</sub>=−9.8 m/s²<br/>
+        v² = u² + 2as → 0 = 19.15² − 2×9.8×s<sub>y</sub><br/>
+        s<sub>y</sub> = 366.7/(2×9.8) = 366.7/19.6 = <span class="afinal">18.7 m</span>
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">A4.</span>
+        u<sub>x</sub>=6 m/s, u<sub>y</sub>=0, s<sub>x</sub>=18 m<br/>
+        <strong>(a) X-table, find t:</strong> s<sub>x</sub> = u<sub>x</sub>×t → 18 = 6t → <span class="afinal">t = 3.0 s</span><br/>
+        <strong>(b) Y-table:</strong> s<sub>y</sub> = ½×9.8×t² = 4.9×9 = <span class="afinal">44.1 m</span> (height of building)
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">A5.</span>
+        u=14 m/s, θ=45°. u<sub>x</sub>=14cos45°=9.90 m/s, u<sub>y</sub>=14sin45°=9.90 m/s, a<sub>y</sub>=−9.8 m/s², t=0.5 s<br/>
+        v<sub>x</sub> = 9.90 + 0 = 9.90 m/s<br/>
+        v<sub>y</sub> = 9.90 + (−9.8)×0.5 = 9.90 − 4.90 = 5.00 m/s (upward)<br/>
+        v = √(9.90² + 5.00²) = √(98.01 + 25) = √123.01 = <span class="afinal">11.09 m/s</span><br/>
+        Direction: θ = arctan(5.00/9.90) ≈ 26.8° above horizontal.
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">A6.</span>
+        u=20 m/s, θ=30°. u<sub>x</sub>=20cos30°=17.32 m/s, u<sub>y</sub>=20sin30°=10 m/s, a<sub>y</sub>=−9.8 m/s², s<sub>y</sub>=+4 m<br/>
+        <strong>Y-table (find t):</strong> s = u<sub>y</sub>t + ½a<sub>y</sub>t²<br/>
+        4 = 10t − 4.9t² → 4.9t² − 10t + 4 = 0<br/>
+        t = [10 ± √(100 − 4×4.9×4)] / (2×4.9) = [10 ± √(100 − 78.4)] / 9.8 = [10 ± √21.6] / 9.8<br/>
+        t = (10 ± 4.648)/9.8 → t = 1.495 s or t = 0.546 s<br/>
+        Use t = 1.495 s (ball is on the way down onto the ledge, taking the later time)<br/>
+        <strong>X-table:</strong> s<sub>x</sub> = 17.32 × 1.495 = <span class="afinal">25.9 m</span>
+      </div>
+    </div>
+
+    <div class="ak-section">
+      <h4>Part B — True or False</h4>
+
+      <div class="ak-item">
+        <span class="anum">B1.</span>
+        <span class="tf-verdict false">FALSE.</span> The acceleration of a projectile is <strong>always 9.8 m/s² straight downward</strong> at every point — including at the highest point. It never changes direction. Only the velocity changes direction at the apex.
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">B2.</span>
+        <span class="tf-verdict false">FALSE.</span> The formulas are reversed. The correct decomposition is: u<sub>x</sub> = u <strong>cos</strong> θ (horizontal) and u<sub>y</sub> = u <strong>sin</strong> θ (vertical). Cosine gives the adjacent side (horizontal); sine gives the opposite side (vertical).
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">B3.</span>
+        <span class="tf-verdict true">TRUE.</span> "Launched horizontally" is indeed a code word meaning u<sub>y</sub> = 0 m/s. There is no initial vertical velocity when the launch direction is purely horizontal.
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">B4.</span>
+        <span class="tf-verdict false">FALSE.</span> Time is the <strong>same</strong> in both the X-table and Y-table — it is the only variable shared between the two tables. The x and y motions happen simultaneously; the same amount of time elapses for both. This is the fundamental linking variable (Rule 3).
+      </div>
+    </div>
+
+    <div class="ak-section">
+      <h4>Part C — Challenge Problems</h4>
+
+      <div class="ak-item">
+        <span class="anum">C1.</span>
+        u=15 m/s, θ=30°. u<sub>x</sub>=15cos30°=12.99 m/s, u<sub>y</sub>=15sin30°=7.5 m/s<br/>
+        Convention: up = +. Launch at top of building, ground is 20 m below → s<sub>y</sub> = −20 m, a<sub>y</sub>=−9.8 m/s²<br/>
+        <strong>(a) Y-table (find t):</strong> −20 = 7.5t − 4.9t²<br/>
+        4.9t² − 7.5t − 20 = 0<br/>
+        t = [7.5 ± √(56.25 + 4×4.9×20)] / 9.8 = [7.5 ± √(56.25 + 392)] / 9.8 = [7.5 ± √448.25] / 9.8<br/>
+        t = (7.5 + 21.17) / 9.8 = 28.67/9.8 = <span class="afinal">2.93 s</span> (take positive root)<br/>
+        <strong>(b) X-table:</strong> s<sub>x</sub> = 12.99 × 2.93 = <span class="afinal">38.1 m</span> from the base of the building.<br/>
+        <strong>(c) Speed just before impact:</strong><br/>
+        v<sub>x</sub> = 12.99 m/s (unchanged)<br/>
+        v<sub>y</sub> = 7.5 + (−9.8)×2.93 = 7.5 − 28.71 = −21.21 m/s (downward)<br/>
+        v = √(12.99² + 21.21²) = √(168.7 + 449.9) = √618.6 = <span class="afinal">24.9 m/s</span>
+      </div>
+
+      <div class="ak-item">
+        <span class="anum">C2.</span>
+        Both balls fall from 20 m with u<sub>y</sub>=0 (Ball A has horizontal speed but vertical initial velocity is still zero).<br/>
+        <strong>Ball A:</strong> s<sub>y</sub>=20 m, a<sub>y</sub>=9.8 m/s², u<sub>y</sub>=0 → t = √(2×20/9.8) = √4.082 = 2.02 s<br/>
+        <strong>Ball B:</strong> s<sub>y</sub>=20 m, a<sub>y</sub>=9.8 m/s², u<sub>y</sub>=0 → t = √(2×20/9.8) = 2.02 s<br/>
+        <strong>(a)</strong> They hit the ground at <span class="afinal">exactly the same time (2.02 s)</span>. The horizontal velocity of Ball A does not affect its vertical fall time — this demonstrates the independence of x and y motion.<br/>
+        <strong>(b)</strong> Ball B lands directly below (0 m horizontal). Ball A lands at s<sub>x</sub> = 10×2.02 = 20.2 m away.<br/>
+        They are <span class="afinal">20.2 m apart</span> horizontally.
+      </div>
+    </div>
+  </div>
+
+</div><!-- container -->
+</div><!-- main -->
+
+<script>
+// PASSWORD GATE
+(function(){
+  var KEY='physics_portal_auth';
+  var HASH=btoa('physics2024');
+  if(localStorage.getItem(KEY)===HASH){unlock();}
+})();
+function checkPwd(){
+  var v=document.getElementById('pwd-input').value;
+  if(btoa(v)===btoa('physics2024')){
+    localStorage.setItem('physics_portal_auth',btoa('physics2024'));
+    unlock();
+  } else {
+    document.getElementById('gate-error').style.display='block';
+    document.getElementById('pwd-input').value='';
+  }
+}
+function unlock(){
+  document.getElementById('gate').style.display='none';
+  document.getElementById('main').style.display='block';
+  buildStars();
+}
+function buildStars(){
+  var c=document.getElementById('stars');
+  if(!c)return;
+  for(var i=0;i<45;i++){
+    var s=document.createElement('div');
+    s.className='star';
+    var sz=(Math.random()*2.5+1).toFixed(1);
+    s.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;animation-delay:'+Math.random()*3+'s;animation-duration:'+(2+Math.random()*3)+'s;';
+    c.appendChild(s);
+  }
+}
+function toggleKey(){
+  var k=document.getElementById('answer-key');
+  var b=document.getElementById('toggle-key-btn');
+  if(k.style.display==='none'||k.style.display===''){
+    k.style.display='block';b.textContent='Hide Answer Key';
+  } else {
+    k.style.display='none';b.textContent='Show Answer Key';
+  }
+}
+</script>
+</body>
+</html>

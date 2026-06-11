@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recording the Angle of a Vector — Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root{
+      --emerald:#059669;--emerald-dark:#064e3b;
+      --dark:#0f172a;--bg:#f0fdf4;--muted:#94a3b8;
+      --amber:#f59e0b;--red:#ef4444;--blue:#3b82f6;--purple:#a855f7;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:16px;line-height:1.7;background-image:radial-gradient(circle,#a7f3d0 1px,transparent 1px);background-size:28px 28px;}
+
+    /* LOCK */
+    #lockScreen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#064e3b 0%,#065f46 50%,#059669 100%);}
+    .lock-box{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.25);border-radius:24px;padding:48px 40px;text-align:center;max-width:380px;width:90%;backdrop-filter:blur(10px);}
+    .lock-icon{font-size:3.2rem;margin-bottom:16px;}
+    .lock-box h2{color:white;font-size:1.6rem;font-weight:900;margin-bottom:8px;}
+    .lock-box p{color:rgba(255,255,255,0.7);font-size:0.95rem;margin-bottom:28px;}
+    .lock-input{width:100%;padding:14px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.12);color:white;font-size:1.1rem;font-family:inherit;outline:none;text-align:center;letter-spacing:4px;}
+    .lock-input::placeholder{letter-spacing:1px;color:rgba(255,255,255,0.4);}
+    .lock-btn{margin-top:16px;width:100%;padding:14px;border-radius:12px;border:none;background:white;color:#065f46;font-size:1rem;font-weight:800;cursor:pointer;transition:transform 0.15s;font-family:inherit;}
+    .lock-btn:hover{transform:translateY(-2px);}
+    .lock-error{color:#fca5a5;font-size:0.88rem;margin-top:10px;min-height:20px;}
+
+    /* HEADER */
+    header{background:linear-gradient(135deg,#064e3b 0%,#065f46 50%,#059669 100%);color:white;padding:44px 60px 40px;text-align:center;position:relative;overflow:hidden;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 40%,rgba(110,231,183,0.22) 0%,transparent 60%);pointer-events:none;}
+    .chip{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;position:relative;}
+    header h1{font-size:2.4rem;font-weight:900;position:relative;margin-bottom:8px;background:linear-gradient(90deg,#a7f3d0,#6ee7b7,#d1fae5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header p{color:rgba(255,255,255,0.75);font-size:0.95rem;position:relative;}
+    .hw-meta{display:flex;justify-content:center;gap:20px;margin-top:18px;flex-wrap:wrap;}
+    .hw-meta-item{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:8px 16px;font-size:0.82rem;color:rgba(255,255,255,0.85);font-weight:700;position:relative;}
+
+    main{max-width:880px;margin:40px auto;padding:0 24px 80px;}
+
+    /* REMINDER BOX */
+    .reminder-box{background:white;border-radius:16px;padding:20px 24px;box-shadow:0 4px 18px rgba(5,150,105,0.1);border:2px solid #a7f3d0;margin-bottom:30px;}
+    .reminder-box h3{font-size:0.9rem;font-weight:900;color:#065f46;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;}
+    .reminder-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    @media(max-width:580px){.reminder-grid{grid-template-columns:1fr;}}
+    .rem-item{background:#f0fdf4;border-radius:10px;padding:10px 14px;font-size:0.85rem;color:#374151;border-left:3px solid #059669;}
+    .rem-item strong{color:#065f46;}
+
+    /* SECTION HEADS */
+    .sect-head{display:flex;align-items:center;gap:12px;margin:36px 0 18px;}
+    .sh-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+    .shi-green{background:linear-gradient(135deg,#059669,#065f46);}
+    .shi-amber{background:linear-gradient(135deg,#f59e0b,#d97706);}
+    .shi-blue{background:linear-gradient(135deg,#3b82f6,#6366f1);}
+    .shi-red{background:linear-gradient(135deg,#ef4444,#dc2626);}
+    .shi-purple{background:linear-gradient(135deg,#a855f7,#7c3aed);}
+    .sect-head h2{font-size:1.35rem;font-weight:900;color:var(--dark);}
+
+    /* QUESTION CARDS */
+    .q-card{background:white;border-radius:16px;padding:20px 24px;box-shadow:0 3px 14px rgba(0,0,0,0.07);margin-bottom:18px;border-left:4px solid transparent;}
+    .qc-g{border-left-color:#059669;}.qc-a{border-left-color:#f59e0b;}.qc-b{border-left-color:#3b82f6;}.qc-p{border-left-color:#a855f7;}.qc-r{border-left-color:#ef4444;}
+    .q-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;}
+    .q-badge{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.88rem;color:white;flex-shrink:0;}
+    .qb-g{background:linear-gradient(135deg,#059669,#065f46);}
+    .qb-a{background:linear-gradient(135deg,#f59e0b,#d97706);}
+    .qb-b{background:linear-gradient(135deg,#3b82f6,#6366f1);}
+    .qb-p{background:linear-gradient(135deg,#a855f7,#7c3aed);}
+    .qb-r{background:linear-gradient(135deg,#ef4444,#dc2626);}
+    .q-title{font-size:0.97rem;color:#1e293b;font-weight:700;padding-top:3px;}
+    .q-sub{font-size:0.84rem;color:#64748b;margin-top:3px;}
+    .ans-input{width:100%;border:2px solid #e2e8f0;border-radius:10px;padding:10px 14px;font-size:0.95rem;font-family:inherit;color:var(--dark);outline:none;transition:border-color 0.2s;background:#fafafa;margin-top:6px;}
+    .ans-input:focus{border-color:#059669;background:white;}
+    .ans-input.correct{border-color:#059669;background:#d1fae5;color:#065f46;}
+    .ans-input.wrong{border-color:#ef4444;background:#fef2f2;color:#991b1b;}
+    .chk-btn{margin-top:9px;padding:9px 20px;border-radius:9px;border:none;background:#059669;color:white;font-weight:800;font-size:0.85rem;cursor:pointer;font-family:inherit;transition:all 0.15s;}
+    .chk-btn:hover{background:#065f46;transform:translateY(-1px);}
+    .fb{display:none;margin-top:8px;padding:8px 14px;border-radius:8px;font-size:0.87rem;font-weight:700;}
+    .fb-ok{background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;}
+    .fb-no{background:#fef2f2;color:#991b1b;border:1px solid #fca5a5;}
+
+    /* SVG SIDE-BY-SIDE */
+    .q-svg-row{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;}
+    @media(max-width:580px){.q-svg-row{grid-template-columns:1fr;}}
+    .q-svg-row svg{width:140px;height:140px;flex-shrink:0;}
+
+    /* MULTI-CHOICE */
+    .opts{display:flex;flex-direction:column;gap:7px;margin-top:10px;}
+    .opt{padding:10px 16px;border-radius:10px;border:2px solid #e2e8f0;background:white;text-align:left;cursor:pointer;font-size:0.9rem;font-weight:600;font-family:inherit;color:#334155;transition:all 0.15s;width:100%;}
+    .opt:hover:not(:disabled){border-color:#059669;background:#f0fdf4;}
+    .opt.correct{border-color:#059669;background:#d1fae5;color:#065f46;font-weight:800;}
+    .opt.wrong{border-color:#ef4444;background:#fef2f2;color:#991b1b;}
+    .opt:disabled{cursor:default;}
+
+    /* TWO-PART ANSWERS */
+    .two-input{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;}
+    @media(max-width:480px){.two-input{grid-template-columns:1fr;}}
+    .two-input label{font-size:0.82rem;font-weight:700;color:#64748b;display:block;margin-bottom:4px;}
+
+    /* SHOW ANSWER TOGGLE */
+    .reveal-btn{padding:9px 20px;border-radius:9px;border:none;background:#e0f2fe;color:#0369a1;font-weight:800;font-size:0.85rem;cursor:pointer;font-family:inherit;margin-top:10px;transition:all 0.15s;}
+    .reveal-btn:hover{background:#bae6fd;}
+    .reveal-ans{display:none;margin-top:10px;padding:12px 16px;background:#f0fdf4;border-radius:10px;border:1px solid #a7f3d0;font-size:0.9rem;color:#065f46;font-weight:700;}
+    .reveal-ans svg{display:block;margin:10px auto;width:140px;height:140px;}
+
+    /* SCENARIO CARD */
+    .scenario-bg{background:linear-gradient(135deg,#1e293b,#0f172a);border-radius:16px;padding:24px 26px;color:white;margin-bottom:18px;}
+    .scenario-bg .sc-label{font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#6ee7b7;margin-bottom:10px;}
+    .scenario-bg p{color:rgba(255,255,255,0.82);font-size:0.93rem;line-height:1.65;}
+    .scenario-bg .sc-key{font-family:'Space Mono',monospace;color:#a7f3d0;font-weight:700;}
+
+    /* ANSWER KEY SECTION */
+    .ak-section{background:linear-gradient(135deg,#064e3b,#065f46);border-radius:20px;padding:28px 32px;margin-top:40px;color:white;}
+    .ak-section h2{font-size:1.15rem;font-weight:900;margin-bottom:6px;color:#a7f3d0;}
+    .ak-toggle{padding:10px 24px;border-radius:10px;border:none;background:rgba(255,255,255,0.15);color:white;font-weight:800;font-size:0.9rem;cursor:pointer;font-family:inherit;border:1px solid rgba(255,255,255,0.25);transition:all 0.15s;margin-top:10px;}
+    .ak-toggle:hover{background:rgba(255,255,255,0.25);}
+    .ak-body{display:none;margin-top:20px;}
+    .ak-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    @media(max-width:580px){.ak-grid{grid-template-columns:1fr;}}
+    .ak-item{background:rgba(255,255,255,0.08);border-radius:12px;padding:12px 16px;}
+    .ak-item .ak-q{font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;color:#6ee7b7;margin-bottom:4px;}
+    .ak-item .ak-a{font-family:'Space Mono',monospace;font-size:0.92rem;color:white;font-weight:700;}
+    .ak-item .ak-note{font-size:0.8rem;color:rgba(255,255,255,0.6);margin-top:4px;}
+
+    /* SCORE */
+    .score-banner{background:linear-gradient(135deg,#064e3b,#059669);border-radius:20px;padding:28px 32px;text-align:center;margin-top:24px;display:none;color:white;}
+    .score-banner .big{font-size:3.5rem;font-weight:900;}
+    .score-banner .lbl{opacity:0.8;margin-top:4px;}
+    .score-banner .msg{margin-top:12px;opacity:0.85;}
+
+    footer{text-align:center;padding:28px 24px;color:#94a3b8;font-size:0.82rem;}
+  </style>
+</head>
+<body>
+
+<!-- LOCK SCREEN -->
+<div id="lockScreen">
+  <div class="lock-box">
+    <div class="lock-icon">🔒</div>
+    <h2>IB Physics</h2>
+    <p>Enter the password to access homework</p>
+    <input type="password" class="lock-input" id="pwInput" placeholder="Enter password" autocomplete="off">
+    <button class="lock-btn" onclick="checkPassword()">Unlock</button>
+    <div class="lock-error" id="lockError"></div>
+  </div>
+</div>
+
+<header>
+  <div class="chip">IB Physics · Unit 19 · Homework</div>
+  <h1>Recording the Angle of a Vector</h1>
+  <p>Independent practice — to be completed at home</p>
+  <div class="hw-meta">
+    <div class="hw-meta-item">12 Questions</div>
+    <div class="hw-meta-item">4 Sections</div>
+    <div class="hw-meta-item">Answer key included</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- REMINDER -->
+  <div class="reminder-box">
+    <h3>Key Reminders Before You Start</h3>
+    <div class="reminder-grid">
+      <div class="rem-item"><strong>"_ of East/West"</strong> → angle from horizontal (standard form)</div>
+      <div class="rem-item"><strong>"_ of North/South"</strong> → angle from vertical (rare form)</div>
+      <div class="rem-item"><strong>Equivalent angles</strong> always add up to <strong>90°</strong></div>
+      <div class="rem-item"><strong>Arc position</strong> shows you which axis is the reference</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SECTION 1 — LABEL THE DIAGRAM
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="sect-head">
+    <div class="sh-icon shi-green">🏷️</div>
+    <h2>Section 1 — Label the Vector</h2>
+  </div>
+  <p style="color:#475569;font-size:0.92rem;margin-bottom:18px;">Write the correct notation for each vector shown. Pay attention to where the angle arc is drawn.</p>
+
+  <!-- 1a -->
+  <div class="q-card qc-g">
+    <div class="q-svg-row">
+      <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="70" cy="70" r="61" fill="#f0fdf4" stroke="#a7f3d0" stroke-width="1.5"/>
+        <line x1="70" y1="10" x2="70" y2="130" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <line x1="10" y1="70" x2="130" y2="70" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <text x="70" y="7" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#374151">N</text>
+        <text x="70" y="140" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#374151">S</text>
+        <text x="134" y="74" font-family="Nunito" font-weight="800" font-size="11" fill="#374151">E</text>
+        <text x="6" y="74" text-anchor="end" font-family="Nunito" font-weight="800" font-size="11" fill="#374151">W</text>
+        <!-- 65° North of East: dx=cos65*55=23.2, dy=-sin65*55=-49.8 -->
+        <line x1="70" y1="70" x2="93.2" y2="20.2" stroke="#059669" stroke-width="2.5" stroke-linecap="round"/>
+        <polygon points="93.2,20.2 83,24 89,33" fill="#059669"/>
+        <!-- arc near East (horizontal) -->
+        <path d="M 120 70 A 50 50 0 0 0 97 28" fill="none" stroke="#f59e0b" stroke-width="2"/>
+        <text x="113" y="50" font-family="Nunito" font-weight="700" font-size="10" fill="#d97706">65°</text>
+      </svg>
+      <div>
+        <div class="q-header" style="margin-bottom:6px;">
+          <div class="q-badge qb-g">1a</div>
+          <div>
+            <div class="q-title">Label this vector.</div>
+            <div class="q-sub">NE quadrant; arc near horizontal axis.</div>
+          </div>
+        </div>
+        <input type="text" class="ans-input" id="h1a" placeholder="?° ___ of ___">
+        <button class="chk-btn" onclick="chk('h1a','fb1a','65° north of east','65° North of East')">Check</button>
+        <div class="fb" id="fb1a"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1b -->
+  <div class="q-card qc-b">
+    <div class="q-svg-row">
+      <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="70" cy="70" r="61" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+        <line x1="70" y1="10" x2="70" y2="130" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <line x1="10" y1="70" x2="130" y2="70" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <text x="70" y="7" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#374151">N</text>
+        <text x="70" y="140" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#374151">S</text>
+        <text x="134" y="74" font-family="Nunito" font-weight="800" font-size="11" fill="#374151">E</text>
+        <text x="6" y="74" text-anchor="end" font-family="Nunito" font-weight="800" font-size="11" fill="#374151">W</text>
+        <!-- 15° South of West: dx=-cos15*55=-53.1, dy=sin15*55=14.2 -->
+        <line x1="70" y1="70" x2="16.9" y2="84.2" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+        <polygon points="16.9,84.2 28,79 25,90" fill="#3b82f6"/>
+        <!-- arc near West (horizontal left) -->
+        <path d="M 20 70 A 50 50 0 0 0 22 83" fill="none" stroke="#f59e0b" stroke-width="2"/>
+        <text x="8" y="80" font-family="Nunito" font-weight="700" font-size="10" fill="#d97706">15°</text>
+      </svg>
+      <div>
+        <div class="q-header" style="margin-bottom:6px;">
+          <div class="q-badge qb-b">1b</div>
+          <div>
+            <div class="q-title">Label this vector.</div>
+            <div class="q-sub">SW quadrant; arc near horizontal axis.</div>
+          </div>
+        </div>
+        <input type="text" class="ans-input" id="h1b" placeholder="?° ___ of ___">
+        <button class="chk-btn" onclick="chk('h1b','fb1b','15° south of west','15° South of West')">Check</button>
+        <div class="fb" id="fb1b"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1c -->
+  <div class="q-card qc-a">
+    <div class="q-svg-row">
+      <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="70" cy="70" r="61" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5"/>
+        <line x1="70" y1="10" x2="70" y2="130" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <line x1="10" y1="70" x2="130" y2="70" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <text x="70" y="7" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#374151">N</text>
+        <text x="70" y="140" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#374151">S</text>
+        <text x="134" y="74" font-family="Nunito" font-weight="800" font-size="11" fill="#374151">E</text>
+        <text x="6" y="74" text-anchor="end" font-family="Nunito" font-weight="800" font-size="11" fill="#374151">W</text>
+        <!-- 50° South of East: dx=cos50*55=35.4, dy=sin50*55=42.1 -->
+        <line x1="70" y1="70" x2="105.4" y2="112.1" stroke="#d97706" stroke-width="2.5" stroke-linecap="round"/>
+        <polygon points="105.4,112.1 96,104 105,102" fill="#d97706"/>
+        <!-- arc near East (horizontal right) -->
+        <path d="M 120 70 A 50 50 0 0 1 100 108" fill="none" stroke="#059669" stroke-width="2"/>
+        <text x="114" y="93" font-family="Nunito" font-weight="700" font-size="10" fill="#065f46">50°</text>
+      </svg>
+      <div>
+        <div class="q-header" style="margin-bottom:6px;">
+          <div class="q-badge qb-a">1c</div>
+          <div>
+            <div class="q-title">Label this vector.</div>
+            <div class="q-sub">SE quadrant; arc near horizontal axis.</div>
+          </div>
+        </div>
+        <input type="text" class="ans-input" id="h1c" placeholder="?° ___ of ___">
+        <button class="chk-btn" onclick="chk('h1c','fb1c','50° south of east','50° South of East')">Check</button>
+        <div class="fb" id="fb1c"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SECTION 2 — EQUIVALENT FORMS
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="sect-head">
+    <div class="sh-icon shi-amber">🔄</div>
+    <h2>Section 2 — Find the Equivalent Form</h2>
+  </div>
+  <p style="color:#475569;font-size:0.92rem;margin-bottom:18px;">Write the alternative notation for each vector. Show the angle calculation where required.</p>
+
+  <!-- 2a -->
+  <div class="q-card qc-g">
+    <div class="q-header">
+      <div class="q-badge qb-g">2a</div>
+      <div>
+        <div class="q-title">Convert: <span style="font-family:'Space Mono',monospace;">80° North of East</span></div>
+        <div class="q-sub">Write the equivalent form using vertical axis as reference. Show your calculation.</div>
+      </div>
+    </div>
+    <div class="two-input">
+      <div>
+        <label>Calculation (90° − ?):</label>
+        <input type="text" class="ans-input" id="h2a-calc" placeholder="90° − 80° = ?°">
+      </div>
+      <div>
+        <label>Equivalent notation:</label>
+        <input type="text" class="ans-input" id="h2a-ans" placeholder="?° ___ of ___">
+      </div>
+    </div>
+    <button class="chk-btn" onclick="chk2('h2a-calc','h2a-ans','fb2a','10° = 10°','10° east of north','Calculation: 90°−80°=10°','10° East of North')">Check</button>
+    <div class="fb" id="fb2a"></div>
+  </div>
+
+  <!-- 2b -->
+  <div class="q-card qc-b">
+    <div class="q-header">
+      <div class="q-badge qb-b">2b</div>
+      <div>
+        <div class="q-title">Convert: <span style="font-family:'Space Mono',monospace;">33° West of South</span></div>
+        <div class="q-sub">Write the equivalent form measuring from the horizontal axis.</div>
+      </div>
+    </div>
+    <div class="two-input">
+      <div>
+        <label>Calculation (90° − ?):</label>
+        <input type="text" class="ans-input" id="h2b-calc" placeholder="90° − 33° = ?°">
+      </div>
+      <div>
+        <label>Equivalent notation:</label>
+        <input type="text" class="ans-input" id="h2b-ans" placeholder="?° ___ of ___">
+      </div>
+    </div>
+    <button class="chk-btn" onclick="chk2('h2b-calc','h2b-ans','fb2b','57°','57° south of west','Calculation: 90°−33°=57°','57° South of West')">Check</button>
+    <div class="fb" id="fb2b"></div>
+  </div>
+
+  <!-- 2c -->
+  <div class="q-card qc-p">
+    <div class="q-header">
+      <div class="q-badge qb-p">2c</div>
+      <div>
+        <div class="q-title">A vector is labeled <span style="font-family:'Space Mono',monospace;">X° North of East</span>. Its equivalent form is <span style="font-family:'Space Mono',monospace;">55° East of North</span>. What is X?</div>
+        <div class="q-sub">Use the complementary angle relationship.</div>
+      </div>
+    </div>
+    <input type="text" class="ans-input" id="h2c" placeholder="X = ?°">
+    <button class="chk-btn" onclick="chk('h2c','fb2c','35','35° (since 35 + 55 = 90°)')">Check</button>
+    <div class="fb" id="fb2c"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SECTION 3 — MULTIPLE CHOICE
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="sect-head">
+    <div class="sh-icon shi-blue">🧩</div>
+    <h2>Section 3 — Multiple Choice</h2>
+  </div>
+
+  <!-- 3a -->
+  <div class="q-card qc-b">
+    <div class="q-header">
+      <div class="q-badge qb-b">3a</div>
+      <div class="q-title">Which statement about the two notations "60° North of West" and "30° West of North" is correct?</div>
+    </div>
+    <div class="opts">
+      <button class="opt" onclick="mc('3a','A','C','fb3a')">A. They describe different vectors because the angles are different.</button>
+      <button class="opt" onclick="mc('3a','B','C','fb3a')">B. They are the same notation written differently, but the angle changes.</button>
+      <button class="opt" onclick="mc('3a','C','C','fb3a')">C. They describe the same vector; 60° + 30° = 90°, confirming they are equivalent forms.</button>
+      <button class="opt" onclick="mc('3a','D','C','fb3a')">D. "60° North of West" uses the vertical axis; "30° West of North" uses the horizontal axis.</button>
+    </div>
+    <div class="fb" id="fb3a"></div>
+  </div>
+
+  <!-- 3b -->
+  <div class="q-card qc-a">
+    <div class="q-header">
+      <div class="q-badge qb-a">3b</div>
+      <div class="q-title">A ship's navigator describes a heading as "25° East of South". The angle arc would be drawn near which axis?</div>
+    </div>
+    <div class="opts">
+      <button class="opt" onclick="mc('3b','A','B','fb3b')">A. Near the North-South (vertical) axis</button>
+      <button class="opt" onclick="mc('3b','B','B','fb3b')">B. Near the East-West (horizontal) axis — this uses the vertical (South) as reference</button>
+      <button class="opt" onclick="mc('3b','C','B','fb3b')">C. Exactly on the diagonal — no clear axis</button>
+      <button class="opt" onclick="mc('3b','D','B','fb3b')">D. Near the East-West axis — East is the reference direction</button>
+    </div>
+    <div class="fb" id="fb3b"></div>
+  </div>
+
+  <!-- 3c -->
+  <div class="q-card qc-r">
+    <div class="q-header">
+      <div class="q-badge qb-r">3c</div>
+      <div class="q-title">In IB Physics, which set of forms is considered "standard" (most commonly used with arc near horizontal)?</div>
+    </div>
+    <div class="opts">
+      <button class="opt" onclick="mc('3c','A','A','fb3c')">A. North of East, North of West, South of East, South of West</button>
+      <button class="opt" onclick="mc('3c','B','A','fb3c')">B. East of North, East of South, West of North, West of South</button>
+      <button class="opt" onclick="mc('3c','C','A','fb3c')">C. Both sets are used equally often</button>
+      <button class="opt" onclick="mc('3c','D','A','fb3c')">D. Only North of East and South of West</button>
+    </div>
+    <div class="fb" id="fb3c"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SECTION 4 — APPLIED / SCENARIO
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="sect-head">
+    <div class="sh-icon shi-purple">🌍</div>
+    <h2>Section 4 — Applied Problems</h2>
+  </div>
+
+  <div class="scenario-bg">
+    <div class="sc-label">Context</div>
+    <p>A drone operator records the direction of each flight in their logbook using compass notation. Use this context for questions 4a–4c.</p>
+  </div>
+
+  <!-- 4a -->
+  <div class="q-card qc-g">
+    <div class="q-header">
+      <div class="q-badge qb-g">4a</div>
+      <div>
+        <div class="q-title">Flight 1 is logged as <span style="font-family:'Space Mono',monospace;color:#065f46;">"42° North of West"</span>. Write the equivalent "_ of North/South" form.</div>
+        <div class="q-sub">Which axis is the reference in the original notation?</div>
+      </div>
+    </div>
+    <div class="two-input">
+      <div>
+        <label>Reference axis in original:</label>
+        <input type="text" class="ans-input" id="h4a-ref" placeholder="horizontal / vertical?">
+      </div>
+      <div>
+        <label>Equivalent form:</label>
+        <input type="text" class="ans-input" id="h4a-ans" placeholder="?° ___ of ___">
+      </div>
+    </div>
+    <button class="chk-btn" onclick="chk2('h4a-ref','h4a-ans','fb4a','horizontal','48° west of north','Reference: horizontal (West). Equivalent: 90°−42°=48°','48° West of North')">Check</button>
+    <div class="fb" id="fb4a"></div>
+  </div>
+
+  <!-- 4b -->
+  <div class="q-card qc-a">
+    <div class="q-header">
+      <div class="q-badge qb-a">4b</div>
+      <div>
+        <div class="q-title">Flight 2 is logged as <span style="font-family:'Space Mono',monospace;color:#d97706;">"67° East of South"</span>. A student says this is the same as "23° South of East". Are they correct?</div>
+        <div class="q-sub">Explain using the complementary angle rule.</div>
+      </div>
+    </div>
+    <div class="opts">
+      <button class="opt" onclick="mc('4b','A','A','fb4b')">A. Yes — 67° + 23° = 90°, so these are valid equivalent forms of the same vector.</button>
+      <button class="opt" onclick="mc('4b','B','A','fb4b')">B. No — "East of South" is standard, "South of East" is rare, so they cannot be equivalent.</button>
+      <button class="opt" onclick="mc('4b','C','A','fb4b')">C. No — the angles must be equal for two notations to describe the same vector.</button>
+      <button class="opt" onclick="mc('4b','D','A','fb4b')">D. Yes, but only because both are in the SE quadrant.</button>
+    </div>
+    <div class="fb" id="fb4b"></div>
+  </div>
+
+  <!-- 4c — draw & reveal -->
+  <div class="q-card qc-p">
+    <div class="q-header">
+      <div class="q-badge qb-p">4c</div>
+      <div>
+        <div class="q-title">Sketch the vector <span style="font-family:'Space Mono',monospace;color:#7e22ce;">"30° South of East"</span> on the compass below, then reveal the answer.</div>
+        <div class="q-sub">Place your arrow tip in the correct quadrant with the arc near the horizontal axis.</div>
+      </div>
+    </div>
+    <div style="background:#f8fffe;border:2px dashed #a7f3d0;border-radius:12px;padding:16px;text-align:center;">
+      <canvas id="canHW" width="220" height="220" style="display:block;margin:0 auto;"></canvas>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap;">
+        <button style="padding:7px 16px;border-radius:8px;border:none;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:inherit;background:#fef2f2;color:#991b1b;border:1px solid #fca5a5;" onclick="clearHWCanvas()">Clear</button>
+        <button style="padding:7px 16px;border-radius:8px;border:none;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:inherit;background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;" onclick="toggleHWAns()">Show Answer</button>
+      </div>
+      <div class="reveal-ans" id="hwDrawAns">
+        <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="110" cy="110" r="96" fill="#fafafa" stroke="#e2e8f0" stroke-width="1.5"/>
+          <line x1="110" y1="16" x2="110" y2="204" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="5,3"/>
+          <line x1="16" y1="110" x2="204" y2="110" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="5,3"/>
+          <text x="110" y="12" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13" fill="#94a3b8">N</text>
+          <text x="110" y="218" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13" fill="#94a3b8">S</text>
+          <text x="208" y="114" font-family="Nunito" font-weight="800" font-size="13" fill="#94a3b8">E</text>
+          <text x="12" y="114" text-anchor="end" font-family="Nunito" font-weight="800" font-size="13" fill="#94a3b8">W</text>
+          <!-- 30° South of East: dx=cos30*85=73.6, dy=sin30*85=42.5 -->
+          <line x1="110" y1="110" x2="183.6" y2="152.5" stroke="#a855f7" stroke-width="3" stroke-linecap="round"/>
+          <polygon points="183.6,152.5 172,146 175,158" fill="#a855f7"/>
+          <!-- arc from East -->
+          <path d="M 190 110 A 80 80 0 0 1 179 148" fill="none" stroke="#f59e0b" stroke-width="2"/>
+          <text x="184" y="133" font-family="Nunito" font-weight="700" font-size="11" fill="#d97706">30°</text>
+          <circle cx="110" cy="110" r="4" fill="#a855f7"/>
+        </svg>
+        <p style="font-size:0.88rem;color:#065f46;font-weight:700;margin-top:6px;">30° South of East — arc near the horizontal (East) axis, vector in SE quadrant.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       FULL ANSWER KEY
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="ak-section">
+    <h2>Full Answer Key</h2>
+    <p style="color:rgba(255,255,255,0.65);font-size:0.88rem;">Try all questions before revealing answers!</p>
+    <button class="ak-toggle" onclick="toggleAK()">Show / Hide All Answers</button>
+    <div class="ak-body" id="akBody">
+      <div class="ak-grid">
+        <div class="ak-item">
+          <div class="ak-q">Q1a</div>
+          <div class="ak-a">65° North of East</div>
+          <div class="ak-note">NE quadrant, arc from horizontal</div>
+        </div>
+        <div class="ak-item">
+          <div class="ak-q">Q1b</div>
+          <div class="ak-a">15° South of West</div>
+          <div class="ak-note">SW quadrant, arc from horizontal</div>
+        </div>
+        <div class="ak-item">
+          <div class="ak-q">Q1c</div>
+          <div class="ak-a">50° South of East</div>
+          <div class="ak-note">SE quadrant, arc from horizontal</div>
+        </div>
+        <div class="ak-item">
+          <div class="ak-q">Q2a</div>
+          <div class="ak-a">10° East of North</div>
+          <div class="ak-note">90° − 80° = 10°; vertical reference</div>
+        </div>
+        <div class="ak-item">
+          <div class="ak-q">Q2b</div>
+          <div class="ak-a">57° South of West</div>
+          <div class="ak-note">90° − 33° = 57°; horizontal reference</div>
+        </div>
+        <div class="ak-item">
+          <div class="ak-q">Q2c</div>
+          <div class="ak-a">X = 35°</div>
+          <div class="ak-note">35° + 55° = 90° ✓</div>
+        </div>
+        <div class="ak-item">
+          <div class="ak-q">Q3a</div>
+          <div class="ak-a">C — same vector, equivalent forms</div>
+          <div class="ak-note">60° + 30° = 90°; both NW quadrant</div>
+        </div>
+        <div class="ak-item">
+          <div class="ak-q">Q3b</div>
+          <div class="ak-a">B — arc near vertical (South reference)</div>
+          <div class="ak-note">"East of South" → South is vertical ref</div>
+        </div>
+        <div class="ak-item">
+          <div class="ak-q">Q3c</div>
+          <div class="ak-a">A — N of E, N of W, S of E, S of W</div>
+          <div class="ak-note">Standard = horizontal axis as reference</div>
+        </div>
+        <div class="ak-item">
+          <div class="ak-q">Q4a</div>
+          <div class="ak-a">Reference: horizontal. Equiv: 48° West of North</div>
+          <div class="ak-note">90° − 42° = 48°</div>
+        </div>
+        <div class="ak-item">
+          <div class="ak-q">Q4b</div>
+          <div class="ak-a">A — Yes, 67° + 23° = 90° ✓</div>
+          <div class="ak-note">Both SE quadrant; one from vertical, one from horizontal</div>
+        </div>
+        <div class="ak-item">
+          <div class="ak-q">Q4c</div>
+          <div class="ak-a">Vector in SE quadrant, 30° below E</div>
+          <div class="ak-note">Arc near East axis; equivalent = 60° East of South</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCORE BANNER -->
+  <div class="score-banner" id="scoreBanner">
+    <div class="big" id="scoreNum"></div>
+    <div class="lbl">Questions answered correctly</div>
+    <div class="msg" id="scoreMsg"></div>
+  </div>
+
+</main>
+
+<footer>IB Physics · Unit 19 Homework — Recording the Angle of a Vector</footer>
+
+<script>
+  // Password
+  function checkPassword(){
+    const val=document.getElementById('pwInput').value;
+    if(val==='physics2024'){document.getElementById('lockScreen').style.display='none';}
+    else{document.getElementById('lockError').textContent='Incorrect password.';document.getElementById('pwInput').value='';document.getElementById('pwInput').focus();}
+  }
+  document.getElementById('pwInput').addEventListener('keydown',function(e){if(e.key==='Enter')checkPassword();});
+
+  // Scoring
+  let score=0,answered=0,total=9;
+  function addScore(){score++;answered++;updateBanner();}
+  function addAnswered(){answered++;updateBanner();}
+  function updateBanner(){
+    const b=document.getElementById('scoreBanner');
+    b.style.display='block';
+    document.getElementById('scoreNum').textContent=score+'/'+total;
+    const msgs=['Keep going — review the lesson!','Good start!','Getting there!','Solid work!','Almost there!','Excellent!','Outstanding!','Perfect score!','Perfect score!','Full marks!'];
+    document.getElementById('scoreMsg').textContent=msgs[Math.min(score,9)];
+  }
+
+  // Text check
+  function chk(inputId,fbId,correctLower,correctDisplay){
+    const inp=document.getElementById(inputId);
+    const fb=document.getElementById(fbId);
+    const val=inp.value.trim().toLowerCase().replace(/\s+/g,' ');
+    const match=val.includes(correctLower)||val===correctLower||val.replace('°','').includes(correctLower.replace('°',''));
+    if(match){
+      inp.className='ans-input correct';
+      fb.className='fb fb-ok';fb.textContent='Correct! '+correctDisplay;fb.style.display='block';
+      addScore();
+    } else {
+      inp.className='ans-input wrong';
+      fb.className='fb fb-no';fb.textContent='Not quite. The answer is: '+correctDisplay;fb.style.display='block';
+      addAnswered();
+    }
+  }
+
+  // Two-part check
+  function chk2(id1,id2,fbId,correct1Partial,correct2Lower,hint1,display2){
+    const inp2=document.getElementById(id2);
+    const fb=document.getElementById(fbId);
+    const val2=inp2.value.trim().toLowerCase().replace(/\s+/g,' ');
+    if(val2===correct2Lower||val2.includes(correct2Lower.split('°')[0])){
+      inp2.className='ans-input correct';
+      fb.className='fb fb-ok';fb.textContent='Correct! '+hint1+' → '+display2;fb.style.display='block';
+      addScore();
+    } else {
+      inp2.className='ans-input wrong';
+      fb.className='fb fb-no';fb.textContent='Not quite. '+hint1+' Answer: '+display2;fb.style.display='block';
+      addAnswered();
+    }
+  }
+
+  // MC
+  const mcFeedback={
+    '3a':{
+      C:'Correct! They are equivalent. "60° North of West" has horizontal (West) as reference; "30° West of North" has vertical (North) as reference. 60°+30°=90° ✓',
+      others:'Not quite. Option C is correct: these are equivalent forms — 60°+30°=90°, both pointing NW.'
+    },
+    '3b':{
+      B:'Correct! "East of South" has South (vertical) as reference. The arc is drawn near the vertical axis.',
+      others:'Not quite. "East of South" → South is the vertical reference. The convention arc appears near the vertical (South) axis.'
+    },
+    '3c':{
+      A:'Correct! Standard IB Physics form = arc near horizontal. These are the "North/South of East/West" forms.',
+      others:'Not quite. Standard forms in IB Physics are those with the arc near horizontal: North of East, North of West, South of East, South of West.'
+    },
+    '4b':{
+      A:'Correct! 67°+23°=90°, confirming these are equivalent forms of the same SE-quadrant vector.',
+      others:'Not quite. A is correct: 67°+23°=90° confirms equivalence. "East of South" is actually the rare (vertical-ref) form; "South of East" is the standard (horizontal-ref) form.'
+    }
+  };
+  function mc(qId,choice,correct,fbId){
+    const prefix='mc'+qId;
+    const opts=document.querySelectorAll('[onclick^="mc(\''+qId+'\'"]');
+    opts.forEach(o=>o.disabled=true);
+    const fb=document.getElementById(fbId);
+    fb.style.display='block';
+    // Mark buttons
+    opts.forEach(o=>{
+      const ch=o.getAttribute('onclick').split("'")[3];
+      if(ch===correct)o.classList.add('correct');
+      if(ch===choice&&choice!==correct)o.classList.add('wrong');
+    });
+    if(choice===correct){
+      fb.className='fb fb-ok';
+      fb.textContent=mcFeedback[qId][correct];
+      addScore();
+    } else {
+      fb.className='fb fb-no';
+      fb.textContent=mcFeedback[qId].others;
+      addAnswered();
+    }
+  }
+
+  // Drawing canvas
+  function setupHWCanvas(){
+    const canvas=document.getElementById('canHW');
+    const ctx=canvas.getContext('2d');
+    ctx.clearRect(0,0,220,220);
+    ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(110,110,96,0,2*Math.PI);ctx.stroke();
+    ctx.strokeStyle='#cbd5e1';ctx.setLineDash([5,3]);ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.moveTo(110,16);ctx.lineTo(110,204);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(16,110);ctx.lineTo(204,110);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#94a3b8';ctx.font='bold 13px Nunito,sans-serif';
+    ctx.textAlign='center';ctx.fillText('N',110,12);ctx.fillText('S',110,218);
+    ctx.textAlign='left';ctx.fillText('E',208,114);
+    ctx.textAlign='right';ctx.fillText('W',12,114);
+    ctx.fillStyle='#94a3b8';ctx.beginPath();ctx.arc(110,110,4,0,2*Math.PI);ctx.fill();
+    let drawing=false,lastX=0,lastY=0;
+    canvas.addEventListener('mousedown',e=>{drawing=true;const r=canvas.getBoundingClientRect();lastX=e.clientX-r.left;lastY=e.clientY-r.top;});
+    canvas.addEventListener('mousemove',e=>{if(!drawing)return;const r=canvas.getBoundingClientRect();const x=e.clientX-r.left,y=e.clientY-r.top;ctx.strokeStyle='#a855f7';ctx.lineWidth=2.5;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(x,y);ctx.stroke();lastX=x;lastY=y;});
+    canvas.addEventListener('mouseup',()=>{drawing=false;});
+    canvas.addEventListener('mouseleave',()=>{drawing=false;});
+    canvas.addEventListener('touchstart',e=>{e.preventDefault();drawing=true;const r=canvas.getBoundingClientRect();lastX=e.touches[0].clientX-r.left;lastY=e.touches[0].clientY-r.top;});
+    canvas.addEventListener('touchmove',e=>{e.preventDefault();if(!drawing)return;const r=canvas.getBoundingClientRect();const x=e.touches[0].clientX-r.left,y=e.touches[0].clientY-r.top;ctx.strokeStyle='#a855f7';ctx.lineWidth=2.5;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(x,y);ctx.stroke();lastX=x;lastY=y;});
+    canvas.addEventListener('touchend',()=>{drawing=false;});
+  }
+  function clearHWCanvas(){setupHWCanvas();}
+  function toggleHWAns(){
+    const el=document.getElementById('hwDrawAns');
+    el.style.display=el.style.display==='block'?'none':'block';
+  }
+  function toggleAK(){
+    const el=document.getElementById('akBody');
+    el.style.display=el.style.display==='block'?'none':'block';
+  }
+  window.addEventListener('load',setupHWCanvas);
+</script>
+</body>
+</html>

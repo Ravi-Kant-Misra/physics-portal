@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propagating Uncertainty: Adding &amp; Subtracting — Homework</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#fffbf0;background-image:radial-gradient(circle,#fde68a 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#92400e 0%,#b45309 60%,#d97706 100%);color:white;padding:32px 60px 28px;}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;}
+    header .meta{opacity:0.85;font-size:0.9rem;}
+    main{max-width:920px;margin:36px auto;padding:0 24px 60px;}
+    /* reference box */
+    .rules-box{background:white;border:2px solid #fde68a;border-radius:10px;padding:18px 22px;margin-bottom:36px;}
+    .rules-box h3{color:#78350f;font-size:1rem;margin-bottom:10px;font-weight:800;}
+    .rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    @media(max-width:600px){.rules-grid{grid-template-columns:1fr;}}
+    .rule-item{background:#fffbeb;border-radius:8px;padding:10px 14px;font-size:0.88rem;color:#374151;}
+    .rule-item strong{color:#78350f;}
+    .rule-item code{font-family:'Space Mono',monospace;background:#fef3c7;padding:1px 5px;border-radius:3px;font-size:0.83rem;color:#78350f;}
+    .tip{margin-top:10px;padding:10px 14px;background:#fffbeb;border-left:4px solid #d97706;border-radius:4px;font-size:0.88rem;color:#78350f;font-weight:600;}
+    /* sections */
+    section{margin-bottom:44px;}
+    h2{font-size:1.25rem;font-weight:700;color:#78350f;border-left:5px solid #d97706;padding-left:12px;margin-bottom:18px;}
+    .instructions{color:#4b5563;font-size:0.92rem;margin-bottom:18px;font-style:italic;}
+    /* problem cards */
+    .problem-card{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:16px;}
+    .problem-num{font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:6px;}
+    .problem-display{font-family:'Space Mono',monospace;font-size:1.35rem;font-weight:700;color:#1a1a2e;margin-bottom:14px;}
+    .work-space{margin-bottom:10px;}
+    .work-label{font-size:0.8rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+    .work-lines{display:flex;flex-direction:column;gap:12px;}
+    .work-line{border-bottom:2px solid #e5e7eb;min-height:26px;width:100%;}
+    .answer-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;}
+    .answer-label{font-size:0.88rem;font-weight:700;color:#78350f;}
+    .answer-line{border-bottom:2px solid #b45309;min-height:28px;width:200px;display:inline-block;}
+    /* harder card */
+    .harder-card{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:16px;border-left:4px solid #f59e0b;}
+    .harder-badge{display:inline-block;background:#fef3c7;color:#92400e;font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+    .step-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:0.88rem;color:#374151;}
+    .step-dot{width:20px;height:20px;border-radius:50%;background:#fef3c7;color:#92400e;font-weight:800;font-size:0.72rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+    .step-blank{border-bottom:1px solid #9ca3af;display:inline-block;min-width:80px;min-height:18px;vertical-align:bottom;}
+    /* Part C — T/F */
+    .tf-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    @media(max-width:600px){.tf-grid{grid-template-columns:1fr;}}
+    .tf-card{background:white;border-radius:8px;padding:16px 18px;box-shadow:0 1px 5px rgba(0,0,0,0.07);}
+    .tf-card .tf-q{font-size:0.9rem;color:#1a1a2e;margin-bottom:10px;font-weight:600;line-height:1.5;}
+    .tf-options{display:flex;gap:12px;}
+    .tf-lbl{display:flex;align-items:center;gap:6px;font-size:0.92rem;font-weight:700;cursor:pointer;}
+    .tf-lbl input{width:16px;height:16px;accent-color:#d97706;}
+    .tf-T{color:#15803d;}.tf-F{color:#dc2626;}
+    /* Part D — extended answer */
+    .short-answer{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .short-answer .q{font-weight:600;margin-bottom:10px;font-size:0.95rem;color:#1a1a2e;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+    /* bonus */
+    .bonus-card{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #fbbf24;border-radius:10px;padding:18px 22px;margin-bottom:14px;}
+    .bonus-card .bonus-badge{display:inline-block;background:#f59e0b;color:white;font-size:0.75rem;font-weight:800;text-transform:uppercase;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+    .bonus-card .q{font-weight:600;margin-bottom:10px;font-size:0.95rem;color:#78350f;}
+    /* answer key */
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#92400e;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #toggle-key-btn:hover{background:#78350f;}
+    #answer-key{display:none;background:#fffbeb;border:2px solid #fbbf24;border-radius:12px;padding:28px 32px;}
+    #answer-key h2{color:#78350f;border-left-color:#d97706;margin-bottom:22px;}
+    .key-section{margin-bottom:28px;}
+    .key-section h3{font-size:1rem;font-weight:700;color:#78350f;margin-bottom:12px;}
+    .key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    @media(max-width:500px){.key-grid{grid-template-columns:1fr;}}
+    .key-item{background:white;border-radius:6px;padding:12px 16px;font-size:0.9rem;border-left:3px solid #fbbf24;}
+    .key-item .knum{font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:4px;}
+    .key-item .kproblem{font-family:'Space Mono',monospace;font-size:0.85rem;color:#374151;margin-bottom:6px;}
+    .key-item .kans{font-family:'Space Mono',monospace;font-weight:700;color:#92400e;font-size:1rem;}
+    .key-item .kexpl{color:#4b5563;font-size:0.8rem;margin-top:4px;}
+    .tf-key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+    .tf-key-item{background:white;border-radius:6px;padding:10px 14px;font-size:0.88rem;border-left:3px solid #fbbf24;}
+    .tf-key-item .knum{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:3px;}
+    .tf-key-item .kans{font-weight:800;font-size:1rem;}
+    .tf-key-item .kans-T{color:#15803d;}.tf-key-item .kans-F{color:#dc2626;}
+    .tf-key-item .kexpl{font-size:0.8rem;color:#4b5563;margin-top:3px;}
+    .short-ans-key{background:white;border-radius:6px;padding:12px 16px;margin-bottom:10px;font-size:0.92rem;border-left:3px solid #f59e0b;}
+    .short-ans-key strong{color:#78350f;}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">❌ Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="label">Physics · High School · Homework Assignment</div>
+  <h1>Propagating Uncertainty: Addition &amp; Subtraction — Homework</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+
+  <!-- REFERENCE BOX -->
+  <div class="rules-box">
+    <h3>Reference — The Rule</h3>
+    <div class="rules-grid">
+      <div class="rule-item"><strong>For addition (y = a + b):</strong><br><code>Δy = Δa + Δb</code></div>
+      <div class="rule-item"><strong>For subtraction (y = a − b):</strong><br><code>Δy = Δa + Δb</code> (same — always add!)</div>
+      <div class="rule-item"><strong>Percent → Absolute:</strong><br><code>Δa_abs = (% / 100) × a</code></div>
+      <div class="rule-item"><strong>Fractional → Absolute:</strong><br><code>Δa_abs = frac × a</code></div>
+    </div>
+    <div class="tip">Key reminder: Uncertainties ALWAYS add, whether you are adding or subtracting the measured values. Round the final uncertainty to 1 sig fig, then match the measurement's decimal places.</div>
+  </div>
+
+  <!-- PART A: HARDER CALCULATION PROBLEMS -->
+  <section>
+    <h2>Part A — Harder Calculation Problems</h2>
+    <p class="instructions">These problems involve multiple steps including percent and fractional uncertainty conversions. Show all working clearly for full marks.</p>
+
+    <div class="harder-card">
+      <div class="harder-badge">Percent Conversion</div>
+      <div class="problem-num" style="margin-top:4px;">Problem 1</div>
+      <div class="problem-display">(35 ± 5% kg) + (15 ± 20% kg) = ?</div>
+      <div style="margin-top:10px;">
+        <div class="step-row"><div class="step-dot">1</div><div>5% of 35 kg = <span class="step-blank"></span></div></div>
+        <div class="step-row"><div class="step-dot">2</div><div>20% of 15 kg = <span class="step-blank"></span></div></div>
+        <div class="step-row"><div class="step-dot">3</div><div>Sum of values: <span class="step-blank"></span> kg</div></div>
+        <div class="step-row"><div class="step-dot">4</div><div>Sum of uncertainties: Δy = <span class="step-blank"></span> + <span class="step-blank"></span> = <span class="step-blank"></span> kg</div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Final Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="harder-card">
+      <div class="harder-badge">Percent Conversion</div>
+      <div class="problem-num" style="margin-top:4px;">Problem 2</div>
+      <div class="problem-display">(120 V ± 5%) − (80 V ± 15%) = ?</div>
+      <div style="margin-top:10px;">
+        <div class="step-row"><div class="step-dot">1</div><div>5% of 120 V = <span class="step-blank"></span></div></div>
+        <div class="step-row"><div class="step-dot">2</div><div>15% of 80 V = <span class="step-blank"></span></div></div>
+        <div class="step-row"><div class="step-dot">3</div><div>Difference of values: <span class="step-blank"></span> V</div></div>
+        <div class="step-row"><div class="step-dot">4</div><div>Sum of uncertainties: Δy = <span class="step-blank"></span> + <span class="step-blank"></span> = <span class="step-blank"></span> V</div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Final Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 3</div>
+      <div class="problem-display">(4.75 ± 0.12 s) + (2.38 ± 0.09 s) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working (round Δ to 1 sig fig, match d.p.):</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 4</div>
+      <div class="problem-display">(550 ± 25 N) − (320 ± 40 N) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working:</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="harder-card">
+      <div class="harder-badge">Three Measurements</div>
+      <div class="problem-num" style="margin-top:4px;">Problem 5</div>
+      <div class="problem-display">(8 ± 1 m) + (5 ± 2 m) + (3 ± 1 m) = ?</div>
+      <p style="font-size:0.88rem;color:#4b5563;margin-bottom:10px;margin-top:4px;"><em>Hint: the rule extends — add all uncertainties.</em></p>
+      <div class="work-space">
+        <div class="work-label">Working:</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="harder-card">
+      <div class="harder-badge">Fractional Uncertainty</div>
+      <div class="problem-num" style="margin-top:4px;">Problem 6</div>
+      <div class="problem-display">(2.4 T ± 0.25) − (1.0 ± 0.5 T) = ?</div>
+      <p style="font-size:0.88rem;color:#4b5563;margin-bottom:10px;margin-top:4px;"><em>Hint: "± 0.25" without a unit after "T" means fractional — convert to absolute first.</em></p>
+      <div class="step-row"><div class="step-dot">1</div><div>Convert fractional: 0.25 × 2.4 = <span class="step-blank"></span> T</div></div>
+      <div class="step-row"><div class="step-dot">2</div><div>Subtract values: <span class="step-blank"></span> T</div></div>
+      <div class="step-row"><div class="step-dot">3</div><div>Add uncertainties: <span class="step-blank"></span> + 0.5 = <span class="step-blank"></span> T</div></div>
+      <div class="answer-row" style="margin-top:10px;"><span class="answer-label">Final Answer:</span><span class="answer-line"></span></div>
+    </div>
+  </section>
+
+  <!-- PART B: TRUE / FALSE -->
+  <section>
+    <h2>Part B — True or False</h2>
+    <p class="instructions">Circle T for True or F for False. If false, briefly explain why on the line below the statement.</p>
+    <div class="tf-grid">
+      <div class="tf-card">
+        <div class="tf-q">Statement 7. When subtracting two measurements, you should subtract their uncertainties to get a smaller, more precise result.</div>
+        <div class="tf-options">
+          <label class="tf-lbl tf-T"><input type="radio" name="tf7" value="T"> T</label>
+          <label class="tf-lbl tf-F"><input type="radio" name="tf7" value="F"> F</label>
+        </div>
+        <div class="work-line" style="margin-top:8px;"></div>
+      </div>
+      <div class="tf-card">
+        <div class="tf-q">Statement 8. The rule Δy = Δa + Δb applies equally to addition and subtraction.</div>
+        <div class="tf-options">
+          <label class="tf-lbl tf-T"><input type="radio" name="tf8" value="T"> T</label>
+          <label class="tf-lbl tf-F"><input type="radio" name="tf8" value="F"> F</label>
+        </div>
+        <div class="work-line" style="margin-top:8px;"></div>
+      </div>
+      <div class="tf-card">
+        <div class="tf-q">Statement 9. A result of 3 ± 5 m is impossible — the uncertainty cannot be larger than the value.</div>
+        <div class="tf-options">
+          <label class="tf-lbl tf-T"><input type="radio" name="tf9" value="T"> T</label>
+          <label class="tf-lbl tf-F"><input type="radio" name="tf9" value="F"> F</label>
+        </div>
+        <div class="work-line" style="margin-top:8px;"></div>
+      </div>
+      <div class="tf-card">
+        <div class="tf-q">Statement 10. Before applying the addition/subtraction rule, all percent or fractional uncertainties must be converted to absolute uncertainties.</div>
+        <div class="tf-options">
+          <label class="tf-lbl tf-T"><input type="radio" name="tf10" value="T"> T</label>
+          <label class="tf-lbl tf-F"><input type="radio" name="tf10" value="F"> F</label>
+        </div>
+        <div class="work-line" style="margin-top:8px;"></div>
+      </div>
+      <div class="tf-card">
+        <div class="tf-q">Statement 11. Subtracting two measurements that are nearly equal is a good way to obtain a precise result with a small relative uncertainty.</div>
+        <div class="tf-options">
+          <label class="tf-lbl tf-T"><input type="radio" name="tf11" value="T"> T</label>
+          <label class="tf-lbl tf-F"><input type="radio" name="tf11" value="F"> F</label>
+        </div>
+        <div class="work-line" style="margin-top:8px;"></div>
+      </div>
+      <div class="tf-card">
+        <div class="tf-q">Statement 12. If you add three measurements each with uncertainty ±2 cm, the total uncertainty of the sum is ±6 cm.</div>
+        <div class="tf-options">
+          <label class="tf-lbl tf-T"><input type="radio" name="tf12" value="T"> T</label>
+          <label class="tf-lbl tf-F"><input type="radio" name="tf12" value="F"> F</label>
+        </div>
+        <div class="work-line" style="margin-top:8px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART C: EXTENDED ANALYSIS -->
+  <section>
+    <h2>Part C — Extended Analysis</h2>
+    <p class="instructions">These questions require you to interpret results and write full explanations.</p>
+
+    <div class="short-answer">
+      <div class="q">Question 13. A physicist measures the initial temperature of a liquid as <strong>(85.0 ± 1.5 °C)</strong> and the final temperature as <strong>(82.0 ± 1.5 °C)</strong>.
+        <br><br>(a) Calculate the temperature change ΔT and its uncertainty.<br>
+        (b) The physicist claims "the liquid cooled by 3.0°C." Is this a valid claim? Justify your answer using your result from (a).
+      </div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="short-answer">
+      <div class="q">Question 14. Two students each measure the length of the same rod using the same ruler (uncertainty ±0.1 cm).<br>
+        Student A records: <strong>12.3 cm</strong><br>
+        Student B records: <strong>12.6 cm</strong><br><br>
+        (a) Express each measurement with its uncertainty.<br>
+        (b) Calculate the difference between their measurements and its uncertainty.<br>
+        (c) Are the two measurements consistent with each other? Explain what "consistent" means in terms of uncertainty ranges.
+      </div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="short-answer">
+      <div class="q">Question 15. An athlete runs two laps. Lap 1 takes <strong>(62 ± 3 s)</strong> and Lap 2 takes <strong>(58 ± 3 s)</strong>.<br><br>
+        (a) Find the total time for both laps.<br>
+        (b) Find how much faster Lap 2 was than Lap 1.<br>
+        (c) The coach claims "Lap 2 was definitely faster." Can the data support this claim? Use your uncertainty to justify your answer.
+      </div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <!-- PART D: BONUS -->
+  <section>
+    <h2>Part D — Bonus Challenge</h2>
+    <div class="bonus-card">
+      <div class="bonus-badge">Bonus</div>
+      <div class="q">Question 16. A student measures a plank of wood in three sections:<br>
+        Section 1: (42 ± 2 cm), &nbsp; Section 2: (38 cm ± 5%), &nbsp; Section 3: (20 ± 1 cm)<br><br>
+        (a) Convert Section 2's percent uncertainty to absolute.<br>
+        (b) Find the total length of the plank and its uncertainty.<br>
+        (c) The student now cuts off Section 3. Find the remaining length and its uncertainty.<br>
+        (d) Express your answer from (c) as a percent uncertainty.
+      </div>
+      <div class="work-lines"><div class="work-line"></div><div class="work-line"></div><div class="work-line"></div><div class="work-line"></div><div class="work-line"></div></div>
+    </div>
+  </section>
+
+  <div class="key-btn-wrap"><button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key (Teacher Use)</button></div>
+
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A — Harder Calculations</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="knum">Problem 1</div>
+          <div class="kproblem">(35±5% kg) + (15±20% kg)</div>
+          <div class="kans">50 ± 5 kg</div>
+          <div class="kexpl">5% of 35=1.75; 20% of 15=3. Values: 35+15=50. Δy=1.75+3=4.75→5 kg (1 s.f.).</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 2</div>
+          <div class="kproblem">(120±5% V) − (80±15% V)</div>
+          <div class="kans">40 ± 18 V</div>
+          <div class="kexpl">5% of 120=6 V; 15% of 80=12 V. Values: 120−80=40 V. Δy=6+12=18 V.</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 3</div>
+          <div class="kproblem">(4.75±0.12 s) + (2.38±0.09 s)</div>
+          <div class="kans">7.13 ± 0.21 s → 7.1 ± 0.2 s</div>
+          <div class="kexpl">Values: 4.75+2.38=7.13 s. Δy=0.12+0.09=0.21→0.2 s (1 s.f.). Match to tenths: 7.1 ± 0.2 s.</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 4</div>
+          <div class="kproblem">(550±25 N) − (320±40 N)</div>
+          <div class="kans">230 ± 65 N → 230 ± 60 N</div>
+          <div class="kexpl">Values: 550−320=230 N. Δy=25+40=65→60 N (1 s.f.). Match: 230 ± 60 N.</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 5</div>
+          <div class="kproblem">(8±1) + (5±2) + (3±1) m</div>
+          <div class="kans">16 ± 4 m</div>
+          <div class="kexpl">Values: 8+5+3=16 m. Δy=1+2+1=4 m. The rule extends to any number of measurements.</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 6</div>
+          <div class="kproblem">(2.4±0.25 frac T) − (1.0±0.5 T)</div>
+          <div class="kans">1.4 ± 1.1 T</div>
+          <div class="kexpl">Frac: 0.25×2.4=0.6 T. Values: 2.4−1.0=1.4 T. Δy=0.6+0.5=1.1 T.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B — True or False</h3>
+      <div class="tf-key-grid">
+        <div class="tf-key-item">
+          <div class="knum">Statement 7</div>
+          <div class="kans tf-key-item kans-F">FALSE</div>
+          <div class="kexpl">You must ALWAYS add uncertainties. Subtracting them would underestimate the error range.</div>
+        </div>
+        <div class="tf-key-item">
+          <div class="knum">Statement 8</div>
+          <div class="kans tf-key-item kans-T">TRUE</div>
+          <div class="kexpl">Δy = Δa + Δb applies to both operations — the sign of the operation on the values does not affect how uncertainties combine.</div>
+        </div>
+        <div class="tf-key-item">
+          <div class="knum">Statement 9</div>
+          <div class="kans tf-key-item kans-F">FALSE</div>
+          <div class="kexpl">An uncertainty larger than the central value is perfectly valid — it simply means the measurement is very imprecise, and the true value could include zero or even be negative.</div>
+        </div>
+        <div class="tf-key-item">
+          <div class="knum">Statement 10</div>
+          <div class="kans tf-key-item kans-T">TRUE</div>
+          <div class="kexpl">The rule Δy = Δa + Δb only works with absolute uncertainties. Convert percent or fractional forms first.</div>
+        </div>
+        <div class="tf-key-item">
+          <div class="knum">Statement 11</div>
+          <div class="kans tf-key-item kans-F">FALSE</div>
+          <div class="kexpl">Subtracting nearly equal values is dangerous — the absolute uncertainty stays large while the result becomes tiny, causing the relative uncertainty to become enormous. This is called "loss of significance."</div>
+        </div>
+        <div class="tf-key-item">
+          <div class="knum">Statement 12</div>
+          <div class="kans tf-key-item kans-T">TRUE</div>
+          <div class="kexpl">Adding three measurements: Δy = 2 + 2 + 2 = 6 cm. The rule extends — add all individual uncertainties.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C — Extended Analysis</h3>
+      <div class="short-ans-key">
+        <strong>Question 13:</strong><br>
+        (a) ΔT = 85.0 − 82.0 = <strong>3.0°C</strong>. Uncertainty: 1.5 + 1.5 = <strong>3.0°C</strong>. So ΔT = <strong>3.0 ± 3.0°C</strong>.<br>
+        (b) The claim is <em>not valid</em>. The uncertainty equals the result — the temperature change could be anywhere from 0°C to 6.0°C. We cannot conclude the liquid cooled at all since zero is within the uncertainty range. The physicist would need a more precise thermometer.
+      </div>
+      <div class="short-ans-key">
+        <strong>Question 14:</strong><br>
+        (a) Student A: 12.3 ± 0.1 cm; Student B: 12.6 ± 0.1 cm.<br>
+        (b) Difference: 12.6 − 12.3 = 0.3 cm. Uncertainty: 0.1 + 0.1 = 0.2 cm. So difference = <strong>0.3 ± 0.2 cm</strong>.<br>
+        (c) The measurements <em>are consistent</em>. "Consistent" means the uncertainty ranges overlap: A's range is 12.2–12.4 cm; B's range is 12.5–12.7 cm. The ranges just barely touch (they share the boundary at 12.4–12.5). The difference of 0.3 cm could plausibly be due to measurement uncertainty alone — the students could be measuring the same length. Note: the difference (0.3 cm) is only marginally larger than the uncertainty (0.2 cm), so we cannot firmly say they measured different values.
+      </div>
+      <div class="short-ans-key">
+        <strong>Question 15:</strong><br>
+        (a) Total time: 62 + 58 = 120 s. Uncertainty: 3 + 3 = 6 s. Total = <strong>120 ± 6 s</strong>.<br>
+        (b) Difference: 62 − 58 = 4 s. Uncertainty: 3 + 3 = 6 s. Difference = <strong>4 ± 6 s</strong>.<br>
+        (c) The coach's claim is <em>not supported</em>. The uncertainty on the difference (±6 s) is larger than the difference itself (4 s). The true difference could be anywhere from −2 s to +10 s, which includes zero (no difference) and even negative values (Lap 1 faster!). We cannot conclude Lap 2 was definitively faster.
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part D — Bonus Challenge</h3>
+      <div class="short-ans-key">
+        <strong>Question 16:</strong><br>
+        (a) 5% of 38 = 1.9 cm, so Section 2 = <strong>38 ± 1.9 cm</strong> (≈ 38 ± 2 cm).<br>
+        (b) Total = 42 + 38 + 20 = <strong>100 cm</strong>. Uncertainty: 2 + 1.9 + 1 = 4.9 ≈ <strong>5 cm</strong>. Total = <strong>100 ± 5 cm</strong>.<br>
+        (c) After cutting Section 3 (20 ± 1 cm) from the total (100 ± 5 cm): Remaining = 100 − 20 = <strong>80 cm</strong>. Uncertainty: 5 + 1 = <strong>6 cm</strong>. Result = <strong>80 ± 6 cm</strong>.<br>
+        (d) Percent uncertainty = (6/80) × 100% = <strong>7.5%</strong>. So 80 ± 7.5% cm.
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+function toggleKey() {
+  var k = document.getElementById('answer-key');
+  var b = document.getElementById('toggle-key-btn');
+  if (k.style.display === 'none' || k.style.display === '') {
+    k.style.display = 'block';
+    b.textContent = 'Hide Answer Key';
+  } else {
+    k.style.display = 'none';
+    b.textContent = 'Show Answer Key (Teacher Use)';
+  }
+}
+</script>
+
+</body>
+</html>

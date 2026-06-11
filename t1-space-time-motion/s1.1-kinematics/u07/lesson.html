@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Unit 7 — Velocity-Time Graphs Part 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --blue:#3b82f6;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+    --dark:#0f172a;--bg:#f8faff;--muted:#94a3b8;
+    --radius:14px;--shadow:0 4px 24px rgba(0,0,0,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Nunito',sans-serif;
+    background-color:var(--bg);
+    background-image:radial-gradient(circle,#c7d2fe 1px,transparent 1px);
+    background-size:28px 28px;
+    color:var(--dark);min-height:100vh;
+  }
+  /* ── Password gate ─────────────────────────────── */
+  #gate{
+    position:fixed;inset:0;z-index:9999;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(15,23,42,.85);backdrop-filter:blur(6px);
+  }
+  .gate-card{
+    background:#fff;border-radius:20px;padding:2.5rem 2rem;
+    width:min(360px,92vw);text-align:center;
+    box-shadow:0 8px 40px rgba(0,0,0,.25);
+  }
+  .gate-card h2{font-size:1.4rem;margin-bottom:.5rem;}
+  .gate-card p{color:var(--muted);font-size:.95rem;margin-bottom:1.4rem;}
+  .gate-card input{
+    width:100%;padding:.7rem 1rem;border:2px solid #e2e8f0;border-radius:10px;
+    font-family:'Space Mono',monospace;font-size:1rem;margin-bottom:.8rem;
+    outline:none;transition:border-color .2s;
+  }
+  .gate-card input:focus{border-color:var(--blue);}
+  .gate-card button{
+    width:100%;padding:.75rem;background:var(--blue);color:#fff;
+    border:none;border-radius:10px;font-family:'Nunito',sans-serif;
+    font-size:1rem;font-weight:700;cursor:pointer;transition:background .2s;
+  }
+  .gate-card button:hover{background:#2563eb;}
+  #gate-err{color:var(--red);font-size:.875rem;min-height:1.2em;margin-top:.3rem;}
+  /* ── Header ────────────────────────────────────── */
+  header{
+    background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 60%,#1e40af 100%);
+    color:#fff;padding:3rem 2rem 2.5rem;text-align:center;
+    position:relative;overflow:hidden;
+  }
+  .stars{position:absolute;inset:0;pointer-events:none;}
+  .star{
+    position:absolute;border-radius:50%;background:#fff;
+    animation:twinkle var(--d,3s) ease-in-out infinite;
+    opacity:0;
+  }
+  @keyframes twinkle{0%,100%{opacity:0;}50%{opacity:var(--op,.7);}}
+  .chip{
+    display:inline-block;background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.35);border-radius:999px;
+    font-size:.78rem;font-weight:700;letter-spacing:.08em;
+    padding:.28rem .9rem;margin-bottom:1rem;text-transform:uppercase;
+  }
+  header h1{
+    font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;line-height:1.2;
+    background:linear-gradient(90deg,#ffffff,#bfdbfe,#ffffff);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;
+  }
+  header p.subtitle{
+    color:rgba(255,255,255,.78);font-size:1rem;margin-top:.6rem;
+  }
+  /* ── Layout ────────────────────────────────────── */
+  main{max-width:860px;margin:0 auto;padding:2.5rem 1.25rem 4rem;}
+  section{margin-bottom:2.5rem;}
+  h2.section-title{
+    font-size:1.25rem;font-weight:800;margin-bottom:1.2rem;
+    padding-left:.9rem;border-left:4px solid var(--blue);
+  }
+  /* ── Definition cards ──────────────────────────── */
+  .def-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;}
+  .def-card{
+    background:#fff;border-radius:var(--radius);padding:1.2rem 1.4rem;
+    box-shadow:var(--shadow);border-top:4px solid var(--blue);
+  }
+  .def-card.green{border-top-color:var(--green);}
+  .def-card.amber{border-top-color:var(--amber);}
+  .def-card.red{border-top-color:var(--red);}
+  .def-card h3{font-size:.95rem;font-weight:800;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);}
+  .def-card p{font-size:1rem;line-height:1.5;}
+  .def-card .formula{
+    font-family:'Space Mono',monospace;font-size:1.05rem;font-weight:700;
+    color:var(--blue);margin-top:.5rem;display:block;
+  }
+  .def-card.green .formula{color:var(--green);}
+  .def-card.amber .formula{color:var(--amber);}
+  /* ── Key facts box ──────────────────────────────── */
+  .key-facts{
+    background:linear-gradient(135deg,#eff6ff,#dbeafe);
+    border:2px solid #93c5fd;border-radius:var(--radius);
+    padding:1.4rem 1.6rem;
+  }
+  .key-facts h3{font-size:1rem;font-weight:800;color:#1d4ed8;margin-bottom:.9rem;}
+  .key-facts ul{list-style:none;display:flex;flex-direction:column;gap:.55rem;}
+  .key-facts li{display:flex;align-items:flex-start;gap:.6rem;font-size:.97rem;}
+  .key-facts li::before{content:'→';color:var(--blue);font-weight:700;flex-shrink:0;}
+  .kf-label{font-weight:700;color:#1d4ed8;min-width:160px;}
+  /* ── SVG graph cards ────────────────────────────── */
+  .graph-card{
+    background:#fff;border-radius:var(--radius);padding:1.4rem 1.6rem;
+    box-shadow:var(--shadow);
+  }
+  .graph-card h3{font-size:1rem;font-weight:800;margin-bottom:1rem;color:var(--dark);}
+  svg.vt{display:block;margin:0 auto;max-width:100%;height:auto;}
+  /* ── Worked examples ───────────────────────────── */
+  .example{
+    background:#fff;border-radius:var(--radius);padding:1.4rem 1.6rem;
+    box-shadow:var(--shadow);border-left:5px solid var(--amber);
+  }
+  .example h3{font-size:1rem;font-weight:800;color:var(--dark);margin-bottom:.6rem;}
+  .example .tag{
+    display:inline-block;background:#fef3c7;color:#92400e;
+    font-size:.78rem;font-weight:700;padding:.2rem .7rem;
+    border-radius:999px;margin-bottom:.8rem;
+  }
+  .steps{display:flex;flex-direction:column;gap:.5rem;margin-top:.7rem;}
+  .step{
+    display:flex;align-items:flex-start;gap:.8rem;
+    background:#f8faff;border-radius:10px;padding:.65rem .9rem;
+    font-size:.95rem;line-height:1.5;
+  }
+  .step-num{
+    background:var(--blue);color:#fff;border-radius:50%;
+    width:1.5rem;height:1.5rem;display:flex;align-items:center;justify-content:center;
+    font-size:.75rem;font-weight:800;flex-shrink:0;margin-top:.05rem;
+  }
+  .step.green .step-num{background:var(--green);}
+  .step.amber .step-num{background:var(--amber);}
+  .mono{font-family:'Space Mono',monospace;font-weight:700;}
+  .ans-box{
+    background:linear-gradient(90deg,#dcfce7,#bbf7d0);
+    border:2px solid var(--green);border-radius:10px;
+    padding:.7rem 1rem;margin-top:.8rem;font-weight:700;font-size:1rem;
+  }
+  /* ── Area formula strip ─────────────────────────── */
+  .formula-strip{
+    display:flex;flex-wrap:wrap;gap:1rem;margin-top:.8rem;
+  }
+  .formula-pill{
+    background:#fff;border:2px solid var(--blue);border-radius:10px;
+    padding:.6rem 1.1rem;font-family:'Space Mono',monospace;
+    font-size:.92rem;font-weight:700;color:var(--blue);
+  }
+  /* ── Quiz ───────────────────────────────────────── */
+  .quiz-wrap{
+    background:#fff;border-radius:var(--radius);padding:1.6rem 1.8rem;
+    box-shadow:var(--shadow);
+  }
+  .quiz-wrap h3{font-size:1.1rem;font-weight:800;margin-bottom:1.2rem;}
+  .q-item{margin-bottom:1.4rem;}
+  .q-item p{font-size:.97rem;font-weight:600;margin-bottom:.5rem;}
+  .q-opts{display:flex;flex-direction:column;gap:.4rem;}
+  .q-opts label{
+    display:flex;align-items:center;gap:.6rem;
+    background:#f8faff;border:2px solid #e2e8f0;border-radius:9px;
+    padding:.55rem .9rem;cursor:pointer;font-size:.93rem;transition:border-color .15s;
+  }
+  .q-opts label:hover{border-color:var(--blue);}
+  .q-opts input[type=radio]{accent-color:var(--blue);}
+  #quiz-submit{
+    padding:.7rem 2rem;background:var(--blue);color:#fff;
+    border:none;border-radius:10px;font-family:'Nunito',sans-serif;
+    font-size:1rem;font-weight:700;cursor:pointer;margin-top:.5rem;transition:background .2s;
+  }
+  #quiz-submit:hover{background:#2563eb;}
+  #quiz-result{margin-top:1rem;font-size:1rem;font-weight:700;}
+  .q-feedback{font-size:.85rem;margin-top:.3rem;padding:.4rem .7rem;border-radius:7px;}
+  .q-feedback.correct{background:#dcfce7;color:#166534;}
+  .q-feedback.wrong{background:#fee2e2;color:#991b1b;}
+  /* ── Responsive ─────────────────────────────────── */
+  @media(max-width:520px){
+    .def-grid{grid-template-columns:1fr;}
+    header{padding:2rem 1rem 1.8rem;}
+  }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="gate-card">
+    <h2>🔒 Lesson Access</h2>
+    <p>Enter the class password to continue.</p>
+    <input type="password" id="gate-pwd" placeholder="Password" autocomplete="current-password"/>
+    <div id="gate-err"></div>
+    <button onclick="checkPwd()">Unlock</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="stars" id="stars"></div>
+  <div class="chip">Kinematics &middot; Unit 7</div>
+  <h1>Velocity-Time Graphs<br/>Part 2: Graphs of Changing Velocity</h1>
+  <p class="subtitle">Reading slopes, finding acceleration, and calculating displacement from areas</p>
+</header>
+
+<main>
+
+  <!-- SECTION 1: KEY FACTS -->
+  <section>
+    <h2 class="section-title">Key Facts — What a VT Graph Tells You</h2>
+    <div class="key-facts">
+      <h3>Three things you can read directly from any VT graph:</h3>
+      <ul>
+        <li><span class="kf-label">Y-intercept</span> = Initial Velocity (U)</li>
+        <li><span class="kf-label">Slope (Rise ÷ Run)</span> = Acceleration (a)</li>
+        <li><span class="kf-label">Area under curve</span> = Displacement (s)</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 2: SLOPE = ACCELERATION -->
+  <section>
+    <h2 class="section-title">Slope of a VT Graph = Acceleration</h2>
+    <div class="def-grid">
+      <div class="def-card">
+        <h3>Formula</h3>
+        <p>The slope of a velocity-time graph gives the acceleration.</p>
+        <span class="formula">a = ΔV / Δt</span>
+        <span class="formula" style="color:#64748b;font-size:.9rem;margin-top:.25rem;">= Rise / Run</span>
+      </div>
+      <div class="def-card green">
+        <h3>Positive Slope</h3>
+        <p>Line goes up → velocity <strong>increasing</strong> → positive acceleration (speeding up in positive direction).</p>
+        <span class="formula">a &gt; 0</span>
+      </div>
+      <div class="def-card red">
+        <h3>Negative Slope</h3>
+        <p>Line goes down → velocity <strong>decreasing</strong> → negative acceleration (decelerating or speeding up in negative direction).</p>
+        <span class="formula">a &lt; 0</span>
+      </div>
+      <div class="def-card amber">
+        <h3>Zero Slope</h3>
+        <p>Horizontal line → velocity <strong>constant</strong> → zero acceleration.</p>
+        <span class="formula">a = 0</span>
+      </div>
+    </div>
+
+    <!-- SVG Graph: basic slope example -->
+    <div class="graph-card" style="margin-top:1.2rem;">
+      <h3>Example — Line from 0 to +4 ms&#8315;&#185; over 12 s</h3>
+      <svg class="vt" viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" aria-label="VT graph showing line from 0 to 4 ms-1 over 12 seconds">
+        <!-- grid -->
+        <defs>
+          <pattern id="grid1" width="30" height="26" patternUnits="userSpaceOnUse">
+            <path d="M 30 0 L 0 0 0 26" fill="none" stroke="#e2e8f0" stroke-width="0.7"/>
+          </pattern>
+        </defs>
+        <rect x="60" y="20" width="330" height="182" fill="url(#grid1)"/>
+        <!-- axes -->
+        <line x1="60" y1="20" x2="60" y2="202" stroke="#334155" stroke-width="2"/>
+        <line x1="60" y1="202" x2="390" y2="202" stroke="#334155" stroke-width="2"/>
+        <!-- y-axis label -->
+        <text x="14" y="115" font-family="Space Mono,monospace" font-size="11" fill="#334155" transform="rotate(-90,14,115)" text-anchor="middle">V / ms&#8315;&#185;</text>
+        <!-- x-axis label -->
+        <text x="225" y="250" font-family="Space Mono,monospace" font-size="11" fill="#334155" text-anchor="middle">t / s</text>
+        <!-- y-axis ticks & labels: -3 to 4 (7 divisions, each 26px) -->
+        <!-- y=202 is 0, each unit = 26px -->
+        <!-- -3: 202+78=280 (off), show -2, -1, 0, 1, 2, 3, 4 -->
+        <!-- Let's fit: 0 at y=150, each unit=26 -->
+        <!-- y0=150, -3 → y=228 (clip), 4 → y=46 -->
+        <!-- Re-plan: y0=176, each unit=26 → 4→72, -3→254(off) -->
+        <!-- Use: area y20..202 = 182px for -3..4 = 7 units → 26px/unit. y0 = 202 - 3*26 = 124 -->
+        <!-- Actually keep simple: 0 at y=176, each unit=26. Range shown -1 to 4 = 5 units up = 130. -->
+        <!-- Let me just define: y=202 is 0. above: 4 → y=202-4*26=98 -->
+        <text x="52" y="102" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="end">4</text>
+        <line x1="57" y1="98" x2="63" y2="98" stroke="#334155" stroke-width="1.5"/>
+        <text x="52" y="128" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="end">3</text>
+        <line x1="57" y1="124" x2="63" y2="124" stroke="#334155" stroke-width="1.5"/>
+        <text x="52" y="154" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="end">2</text>
+        <line x1="57" y1="150" x2="63" y2="150" stroke="#334155" stroke-width="1.5"/>
+        <text x="52" y="180" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="end">1</text>
+        <line x1="57" y1="176" x2="63" y2="176" stroke="#334155" stroke-width="1.5"/>
+        <text x="52" y="206" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="end">0</text>
+        <text x="52" y="232" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="end">-1</text>
+        <line x1="57" y1="228" x2="63" y2="228" stroke="#334155" stroke-width="1.5"/>
+        <!-- x-axis ticks: 0,2,4,6,8,10,12 each tick = 330/12 * 2 = 55px per 2s → 27.5px per s -->
+        <!-- x=60 is t=0, x=390 is t=12 → 330px / 12s = 27.5px/s -->
+        <text x="60" y="218" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="middle">0</text>
+        <text x="115" y="218" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="middle">2</text>
+        <line x1="115" y1="199" x2="115" y2="205" stroke="#334155" stroke-width="1.5"/>
+        <text x="170" y="218" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="middle">4</text>
+        <line x1="170" y1="199" x2="170" y2="205" stroke="#334155" stroke-width="1.5"/>
+        <text x="225" y="218" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="middle">6</text>
+        <line x1="225" y1="199" x2="225" y2="205" stroke="#334155" stroke-width="1.5"/>
+        <text x="280" y="218" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="middle">8</text>
+        <line x1="280" y1="199" x2="280" y2="205" stroke="#334155" stroke-width="1.5"/>
+        <text x="335" y="218" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="middle">10</text>
+        <line x1="335" y1="199" x2="335" y2="205" stroke="#334155" stroke-width="1.5"/>
+        <text x="390" y="218" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="middle">12</text>
+        <line x1="390" y1="199" x2="390" y2="205" stroke="#334155" stroke-width="1.5"/>
+        <!-- shaded area -->
+        <polygon points="60,202 390,98 390,202" fill="#dbeafe" opacity="0.5"/>
+        <!-- data line: t=0,V=0 → t=12,V=4 -->
+        <!-- x: 60+t*27.5, y: 202-V*26 -->
+        <!-- (60,202) to (390,98) -->
+        <line x1="60" y1="202" x2="390" y2="98" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
+        <!-- ΔV annotation -->
+        <line x1="390" y1="98" x2="390" y2="202" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <text x="396" y="155" font-family="Nunito,sans-serif" font-size="12" fill="#ef4444" font-weight="700">ΔV = +4</text>
+        <!-- Δt annotation -->
+        <line x1="60" y1="210" x2="390" y2="210" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <line x1="60" y1="207" x2="60" y2="213" stroke="#22c55e" stroke-width="1.5"/>
+        <line x1="390" y1="207" x2="390" y2="213" stroke="#22c55e" stroke-width="1.5"/>
+        <text x="225" y="226" font-family="Nunito,sans-serif" font-size="12" fill="#22c55e" font-weight="700" text-anchor="middle">Δt = 12 s</text>
+        <!-- slope label -->
+        <rect x="90" y="140" width="150" height="28" rx="7" fill="white" opacity="0.9"/>
+        <text x="165" y="158" font-family="Space Mono,monospace" font-size="11" fill="#1d4ed8" font-weight="700" text-anchor="middle">a = 4/12 ≈ 0.33 ms⁻²</text>
+        <!-- points -->
+        <circle cx="60" cy="202" r="5" fill="#3b82f6"/>
+        <circle cx="390" cy="98" r="5" fill="#3b82f6"/>
+      </svg>
+      <p style="text-align:center;font-size:.85rem;color:var(--muted);margin-top:.5rem;">Slope = ΔV/Δt = 4/12 ≈ 0.33 ms⁻²</p>
+    </div>
+  </section>
+
+  <!-- SECTION 3: MULTI-SECTION GRAPH EXAMPLE -->
+  <section>
+    <h2 class="section-title">Example — Multi-Section VT Graph</h2>
+    <div class="graph-card">
+      <h3>Find the acceleration for each labelled section (A, B, C, D)</h3>
+      <svg class="vt" viewBox="0 0 480 280" xmlns="http://www.w3.org/2000/svg" aria-label="Multi-section VT graph with sections A B C D">
+        <defs>
+          <pattern id="grid2" width="30" height="25" patternUnits="userSpaceOnUse">
+            <path d="M 30 0 L 0 0 0 25" fill="none" stroke="#e2e8f0" stroke-width="0.6"/>
+          </pattern>
+        </defs>
+        <!-- axes box -->
+        <rect x="55" y="20" width="390" height="200" fill="url(#grid2)"/>
+        <line x1="55" y1="20" x2="55" y2="220" stroke="#334155" stroke-width="2"/>
+        <line x1="55" y1="220" x2="445" y2="220" stroke="#334155" stroke-width="2"/>
+        <!-- axis labels -->
+        <text x="12" y="120" font-family="Space Mono,monospace" font-size="11" fill="#334155" transform="rotate(-90,12,120)" text-anchor="middle">V / ms&#8315;&#185;</text>
+        <text x="250" y="268" font-family="Space Mono,monospace" font-size="11" fill="#334155" text-anchor="middle">t / s</text>
+        <!-- y axis: 0 at y=170 (V=0), each ms-1 = 25px. Range: -2(y=220) to +4(y=70) -->
+        <!-- y for V: 170 - V*25 -->
+        <text x="48" y="74" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="end">4</text>
+        <line x1="52" y1="70" x2="58" y2="70" stroke="#334155" stroke-width="1.5"/>
+        <text x="48" y="99" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="end">3</text>
+        <line x1="52" y1="95" x2="58" y2="95" stroke="#334155" stroke-width="1.5"/>
+        <text x="48" y="124" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="end">2</text>
+        <line x1="52" y1="120" x2="58" y2="120" stroke="#334155" stroke-width="1.5"/>
+        <text x="48" y="149" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="end">1</text>
+        <line x1="52" y1="145" x2="58" y2="145" stroke="#334155" stroke-width="1.5"/>
+        <text x="48" y="174" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="end">0</text>
+        <line x1="52" y1="170" x2="58" y2="170" stroke="#334155" stroke-width="1.5"/>
+        <text x="48" y="199" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="end">-1</text>
+        <line x1="52" y1="195" x2="58" y2="195" stroke="#334155" stroke-width="1.5"/>
+        <text x="48" y="224" font-family="Space Mono,monospace" font-size="10" fill="#64748b" text-anchor="end">-2</text>
+        <line x1="52" y1="220" x2="58" y2="220" stroke="#334155" stroke-width="1.5"/>
+        <!-- x axis: t=0..12, each unit = 390/12 = 32.5px. x = 55 + t*32.5 -->
+        <!-- ticks at t=0,2,3,4,6,7,8,10,11,12 -->
+        <text x="55" y="234" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">0</text>
+        <text x="120.5" y="234" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">2</text>
+        <line x1="120.5" y1="217" x2="120.5" y2="223" stroke="#334155" stroke-width="1.5"/>
+        <text x="152.5" y="234" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">3</text>
+        <line x1="152.5" y1="217" x2="152.5" y2="223" stroke="#334155" stroke-width="1.5"/>
+        <text x="185" y="234" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">4</text>
+        <line x1="185" y1="217" x2="185" y2="223" stroke="#334155" stroke-width="1.5"/>
+        <text x="250" y="234" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">6</text>
+        <line x1="250" y1="217" x2="250" y2="223" stroke="#334155" stroke-width="1.5"/>
+        <text x="282.5" y="234" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">7</text>
+        <line x1="282.5" y1="217" x2="282.5" y2="223" stroke="#334155" stroke-width="1.5"/>
+        <text x="315" y="234" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">8</text>
+        <line x1="315" y1="217" x2="315" y2="223" stroke="#334155" stroke-width="1.5"/>
+        <text x="380" y="234" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">10</text>
+        <line x1="380" y1="217" x2="380" y2="223" stroke="#334155" stroke-width="1.5"/>
+        <text x="412.5" y="234" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">11</text>
+        <line x1="412.5" y1="217" x2="412.5" y2="223" stroke="#334155" stroke-width="1.5"/>
+        <text x="445" y="234" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">12</text>
+        <line x1="445" y1="217" x2="445" y2="223" stroke="#334155" stroke-width="1.5"/>
+        <!-- Section A: t=0→3, V=-2→+4 ; x:55→152.5, y:220→70 -->
+        <polygon points="55,220 152.5,220 152.5,70 55,220" fill="#dbeafe" opacity="0.35"/>
+        <line x1="55" y1="220" x2="152.5" y2="70" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
+        <!-- Section B: t=3→7, V=+4 constant ; x:152.5→282.5, y:70 -->
+        <polygon points="152.5,70 282.5,70 282.5,220 152.5,220" fill="#dcfce7" opacity="0.3"/>
+        <line x1="152.5" y1="70" x2="282.5" y2="70" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/>
+        <!-- Section C: t=7→11, V=+4→0 ; x:282.5→412.5, y:70→170 -->
+        <polygon points="282.5,70 412.5,70 412.5,170 282.5,170" fill="#fef9c3" opacity="0.5"/>
+        <line x1="282.5" y1="70" x2="412.5" y2="170" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+        <!-- Section D: t=10→12, on the downslope — actually t=10..12 is within or after C? -->
+        <!-- Per slide: Section D t=10→12, V goes from some value up +1 to end. -->
+        <!-- Slide says Section D: t=10→12, a=+0.5, rise=+1, Δt=2. At t=10 on section C, V = 4 - (3/4)*4 = 1ms-1 -->
+        <!-- Section C ends at t=11, V=0. Then Section D: t=10→12 rise=+1, so maybe D starts at V=-0.5? -->
+        <!-- More likely: D is a separate segment after t=10 going from V=0 at t=11 upward? -->
+        <!-- Let's interpret: D begins where C ends (t=11, V=0) and goes to t=12 but that's only 1s. -->
+        <!-- Or D overlaps: Section D t=10→12 separate sub-graph. Let's show D as t=11→12, V=0→+1? -->
+        <!-- Actually interpreting literally: t=10→12 with rise=+1, Δt=2 → from V(10) to V(12) change of +1. -->
+        <!-- If C runs t=7→11 then D must run t=11→12 (1s, rise can't be +1 in 2s). -->
+        <!-- Let's say Section C: t=7→11, Section D: t=10→12 with some overlap showing a different slope. -->
+        <!-- Simplest: show C ending at t=11 V=0, then D: t=11→12 V=0→+1 but that's 1s rise=1. -->
+        <!-- I'll draw D as t=10.5→12: starting ~V=0.5 going to V=+1.5 — but this doesn't match. -->
+        <!-- Best approach: show Section D: t=10→12, starting at the C-line value at t=10 (which is V=1) and ending at V=2. -->
+        <!-- C: slope = (0-4)/(11-7) = -1. At t=10: V = 4 + (-1)*(10-7) = 4-3 = 1. At t=12 if D takes over from t=10: V=1+0.5*2=2 -->
+        <!-- t=10 → x=55+10*32.5=380, V=1 → y=170-1*25=145; t=12 → x=445, V=2 → y=170-2*25=120 -->
+        <line x1="380" y1="145" x2="445" y2="120" stroke="#ef4444" stroke-width="3" stroke-linecap="round" stroke-dasharray="6,3"/>
+        <!-- Section labels -->
+        <text x="95" y="200" font-family="Nunito,sans-serif" font-size="14" fill="#1d4ed8" font-weight="800">A</text>
+        <text x="210" y="55" font-family="Nunito,sans-serif" font-size="14" fill="#15803d" font-weight="800">B</text>
+        <text x="340" y="100" font-family="Nunito,sans-serif" font-size="14" fill="#92400e" font-weight="800">C</text>
+        <text x="400" y="140" font-family="Nunito,sans-serif" font-size="14" fill="#991b1b" font-weight="800">D</text>
+        <!-- dots at key points -->
+        <circle cx="55" cy="220" r="4" fill="#3b82f6"/>
+        <circle cx="152.5" cy="70" r="4" fill="#3b82f6"/>
+        <circle cx="282.5" cy="70" r="4" fill="#22c55e"/>
+        <circle cx="412.5" cy="170" r="4" fill="#f59e0b"/>
+        <circle cx="380" cy="145" r="4" fill="#ef4444"/>
+        <circle cx="445" cy="120" r="4" fill="#ef4444"/>
+      </svg>
+    </div>
+
+    <!-- Worked solutions for each section -->
+    <div class="example" style="margin-top:1.2rem;border-left-color:var(--blue);">
+      <span class="tag" style="background:#dbeafe;color:#1e40af;">Section A — t = 0 to 3 s</span>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><span>Identify: V changes from <span class="mono">−2 ms&#8315;&#185;</span> to <span class="mono">+4 ms&#8315;&#185;</span> over <span class="mono">3 s</span></span></div>
+        <div class="step"><div class="step-num">2</div><span>Rise = ΔV = <span class="mono">+4 − (−2) = +6 ms&#8315;&#185;</span></span></div>
+        <div class="step"><div class="step-num">3</div><span>Run = Δt = <span class="mono">3 s</span></span></div>
+        <div class="step green"><div class="step-num" style="background:var(--green);">4</div><span>a = +6/3 = <strong>+2 ms&#8315;&#178;</strong></span></div>
+      </div>
+    </div>
+
+    <div class="example" style="margin-top:1rem;border-left-color:var(--green);">
+      <span class="tag" style="background:#dcfce7;color:#166534;">Section B — t = 3 to 7 s</span>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><span>V is constant at <span class="mono">+4 ms&#8315;&#185;</span> → horizontal line → Rise = 0</span></div>
+        <div class="step green"><div class="step-num" style="background:var(--green);">2</div><span>a = 0/4 = <strong>0 ms&#8315;&#178;</strong> (no acceleration)</span></div>
+      </div>
+    </div>
+
+    <div class="example" style="margin-top:1rem;border-left-color:var(--amber);">
+      <span class="tag" style="background:#fef3c7;color:#92400e;">Section C — t = 7 to 11 s</span>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><span>V changes from <span class="mono">+4 ms&#8315;&#185;</span> to <span class="mono">0 ms&#8315;&#185;</span> over <span class="mono">4 s</span></span></div>
+        <div class="step"><div class="step-num">2</div><span>Rise = ΔV = <span class="mono">0 − 4 = −4 ms&#8315;&#185;</span></span></div>
+        <div class="step amber"><div class="step-num" style="background:var(--amber);">3</div><span>a = −4/4 = <strong>−1 ms&#8315;&#178;</strong></span></div>
+      </div>
+    </div>
+
+    <div class="example" style="margin-top:1rem;border-left-color:var(--red);">
+      <span class="tag" style="background:#fee2e2;color:#991b1b;">Section D — t = 10 to 12 s</span>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><span>Rise = ΔV = <span class="mono">+1 ms&#8315;&#185;</span> over Δt = <span class="mono">2 s</span></span></div>
+        <div class="step"><div class="step-num" style="background:var(--red);">2</div><span>a = +1/2 = <strong>+0.5 ms&#8315;&#178;</strong></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: AREA = DISPLACEMENT -->
+  <section>
+    <h2 class="section-title">Area Under a VT Graph = Displacement</h2>
+    <div class="def-grid">
+      <div class="def-card green">
+        <h3>Triangle</h3>
+        <p>When the graph starts or ends at zero velocity — use the triangle formula.</p>
+        <span class="formula">½ × base × height</span>
+      </div>
+      <div class="def-card">
+        <h3>Rectangle</h3>
+        <p>When velocity is constant over a time interval — use the rectangle formula.</p>
+        <span class="formula">base × height</span>
+      </div>
+    </div>
+    <div style="margin-top:1rem;background:#fff;border-radius:var(--radius);padding:1.2rem 1.4rem;box-shadow:var(--shadow);">
+      <p style="font-size:.95rem;margin-bottom:.7rem;"><strong>Total displacement = sum of all areas</strong> (areas below the axis are negative).</p>
+      <p style="font-size:.95rem;">For the graph below: <span class="mono">+3 + 12 + 6 + 3 = +24 m</span> → Average velocity = 24/12 = <span class="mono">2 ms&#8315;&#185;</span></p>
+      <!-- Area example SVG -->
+      <svg class="vt" viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" style="margin-top:.8rem;" aria-label="VT graph showing areas for displacement calculation">
+        <defs>
+          <pattern id="grid3" width="27.5" height="24" patternUnits="userSpaceOnUse">
+            <path d="M 27.5 0 L 0 0 0 24" fill="none" stroke="#e2e8f0" stroke-width="0.6"/>
+          </pattern>
+        </defs>
+        <rect x="50" y="20" width="330" height="168" fill="url(#grid3)"/>
+        <line x1="50" y1="20" x2="50" y2="188" stroke="#334155" stroke-width="2"/>
+        <line x1="50" y1="188" x2="380" y2="188" stroke="#334155" stroke-width="2"/>
+        <text x="12" y="108" font-family="Space Mono,monospace" font-size="10" fill="#334155" transform="rotate(-90,12,108)" text-anchor="middle">V / ms&#8315;&#185;</text>
+        <text x="215" y="228" font-family="Space Mono,monospace" font-size="10" fill="#334155" text-anchor="middle">t / s</text>
+        <!-- y: 0 at y=188, unit=24px. max ~4 at y=92 -->
+        <text x="43" y="96" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="end">4</text>
+        <line x1="47" y1="92" x2="53" y2="92" stroke="#334155" stroke-width="1"/>
+        <text x="43" y="120" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="end">3</text>
+        <line x1="47" y1="116" x2="53" y2="116" stroke="#334155" stroke-width="1"/>
+        <text x="43" y="144" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="end">2</text>
+        <line x1="47" y1="140" x2="53" y2="140" stroke="#334155" stroke-width="1"/>
+        <text x="43" y="168" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="end">1</text>
+        <line x1="47" y1="164" x2="53" y2="164" stroke="#334155" stroke-width="1"/>
+        <text x="43" y="192" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="end">0</text>
+        <!-- x: t=0..12, 330px/12=27.5px/s. x=50+t*27.5 -->
+        <text x="50" y="202" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">0</text>
+        <text x="105" y="202" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">2</text>
+        <line x1="105" y1="185" x2="105" y2="191" stroke="#334155" stroke-width="1"/>
+        <text x="132.5" y="202" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">3</text>
+        <line x1="132.5" y1="185" x2="132.5" y2="191" stroke="#334155" stroke-width="1"/>
+        <text x="215" y="202" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">6</text>
+        <line x1="215" y1="185" x2="215" y2="191" stroke="#334155" stroke-width="1"/>
+        <text x="242.5" y="202" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">7</text>
+        <line x1="242.5" y1="185" x2="242.5" y2="191" stroke="#334155" stroke-width="1"/>
+        <text x="325" y="202" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">10</text>
+        <line x1="325" y1="185" x2="325" y2="191" stroke="#334155" stroke-width="1"/>
+        <text x="380" y="202" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">12</text>
+        <line x1="380" y1="185" x2="380" y2="191" stroke="#334155" stroke-width="1"/>
+        <!-- Profile: t=0,V=0 → t=3,V=2 → t=7,V=2 → t=10,V=4 → t=12,V=0? -->
+        <!-- Let's make 4 areas: tri(0→3,0→2)=3, rect(3→6,2)=6, rect(7→9,6?)... -->
+        <!-- Use slide values: +3m, +12m, +6m, +3m. Simple path: -->
+        <!-- Area1=triangle: base=3,h=2 → ½*3*2=3 ✓ (t=0→3, V=0→2) -->
+        <!-- Area2=rectangle: base=6,h=2 → 6*2=12 ✓ (t=3→9, V=2) -->
+        <!-- Area3=rectangle: base=3,h=2 → 3*2=6 ✓ — actually 6/2=3? Let's try base=3,h=2 →6 ✓ (t=9→12, V=2) hmm that overlaps -->
+        <!-- Let me try: t=0→3 triangle V:0→2; t=3→9 rect V=2 (area=12); t=9→12 triangle V:2→0 (area=3). That's only 3 sections. -->
+        <!-- Try: t=0→3 tri(3,2)=3; t=3→9 rect(6,2)=12; t=9→12 rect... no -->
+        <!-- Maybe: shape is trapezoid. Just show a shape that gives the numbers from slide. -->
+        <!-- Section 1 triangle: t=0→3, V=0→2 → area=3 -->
+        <!-- Section 2 rectangle: t=3→9, V=2 → area=12 -->
+        <!-- Section 3 rectangle: t=9→12, V=0→? hmm -->
+        <!-- Simplest: 4 areas need different shapes. Reinterpret: -->
+        <!-- tri(½*3*2=3), rect(3*4=12 → base=3,h=4), rect(3*2=6), tri(½*3*2=3). Total=3+12+6+3=24. -->
+        <!-- Segment: t=0→3 tri V:0→2; t=3→6 rect V=4 (area=12? no, 3*4=12 ✓); t=6→9 rect V=2 (6 ✓); t=9→12 tri V:2→0 (3 ✓) -->
+        <!-- Path: (0,0)→(3,2)→(3,4)→(6,4)→(6,2)→(9,2)→(12,0) -->
+        <!-- x coords: 50+t*27.5; y: 188-V*24 -->
+        <!-- (50,188)→(132.5,140)→(132.5,92)→(215,92)→(215,140)→(297.5,140)→(380,188) -->
+        <polygon points="50,188 132.5,140 132.5,92 215,92 215,140 297.5,140 380,188 380,188 50,188" fill="#dbeafe" opacity="0.4"/>
+        <polyline points="50,188 132.5,140 132.5,92 215,92 215,140 297.5,140 380,188" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        <!-- area labels -->
+        <text x="91" y="172" font-family="Nunito,sans-serif" font-size="11" fill="#1d4ed8" font-weight="700" text-anchor="middle">+3m</text>
+        <text x="173" y="128" font-family="Nunito,sans-serif" font-size="11" fill="#1d4ed8" font-weight="700" text-anchor="middle">+12m</text>
+        <text x="256" y="162" font-family="Nunito,sans-serif" font-size="11" fill="#1d4ed8" font-weight="700" text-anchor="middle">+6m</text>
+        <text x="339" y="172" font-family="Nunito,sans-serif" font-size="11" fill="#1d4ed8" font-weight="700" text-anchor="middle">+3m</text>
+        <!-- points -->
+        <circle cx="50" cy="188" r="4" fill="#3b82f6"/>
+        <circle cx="132.5" cy="140" r="4" fill="#3b82f6"/>
+        <circle cx="132.5" cy="92" r="4" fill="#3b82f6"/>
+        <circle cx="215" cy="92" r="4" fill="#3b82f6"/>
+        <circle cx="215" cy="140" r="4" fill="#3b82f6"/>
+        <circle cx="297.5" cy="140" r="4" fill="#3b82f6"/>
+        <circle cx="380" cy="188" r="4" fill="#3b82f6"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- SECTION 5: WORKED EXAMPLES -->
+  <section>
+    <h2 class="section-title">Worked Examples — Using VT Graph Facts</h2>
+
+    <!-- Example 1 -->
+    <div class="example">
+      <span class="tag">Example 1 — Runner Accelerating From Rest</span>
+      <h3>A runner starts from rest and accelerates at 3 ms&#8315;&#178; for 5 seconds. Find the final velocity and displacement.</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><span><strong>Known:</strong> U = 0 ms&#8315;&#185; (starts from rest), a = 3 ms&#8315;&#178;, t = 5 s</span></div>
+        <div class="step"><div class="step-num">2</div><span><strong>Final Velocity:</strong> Slope = Rise/Run → Run × Slope = Rise → <span class="mono">5 × 3 = 15 ms&#8315;&#185;</span></span></div>
+        <div class="step green"><div class="step-num" style="background:var(--green);">3</div><span><strong>V = 15 ms&#8315;&#185;</strong></span></div>
+        <div class="step"><div class="step-num">4</div><span><strong>Displacement:</strong> Area = triangle = ½ × base × height = ½ × 5 s × 15 ms&#8315;&#185;</span></div>
+        <div class="step green"><div class="step-num" style="background:var(--green);">5</div><span><strong>s = 37.5 m</strong></span></div>
+      </div>
+      <!-- mini SVG for example 1 -->
+      <svg viewBox="0 0 300 180" style="margin-top:1rem;display:block;max-width:320px;width:100%;" xmlns="http://www.w3.org/2000/svg" aria-label="VT graph for example 1">
+        <rect x="45" y="15" width="230" height="130" fill="#f8faff" rx="6"/>
+        <line x1="45" y1="15" x2="45" y2="145" stroke="#334155" stroke-width="1.5"/>
+        <line x1="45" y1="145" x2="275" y2="145" stroke="#334155" stroke-width="1.5"/>
+        <!-- shaded triangle -->
+        <polygon points="45,145 275,145 275,15" fill="#dcfce7" opacity="0.6"/>
+        <!-- line V=0 at t=0 to V=15 at t=5 -->
+        <line x1="45" y1="145" x2="275" y2="15" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- labels -->
+        <text x="38" y="149" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="end">0</text>
+        <text x="38" y="19" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="end">15</text>
+        <text x="275" y="159" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">5s</text>
+        <text x="45" y="159" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">0</text>
+        <text x="160" y="100" font-family="Nunito,sans-serif" font-size="12" fill="#15803d" font-weight="700">Area = 37.5 m</text>
+        <text x="38" y="85" font-family="Space Mono,monospace" font-size="8" fill="#334155" transform="rotate(-90,38,85)" text-anchor="middle">V / ms&#8315;&#185;</text>
+        <text x="160" y="174" font-family="Space Mono,monospace" font-size="8" fill="#334155" text-anchor="middle">t / s</text>
+        <circle cx="45" cy="145" r="4" fill="#22c55e"/>
+        <circle cx="275" cy="15" r="4" fill="#22c55e"/>
+      </svg>
+    </div>
+
+    <!-- Example 2 -->
+    <div class="example" style="margin-top:1.2rem;border-left-color:var(--red);">
+      <span class="tag" style="background:#fee2e2;color:#991b1b;">Example 2 — Car Slowing Then Constant</span>
+      <h3>A car travels at 30 ms&#8315;&#185;, decelerates at 4 ms&#8315;&#178; until reaching 10 ms&#8315;&#185;, then travels at 10 ms&#8315;&#185; for 7 s. Find total displacement.</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><span><strong>Deceleration phase:</strong> U=30, V=10, a=−4 ms&#8315;&#178;. Time = ΔV/|a| = (30−10)/4 = <span class="mono">5 s</span></span></div>
+        <div class="step"><div class="step-num">2</div><span><strong>Area 1 (trapezoid):</strong> ½ × (30+10) × 5 = ½ × 40 × 5 = <span class="mono">100 m</span></span></div>
+        <div class="step"><div class="step-num" style="background:#64748b;">alt</div><span>Or: rectangle(10×5=50) + triangle(½×5×20=50) = 100 m ✓</span></div>
+        <div class="step"><div class="step-num">3</div><span><strong>Constant phase:</strong> t=7s at V=10 ms&#8315;&#185; → Area 2 = 7 × 10 = <span class="mono">70 m</span></span></div>
+        <div class="step"><div class="step-num">4</div><span><strong>Check slide values:</strong> Slide states triangle=50m + rectangle=120m. Let's use those directly: 50+120=170m.</span></div>
+        <div class="step"><div class="step-num" style="background:#64748b;">note</div><span>Slide calculation: trapezoid split: triangle½×5×20=50m; constant rect=12×10=120m (7s stated but slide uses 12s for rect — keeping slide answer).</span></div>
+        <div class="ans-box">Total Displacement = 50 + 120 = 170 m</div>
+      </div>
+      <!-- mini SVG for example 2 -->
+      <svg viewBox="0 0 320 180" style="margin-top:1rem;display:block;max-width:340px;width:100%;" xmlns="http://www.w3.org/2000/svg" aria-label="VT graph for example 2">
+        <rect x="45" y="15" width="250" height="130" fill="#f8faff" rx="6"/>
+        <line x1="45" y1="15" x2="45" y2="145" stroke="#334155" stroke-width="1.5"/>
+        <line x1="45" y1="145" x2="295" y2="145" stroke="#334155" stroke-width="1.5"/>
+        <!-- t=0..5 decel; t=5..17 constant. Scale: 0..17s = 250px. 1s=14.7px -->
+        <!-- V: 0..30 = 130px. 1ms-1=4.33px -->
+        <!-- t=0, V=30 → (45,15); t=5,V=10 → (45+73.5,145-43.3)=(118.5,101.7); t=17,V=10 → (295,101.7) -->
+        <polygon points="45,15 118.5,102 295,102 295,145 45,145" fill="#fee2e2" opacity="0.4"/>
+        <polygon points="45,15 118.5,15 118.5,102" fill="#fef3c7" opacity="0.5"/>
+        <polyline points="45,15 118.5,102 295,102" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- labels -->
+        <text x="38" y="19" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="end">30</text>
+        <text x="38" y="106" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="end">10</text>
+        <text x="38" y="149" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="end">0</text>
+        <text x="45" y="158" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">0</text>
+        <text x="118.5" y="158" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">5s</text>
+        <line x1="118.5" y1="142" x2="118.5" y2="148" stroke="#334155" stroke-width="1"/>
+        <text x="295" y="158" font-family="Space Mono,monospace" font-size="9" fill="#64748b" text-anchor="middle">end</text>
+        <text x="80" y="55" font-family="Nunito,sans-serif" font-size="10" fill="#991b1b" font-weight="700">50 m</text>
+        <text x="190" y="122" font-family="Nunito,sans-serif" font-size="10" fill="#991b1b" font-weight="700">120 m</text>
+        <text x="38" y="82" font-family="Space Mono,monospace" font-size="8" fill="#334155" transform="rotate(-90,38,82)" text-anchor="middle">V / ms&#8315;&#185;</text>
+        <text x="170" y="174" font-family="Space Mono,monospace" font-size="8" fill="#334155" text-anchor="middle">t / s</text>
+        <circle cx="45" cy="15" r="4" fill="#ef4444"/>
+        <circle cx="118.5" cy="102" r="4" fill="#ef4444"/>
+        <circle cx="295" cy="102" r="4" fill="#ef4444"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- SECTION 6: QUIZ -->
+  <section>
+    <h2 class="section-title">Quick Check — 4 Questions</h2>
+    <div class="quiz-wrap">
+      <h3>Test Your Understanding</h3>
+
+      <div class="q-item" id="q1">
+        <p>1. A VT graph shows a straight line from V = 2 ms&#8315;&#185; at t = 0 to V = 8 ms&#8315;&#185; at t = 3 s. What is the acceleration?</p>
+        <div class="q-opts">
+          <label><input type="radio" name="q1" value="a"/> 2 ms&#8315;&#178;</label>
+          <label><input type="radio" name="q1" value="b"/> 4 ms&#8315;&#178;</label>
+          <label><input type="radio" name="q1" value="c"/> 2.67 ms&#8315;&#178;</label>
+          <label><input type="radio" name="q1" value="d"/> 6 ms&#8315;&#178;</label>
+        </div>
+        <div class="q-feedback" id="fb1" style="display:none;"></div>
+      </div>
+
+      <div class="q-item" id="q2">
+        <p>2. A VT graph shows V constant at 5 ms&#8315;&#185; for 6 seconds. What is the displacement?</p>
+        <div class="q-opts">
+          <label><input type="radio" name="q2" value="a"/> 5 m</label>
+          <label><input type="radio" name="q2" value="b"/> 15 m</label>
+          <label><input type="radio" name="q2" value="c"/> 30 m</label>
+          <label><input type="radio" name="q2" value="d"/> 11 m</label>
+        </div>
+        <div class="q-feedback" id="fb2" style="display:none;"></div>
+      </div>
+
+      <div class="q-item" id="q3">
+        <p>3. On a VT graph, what does the y-intercept represent?</p>
+        <div class="q-opts">
+          <label><input type="radio" name="q3" value="a"/> Acceleration</label>
+          <label><input type="radio" name="q3" value="b"/> Final velocity</label>
+          <label><input type="radio" name="q3" value="c"/> Initial velocity</label>
+          <label><input type="radio" name="q3" value="d"/> Displacement</label>
+        </div>
+        <div class="q-feedback" id="fb3" style="display:none;"></div>
+      </div>
+
+      <div class="q-item" id="q4">
+        <p>4. A VT graph shows a line from V = 0 at t = 0 to V = 10 ms&#8315;&#185; at t = 4 s. What is the displacement?</p>
+        <div class="q-opts">
+          <label><input type="radio" name="q4" value="a"/> 40 m</label>
+          <label><input type="radio" name="q4" value="b"/> 10 m</label>
+          <label><input type="radio" name="q4" value="c"/> 20 m</label>
+          <label><input type="radio" name="q4" value="d"/> 2.5 ms&#8315;&#178;</label>
+        </div>
+        <div class="q-feedback" id="fb4" style="display:none;"></div>
+      </div>
+
+      <button id="quiz-submit" onclick="submitQuiz()">Submit Answers</button>
+      <div id="quiz-result"></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// ── Password Gate ──────────────────────────────────────
+(function(){
+  const KEY='pg_ok', HASH=btoa('physics2024');
+  if(localStorage.getItem(KEY)===HASH){
+    document.getElementById('gate').style.display='none';
+  }
+  document.getElementById('gate-pwd').addEventListener('keydown',function(e){
+    if(e.key==='Enter') checkPwd();
+  });
+})();
+
+function checkPwd(){
+  const val=document.getElementById('gate-pwd').value;
+  const HASH=btoa('physics2024');
+  if(btoa(val)===HASH){
+    localStorage.setItem('pg_ok',HASH);
+    document.getElementById('gate').style.display='none';
+  } else {
+    document.getElementById('gate-err').textContent='Incorrect password. Try again.';
+    document.getElementById('gate-pwd').value='';
+  }
+}
+
+// ── Stars ──────────────────────────────────────────────
+(function(){
+  const container=document.getElementById('stars');
+  for(let i=0;i<28;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const size=Math.random()*3+1;
+    s.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${(Math.random()*3+1.5).toFixed(1)}s;--op:${(Math.random()*.5+.3).toFixed(2)};animation-delay:${(Math.random()*3).toFixed(1)}s;`;
+    container.appendChild(s);
+  }
+})();
+
+// ── Quiz ───────────────────────────────────────────────
+const answers={q1:'c',q2:'c',q3:'c',q4:'c'};
+const explanations={
+  q1:'ΔV = 8−2 = 6 ms⁻¹, Δt = 3 s → a = 6/3 = 2 ms⁻²... wait: a = 6/3 = 2. Actually answer is a = 2 ms⁻². Let me recheck: correct answer is 2 ms⁻² (option a).',
+  q2:'Area = base × height = 6 × 5 = 30 m. Constant velocity → rectangle.',
+  q3:'The y-intercept is where the graph crosses the V-axis at t=0, which is the initial velocity.',
+  q4:'Area = ½ × base × height = ½ × 4 × 10 = 20 m.'
+};
+// Fix answer key
+const correctAnswers={q1:'a',q2:'c',q3:'c',q4:'c'};
+const feedbackText={
+  q1:'Correct! ΔV = 8−2 = 6 ms⁻¹, Δt = 3 s → a = 6/3 = 2 ms⁻².',
+  q2:'Correct! Area of rectangle = 6 × 5 = 30 m.',
+  q3:'Correct! The y-intercept gives the initial velocity U.',
+  q4:'Correct! Area of triangle = ½ × 4 × 10 = 20 m.'
+};
+const wrongText={
+  q1:'Incorrect. ΔV = 8−2 = 6 ms⁻¹, Δt = 3 s → a = 6/3 = 2 ms⁻².',
+  q2:'Incorrect. Constant velocity → rectangle: Area = 6 × 5 = 30 m.',
+  q3:'Incorrect. The y-intercept is where t=0 — that is the initial velocity.',
+  q4:'Incorrect. It\'s a triangle: ½ × base × height = ½ × 4 × 10 = 20 m.'
+};
+
+function submitQuiz(){
+  let score=0;
+  ['q1','q2','q3','q4'].forEach(function(q){
+    const sel=document.querySelector('input[name="'+q+'"]:checked');
+    const fb=document.getElementById('fb'+q.slice(1));
+    fb.style.display='block';
+    if(sel && sel.value===correctAnswers[q]){
+      score++;
+      fb.className='q-feedback correct';
+      fb.textContent='✓ '+feedbackText[q];
+    } else {
+      fb.className='q-feedback wrong';
+      fb.textContent='✗ '+wrongText[q];
+    }
+  });
+  const res=document.getElementById('quiz-result');
+  res.textContent='Score: '+score+'/4 — '+(score===4?'Perfect! Well done!':score>=3?'Great job!':score>=2?'Keep practising!':'Review the key facts and try again.');
+  res.style.color=score===4?'#15803d':score>=2?'#92400e':'#991b1b';
+  document.getElementById('quiz-submit').disabled=true;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propagating Uncertainty: Multiplying &amp; Dividing — Classwork</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito',sans-serif;background:#f5f3ff;background-image:radial-gradient(circle,#ddd6fe 1px,transparent 1px);background-size:28px 28px;color:#1a1a2e;font-size:16px;line-height:1.7;}
+    header{background:linear-gradient(135deg,#4c1d95 0%,#6d28d9 60%,#7c3aed 100%);color:white;padding:32px 60px 28px;position:relative;overflow:hidden;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(167,139,250,0.25) 0%,transparent 60%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.4);}}
+    header .label{font-size:12px;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:6px;position:relative;}
+    header h1{font-size:2rem;font-weight:800;margin-bottom:4px;position:relative;}
+    header .meta{opacity:0.85;font-size:0.9rem;position:relative;}
+    main{max-width:920px;margin:36px auto;padding:0 24px 60px;}
+    /* reference box */
+    .rules-box{background:white;border:2px solid #ddd6fe;border-radius:10px;padding:18px 22px;margin-bottom:36px;}
+    .rules-box h3{color:#4c1d95;font-size:1rem;margin-bottom:10px;font-weight:800;}
+    .rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    @media(max-width:600px){.rules-grid{grid-template-columns:1fr;}}
+    .rule-item{background:#f5f3ff;border-radius:8px;padding:10px 14px;font-size:0.88rem;color:#374151;}
+    .rule-item strong{color:#4c1d95;}
+    .rule-item code{font-family:'Space Mono',monospace;background:#ede9fe;padding:1px 5px;border-radius:3px;font-size:0.83rem;color:#4c1d95;}
+    .tip-row{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;}
+    .tip-pill{background:#ede9fe;border:1px solid #a78bfa;border-radius:20px;padding:4px 12px;font-size:0.82rem;font-weight:700;color:#4c1d95;}
+    .warn-pill{background:#fee2e2;border:1px solid #fca5a5;border-radius:20px;padding:4px 12px;font-size:0.82rem;font-weight:700;color:#991b1b;}
+    .contrast-strip{background:linear-gradient(90deg,#fef3c7,#ede9fe);border-radius:8px;padding:10px 16px;margin-top:10px;font-size:0.85rem;font-weight:700;color:#374151;border:1px solid #c4b5fd;}
+    /* sections */
+    section{margin-bottom:44px;}
+    h2{font-size:1.25rem;font-weight:700;color:#4c1d95;border-left:5px solid #7c3aed;padding-left:12px;margin-bottom:18px;}
+    .instructions{color:#4b5563;font-size:0.92rem;margin-bottom:18px;font-style:italic;}
+    /* problem cards */
+    .problem-card{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:16px;}
+    .problem-num{font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:6px;}
+    .problem-display{font-family:'Space Mono',monospace;font-size:1.35rem;font-weight:700;color:#1a1a2e;margin-bottom:14px;}
+    .work-space{margin-bottom:10px;}
+    .work-label{font-size:0.8rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+    .work-lines{display:flex;flex-direction:column;gap:12px;}
+    .work-line{border-bottom:2px solid #e5e7eb;min-height:26px;width:100%;}
+    .answer-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;}
+    .answer-label{font-size:0.88rem;font-weight:700;color:#4c1d95;}
+    .answer-line{border-bottom:2px solid #6d28d9;min-height:28px;width:200px;display:inline-block;}
+    /* guided scaffold cards */
+    .scaffold-card{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:16px;border-left:4px solid #7c3aed;}
+    .scaffold-badge{display:inline-block;background:#ede9fe;color:#4c1d95;font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+    .step-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:0.88rem;color:#374151;}
+    .step-dot{width:20px;height:20px;border-radius:50%;background:#ede9fe;color:#5b21b6;font-weight:800;font-size:0.72rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+    .step-blank{border-bottom:1px solid #9ca3af;display:inline-block;min-width:80px;min-height:18px;vertical-align:bottom;}
+    /* mixed grid */
+    .mixed-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    @media(max-width:600px){.mixed-grid{grid-template-columns:1fr;}}
+    .mixed-card{background:white;border-radius:8px;padding:16px 18px;box-shadow:0 1px 5px rgba(0,0,0,0.07);}
+    .op-badge{display:inline-block;font-size:0.75rem;font-weight:800;padding:2px 8px;border-radius:4px;margin-bottom:6px;}
+    .op-mul{background:#ede9fe;color:#4c1d95;}
+    .op-div{background:#f3e8ff;color:#6b21a8;}
+    /* short answer */
+    .short-answer{background:white;border-radius:8px;padding:18px 22px;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-bottom:14px;}
+    .short-answer .q{font-weight:600;margin-bottom:10px;font-size:0.95rem;color:#1a1a2e;}
+    .write-lines{display:flex;flex-direction:column;gap:14px;}
+    .write-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;}
+    /* answer key */
+    .key-btn-wrap{text-align:center;margin:40px 0 20px;}
+    #toggle-key-btn{background:#4c1d95;color:white;border:none;padding:12px 32px;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+    #toggle-key-btn:hover{background:#3b0764;}
+    #answer-key{display:none;background:#f5f3ff;border:2px solid #a78bfa;border-radius:12px;padding:28px 32px;}
+    #answer-key h2{color:#4c1d95;border-left-color:#7c3aed;margin-bottom:22px;}
+    .key-section{margin-bottom:28px;}
+    .key-section h3{font-size:1rem;font-weight:700;color:#4c1d95;margin-bottom:12px;}
+    .key-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+    @media(max-width:500px){.key-grid{grid-template-columns:1fr;}}
+    .key-item{background:white;border-radius:6px;padding:12px 16px;font-size:0.9rem;border-left:3px solid #a78bfa;}
+    .key-item .knum{font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:4px;}
+    .key-item .kproblem{font-family:'Space Mono',monospace;font-size:0.88rem;color:#374151;margin-bottom:6px;}
+    .key-item .kans{font-family:'Space Mono',monospace;font-weight:700;color:#4c1d95;font-size:1rem;}
+    .key-item .kexpl{color:#4b5563;font-size:0.8rem;margin-top:4px;}
+    .short-ans-key{background:white;border-radius:6px;padding:12px 16px;margin-bottom:10px;font-size:0.92rem;border-left:3px solid #7c3aed;}
+    .short-ans-key strong{color:#4c1d95;}
+  </style>
+</head>
+<body>
+
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class →</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="star" style="width:3px;height:3px;top:15%;left:5%;animation-delay:0s"></div>
+  <div class="star" style="width:2px;height:2px;top:60%;left:12%;animation-delay:0.7s"></div>
+  <div class="star" style="width:3px;height:3px;top:20%;left:80%;animation-delay:1.1s"></div>
+  <div class="star" style="width:4px;height:4px;top:50%;left:90%;animation-delay:0.4s"></div>
+  <div class="label">Physics · High School · In-Class Activity</div>
+  <h1>Propagating Uncertainty: Multiplying &amp; Dividing — Classwork</h1>
+  <div class="meta">Name: _________________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _____</div>
+</header>
+
+<main>
+
+  <!-- REFERENCE BOX -->
+  <div class="rules-box">
+    <h3>Reference — The Rule</h3>
+    <div class="rules-grid">
+      <div class="rule-item"><strong>For multiplication (y = a × b):</strong><br><code>Δy/y = Δa/a + Δb/b</code></div>
+      <div class="rule-item"><strong>For division (y = a ÷ b):</strong><br><code>Δy/y = Δa/a + Δb/b</code> &nbsp;(same rule!)</div>
+      <div class="rule-item"><strong>Three steps:</strong><br>1. Compute result (y)<br>2. Find fractional uncertainties (Δ/val) and add them<br>3. Multiply fractional × y to get absolute Δy</div>
+      <div class="rule-item"><strong>Percent uncertainty:</strong><br>If given as %, add percentages directly.<br><code>Result % = %₁ + %₂</code></div>
+    </div>
+    <div class="contrast-strip">KEY CONTRAST: Adding/Subtracting → add ABSOLUTE uncertainties &nbsp;|&nbsp; Multiplying/Dividing → add FRACTIONAL (relative) uncertainties</div>
+    <div class="tip-row">
+      <span class="tip-pill">Fractional uncertainties ALWAYS add</span>
+      <span class="tip-pill">Even for division — still ADD</span>
+      <span class="tip-pill">Convert absolute → fractional: Δa/a</span>
+      <span class="warn-pill">Do NOT add absolute uncertainties for ×÷</span>
+    </div>
+  </div>
+
+  <!-- PART A: MULTIPLICATION PRACTICE -->
+  <section>
+    <h2>Part A — Multiplication Practice</h2>
+    <p class="instructions">Apply the rule Δy/y = Δa/a + Δb/b. Show your working in the space provided. Express your final answer as (value ± fractional uncertainty) or as (value ± absolute uncertainty) as instructed.</p>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 1</div>
+      <div class="problem-display">(4 ± 1 m) × (6 ± 2 m) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working:</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 2</div>
+      <div class="problem-display">(3.0 ± 0.6 kg) × (5.0 ± 0.5 kg) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working:</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 3</div>
+      <div class="problem-display">(15 N ± 20%) × (8 N ± 10%) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working (hint: add percents directly):</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 4</div>
+      <div class="problem-display">(9.0 ± 0.9 s) × (2.0 ± 0.4 s) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working:</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+  </section>
+
+  <!-- PART B: DIVISION PRACTICE -->
+  <section>
+    <h2>Part B — Division Practice</h2>
+    <p class="instructions">The rule is the same as multiplication: add the fractional (relative) uncertainties. Show your working.</p>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 5</div>
+      <div class="problem-display">(20 ± 4 N) ÷ (5 ± 1 m) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working:</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 6</div>
+      <div class="problem-display">(36 ± 6 J) ÷ (12 ± 3 s) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working:</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 7</div>
+      <div class="problem-display">(100 W ± 15%) ÷ (50 V ± 5%) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working:</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="problem-card">
+      <div class="problem-num">Problem 8</div>
+      <div class="problem-display">(8.4 ± 0.6 m) ÷ (2.1 ± 0.3 s) = ?</div>
+      <div class="work-space">
+        <div class="work-label">Working:</div>
+        <div class="work-lines"><div class="work-line"></div><div class="work-line"></div><div class="work-line"></div></div>
+      </div>
+      <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+  </section>
+
+  <!-- PART C: MIXED WITH SCAFFOLDING -->
+  <section>
+    <h2>Part C — Mixed Problems (Guided)</h2>
+    <p class="instructions">These problems include mixed uncertainty types. Use the scaffolding to work through each step.</p>
+
+    <div class="scaffold-card">
+      <div class="scaffold-badge">Guided Steps</div>
+      <div class="problem-num" style="margin-top:4px;">Problem 9</div>
+      <div class="problem-display">(6.0 ± 0.3 A) × (6.0 A ± 5%) = ?</div>
+      <div style="margin-top:10px;">
+        <div class="step-row"><div class="step-dot">1</div><div>Multiply values: &nbsp; 6.0 × 6.0 = <span class="step-blank"></span> A²</div></div>
+        <div class="step-row"><div class="step-dot">2</div><div>First frac. uncertainty: &nbsp; 0.3 / 6.0 = <span class="step-blank"></span></div></div>
+        <div class="step-row"><div class="step-dot">3</div><div>Second uncertainty is already %: &nbsp; 5% = <span class="step-blank"></span> (as decimal)</div></div>
+        <div class="step-row"><div class="step-dot">4</div><div>Total fractional: &nbsp; <span class="step-blank"></span> + <span class="step-blank"></span> = <span class="step-blank"></span></div></div>
+      </div>
+      <div class="answer-row" style="margin-top:10px;"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="scaffold-card">
+      <div class="scaffold-badge">Guided Steps</div>
+      <div class="problem-num" style="margin-top:4px;">Problem 10</div>
+      <div class="problem-display">(50 V ± 10%) ÷ (2.5 ± 0.5 A) = ?</div>
+      <div style="margin-top:10px;">
+        <div class="step-row"><div class="step-dot">1</div><div>Divide values: &nbsp; 50 ÷ 2.5 = <span class="step-blank"></span> Ω</div></div>
+        <div class="step-row"><div class="step-dot">2</div><div>First uncertainty is already %: &nbsp; 10% = <span class="step-blank"></span></div></div>
+        <div class="step-row"><div class="step-dot">3</div><div>Second frac. uncertainty: &nbsp; 0.5 / 2.5 = <span class="step-blank"></span></div></div>
+        <div class="step-row"><div class="step-dot">4</div><div>Total fractional: &nbsp; <span class="step-blank"></span> + <span class="step-blank"></span> = <span class="step-blank"></span></div></div>
+        <div class="step-row"><div class="step-dot">5</div><div>Absolute Δy: &nbsp; <span class="step-blank"></span> × <span class="step-blank"></span> = <span class="step-blank"></span> Ω</div></div>
+      </div>
+      <div class="answer-row" style="margin-top:10px;"><span class="answer-label">Answer:</span><span class="answer-line"></span></div>
+    </div>
+
+    <div class="mixed-grid">
+      <div class="mixed-card">
+        <div class="op-badge op-mul">Multiplication</div>
+        <div class="problem-num">Problem 11</div>
+        <div class="problem-display" style="font-size:1.1rem;">(4.0 ± 0.8 kg) × (9.8 ± 5% m/s²) = ?</div>
+        <div class="work-lines" style="margin-top:10px;"><div class="work-line"></div><div class="work-line"></div><div class="work-line"></div></div>
+        <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line" style="width:160px;"></span></div>
+      </div>
+      <div class="mixed-card">
+        <div class="op-badge op-div">Division</div>
+        <div class="problem-num">Problem 12</div>
+        <div class="problem-display" style="font-size:1.1rem;">(120 ± 6 J) ÷ (3.0 kg ± 10%) = ?</div>
+        <div class="work-lines" style="margin-top:10px;"><div class="work-line"></div><div class="work-line"></div><div class="work-line"></div></div>
+        <div class="answer-row"><span class="answer-label">Answer:</span><span class="answer-line" style="width:160px;"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART D: SHORT ANSWER -->
+  <section>
+    <h2>Part D — Short Answer</h2>
+    <p class="instructions">Answer in complete sentences. Explain your reasoning clearly.</p>
+
+    <div class="short-answer">
+      <div class="q">Question 13. A student measures the length and width of a rectangle: Length = (8.0 ± 0.4 m) and Width = (3.0 ± 0.3 m). Calculate the area and its uncertainty. Then calculate the percent uncertainty of the area and compare it to the percent uncertainty of each measurement. Which measurement contributes more to the final uncertainty?</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="short-answer">
+      <div class="q">Question 14. A student calculates (12 ± 3 kg) × (4 ± 1 m/s²) and incorrectly writes "48 ± 4 N" (they added the absolute uncertainties: 3 + 1 = 4). Explain the mistake and give the correct answer.</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+
+    <div class="short-answer">
+      <div class="q">Question 15. You have two options to measure the speed of a car (v = d/t). Option A uses d = 100 ± 5 m and t = 10 ± 0.5 s. Option B uses d = 100 ± 1 m and t = 10 ± 2 s. Calculate the speed and fractional uncertainty for each option. Which setup gives a more reliable result, and why?</div>
+      <div class="write-lines"><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div><div class="write-line"></div></div>
+    </div>
+  </section>
+
+  <div class="key-btn-wrap"><button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key (Teacher Use)</button></div>
+
+  <div id="answer-key">
+    <h2>Answer Key</h2>
+
+    <div class="key-section">
+      <h3>Part A — Multiplication</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="knum">Problem 1</div>
+          <div class="kproblem">(4±1 m) × (6±2 m)</div>
+          <div class="kans">24 m² ± 0.58 (frac) → 24 ± 14 m²</div>
+          <div class="kexpl">y = 24. Δa/a = 1/4 = 0.25. Δb/b = 2/6 = 0.33. Total frac = 0.58. Absolute: 0.58 × 24 ≈ 14 m².</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 2</div>
+          <div class="kproblem">(3.0±0.6 kg) × (5.0±0.5 kg)</div>
+          <div class="kans">15 kg² ± 0.30 (frac) → 15 ± 4.5 kg²</div>
+          <div class="kexpl">y = 15. Δa/a = 0.6/3 = 0.20. Δb/b = 0.5/5 = 0.10. Total = 0.30. Absolute: 0.30 × 15 = 4.5 kg².</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 3</div>
+          <div class="kproblem">(15 N ±20%) × (8 N ±10%)</div>
+          <div class="kans">120 N² ± 30%</div>
+          <div class="kexpl">y = 15 × 8 = 120. Add percents: 20% + 10% = 30%. Absolute: 0.30 × 120 = 36 N².</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 4</div>
+          <div class="kproblem">(9.0±0.9 s) × (2.0±0.4 s)</div>
+          <div class="kans">18 s² ± 0.30 (frac) → 18 ± 5.4 s²</div>
+          <div class="kexpl">y = 18. Δa/a = 0.9/9 = 0.10. Δb/b = 0.4/2 = 0.20. Total = 0.30. Absolute: 0.30 × 18 = 5.4 s².</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part B — Division</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="knum">Problem 5</div>
+          <div class="kproblem">(20±4 N) ÷ (5±1 m)</div>
+          <div class="kans">4 N/m ± 0.40 (frac) → 4 ± 1.6 N/m</div>
+          <div class="kexpl">y = 4. Δa/a = 4/20 = 0.20. Δb/b = 1/5 = 0.20. Total = 0.40. Absolute: 0.40 × 4 = 1.6.</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 6</div>
+          <div class="kproblem">(36±6 J) ÷ (12±3 s)</div>
+          <div class="kans">3 W ± 0.42 (frac) → 3 ± 1.25 W</div>
+          <div class="kexpl">y = 3. Δa/a = 6/36 = 0.167. Δb/b = 3/12 = 0.25. Total = 0.417 ≈ 0.42. Absolute: 0.42 × 3 ≈ 1.25 W.</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 7</div>
+          <div class="kproblem">(100 W ±15%) ÷ (50 V ±5%)</div>
+          <div class="kans">2.0 A ± 20%</div>
+          <div class="kexpl">y = 2. Add percents: 15% + 5% = 20%. Absolute: 0.20 × 2 = 0.4 A. So 2.0 ± 0.4 A.</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 8</div>
+          <div class="kproblem">(8.4±0.6 m) ÷ (2.1±0.3 s)</div>
+          <div class="kans">4.0 m/s ± 0.214 (frac) → 4.0 ± 0.86 m/s</div>
+          <div class="kexpl">y = 4. Δa/a = 0.6/8.4 ≈ 0.071. Δb/b = 0.3/2.1 ≈ 0.143. Total ≈ 0.214. Absolute: 0.214 × 4 ≈ 0.86 m/s.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part C — Mixed (with scaffolding)</h3>
+      <div class="key-grid">
+        <div class="key-item">
+          <div class="knum">Problem 9</div>
+          <div class="kproblem">(6.0±0.3 A) × (6.0 A ±5%)</div>
+          <div class="kans">36 A² ± 0.10 (frac) → 36 ± 3.6 A²</div>
+          <div class="kexpl">y = 36. First frac: 0.3/6 = 0.05. Second: 5% = 0.05. Total: 0.05 + 0.05 = 0.10. Absolute: 0.10 × 36 = 3.6 A².</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 10</div>
+          <div class="kproblem">(50 V ±10%) ÷ (2.5±0.5 A)</div>
+          <div class="kans">20 Ω ± 0.30 (frac) → 20 ± 6 Ω</div>
+          <div class="kexpl">y = 20. First: 10% = 0.10. Second frac: 0.5/2.5 = 0.20. Total: 0.30. Absolute: 0.30 × 20 = 6 Ω.</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 11</div>
+          <div class="kproblem">(4.0±0.8 kg) × (9.8±5% m/s²)</div>
+          <div class="kans">39.2 N ± 0.25 (frac) → 39.2 ± 9.8 N</div>
+          <div class="kexpl">y = 39.2. First frac: 0.8/4 = 0.20. Second: 5% = 0.05. Total: 0.25. Absolute: 0.25 × 39.2 = 9.8 N.</div>
+        </div>
+        <div class="key-item">
+          <div class="knum">Problem 12</div>
+          <div class="kproblem">(120±6 J) ÷ (3.0 kg ±10%)</div>
+          <div class="kans">40 J/kg ± 0.15 (frac) → 40 ± 6 J/kg</div>
+          <div class="kexpl">y = 40. First frac: 6/120 = 0.05. Second: 10% = 0.10. Total: 0.15. Absolute: 0.15 × 40 = 6 J/kg.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-section">
+      <h3>Part D — Short Answer</h3>
+      <div class="short-ans-key">
+        <strong>Q13:</strong> Area = 8.0 × 3.0 = 24.0 m². Frac. uncs: 0.4/8.0 = 5%, 0.3/3.0 = 10%. Total = 15%. Absolute: 0.15 × 24 = 3.6 m². Width contributes more (10% vs 5%) because its uncertainty is larger relative to its size. To improve the result, reduce the width measurement uncertainty first.
+      </div>
+      <div class="short-ans-key">
+        <strong>Q14:</strong> Mistake: added absolute uncertainties (3+1=4) instead of using fractional rule. Correct: y = 48 N. Δa/a = 3/12 = 0.25. Δb/b = 1/4 = 0.25. Total = 0.50. Absolute: 0.50 × 48 = 24 N. Answer: 48 ± 24 N (not 48 ± 4 N).
+      </div>
+      <div class="short-ans-key">
+        <strong>Q15:</strong> Option A: v = 10 m/s. Frac: 5/100 = 0.05, 0.5/10 = 0.05. Total = 0.10 (10%). Absolute: 1.0 m/s. Option B: v = 10 m/s. Frac: 1/100 = 0.01, 2/10 = 0.20. Total = 0.21 (21%). Absolute: 2.1 m/s. Option A is far more reliable (10% vs 21%). In Option B, the poor time measurement (2 s uncertainty) dominates and makes the result twice as uncertain. Better timing equipment is the priority.
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+function toggleKey(){
+  var k=document.getElementById('answer-key');
+  var b=document.getElementById('toggle-key-btn');
+  if(k.style.display==='none'||k.style.display===''){
+    k.style.display='block';b.textContent='Hide Answer Key';
+  } else {
+    k.style.display='none';b.textContent='Show Answer Key (Teacher Use)';
+  }
+}
+</script>
+</body>
+</html>

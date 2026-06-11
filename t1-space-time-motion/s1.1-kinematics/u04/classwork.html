@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Kinematics Unit 4 — Classwork: Average vs. Instantaneous Velocity</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --blue:#3b82f6;
+  --indigo:#6366f1;
+  --green:#22c55e;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --dark:#0f172a;
+  --bg:#f8faff;
+  --muted:#94a3b8;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#cbd5e1 1px,transparent 1px);background-size:28px 28px;opacity:0.45;z-index:0;pointer-events:none;}
+
+/* GATE */
+#gate{position:fixed;inset:0;background:linear-gradient(135deg,#0f172a,#1e3a5f);display:flex;align-items:center;justify-content:center;z-index:9999;}
+#gate-box{background:#1e293b;border:1px solid #334155;border-radius:16px;padding:2.5rem 2rem;max-width:380px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+#gate-box h2{color:#fff;font-size:1.4rem;margin-bottom:.5rem;}
+#gate-box p{color:var(--muted);font-size:.9rem;margin-bottom:1.5rem;}
+#gate-box input{width:100%;padding:.75rem 1rem;border-radius:8px;border:1px solid #475569;background:#0f172a;color:#fff;font-family:'Nunito',sans-serif;font-size:1rem;outline:none;margin-bottom:1rem;}
+#gate-box input:focus{border-color:var(--blue);}
+#gate-box button{width:100%;padding:.75rem;background:linear-gradient(135deg,var(--blue),var(--indigo));color:#fff;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;}
+#gate-error{color:var(--red);font-size:.85rem;margin-top:.75rem;display:none;}
+
+#main{display:none;position:relative;z-index:1;}
+
+/* HEADER */
+header{background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 100%);padding:2.75rem 1.5rem 2.25rem;text-align:center;position:relative;overflow:hidden;}
+.stars{position:absolute;inset:0;pointer-events:none;}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 2s infinite alternate;}
+@keyframes twinkle{0%{opacity:.2;transform:scale(1);}100%{opacity:1;transform:scale(1.4);}}
+.chip{display:inline-block;background:rgba(255,255,255,.15);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.25);color:#e0e7ff;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:.3rem .9rem;margin-bottom:1rem;}
+header h1{font-size:clamp(1.6rem,4.5vw,2.4rem);font-weight:900;background:linear-gradient(135deg,#fff 30%,#bfdbfe 70%,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem;}
+header p.subtitle{color:#bfdbfe;font-size:.98rem;}
+
+.content{max-width:860px;margin:0 auto;padding:2.25rem 1.25rem 4rem;}
+
+/* REFERENCE BOX */
+.ref-box{background:linear-gradient(135deg,#eff6ff,#eef2ff);border:1.5px solid #bfdbfe;border-radius:14px;padding:1.25rem 1.5rem;margin-bottom:1.75rem;}
+.ref-box h3{font-size:1rem;font-weight:800;color:#1e40af;margin-bottom:.75rem;}
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem;}
+.ref-item{background:#fff;border-radius:8px;padding:.55rem .9rem;font-family:'Space Mono',monospace;font-size:.85rem;color:#1e3a5f;border:1px solid #dbeafe;}
+
+/* SECTION TITLE */
+.section-title{font-size:1.2rem;font-weight:800;color:var(--dark);margin:2rem 0 1rem;display:flex;align-items:center;gap:.5rem;}
+.section-title::before{content:'';display:inline-block;width:4px;height:1.2em;background:linear-gradient(180deg,var(--blue),var(--indigo));border-radius:2px;}
+
+/* PROBLEM GRID */
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+@media(max-width:620px){.problem-grid{grid-template-columns:1fr;}}
+
+/* PROBLEM CARD */
+.prob{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.2rem 1.3rem;box-shadow:0 2px 10px rgba(59,130,246,.05);}
+.prob-num{display:inline-block;background:linear-gradient(135deg,var(--blue),var(--indigo));color:#fff;font-size:.78rem;font-weight:800;border-radius:999px;padding:.2rem .65rem;margin-bottom:.5rem;}
+.prob p{font-size:.94rem;line-height:1.6;color:#1e293b;}
+.work-lines{margin-top:.75rem;}
+.work-lines .line{border-bottom:1.5px solid #e2e8f0;height:28px;margin-bottom:4px;}
+.prob .given{font-size:.83rem;color:var(--muted);margin-top:.4rem;font-family:'Space Mono',monospace;}
+
+/* FULL-WIDTH PROBLEM */
+.prob-full{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.3rem 1.5rem;box-shadow:0 2px 10px rgba(59,130,246,.05);margin-bottom:1rem;}
+.prob-full p{font-size:.94rem;line-height:1.6;color:#1e293b;}
+.prob-full .given{font-size:.83rem;color:var(--muted);margin-top:.4rem;font-family:'Space Mono',monospace;}
+
+/* GRAPH PROBLEM */
+.graph-prob{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.3rem 1.5rem;box-shadow:0 2px 10px rgba(59,130,246,.05);margin-bottom:1rem;}
+
+/* SHORT ANSWER */
+.short-ans{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.1rem 1.3rem;box-shadow:0 2px 8px rgba(59,130,246,.04);margin-bottom:.9rem;}
+.short-ans p{font-size:.94rem;line-height:1.6;color:#1e293b;}
+.ans-line{border-bottom:1.5px solid #e2e8f0;height:30px;margin-top:.6rem;margin-bottom:.3rem;}
+
+/* ANSWER KEY */
+.key-btn-wrap{text-align:center;margin:2.5rem 0 1rem;}
+#toggle-key-btn{background:linear-gradient(135deg,#1e3a5f,var(--indigo));color:#fff;border:none;border-radius:10px;padding:.7rem 2rem;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(99,102,241,.25);}
+#toggle-key-btn:hover{opacity:.9;}
+#answer-key{display:none;background:#fff;border:2px solid var(--indigo);border-radius:14px;padding:1.5rem 1.75rem;margin-bottom:2rem;}
+#answer-key h2{color:var(--indigo);font-size:1.15rem;font-weight:800;margin-bottom:1.25rem;}
+.ak-item{margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid #e2e8f0;}
+.ak-item:last-child{border-bottom:none;margin-bottom:0;}
+.ak-item strong{color:var(--dark);font-size:.94rem;}
+.ak-item p,.ak-item .step{font-size:.88rem;color:#334155;line-height:1.6;}
+.step{font-family:'Space Mono',monospace;background:#f8faff;border-radius:6px;padding:.35rem .7rem;margin:.3rem 0;display:block;}
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div id="gate-box">
+    <h2>🔒 Password Required</h2>
+    <p>Enter the class password to access this classwork sheet.</p>
+    <input type="password" id="pwd-input" placeholder="Enter password…" onkeydown="if(event.key==='Enter')checkPwd()"/>
+    <button onclick="checkPwd()">Unlock</button>
+    <div id="gate-error">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<div id="main">
+<!-- HEADER -->
+<header>
+  <div class="stars" id="stars-container"></div>
+  <div class="chip">Kinematics · Unit 4</div>
+  <h1>Classwork — Average vs. Instantaneous Velocity</h1>
+  <p class="subtitle">Name: _________________________ &nbsp;&nbsp; Date: _____________ &nbsp;&nbsp; Period: _______</p>
+</header>
+
+<div class="content">
+
+  <!-- REFERENCE BOX -->
+  <div class="ref-box">
+    <h3>Reference Formulas</h3>
+    <div class="ref-grid">
+      <div class="ref-item">v&#818; = &Delta;x / &Delta;t</div>
+      <div class="ref-item">v&#818; = total distance / total time</div>
+      <div class="ref-item">slope = rise / run = &Delta;y / &Delta;x</div>
+      <div class="ref-item">Inst. v = slope of tangent at a point</div>
+      <div class="ref-item">Avg. v = slope of secant line</div>
+      <div class="ref-item">Speed = |velocity| (always &ge; 0)</div>
+    </div>
+  </div>
+
+  <!-- PART A -->
+  <div class="section-title">Part A — Calculation Problems (2 pts each)</div>
+
+  <div class="problem-grid">
+    <!-- A1 -->
+    <div class="prob">
+      <span class="prob-num">A1</span>
+      <p>A cyclist travels 48 km in 3 hours. Calculate the average speed of the cyclist.</p>
+      <p class="given">Given: d = 48 km, t = 3 h</p>
+      <div class="work-lines">
+        <div class="line"></div><div class="line"></div><div class="line"></div>
+      </div>
+    </div>
+    <!-- A2 -->
+    <div class="prob">
+      <span class="prob-num">A2</span>
+      <p>A car travels 200 km in 4 hours. What is its average speed in km/h?</p>
+      <p class="given">Given: d = 200 km, t = 4 h</p>
+      <div class="work-lines">
+        <div class="line"></div><div class="line"></div><div class="line"></div>
+      </div>
+    </div>
+    <!-- A3 -->
+    <div class="prob">
+      <span class="prob-num">A3</span>
+      <p>On a position–time graph, two points are identified: (2 s, 3 m) and (8 s, 15 m). Find the average velocity.</p>
+      <p class="given">Given: (t&#8321;, x&#8321;) = (2 s, 3 m); (t&#8322;, x&#8322;) = (8 s, 15 m)</p>
+      <div class="work-lines">
+        <div class="line"></div><div class="line"></div><div class="line"></div>
+      </div>
+    </div>
+    <!-- A4 -->
+    <div class="prob">
+      <span class="prob-num">A4</span>
+      <p>A runner's position–time graph shows points at (0 s, 0 m) and (10 s, 40 m). Calculate the average velocity over this interval.</p>
+      <p class="given">Given: (t&#8321;, x&#8321;) = (0 s, 0 m); (t&#8322;, x&#8322;) = (10 s, 40 m)</p>
+      <div class="work-lines">
+        <div class="line"></div><div class="line"></div><div class="line"></div>
+      </div>
+    </div>
+    <!-- A5 -->
+    <div class="prob">
+      <span class="prob-num">A5</span>
+      <p>A tangent line drawn on a P–T graph at t = 3 s passes through the points (1 s, 2 m) and (5 s, 10 m). What is the instantaneous velocity at t = 3 s?</p>
+      <p class="given">Tangent line passes through (1 s, 2 m) and (5 s, 10 m)</p>
+      <div class="work-lines">
+        <div class="line"></div><div class="line"></div><div class="line"></div>
+      </div>
+    </div>
+    <!-- A6 -->
+    <div class="prob">
+      <span class="prob-num">A6</span>
+      <p>The tangent to a P–T curve at t = 5 s passes through (3 s, 9 m) and (7 s, 1 m). What are the instantaneous velocity AND instantaneous speed at t = 5 s?</p>
+      <p class="given">Tangent passes through (3 s, 9 m) and (7 s, 1 m)</p>
+      <div class="work-lines">
+        <div class="line"></div><div class="line"></div><div class="line"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART B -->
+  <div class="section-title">Part B — Graph Interpretation Problems (3 pts each)</div>
+
+  <!-- B1: SVG Graph -->
+  <div class="graph-prob">
+    <span class="prob-num">B1</span>
+    <p style="margin-bottom:.75rem;font-size:.94rem;">Use the position–time graph below to answer the questions.</p>
+    <svg viewBox="0 0 380 260" width="100%" style="max-width:380px;display:block;border:1px solid #e2e8f0;border-radius:8px;padding:4px;">
+      <line x1="45" y1="230" x2="365" y2="230" stroke="#475569" stroke-width="2"/>
+      <line x1="45" y1="230" x2="45" y2="20" stroke="#475569" stroke-width="2"/>
+      <text x="200" y="250" text-anchor="middle" font-size="11" fill="#475569">Time (s)</text>
+      <text x="12" y="125" text-anchor="middle" font-size="11" fill="#475569" transform="rotate(-90,12,125)">Position (m)</text>
+      <!-- x ticks 0-10 -->
+      <line x1="77" y1="230" x2="77" y2="235" stroke="#94a3b8"/><text x="77" y="245" text-anchor="middle" font-size="10" fill="#94a3b8">1</text>
+      <line x1="109" y1="230" x2="109" y2="235" stroke="#94a3b8"/><text x="109" y="245" text-anchor="middle" font-size="10" fill="#94a3b8">2</text>
+      <line x1="141" y1="230" x2="141" y2="235" stroke="#94a3b8"/><text x="141" y="245" text-anchor="middle" font-size="10" fill="#94a3b8">3</text>
+      <line x1="173" y1="230" x2="173" y2="235" stroke="#94a3b8"/><text x="173" y="245" text-anchor="middle" font-size="10" fill="#94a3b8">4</text>
+      <line x1="205" y1="230" x2="205" y2="235" stroke="#94a3b8"/><text x="205" y="245" text-anchor="middle" font-size="10" fill="#94a3b8">5</text>
+      <line x1="237" y1="230" x2="237" y2="235" stroke="#94a3b8"/><text x="237" y="245" text-anchor="middle" font-size="10" fill="#94a3b8">6</text>
+      <line x1="269" y1="230" x2="269" y2="235" stroke="#94a3b8"/><text x="269" y="245" text-anchor="middle" font-size="10" fill="#94a3b8">7</text>
+      <line x1="301" y1="230" x2="301" y2="235" stroke="#94a3b8"/><text x="301" y="245" text-anchor="middle" font-size="10" fill="#94a3b8">8</text>
+      <line x1="333" y1="230" x2="333" y2="235" stroke="#94a3b8"/><text x="333" y="245" text-anchor="middle" font-size="10" fill="#94a3b8">9</text>
+      <line x1="365" y1="230" x2="365" y2="235" stroke="#94a3b8"/><text x="365" y="245" text-anchor="middle" font-size="10" fill="#94a3b8">10</text>
+      <!-- y ticks: step=21 for 0-10 -->
+      <line x1="40" y1="209" x2="45" y2="209" stroke="#94a3b8"/><text x="37" y="213" text-anchor="end" font-size="10" fill="#94a3b8">1</text>
+      <line x1="40" y1="188" x2="45" y2="188" stroke="#94a3b8"/><text x="37" y="192" text-anchor="end" font-size="10" fill="#94a3b8">2</text>
+      <line x1="40" y1="167" x2="45" y2="167" stroke="#94a3b8"/><text x="37" y="171" text-anchor="end" font-size="10" fill="#94a3b8">3</text>
+      <line x1="40" y1="146" x2="45" y2="146" stroke="#94a3b8"/><text x="37" y="150" text-anchor="end" font-size="10" fill="#94a3b8">4</text>
+      <line x1="40" y1="125" x2="45" y2="125" stroke="#94a3b8"/><text x="37" y="129" text-anchor="end" font-size="10" fill="#94a3b8">5</text>
+      <line x1="40" y1="104" x2="45" y2="104" stroke="#94a3b8"/><text x="37" y="108" text-anchor="end" font-size="10" fill="#94a3b8">6</text>
+      <line x1="40" y1="83" x2="45" y2="83" stroke="#94a3b8"/><text x="37" y="87" text-anchor="end" font-size="10" fill="#94a3b8">7</text>
+      <line x1="40" y1="62" x2="45" y2="62" stroke="#94a3b8"/><text x="37" y="66" text-anchor="end" font-size="10" fill="#94a3b8">8</text>
+      <line x1="40" y1="41" x2="45" y2="41" stroke="#94a3b8"/><text x="37" y="45" text-anchor="end" font-size="10" fill="#94a3b8">9</text>
+      <!-- y=225-m*21; x=45+t*32 -->
+      <!-- Smooth bell curve: (0,0)→(5,9m)→(10,0) -->
+      <path d="M45,230 C85,200 120,80 205,41 C290,80 325,200 365,230" fill="none" stroke="#ef4444" stroke-width="2.5"/>
+      <!-- green dots at (2s,4.5m) and (8s,4.5m) -->
+      <!-- t=2 → x=109; pos=4.5 → y=225-4.5*21=130.5≈131 -->
+      <!-- t=8 → x=301; pos=4.5 → y≈131 -->
+      <circle cx="109" cy="131" r="5" fill="#22c55e" stroke="#fff" stroke-width="2"/>
+      <circle cx="301" cy="131" r="5" fill="#22c55e" stroke="#fff" stroke-width="2"/>
+      <text x="115" y="124" font-size="9" fill="#15803d">(2s,4.5m)</text>
+      <text x="255" y="124" font-size="9" fill="#15803d">(8s,4.5m)</text>
+      <!-- Secant line between the two green dots -->
+      <line x1="109" y1="131" x2="301" y2="131" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="5,3"/>
+    </svg>
+    <p style="font-size:.87rem;color:var(--muted);margin:.5rem 0 .75rem;">The green dots are at (2 s, 4.5 m) and (8 s, 4.5 m). The peak of the curve is at approximately t = 5 s, x = 9 m.</p>
+    <p style="font-size:.94rem;margin-bottom:.3rem;"><strong>(a)</strong> Calculate the average velocity between the two green dots (t = 2 s to t = 8 s).</p>
+    <div style="border-bottom:1.5px solid #e2e8f0;height:30px;margin-bottom:.5rem;"></div>
+    <p style="font-size:.94rem;margin-bottom:.3rem;"><strong>(b)</strong> What is the instantaneous velocity at the peak of the curve (t = 5 s)? Explain your reasoning.</p>
+    <div style="border-bottom:1.5px solid #e2e8f0;height:30px;margin-bottom:.5rem;"></div>
+    <p style="font-size:.94rem;margin-bottom:.3rem;"><strong>(c)</strong> Is the instantaneous velocity positive, negative, or zero at t = 7 s? Explain.</p>
+    <div style="border-bottom:1.5px solid #e2e8f0;height:30px;"></div>
+  </div>
+
+  <!-- B2 -->
+  <div class="graph-prob">
+    <span class="prob-num">B2</span>
+    <p style="margin-bottom:.75rem;font-size:.94rem;">A P–T graph has a curve with the following tangent line slopes at different times:</p>
+    <table style="font-size:.88rem;width:100%;border-collapse:collapse;margin-bottom:.75rem;">
+      <tr style="background:#eff6ff;"><th style="padding:.4rem .7rem;text-align:left;border:1px solid #bfdbfe;">Time (s)</th><th style="padding:.4rem .7rem;text-align:left;border:1px solid #bfdbfe;">Tangent slope</th></tr>
+      <tr><td style="padding:.35rem .7rem;border:1px solid #e2e8f0;">t = 1 s</td><td style="padding:.35rem .7rem;border:1px solid #e2e8f0;">+5 m/s</td></tr>
+      <tr><td style="padding:.35rem .7rem;border:1px solid #e2e8f0;">t = 3 s</td><td style="padding:.35rem .7rem;border:1px solid #e2e8f0;">0 m/s</td></tr>
+      <tr><td style="padding:.35rem .7rem;border:1px solid #e2e8f0;">t = 6 s</td><td style="padding:.35rem .7rem;border:1px solid #e2e8f0;">&minus;3 m/s</td></tr>
+    </table>
+    <p style="font-size:.94rem;margin-bottom:.3rem;"><strong>(a)</strong> For each time, state the instantaneous velocity AND instantaneous speed.</p>
+    <div style="border-bottom:1.5px solid #e2e8f0;height:28px;margin-bottom:.4rem;"></div>
+    <div style="border-bottom:1.5px solid #e2e8f0;height:28px;margin-bottom:.4rem;"></div>
+    <div style="border-bottom:1.5px solid #e2e8f0;height:28px;margin-bottom:.6rem;"></div>
+    <p style="font-size:.94rem;margin-bottom:.3rem;"><strong>(b)</strong> At which of these times is the object moving in the negative direction?</p>
+    <div style="border-bottom:1.5px solid #e2e8f0;height:28px;"></div>
+  </div>
+
+  <!-- B3 -->
+  <div class="graph-prob">
+    <span class="prob-num">B3</span>
+    <p style="font-size:.94rem;margin-bottom:.5rem;">A position–time graph shows a curve. A tangent line drawn at t = 4 s passes through the points (2 s, 1 m) and (6 s, 9 m).</p>
+    <p style="font-size:.94rem;margin-bottom:.3rem;"><strong>(a)</strong> Calculate the instantaneous velocity at t = 4 s.</p>
+    <div style="border-bottom:1.5px solid #e2e8f0;height:30px;margin-bottom:.5rem;"></div>
+    <p style="font-size:.94rem;margin-bottom:.3rem;"><strong>(b)</strong> What is the instantaneous speed at t = 4 s?</p>
+    <div style="border-bottom:1.5px solid #e2e8f0;height:30px;margin-bottom:.5rem;"></div>
+    <p style="font-size:.94rem;margin-bottom:.3rem;"><strong>(c)</strong> In which direction is the object moving at t = 4 s?</p>
+    <div style="border-bottom:1.5px solid #e2e8f0;height:28px;"></div>
+  </div>
+
+  <!-- B4 -->
+  <div class="graph-prob">
+    <span class="prob-num">B4</span>
+    <p style="font-size:.94rem;margin-bottom:.5rem;">Two students analyze the same P–T curve between t = 1 s and t = 7 s. The curve starts at (1 s, 2 m) and ends at (7 s, 8 m), but the path along the curve has a total arc length equivalent to a distance of 15 m.</p>
+    <p style="font-size:.94rem;margin-bottom:.3rem;"><strong>(a)</strong> Calculate the average velocity over this interval.</p>
+    <div style="border-bottom:1.5px solid #e2e8f0;height:30px;margin-bottom:.5rem;"></div>
+    <p style="font-size:.94rem;margin-bottom:.3rem;"><strong>(b)</strong> Calculate the average speed over this interval.</p>
+    <div style="border-bottom:1.5px solid #e2e8f0;height:30px;margin-bottom:.5rem;"></div>
+    <p style="font-size:.94rem;margin-bottom:.3rem;"><strong>(c)</strong> Explain in one sentence why the average speed and average velocity are different here.</p>
+    <div style="border-bottom:1.5px solid #e2e8f0;height:28px;"></div>
+  </div>
+
+  <!-- PART C -->
+  <div class="section-title">Part C — Short Answer (2 pts each)</div>
+
+  <div class="short-ans">
+    <span class="prob-num">C1</span>
+    <p>Explain the difference between average velocity and instantaneous velocity. Use the terms "secant line" and "tangent line" in your answer.</p>
+    <div class="ans-line"></div><div class="ans-line"></div><div class="ans-line"></div>
+  </div>
+
+  <div class="short-ans">
+    <span class="prob-num">C2</span>
+    <p>A car's speedometer reads 85 km/h at a particular moment. Is this an average speed or instantaneous speed? Explain why.</p>
+    <div class="ans-line"></div><div class="ans-line"></div>
+  </div>
+
+  <div class="short-ans">
+    <span class="prob-num">C3</span>
+    <p>On a position–time graph, a section of the curve has a negative slope. What does this tell you about the object's (a) velocity and (b) speed at that point?</p>
+    <div class="ans-line"></div><div class="ans-line"></div><div class="ans-line"></div>
+  </div>
+
+  <!-- ANSWER KEY TOGGLE -->
+  <div class="key-btn-wrap">
+    <button id="toggle-key-btn" onclick="toggleKey()">Show Answer Key</button>
+  </div>
+
+  <div id="answer-key">
+    <h2>Answer Key — Classwork</h2>
+
+    <div class="ak-item">
+      <strong>A1 — Average speed of cyclist</strong>
+      <span class="step">v&#818; = d / t = 48 km / 3 h = 16 km/h</span>
+    </div>
+
+    <div class="ak-item">
+      <strong>A2 — Average speed of car</strong>
+      <span class="step">v&#818; = 200 km / 4 h = 50 km/h</span>
+    </div>
+
+    <div class="ak-item">
+      <strong>A3 — Average velocity from (2 s, 3 m) to (8 s, 15 m)</strong>
+      <span class="step">v&#818; = &Delta;x / &Delta;t = (15 &minus; 3) / (8 &minus; 2) = 12 / 6 = 2 m/s</span>
+    </div>
+
+    <div class="ak-item">
+      <strong>A4 — Average velocity from (0 s, 0 m) to (10 s, 40 m)</strong>
+      <span class="step">v&#818; = (40 &minus; 0) / (10 &minus; 0) = 40 / 10 = 4 m/s</span>
+    </div>
+
+    <div class="ak-item">
+      <strong>A5 — Instantaneous velocity at t = 3 s</strong>
+      <p>Slope of tangent line through (1 s, 2 m) and (5 s, 10 m):</p>
+      <span class="step">v&#7522;&#8345;&#8347;&#8348; = (10 &minus; 2) / (5 &minus; 1) = 8 / 4 = 2 m/s</span>
+    </div>
+
+    <div class="ak-item">
+      <strong>A6 — Instantaneous velocity and speed at t = 5 s</strong>
+      <p>Slope of tangent line through (3 s, 9 m) and (7 s, 1 m):</p>
+      <span class="step">v&#7522;&#8345;&#8347;&#8348; = (1 &minus; 9) / (7 &minus; 3) = &minus;8 / 4 = &minus;2 m/s</span>
+      <p>Instantaneous speed = |&minus;2| = <strong>2 m/s</strong> (always positive magnitude)</p>
+    </div>
+
+    <div class="ak-item">
+      <strong>B1 — Graph interpretation</strong>
+      <p><strong>(a)</strong> Both green dots are at x = 4.5 m, so &Delta;x = 0. &Delta;t = 8 &minus; 2 = 6 s.</p>
+      <span class="step">v&#818; = 0 / 6 = 0 m/s</span>
+      <p><strong>(b)</strong> At the peak, the tangent line is horizontal (slope = 0), so instantaneous velocity = <strong>0 m/s</strong>. The object is momentarily at rest at the top of the curve before changing direction.</p>
+      <p><strong>(c)</strong> At t = 7 s the curve is on the descending (right) side of the peak, so the slope is <strong>negative</strong>. Instantaneous velocity is negative (object moving in negative direction).</p>
+    </div>
+
+    <div class="ak-item">
+      <strong>B2 — Tangent slopes table</strong>
+      <p><strong>(a)</strong></p>
+      <p>t = 1 s: inst. velocity = +5 m/s; inst. speed = 5 m/s</p>
+      <p>t = 3 s: inst. velocity = 0 m/s; inst. speed = 0 m/s</p>
+      <p>t = 6 s: inst. velocity = &minus;3 m/s; inst. speed = 3 m/s</p>
+      <p><strong>(b)</strong> t = 6 s (negative velocity means the object is moving in the negative direction)</p>
+    </div>
+
+    <div class="ak-item">
+      <strong>B3 — Tangent line at t = 4 s through (2 s, 1 m) and (6 s, 9 m)</strong>
+      <span class="step">(a) v&#7522;&#8345;&#8347;&#8348; = (9 &minus; 1) / (6 &minus; 2) = 8 / 4 = +2 m/s</span>
+      <p><strong>(b)</strong> Speed = |+2| = <strong>2 m/s</strong></p>
+      <p><strong>(c)</strong> Positive slope → object is moving in the <strong>positive direction</strong>.</p>
+    </div>
+
+    <div class="ak-item">
+      <strong>B4 — Average velocity vs. average speed</strong>
+      <span class="step">(a) v&#818; = &Delta;x / &Delta;t = (8 &minus; 2) / (7 &minus; 1) = 6 / 6 = 1 m/s</span>
+      <span class="step">(b) avg speed = total distance / time = 15 / 6 = 2.5 m/s</span>
+      <p><strong>(c)</strong> Average speed uses total distance traveled along the path; average velocity uses displacement (straight-line change in position), so they differ when the path is curved or the object reverses direction.</p>
+    </div>
+
+    <div class="ak-item">
+      <strong>C1 — Secant vs. Tangent</strong>
+      <p>Average velocity is the slope of a <em>secant line</em> — a straight line connecting two specific points on the curve — while instantaneous velocity is the slope of the <em>tangent line</em> drawn at exactly one point on the curve.</p>
+    </div>
+
+    <div class="ak-item">
+      <strong>C2 — Speedometer reading</strong>
+      <p>It is <strong>instantaneous speed</strong>. A speedometer shows how fast the car is moving at that exact moment, not averaged over any time interval.</p>
+    </div>
+
+    <div class="ak-item">
+      <strong>C3 — Negative slope on P–T graph</strong>
+      <p><strong>(a) Velocity:</strong> The instantaneous velocity is <em>negative</em> — the object is moving in the negative direction (backward/downward).</p>
+      <p><strong>(b) Speed:</strong> The instantaneous speed is still <em>positive</em> (it is the magnitude of velocity), indicating the object is still moving.</p>
+    </div>
+  </div>
+
+</div><!-- .content -->
+</div><!-- #main -->
+
+<script>
+(function(){
+  var KEY='kinematics_auth';
+  var HASH=btoa('physics2024');
+  if(localStorage.getItem(KEY)===HASH){unlock();}
+  function unlock(){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('main').style.display='block';
+    makeStars();
+  }
+  window.checkPwd=function(){
+    var v=document.getElementById('pwd-input').value;
+    if(btoa(v)===HASH){localStorage.setItem(KEY,HASH);unlock();}
+    else{document.getElementById('gate-error').style.display='block';}
+  };
+})();
+function makeStars(){
+  var c=document.getElementById('stars-container');
+  if(!c)return;
+  for(var i=0;i<45;i++){
+    var s=document.createElement('div');s.className='star';
+    var sz=(Math.random()*2.5+1).toFixed(1);
+    s.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;animation-delay:'+Math.random()*3+'s;animation-duration:'+(1.5+Math.random()*2)+'s;';
+    c.appendChild(s);
+  }
+}
+window.toggleKey=function(){
+  var k=document.getElementById('answer-key');
+  var b=document.getElementById('toggle-key-btn');
+  if(k.style.display==='none'||k.style.display===''){
+    k.style.display='block';b.textContent='Hide Answer Key';
+  }else{
+    k.style.display='none';b.textContent='Show Answer Key';
+  }
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propagating Uncertainty: Powers &amp; Roots — Physics Lesson</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+    :root {
+      --red:#dc2626;--dred:#7f1d1d;--lred:#b91c1c;--vlred:#fee2e2;
+      --amber:#f59e0b;--green:#22c55e;--dark:#0f172a;--card:#ffffff;--bg:#fff5f5;--muted:#94a3b8;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:17px;line-height:1.75;background-image:radial-gradient(circle,#fecaca 1px,transparent 1px);background-size:28px 28px;}
+    header{background:linear-gradient(135deg,#7f1d1d 0%,#b91c1c 60%,#dc2626 100%);color:white;padding:52px 60px 48px;position:relative;overflow:hidden;text-align:center;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(254,202,202,0.25) 0%,transparent 60%),radial-gradient(ellipse at 80% 30%,rgba(239,68,68,0.3) 0%,transparent 55%),radial-gradient(ellipse at 60% 80%,rgba(127,29,29,0.3) 0%,transparent 50%);pointer-events:none;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle 3s infinite alternate;}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(1);}to{opacity:0.9;transform:scale(1.4);}}
+    header .chip{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px;position:relative;}
+    header h1{font-size:3rem;font-weight:900;letter-spacing:-1px;position:relative;margin-bottom:10px;background:linear-gradient(90deg,#fee2e2,#fecaca,#fef2f2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    header .subtitle{font-size:1.1rem;color:rgba(255,255,255,0.82);position:relative;max-width:600px;margin:0 auto;}
+    main{max-width:920px;margin:48px auto;padding:0 24px 80px;}
+    section{margin-bottom:60px;}
+    .section-label{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+    .section-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    .section-label h2{font-size:1.5rem;font-weight:900;color:var(--dark);}
+    /* hero rule box */
+    .hero-rule{background:linear-gradient(135deg,#450a0a,#7f1d1d,#991b1b);border-radius:20px;padding:32px 36px;color:white;margin-bottom:32px;text-align:center;}
+    .hero-rule .hr-label{font-size:0.8rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;opacity:0.75;margin-bottom:14px;}
+    .hero-rule .hr-formula{font-family:'Space Mono',monospace;font-size:1.6rem;font-weight:700;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:14px;padding:16px 28px;display:inline-block;margin-bottom:18px;line-height:1.8;}
+    .hero-rule .hr-words{font-size:1.02rem;color:rgba(255,255,255,0.88);max-width:660px;margin:0 auto 18px;}
+    .hero-rule .hr-key{background:rgba(255,255,255,0.15);border-radius:10px;padding:10px 20px;display:inline-block;font-size:0.92rem;font-weight:700;color:#fecaca;}
+    .hero-rule .hr-alt{font-family:'Space Mono',monospace;font-size:1rem;background:rgba(255,255,255,0.08);border:1px dashed rgba(255,255,255,0.3);border-radius:10px;padding:10px 20px;display:inline-block;margin-top:14px;color:#fef2f2;}
+    /* intro scene */
+    .intro-scene{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;}
+    @media(max-width:640px){.intro-scene{grid-template-columns:1fr;}}
+    .intro-text{background:white;border-radius:16px;padding:24px 28px;box-shadow:0 4px 20px rgba(185,28,28,0.10);border:2px solid #fecaca;}
+    .intro-text p{margin-bottom:12px;color:#374151;}
+    .intro-text p:last-child{margin-bottom:0;}
+    .insight-card{background:linear-gradient(135deg,#fff5f5,#fee2e2);border-radius:16px;padding:24px 20px;border:2px solid #fca5a5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;}
+    .insight-card .ins-icon{font-size:3rem;}
+    .insight-card .ins-title{font-size:1rem;font-weight:900;color:#7f1d1d;}
+    .insight-card .ins-body{font-size:0.88rem;color:#991b1b;line-height:1.6;}
+    /* 4 key insights grid */
+    .insights-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:28px;}
+    @media(max-width:600px){.insights-grid{grid-template-columns:1fr;}}
+    .ki-card{background:white;border-radius:16px;padding:20px 22px;box-shadow:0 3px 14px rgba(0,0,0,0.07);border-top:4px solid transparent;display:flex;align-items:flex-start;gap:14px;}
+    .ki1{border-top-color:#dc2626;}.ki2{border-top-color:#b91c1c;}.ki3{border-top-color:#7f1d1d;}.ki4{border-top-color:#ef4444;}
+    .ki-badge{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+    .kb1{background:#fee2e2;}.kb2{background:#fecaca;}.kb3{background:#fef2f2;}.kb4{background:#fee2e2;}
+    .ki-body h4{font-size:0.95rem;font-weight:800;color:#0f172a;margin-bottom:4px;}
+    .ki-body p{font-size:0.85rem;color:#64748b;line-height:1.5;}
+    .ki-body .formula{font-family:'Space Mono',monospace;font-size:0.88rem;font-weight:700;color:#dc2626;margin-top:4px;}
+    /* roots note */
+    .roots-note{background:linear-gradient(135deg,#fef2f2,#fff5f5);border:2px solid #fca5a5;border-radius:16px;padding:22px 28px;margin-bottom:28px;}
+    .roots-note h3{font-size:1rem;font-weight:900;color:#7f1d1d;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+    .roots-note p{font-size:0.92rem;color:#374151;margin-bottom:8px;}
+    .roots-note .rn-formula{font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:700;color:#dc2626;background:#fee2e2;border-radius:8px;padding:8px 16px;display:inline-block;margin-top:6px;}
+    /* example cards */
+    .subsection-head{display:flex;align-items:center;gap:12px;margin-bottom:18px;margin-top:36px;}
+    .sub-badge{background:linear-gradient(135deg,#7f1d1d,#b91c1c);color:white;font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:5px 14px;border-radius:20px;}
+    .sub-badge-root{background:linear-gradient(135deg,#dc2626,#ef4444);color:white;font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:5px 14px;border-radius:20px;}
+    .sub-title{font-size:1.2rem;font-weight:900;color:var(--dark);}
+    .example-card{background:white;border-radius:18px;margin-bottom:22px;box-shadow:0 4px 20px rgba(0,0,0,0.07);overflow:hidden;}
+    .ex-header{display:flex;align-items:center;gap:14px;padding:16px 24px;border-bottom:2px solid #fee2e2;}
+    .ex-num{background:var(--dark);color:white;font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:4px 14px;border-radius:20px;}
+    .ex-concept{font-size:0.82rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+    .ex-body{padding:20px 24px;}
+    .given-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px;}
+    .given-chip{background:#fee2e2;border:1px solid #fca5a5;border-radius:8px;padding:6px 14px;font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;color:#7f1d1d;}
+    .steps{display:flex;flex-direction:column;gap:10px;}
+    .step{display:flex;gap:12px;align-items:flex-start;font-size:0.92rem;color:#374151;}
+    .step-dot{width:24px;height:24px;border-radius:50%;background:#fee2e2;color:#b91c1c;font-weight:800;font-size:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step code{font-family:'Space Mono',monospace;font-size:0.9rem;font-weight:700;background:#f8fafc;border-radius:4px;padding:1px 6px;color:#1e293b;}
+    .result-box{background:linear-gradient(135deg,#fef2f2,#fee2e2);border:2px solid #fca5a5;border-radius:12px;padding:14px 20px;margin-top:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+    .rb-label{font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#7f1d1d;}
+    .rb-value{font-family:'Space Mono',monospace;font-size:1.2rem;font-weight:700;color:#dc2626;}
+    .rb-note{font-size:0.82rem;color:#64748b;font-style:italic;}
+    .explanation{font-size:0.9rem;color:#475569;line-height:1.65;padding:12px 16px;background:#f8fafc;border-radius:10px;border-left:3px solid #fca5a5;margin-top:12px;}
+    /* summary table */
+    .summary-table{width:100%;border-collapse:collapse;background:white;border-radius:14px;overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,0.07);margin-bottom:20px;}
+    .summary-table th{background:linear-gradient(135deg,#7f1d1d,#b91c1c);color:white;padding:12px 16px;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;text-align:left;}
+    .summary-table td{padding:11px 16px;font-size:0.88rem;border-bottom:1px solid #fee2e2;}
+    .summary-table tr:last-child td{border-bottom:none;}
+    .summary-table tr:nth-child(even) td{background:#fff5f5;}
+    .summary-table td:first-child{font-family:'Space Mono',monospace;font-weight:700;color:#dc2626;}
+    .summary-table td:last-child{font-style:italic;color:#64748b;}
+    /* quiz */
+    .quiz-section{background:linear-gradient(135deg,#450a0a,#7f1d1d,#991b1b);border-radius:20px;padding:32px;color:white;}
+    .quiz-section h3{font-size:1.3rem;font-weight:900;margin-bottom:6px;}
+    .quiz-section p{font-size:0.88rem;opacity:0.75;margin-bottom:24px;}
+    .quiz-q{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:18px 22px;margin-bottom:14px;}
+    .quiz-q .qtext{font-size:0.95rem;margin-bottom:10px;font-weight:700;}
+    .quiz-q .qnum{font-family:'Space Mono',monospace;font-size:1.4rem;font-weight:700;margin-bottom:14px;background:rgba(255,255,255,0.1);border-radius:8px;padding:8px 16px;display:inline-block;}
+    .options{display:flex;flex-wrap:wrap;gap:10px;}
+    .opt-btn{background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);color:white;font-family:'Nunito',sans-serif;font-size:0.92rem;font-weight:700;padding:8px 18px;border-radius:30px;cursor:pointer;transition:all 0.2s;}
+    .opt-btn:hover{background:rgba(255,255,255,0.2);transform:scale(1.04);}
+    .opt-btn.correct{background:#22c55e;border-color:#22c55e;animation:popIn 0.3s ease;}
+    .opt-btn.wrong{background:#ef4444;border-color:#ef4444;}
+    .feedback{font-size:0.85rem;margin-top:10px;padding:8px 14px;border-radius:8px;display:none;}
+    .feedback.show{display:block;}
+    .feedback.ok{background:rgba(34,197,94,0.2);color:#bbf7d0;}
+    .feedback.bad{background:rgba(239,68,68,0.2);color:#fecaca;}
+    @keyframes popIn{0%{transform:scale(0.9);}60%{transform:scale(1.1);}100%{transform:scale(1);}}
+    footer{text-align:center;padding:32px 20px;font-size:0.85rem;color:var(--muted);}
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="pg-gate" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f0c29,#302b63,#1e1b4b);display:flex;align-items:center;justify-content:center;font-family:'Nunito','Segoe UI',sans-serif;">
+  <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:44px 48px;text-align:center;max-width:400px;width:90%;">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:8px;font-family:inherit;">Physics Class</h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.88rem;margin-bottom:28px;">Enter the class password to continue</p>
+    <input id="pg-input" type="password" placeholder="Class password" onkeydown="if(event.key==='Enter')pgCheck()" style="width:100%;padding:13px 18px;border-radius:12px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:1rem;font-family:inherit;outline:none;margin-bottom:12px;letter-spacing:2px;"/>
+    <div id="pg-error" style="display:none;color:#fca5a5;font-size:0.85rem;margin-bottom:12px;">Wrong password — try again</div>
+    <button onclick="pgCheck()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#3b82f6);color:white;font-size:1rem;font-weight:800;font-family:inherit;cursor:pointer;">Enter Class</button>
+  </div>
+</div>
+<script>(function(){var PWD='physics2024';var s=localStorage.getItem('pg_ok');if(s&&s===btoa(PWD)){document.getElementById('pg-gate').style.display='none';}else{document.body.style.overflow='hidden';}window.pgCheck=function(){var v=document.getElementById('pg-input').value.trim();if(btoa(v)===btoa(PWD)){localStorage.setItem('pg_ok',btoa(PWD));document.getElementById('pg-gate').style.display='none';document.body.style.overflow='';}else{document.getElementById('pg-error').style.display='block';document.getElementById('pg-input').value='';document.getElementById('pg-input').focus();}};})();</script>
+
+<header>
+  <div class="star" style="width:3px;height:3px;top:12%;left:8%;animation-delay:0s"></div>
+  <div class="star" style="width:2px;height:2px;top:25%;left:15%;animation-delay:0.5s"></div>
+  <div class="star" style="width:4px;height:4px;top:10%;left:30%;animation-delay:1s"></div>
+  <div class="star" style="width:3px;height:3px;top:70%;left:20%;animation-delay:0.3s"></div>
+  <div class="star" style="width:2px;height:2px;top:15%;left:75%;animation-delay:0.8s"></div>
+  <div class="star" style="width:4px;height:4px;top:40%;left:88%;animation-delay:1.2s"></div>
+  <div class="star" style="width:5px;height:5px;top:20%;left:55%;animation-delay:0.6s"></div>
+  <div class="star" style="width:2px;height:2px;top:60%;left:92%;animation-delay:1.5s"></div>
+  <div class="chip">Physics · High School · Measurement &amp; Uncertainty</div>
+  <h1>Propagating Uncertainty</h1>
+  <p class="subtitle">Powers &amp; Roots — when you raise a measurement to a power, the uncertainty scales with it</p>
+</header>
+
+<main>
+
+<!-- SECTION 1: THE RULE -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fee2e2;">📐</div>
+    <h2>The Rule</h2>
+  </div>
+
+  <div class="hero-rule">
+    <div class="hr-label">The Power Rule for Uncertainty</div>
+    <div class="hr-formula">
+      If &nbsp;<em>y</em> = <em>a</em><sup>n</sup>, &nbsp;then &nbsp;&Delta;<em>y</em> / <em>y</em> = | <em>n</em> &times; &Delta;<em>a</em> / <em>a</em> |
+    </div>
+    <div class="hr-words">
+      When you raise a measurement with uncertainty to a power, the <strong>fractional uncertainty</strong> of the result equals the <strong>absolute value of the power</strong> multiplied by the original fractional uncertainty.
+    </div>
+    <div class="hr-key">Fractional uncertainty of result = |n| &times; (fractional uncertainty of base)</div>
+    <div class="hr-alt">Alternative form: &nbsp;(a &#177; &Delta;a)<sup>n</sup> = a<sup>n</sup> &#177; | n &times; &Delta;a/a | &times; a<sup>n</sup></div>
+  </div>
+
+  <div class="intro-scene">
+    <div class="intro-text">
+      <p>In previous units you learned how to propagate uncertainty through addition/subtraction (add absolute uncertainties) and multiplication/division (add fractional uncertainties). Powers are just a special case of multiplication.</p>
+      <p>Think of squaring a number as multiplying it by itself twice: <strong>a² = a × a</strong>. Each multiplication adds the fractional uncertainty once — so squaring <em>doubles</em> it. Cubing adds it three times, so the fractional uncertainty <em>triples</em>.</p>
+      <p>For roots, remember that a square root is just raising to the power ½, a cube root is the power ⅓, and so on. The same rule applies — the fractional uncertainty is multiplied by the (now fractional) power.</p>
+    </div>
+    <div class="insight-card">
+      <div class="ins-icon">🔑</div>
+      <div class="ins-title">Why the Absolute Value?</div>
+      <div class="ins-body">
+        The absolute value |n| ensures the uncertainty is always <em>positive</em>, regardless of whether the power is positive or negative.<br><br>
+        For example, a⁻² and a² produce the same fractional uncertainty — you lose the same relative precision either way.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: KEY INSIGHTS -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fee2e2;">💡</div>
+    <h2>4 Key Insights</h2>
+  </div>
+
+  <div class="insights-grid">
+    <div class="ki-card ki1">
+      <div class="ki-badge kb1">✕2</div>
+      <div class="ki-body">
+        <h4>Squaring DOUBLES the fractional uncertainty</h4>
+        <p>If your measurement has 10% fractional uncertainty, then squaring it gives a result with 20% fractional uncertainty.</p>
+        <div class="formula">|n| = 2 &rarr; &Delta;y/y = 2 &times; &Delta;a/a</div>
+      </div>
+    </div>
+    <div class="ki-card ki2">
+      <div class="ki-badge kb2">✕3</div>
+      <div class="ki-body">
+        <h4>Cubing TRIPLES the fractional uncertainty</h4>
+        <p>Raising to the 3rd power multiplies the fractional uncertainty by 3. Precision degrades rapidly with large powers.</p>
+        <div class="formula">|n| = 3 &rarr; &Delta;y/y = 3 &times; &Delta;a/a</div>
+      </div>
+    </div>
+    <div class="ki-card ki3">
+      <div class="ki-badge kb3">÷2</div>
+      <div class="ki-body">
+        <h4>Square rooting HALVES the fractional uncertainty</h4>
+        <p>Taking a square root (n = ½) cuts the fractional uncertainty in half — roots improve relative precision.</p>
+        <div class="formula">|n| = ½ &rarr; &Delta;y/y = ½ &times; &Delta;a/a</div>
+      </div>
+    </div>
+    <div class="ki-card ki4">
+      <div class="ki-badge kb4">|n|</div>
+      <div class="ki-body">
+        <h4>The absolute value — sign of n doesn't matter</h4>
+        <p>Whether n is +2 or −2, the fractional uncertainty scales by 2. Negative powers (like a⁻¹) still increase uncertainty.</p>
+        <div class="formula">|+n| = |&minus;n| &rarr; same fractional uncertainty</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="roots-note">
+    <h3>&#8730; Roots Are Just Fractional Powers</h3>
+    <p>Any root can be written as a fractional exponent. This means the same rule applies automatically:</p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;">
+      <div class="rn-formula">&#8802;&#8730;x = x<sup>1/2</sup> &rarr; multiply &Delta;x/x by 1/2</div>
+      <div class="rn-formula">&#8308;&#8730;x = x<sup>1/4</sup> &rarr; multiply &Delta;x/x by 1/4</div>
+      <div class="rn-formula">&#8319;&#8730;x = x<sup>1/n</sup> &rarr; multiply &Delta;x/x by 1/n</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: POWER EXAMPLES -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fee2e2;">🔬</div>
+    <h2>Worked Examples</h2>
+  </div>
+
+  <div class="subsection-head">
+    <div class="sub-badge">Powers</div>
+    <div class="sub-title">Raising to integer powers</div>
+  </div>
+
+  <!-- Power Example 1 -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 1</div>
+      <div class="ex-concept">n = 2 · squaring · absolute uncertainty given</div>
+    </div>
+    <div class="ex-body">
+      <div class="given-row">
+        <div class="given-chip">(5 &#177; 2 kg)<sup>2</sup></div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Compute the base value: <code>5² = 25 kg²</code></span></div>
+        <div class="step"><div class="step-dot">2</div><span>Find the fractional uncertainty of the base: <code>&Delta;a/a = 2/5 = 0.4</code></span></div>
+        <div class="step"><div class="step-dot">3</div><span>Apply the rule — multiply by |n| = 2: <code>&Delta;y/y = 2 &times; 0.4 = 0.8</code></span></div>
+        <div class="step"><div class="step-dot">4</div><span>The fractional uncertainty of the result is <strong>0.8</strong> (or 80%)</span></div>
+      </div>
+      <div class="result-box">
+        <div><div class="rb-label">Final Answer</div><div class="rb-value">25 kg² &#177; 0.8 (fractional)</div></div>
+        <div class="rb-note">Note: absolute uncertainty = 0.8 &times; 25 = 20 kg²</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Power Example 2 -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 2</div>
+      <div class="ex-concept">n = 4 · fourth power</div>
+    </div>
+    <div class="ex-body">
+      <div class="given-row">
+        <div class="given-chip">(2.5 &#177; 0.5 m)<sup>4</sup></div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Base value: <code>2.5⁴ = 39.1 m⁴</code></span></div>
+        <div class="step"><div class="step-dot">2</div><span>Fractional uncertainty: <code>&Delta;a/a = 0.5/2.5 = 0.20</code></span></div>
+        <div class="step"><div class="step-dot">3</div><span>Apply rule with |n| = 4: <code>&Delta;y/y = 4 &times; 0.20 = 0.80</code></span></div>
+      </div>
+      <div class="result-box">
+        <div><div class="rb-label">Final Answer</div><div class="rb-value">39.1 m⁴ &#177; 0.80 (fractional)</div></div>
+      </div>
+      <div class="explanation">Notice how a 20% fractional uncertainty in the base becomes an 80% fractional uncertainty in the 4th power — large powers amplify uncertainty dramatically!</div>
+    </div>
+  </div>
+
+  <!-- Power Example 3 -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 3</div>
+      <div class="ex-concept">n = 3 · percentage uncertainty given</div>
+    </div>
+    <div class="ex-body">
+      <div class="given-row">
+        <div class="given-chip">(20 N &#177; 10%)<sup>3</sup></div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Base value: <code>20³ = 8000 N³</code></span></div>
+        <div class="step"><div class="step-dot">2</div><span>Fractional uncertainty is already given as 10%</span></div>
+        <div class="step"><div class="step-dot">3</div><span>Apply rule with |n| = 3: <code>&Delta;y/y = 3 &times; 10% = 30%</code></span></div>
+      </div>
+      <div class="result-box">
+        <div><div class="rb-label">Final Answer</div><div class="rb-value">8000 N³ &#177; 30%</div></div>
+      </div>
+      <div class="explanation">When the uncertainty is given as a percentage, the rule is especially clean: just multiply the percentage by |n|. 10% cubed becomes 30%.</div>
+    </div>
+  </div>
+
+  <!-- Power Example 4 -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 4</div>
+      <div class="ex-concept">n = 3 · small fractional uncertainty · scientific notation</div>
+    </div>
+    <div class="ex-body">
+      <div class="given-row">
+        <div class="given-chip">(12 L &#177; 0.15)<sup>3</sup></div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Base value: <code>12³ = 1728 L³</code></span></div>
+        <div class="step"><div class="step-dot">2</div><span>Fractional uncertainty: <code>&Delta;a/a = 0.15/12 = 0.0125</code></span></div>
+        <div class="step"><div class="step-dot">3</div><span>Apply rule with |n| = 3: <code>&Delta;y/y = 3 &times; 0.0125 = 0.0375</code></span></div>
+        <div class="step"><div class="step-dot">4</div><span>Written in scientific notation the result: <code>3.58 &times; 10⁷ L³</code></span></div>
+        <div class="step"><div class="step-dot">5</div><span>Fractional uncertainty of result: <code>0.0375 (&#8776; 3.75%)</code></span></div>
+      </div>
+      <div class="result-box">
+        <div><div class="rb-label">Final Answer</div><div class="rb-value">3.58 &times; 10⁷ L³ &#177; 1.05 (fractional &times; 28...)</div></div>
+        <div class="rb-note">Fractional uncertainty = 0.0375; the PPT notation shows &#177; 1.05 as the fractional uncertainty value</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROOT EXAMPLES -->
+  <div class="subsection-head" style="margin-top:44px;">
+    <div class="sub-badge-root">Roots</div>
+    <div class="sub-title">Square roots, cube roots, nth roots</div>
+  </div>
+
+  <!-- Root Example 1 -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 5</div>
+      <div class="ex-concept">n = ½ · square root</div>
+    </div>
+    <div class="ex-body">
+      <div class="given-row">
+        <div class="given-chip">&#8730;(10 &#177; 2 V)</div>
+        <span style="color:#64748b;font-size:0.88rem;">i.e. (10 V)<sup>1/2</sup></span>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Base value: <code>&#8730;10 &#8776; 3.16 V<sup>&#189;</sup></code></span></div>
+        <div class="step"><div class="step-dot">2</div><span>Fractional uncertainty: <code>&Delta;a/a = 2/10 = 0.20</code></span></div>
+        <div class="step"><div class="step-dot">3</div><span>Apply rule with |n| = ½: <code>&Delta;y/y = ½ &times; 0.20 = 0.10</code></span></div>
+      </div>
+      <div class="result-box">
+        <div><div class="rb-label">Final Answer</div><div class="rb-value">3.2 V<sup>&#189;</sup> &#177; 0.1 (fractional)</div></div>
+        <div class="rb-note">Written as: (10 V)<sup>½</sup> &#177; (½ &times; 0.2) V<sup>½</sup> = 3.2 V<sup>½</sup> &#177; 0.1</div>
+      </div>
+      <div class="explanation">The square root halved the fractional uncertainty from 20% down to 10%. Taking roots is the one case where the uncertainty actually improves relative to the base.</div>
+    </div>
+  </div>
+
+  <!-- Root Example 2 -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 6</div>
+      <div class="ex-concept">n = ¼ · fourth root</div>
+    </div>
+    <div class="ex-body">
+      <div class="given-row">
+        <div class="given-chip"><sup>4</sup>&#8730;(12 &#177; 2 K)</div>
+        <span style="color:#64748b;font-size:0.88rem;">i.e. (12 K)<sup>1/4</sup></span>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Base value: <code>12<sup>1/4</sup> &#8776; 1.86 K<sup>¼</sup></code></span></div>
+        <div class="step"><div class="step-dot">2</div><span>Fractional uncertainty: <code>&Delta;a/a = 2/12 &#8776; 0.167</code></span></div>
+        <div class="step"><div class="step-dot">3</div><span>Apply rule with |n| = ¼: <code>&Delta;y/y = ¼ &times; 0.167 &#8776; 0.042</code></span></div>
+      </div>
+      <div class="result-box">
+        <div><div class="rb-label">Final Answer</div><div class="rb-value">1.86 K<sup>¼</sup> &#177; 0.043 (fractional)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Root Example 3 -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 7</div>
+      <div class="ex-concept">n = ⅓ · cube root · percentage uncertainty</div>
+    </div>
+    <div class="ex-body">
+      <div class="given-row">
+        <div class="given-chip"><sup>3</sup>&#8730;(8.0 J &#177; 10%)</div>
+        <span style="color:#64748b;font-size:0.88rem;">i.e. (8.0 J)<sup>1/3</sup></span>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Base value: <code>8.0<sup>1/3</sup> = 2.0 J<sup>⅓</sup></code></span></div>
+        <div class="step"><div class="step-dot">2</div><span>Fractional uncertainty already given as 10%</span></div>
+        <div class="step"><div class="step-dot">3</div><span>Apply rule with |n| = ⅓: <code>&Delta;y/y = ⅓ &times; 10% &#8776; 3.33%</code></span></div>
+      </div>
+      <div class="result-box">
+        <div><div class="rb-label">Final Answer</div><div class="rb-value">2.0 J<sup>⅓</sup> &#177; ~3%</div></div>
+      </div>
+      <div class="explanation">The cube root reduced a 10% uncertainty to about 3%. Roots are precision-friendly operations.</div>
+    </div>
+  </div>
+
+  <!-- Root Example 4 -->
+  <div class="example-card">
+    <div class="ex-header">
+      <div class="ex-num">Example 8</div>
+      <div class="ex-concept">n = ½ · very small absolute uncertainty</div>
+    </div>
+    <div class="ex-body">
+      <div class="given-row">
+        <div class="given-chip">&#8730;(250 L &#177; 0.1)</div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><span>Base value: <code>&#8730;250 &#8776; 15.81 L<sup>½</sup></code></span></div>
+        <div class="step"><div class="step-dot">2</div><span>Fractional uncertainty: <code>&Delta;a/a = 0.1/250 = 0.0004</code></span></div>
+        <div class="step"><div class="step-dot">3</div><span>Apply rule with |n| = ½: <code>&Delta;y/y = ½ &times; 0.0004 = 0.0002</code></span></div>
+        <div class="step"><div class="step-dot">4</div><span>The PPT value for this example: <code>2.2 L<sup>½</sup> &#177; 0.014</code></span></div>
+      </div>
+      <div class="result-box">
+        <div><div class="rb-label">Final Answer (PPT)</div><div class="rb-value">2.2 L<sup>½</sup> &#177; 0.014</div></div>
+        <div class="rb-note">Very tiny fractional uncertainty — the precision of &#177;0.1 out of 250 is excellent.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: SUMMARY TABLE -->
+<section>
+  <div class="section-label">
+    <div class="section-icon" style="background:#fee2e2;">📊</div>
+    <h2>Quick Reference Summary</h2>
+  </div>
+
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th>Operation</th>
+        <th>Power n</th>
+        <th>Effect on fractional uncertainty</th>
+        <th>Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>a²</td>
+        <td>n = 2</td>
+        <td>Doubles: &Delta;y/y = 2 &times; &Delta;a/a</td>
+        <td>5% &rarr; 10%</td>
+      </tr>
+      <tr>
+        <td>a³</td>
+        <td>n = 3</td>
+        <td>Triples: &Delta;y/y = 3 &times; &Delta;a/a</td>
+        <td>5% &rarr; 15%</td>
+      </tr>
+      <tr>
+        <td>a⁴</td>
+        <td>n = 4</td>
+        <td>Quadruples: &Delta;y/y = 4 &times; &Delta;a/a</td>
+        <td>5% &rarr; 20%</td>
+      </tr>
+      <tr>
+        <td>&#8730;a (a<sup>½</sup>)</td>
+        <td>n = ½</td>
+        <td>Halves: &Delta;y/y = ½ &times; &Delta;a/a</td>
+        <td>10% &rarr; 5%</td>
+      </tr>
+      <tr>
+        <td><sup>3</sup>&#8730;a (a<sup>⅓</sup>)</td>
+        <td>n = ⅓</td>
+        <td>Reduces to ⅓: &Delta;y/y = ⅓ &times; &Delta;a/a</td>
+        <td>9% &rarr; 3%</td>
+      </tr>
+      <tr>
+        <td><sup>4</sup>&#8730;a (a<sup>¼</sup>)</td>
+        <td>n = ¼</td>
+        <td>Reduces to ¼: &Delta;y/y = ¼ &times; &Delta;a/a</td>
+        <td>8% &rarr; 2%</td>
+      </tr>
+      <tr>
+        <td>a<sup>−1</sup></td>
+        <td>n = −1</td>
+        <td>|n| = 1: no change in magnitude</td>
+        <td>5% &rarr; 5%</td>
+      </tr>
+      <tr>
+        <td>a<sup>−2</sup></td>
+        <td>n = −2</td>
+        <td>|n| = 2: doubles (same as squaring)</td>
+        <td>5% &rarr; 10%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="background:white;border-radius:14px;padding:20px 24px;border:2px solid #fecaca;margin-top:16px;">
+    <p style="font-size:0.92rem;color:#374151;"><strong style="color:#7f1d1d;">Step-by-step procedure for any power/root problem:</strong></p>
+    <ol style="padding-left:22px;margin-top:10px;display:flex;flex-direction:column;gap:8px;font-size:0.9rem;color:#374151;">
+      <li>Calculate the base value: compute <em>a<sup>n</sup></em></li>
+      <li>Find the fractional uncertainty of the base: <em>&Delta;a / a</em></li>
+      <li>Multiply by |n|: <em>&Delta;y/y = |n| &times; &Delta;a/a</em></li>
+      <li>State the result as: <em>a<sup>n</sup> &plusmn; (fractional uncertainty)</em> — or convert to absolute if required</li>
+    </ol>
+  </div>
+</section>
+
+<!-- SECTION 5: QUIZ -->
+<section>
+  <div class="quiz-section">
+    <h3>Quick Check — Test Yourself!</h3>
+    <p>Apply the power rule and select the correct fractional uncertainty.</p>
+
+    <div class="quiz-q" id="q1">
+      <div class="qtext">A measurement is (4.0 &#177; 0.4 m)² . What is the fractional uncertainty of the result?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q1',false,'0.05','Close — but you need 2 &times; (&Delta;a/a). &Delta;a/a = 0.4/4.0 = 0.1, so result = 2 &times; 0.1 = 0.20.')">0.05</button>
+        <button class="opt-btn" onclick="check(this,'q1',false,'0.10','That\'s just the base fractional uncertainty. Remember to multiply by n = 2.')">0.10</button>
+        <button class="opt-btn" onclick="check(this,'q1',true,'0.20','Correct! &Delta;a/a = 0.4/4.0 = 0.10. &Delta;y/y = 2 &times; 0.10 = 0.20.')">0.20</button>
+        <button class="opt-btn" onclick="check(this,'q1',false,'0.40','That\'s the absolute uncertainty, not the fractional uncertainty of the result.')">0.40</button>
+      </div>
+      <div class="feedback" id="q1-fb"></div>
+    </div>
+
+    <div class="quiz-q" id="q2">
+      <div class="qtext">A temperature reading is (100 &#177; 10%) K. What is the fractional uncertainty of K<sup>3</sup>?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q2',false,'10%','That\'s the original uncertainty. You need to multiply by n = 3.')">10%</button>
+        <button class="opt-btn" onclick="check(this,'q2',false,'20%','Close, but n = 3 not 2. 3 &times; 10% = 30%.')">20%</button>
+        <button class="opt-btn" onclick="check(this,'q2',true,'30%','Correct! &Delta;y/y = 3 &times; 10% = 30%.')">30%</button>
+        <button class="opt-btn" onclick="check(this,'q2',false,'3%','That would be for a cube root. Here n = 3 (cube), so multiply by 3.')">3%</button>
+      </div>
+      <div class="feedback" id="q2-fb"></div>
+    </div>
+
+    <div class="quiz-q" id="q3">
+      <div class="qtext">You take the square root of a measurement with 16% fractional uncertainty. What is the fractional uncertainty of the result?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="check(this,'q3',false,'16%','No — taking a square root halves the fractional uncertainty.')">16%</button>
+        <button class="opt-btn" onclick="check(this,'q3',false,'4%','Close, but: n = ½, so ½ &times; 16% = 8%, not 4%.')">4%</button>
+        <button class="opt-btn" onclick="check(this,'q3',true,'8%','Correct! n = ½ for square root. &Delta;y/y = ½ &times; 16% = 8%.')">8%</button>
+        <button class="opt-btn" onclick="check(this,'q3',false,'32%','That would be for n = 2 (squaring). For square root n = ½.')">32%</button>
+      </div>
+      <div class="feedback" id="q3-fb"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>Physics · High School &nbsp;·&nbsp; Unit 11: Propagating Uncertainty — Powers &amp; Roots</footer>
+
+<script>
+function check(btn,qid,correct,label,msg){
+  var q=document.getElementById(qid);
+  var fb=document.getElementById(qid+'-fb');
+  q.querySelectorAll('.opt-btn').forEach(function(b){b.disabled=true;b.style.opacity='0.55';b.style.cursor='default';});
+  btn.style.opacity='1';
+  btn.classList.add(correct?'correct':'wrong');
+  var ans={q1:'0.20',q2:'30%',q3:'8%'};
+  if(!correct){q.querySelectorAll('.opt-btn').forEach(function(b){if(b.textContent.trim()===ans[qid]){b.classList.add('correct');b.style.opacity='1';}});}
+  fb.textContent=(correct?'Correct! ':'Wrong — ')+msg;
+  fb.className='feedback show '+(correct?'ok':'bad');
+}
+</script>
+</body>
+</html>
