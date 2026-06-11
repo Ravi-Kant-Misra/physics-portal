@@ -1,0 +1,184 @@
+# HOW TO BUILD THE GOOGLE SITE
+# Physics Foundation — where Concepts Click
+# Estimated time: 25–30 minutes
+
+═══════════════════════════════════════════════════════════
+STEP 1 — CREATE THE SITE
+═══════════════════════════════════════════════════════════
+
+1. Go to https://sites.google.com
+2. Click the + (New Site) button
+3. Click on "Untitled Site" at the top left → type:
+   Physics Foundation
+4. Click on "Your page title" in the main area → type:
+   where Concepts Click
+
+═══════════════════════════════════════════════════════════
+STEP 2 — SET THE HEADER
+═══════════════════════════════════════════════════════════
+
+1. Click on the header area at the top of the page
+2. Click "Change image" → choose a dark blue or space image
+   (or search "Upload" and use a plain dark blue colour)
+3. Below the title, click "Add subheading" → type:
+   Think Deeper. Learn Better. — with Ravi M.
+
+═══════════════════════════════════════════════════════════
+STEP 3 — HOME PAGE CONTENT
+═══════════════════════════════════════════════════════════
+
+--- Section 1: Welcome text ---
+From the right panel click INSERT → Text box
+Paste this text:
+
+"This is your home for IB Physics — a structured, step-by-step journey where every concept is built carefully before the next one begins.
+
+Physics is not about memorising formulas. It is about understanding why the universe behaves the way it does. When you understand the concept, the formula writes itself."
+
+--- Section 2: Three feature cards ---
+From INSERT panel → click "3 columns" layout
+Fill in each column:
+
+Column 1:
+📖 Learn at Your Own Pace
+Work through lessons, classwork, and homework unit by unit. Each chapter unlocks only when the previous one is complete.
+
+Column 2:
+✅ Parent-Reviewed Progress
+Every homework submission is reviewed by your parent against the answer key before your next chapter unlocks.
+
+Column 3:
+🚀 Built on Strong Foundations
+We start with the mathematical tools you need — significant figures, vectors, graphs — before diving into physics.
+
+--- Section 3: Portal button ---
+From INSERT panel → Button
+Label: Enter Student Portal →
+Link: https://script.google.com/macros/s/AKfycbwc0-62SrefMlpwxJtBXZN1ud4clOT0CC9wSgzndq4n6XC2z-5HrlE_idQ6OhSv1WxJsQ/exec
+
+--- Section 4: Stories teaser ---
+Add a text box:
+"Physics is a Human Story
+
+Before equations, there were people — curious, stubborn, brilliant people who changed how we see the world."
+
+Add a button:
+Label: Read the Stories →
+Link: (this will link to the Stories page — come back and add after creating that page)
+
+═══════════════════════════════════════════════════════════
+STEP 4 — ADD PAGES
+═══════════════════════════════════════════════════════════
+
+In the right panel click PAGES → click + Add page
+
+Create these 5 pages in this order:
+1. Stories of Science
+2. Rules of Engagement
+3. My Vision
+4. The Ideal Student
+5. Schedule
+
+═══════════════════════════════════════════════════════════
+STEP 5 — STORIES OF SCIENCE PAGE
+═══════════════════════════════════════════════════════════
+
+Page title: Stories of Science
+Subheading: Physics is not a list of equations. It is a record of human curiosity.
+
+Add a text box:
+"Behind every law of physics is a person — someone who looked at the world and refused to accept that it could not be understood. These are their stories."
+
+Then add each story as a clickable card or button using INSERT → Button or INSERT → Image card.
+Use the links and descriptions from the stories.md file in the google-site folder.
+
+The 11 links are:
+u00: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u00/lesson.html
+u01: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u01/lesson.html
+u02: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u02/lesson.html
+u03: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u03/lesson.html
+u04: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u04/lesson.html
+u05: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u05/lesson.html
+u06: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u06/lesson.html
+u07: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u07/lesson.html
+u08: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u08/lesson.html
+u09: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u09/lesson.html
+u10: https://ravi-kant-misra.github.io/physics-portal/t0-appendix/s0.2-stories/u10/lesson.html
+
+═══════════════════════════════════════════════════════════
+STEP 6 — RULES OF ENGAGEMENT PAGE
+═══════════════════════════════════════════════════════════
+
+Page title: Rules of Engagement
+Subheading: How we work together in Physics Foundation
+
+Copy the full content from:
+google-site/rules-of-engagement.md
+(open this file, copy everything under "The Rules" and paste into text boxes)
+
+═══════════════════════════════════════════════════════════
+STEP 7 — MY VISION PAGE
+═══════════════════════════════════════════════════════════
+
+Page title: My Vision
+Subheading: What Physics Foundation is really about
+
+Copy the full content from:
+google-site/vision.md
+
+═══════════════════════════════════════════════════════════
+STEP 8 — THE IDEAL STUDENT PAGE
+═══════════════════════════════════════════════════════════
+
+Page title: The Ideal Student
+Subheading: The habits and mindset that produce real understanding
+
+Copy the full content from:
+google-site/ideal-student.md
+
+═══════════════════════════════════════════════════════════
+STEP 9 — SCHEDULE PAGE
+═══════════════════════════════════════════════════════════
+
+Page title: Class Schedule
+Subheading: When we meet, what to expect, and how to prepare
+
+Copy the full content from:
+google-site/schedule.md
+
+Use INSERT → Table for the weekly structure table.
+
+═══════════════════════════════════════════════════════════
+STEP 10 — NAVIGATION
+═══════════════════════════════════════════════════════════
+
+Google Sites builds the navigation automatically from your pages.
+Check the top of the site — you should see:
+Home | Stories of Science | Rules of Engagement | My Vision | The Ideal Student | Schedule
+
+If the order is wrong: PAGES panel → drag pages into this order.
+
+═══════════════════════════════════════════════════════════
+STEP 11 — PUBLISH
+═══════════════════════════════════════════════════════════
+
+1. Click PUBLISH (top right)
+2. URL will be: sites.google.com/view/physics-foundation
+   (or similar — Google Sites picks it automatically)
+3. Under "Who can view this site" → select "Anyone"
+4. Click PUBLISH
+
+Your site is now live. Share this URL with students and parents.
+That is the only link they ever need.
+
+═══════════════════════════════════════════════════════════
+FINAL SITE STRUCTURE
+═══════════════════════════════════════════════════════════
+
+Physics Foundation — where Concepts Click
+├── Home (portal button + stories teaser)
+├── Stories of Science (11 story links)
+├── Rules of Engagement
+├── My Vision
+├── The Ideal Student
+└── Schedule
