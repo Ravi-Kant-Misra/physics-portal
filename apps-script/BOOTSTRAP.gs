@@ -599,8 +599,8 @@ function _unitCard(unit, prog, hwFormUrl) {
       var c=unit.ClassworkURL ?'<a href="'+unit.ClassworkURL+'" target="_blank" class="lb">✏️ Classwork</a>'  :'';
       var hw='';
       if(['available','in_progress','corrections'].indexOf(st)>=0){
-        var pf=hwFormUrl+'?'+encodeURIComponent('Your name')+'='+encodeURIComponent(unit.UnitID+' — '+unit.UnitName);
-        hw='<a href="'+hwFormUrl+'" target="_blank" class="lb sub">📤 Submit Homework</a>';
+        var hwPage = unit.HomeworkURL ? '<a href="'+unit.HomeworkURL+'" target="_blank" class="lb">📝 Homework</a>' : '';
+        hw = hwPage + '<a href="'+hwFormUrl+'" target="_blank" class="lb sub">📤 Submit</a>';
       }
       links='<div class="links">'+l+c+hw+'</div>';
     }
