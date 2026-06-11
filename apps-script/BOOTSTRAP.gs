@@ -310,15 +310,9 @@ function _createHomeworkForm(folder, ss) {
   q2.setTitle('Unit completed').setRequired(true);
   q2.setChoiceValues(unitLabels.length > 0 ? unitLabels : ['0.1.01 — Significant Figures']);
 
-  // Q3 — File upload
-  form.addItem().setTitle('').asPageBreakItem(); // workaround: file upload needs Drive
-  var q3 = form.addItem();
-  // File upload requires the form to be in a Drive folder — use a paragraph instead
-  // (Apps Script cannot create file upload questions via API; student pastes Drive link)
+  // Q3 — Homework link (file upload not available via Apps Script API)
   var q3p = form.addParagraphTextItem();
   q3p.setTitle('Paste a link to your homework (Google Drive share link or photo link)').setRequired(true);
-  // Remove the page break we added
-  form.deleteItem(form.getItems()[2]);
 
   // Q4 — Confirmation
   var q4 = form.addCheckboxItem();
