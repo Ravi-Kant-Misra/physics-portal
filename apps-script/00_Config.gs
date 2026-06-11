@@ -21,7 +21,7 @@ var CONFIG = {
   ANSWER_KEYS_FOLDER_ID: 'PASTE_ANSWER_KEYS_FOLDER_ID_HERE',
 
   // Base URL for GitHub Pages
-  BASE_URL: 'https://ravi-kant-misra.github.io/physics-portal/',
+  BASE_URL: 'https://misra-ravi.github.io/physics-foundation/',
 
   // Portal admin email (receives error alerts)
   ADMIN_EMAIL: 'misra.ravikant@gmail.com',
