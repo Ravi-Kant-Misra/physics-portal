@@ -76,10 +76,7 @@
     .ch-key .ckq{font-size:0.82rem;font-weight:800;color:#15803d;margin-bottom:8px;}
     .ch-key .ckstep{font-family:'Space Mono',monospace;font-size:0.85rem;color:#374151;margin-bottom:4px;}
     .ch-key .ckans{color:#ef4444;font-weight:700;font-family:'Space Mono',monospace;font-size:0.95rem;margin-top:6px;}
-  
-    /* portal: hide answer key */
-    #toggle-key-btn, .key-btn-wrap, #answer-key { display: none !important; }
-</style>
+  </style>
 </head>
 <body>
 
@@ -404,5 +401,23 @@
 
 </main>
 <footer style="text-align:center;padding:28px 20px;font-size:0.82rem;color:#94a3b8;">Kinematics &middot; Unit 12 &mdash; Homework &nbsp;|&nbsp; Physics Class</footer>
+
+<script>
+(function(){
+  if(new URLSearchParams(window.location.search).get('key')==='show'){
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    if(k) k.style.display='block';
+    if(b) b.style.display='none';
+  } else {
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    var w=document.querySelector('.key-btn-wrap');
+    if(k) k.style.display='none';
+    if(b) b.style.display='none';
+    if(w) w.style.display='none';
+  }
+})();
+</script>
 </body>
 </html>

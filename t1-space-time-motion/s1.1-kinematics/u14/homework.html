@@ -131,9 +131,6 @@ table.blank td{min-width:70px;height:28px;background:#f8faff;}
 #toggle-key-btn{background:var(--amber);color:#fff;border:none;border-radius:12px;
   padding:.75rem 2rem;font-size:1rem;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;
   display:block;margin:1.5rem auto 0;}
-
-    /* portal: hide answer key */
-    #toggle-key-btn, .key-btn-wrap, #answer-key { display: none !important; }
 </style>
 </head>
 <body>
@@ -599,6 +596,24 @@ function toggleKey(){
     k.style.display='none';b.textContent='Show Answer Key';
   }
 }
+</script>
+
+<script>
+(function(){
+  if(new URLSearchParams(window.location.search).get('key')==='show'){
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    if(k) k.style.display='block';
+    if(b) b.style.display='none';
+  } else {
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    var w=document.querySelector('.key-btn-wrap');
+    if(k) k.style.display='none';
+    if(b) b.style.display='none';
+    if(w) w.style.display='none';
+  }
+})();
 </script>
 </body>
 </html>

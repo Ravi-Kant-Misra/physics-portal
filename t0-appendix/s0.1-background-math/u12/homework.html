@@ -104,10 +104,7 @@
     footer{text-align:center;padding:32px 20px;font-size:0.85rem;color:var(--muted);}
 
     @keyframes popIn{0%{transform:scale(0.9);}60%{transform:scale(1.1);}100%{transform:scale(1);}}
-  
-    /* portal: hide answer key */
-    #toggle-key-btn, .key-btn-wrap, #answer-key { display: none !important; }
-</style>
+  </style>
 </head>
 <body>
 
@@ -499,6 +496,24 @@ function tfAns(btn, id, isCorrect) {
       (id === 'tf4') ? 'Incorrect. Rule 1 (addition/subtraction) uses ABSOLUTE uncertainties: Δy = Δa + Δb.' : fb.textContent;
   }
 }
+</script>
+
+<script>
+(function(){
+  if(new URLSearchParams(window.location.search).get('key')==='show'){
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    if(k) k.style.display='block';
+    if(b) b.style.display='none';
+  } else {
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    var w=document.querySelector('.key-btn-wrap');
+    if(k) k.style.display='none';
+    if(b) b.style.display='none';
+    if(w) w.style.display='none';
+  }
+})();
 </script>
 </body>
 </html>

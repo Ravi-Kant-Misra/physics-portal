@@ -114,9 +114,6 @@
   .key-item p{font-size:.88rem;line-height:1.6;color:#e0f2fe;}
   .key-item .kans{font-family:'Space Mono',monospace;color:#34d399;font-weight:700;font-size:.9rem;margin-top:.3rem;}
   .kans-red{font-family:'Space Mono',monospace;color:#f87171;font-weight:700;font-size:.9rem;margin-top:.3rem;}
-
-    /* portal: hide answer key */
-    #toggle-key-btn, .key-btn-wrap, #answer-key { display: none !important; }
 </style>
 </head>
 <body>
@@ -455,5 +452,23 @@ function toggleKey(){
 }
 </script>
 
+
+<script>
+(function(){
+  if(new URLSearchParams(window.location.search).get('key')==='show'){
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    if(k) k.style.display='block';
+    if(b) b.style.display='none';
+  } else {
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    var w=document.querySelector('.key-btn-wrap');
+    if(k) k.style.display='none';
+    if(b) b.style.display='none';
+    if(w) w.style.display='none';
+  }
+})();
+</script>
 </body>
 </html>

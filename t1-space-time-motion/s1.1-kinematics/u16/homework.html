@@ -68,10 +68,7 @@
     footer{text-align:center;padding:28px 20px;font-size:0.85rem;color:var(--muted);}
     .mm-draw-box{background:#f0f4ff;border:2px dashed #93c5fd;border-radius:12px;padding:16px;margin-bottom:12px;}
     .mm-draw-box .mm-instr{font-size:0.82rem;color:#1d4ed8;font-weight:700;margin-bottom:8px;}
-  
-    /* portal: hide answer key */
-    #toggle-key-btn, .key-btn-wrap, #answer-key { display: none !important; }
-</style>
+  </style>
 </head>
 <body>
 
@@ -441,5 +438,23 @@ function selectTF(btn, val, qnum) {
 }
 </script>
 
+
+<script>
+(function(){
+  if(new URLSearchParams(window.location.search).get('key')==='show'){
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    if(k) k.style.display='block';
+    if(b) b.style.display='none';
+  } else {
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    var w=document.querySelector('.key-btn-wrap');
+    if(k) k.style.display='none';
+    if(b) b.style.display='none';
+    if(w) w.style.display='none';
+  }
+})();
+</script>
 </body>
 </html>

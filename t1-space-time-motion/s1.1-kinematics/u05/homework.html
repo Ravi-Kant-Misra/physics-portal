@@ -139,9 +139,6 @@ main{max-width:900px;margin:0 auto;padding:36px 20px 80px;}
 .key-ans strong{color:var(--green);}
 .key-work{font-family:'Space Mono',monospace;font-size:.82rem;color:#475569;
   background:#f8faff;border-radius:6px;padding:8px 12px;margin-top:6px;white-space:pre-wrap;}
-
-    /* portal: hide answer key */
-    #toggle-key-btn, .key-btn-wrap, #answer-key { display: none !important; }
 </style>
 </head>
 <body>
@@ -630,6 +627,24 @@ function toggleKey(){
     btn.textContent='Show Answer Key';
   }
 }
+</script>
+
+<script>
+(function(){
+  if(new URLSearchParams(window.location.search).get('key')==='show'){
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    if(k) k.style.display='block';
+    if(b) b.style.display='none';
+  } else {
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    var w=document.querySelector('.key-btn-wrap');
+    if(k) k.style.display='none';
+    if(b) b.style.display='none';
+    if(w) w.style.display='none';
+  }
+})();
 </script>
 </body>
 </html>

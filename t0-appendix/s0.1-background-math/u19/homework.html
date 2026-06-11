@@ -127,10 +127,7 @@
     .score-banner .msg{margin-top:12px;opacity:0.85;}
 
     footer{text-align:center;padding:28px 24px;color:#94a3b8;font-size:0.82rem;}
-  
-    /* portal: hide answer key */
-    #toggle-key-btn, .key-btn-wrap, #answer-key { display: none !important; }
-</style>
+  </style>
 </head>
 <body>
 
@@ -707,6 +704,24 @@
     el.style.display=el.style.display==='block'?'none':'block';
   }
   window.addEventListener('load',setupHWCanvas);
+</script>
+
+<script>
+(function(){
+  if(new URLSearchParams(window.location.search).get('key')==='show'){
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    if(k) k.style.display='block';
+    if(b) b.style.display='none';
+  } else {
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    var w=document.querySelector('.key-btn-wrap');
+    if(k) k.style.display='none';
+    if(b) b.style.display='none';
+    if(w) w.style.display='none';
+  }
+})();
 </script>
 </body>
 </html>

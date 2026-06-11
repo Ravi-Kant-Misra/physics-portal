@@ -185,9 +185,6 @@
   .key-ans{font-family:'Space Mono',monospace;font-weight:700;color:var(--green);}
   .key-work{display:block;font-family:'Space Mono',monospace;font-size:.82rem;color:#64748b;margin-top:.25rem;line-height:1.6;}
   @media(max-width:600px){.content{padding:1.5rem .8rem 3rem;}.card{padding:1.2rem;}.gese-fields{grid-template-columns:1fr;}}
-
-    /* portal: hide answer key */
-    #toggle-key-btn, .key-btn-wrap, #answer-key { display: none !important; }
 </style>
 </head>
 <body>
@@ -564,6 +561,24 @@ function toggleKey(){
   document.getElementById('toggle-key-btn').textContent=keyVisible?'Hide Answer Key':'Show Answer Key';
   document.getElementById('toggle-key-btn').style.background=keyVisible?'linear-gradient(90deg,#64748b,#475569)':'linear-gradient(90deg,var(--red),#dc2626)';
 }
+</script>
+
+<script>
+(function(){
+  if(new URLSearchParams(window.location.search).get('key')==='show'){
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    if(k) k.style.display='block';
+    if(b) b.style.display='none';
+  } else {
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    var w=document.querySelector('.key-btn-wrap');
+    if(k) k.style.display='none';
+    if(b) b.style.display='none';
+    if(w) w.style.display='none';
+  }
+})();
 </script>
 </body>
 </html>

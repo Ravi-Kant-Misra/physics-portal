@@ -78,10 +78,7 @@
 
     .final-score{background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #fbbf24;border-radius:16px;padding:20px 24px;text-align:center;margin-top:28px;display:none;}
     .final-score p{font-size:1.15rem;font-weight:800;color:#78350f;}
-  
-    /* portal: hide answer key */
-    #toggle-key-btn, .key-btn-wrap, #answer-key { display: none !important; }
-</style>
+  </style>
 </head>
 <body>
 
@@ -475,5 +472,23 @@ function checkH9(){
 }
 </script>
 
+
+<script>
+(function(){
+  if(new URLSearchParams(window.location.search).get('key')==='show'){
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    if(k) k.style.display='block';
+    if(b) b.style.display='none';
+  } else {
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    var w=document.querySelector('.key-btn-wrap');
+    if(k) k.style.display='none';
+    if(b) b.style.display='none';
+    if(w) w.style.display='none';
+  }
+})();
+</script>
 </body>
 </html>

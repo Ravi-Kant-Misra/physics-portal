@@ -617,13 +617,15 @@ function _unitCard(unit, prog, hwFormUrl) {
 var _ES='<style>@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&display=swap");body{font-family:Nunito,Arial,sans-serif;background:#f8faff;margin:0;padding:0;}.w{max-width:560px;margin:32px auto;background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);}.h{background:linear-gradient(135deg,#1e3a5f,#1d4ed8);color:white;padding:32px 36px;}.h .lbl{font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:.8;margin-bottom:6px;}.h h1{font-size:1.35rem;font-weight:800;margin:0;}.b{padding:32px 36px;color:#1a1a2e;font-size:.94rem;line-height:1.7;}.badge{background:#eff6ff;border:2px solid #bfdbfe;border-radius:10px;padding:14px 18px;margin:18px 0;font-weight:700;color:#1d4ed8;}.btn{display:inline-block;padding:13px 26px;border-radius:10px;font-weight:800;font-size:.92rem;text-decoration:none;margin:6px 6px 6px 0;}.bg{background:#22c55e;color:white;}.br{background:#ef4444;color:white;}.bb{background:#1d4ed8;color:white;}.note{font-size:.8rem;color:#64748b;margin-top:18px;padding-top:14px;border-top:1px solid #e2e8f0;}.fb{background:#fff7ed;border:2px solid #fed7aa;border-radius:10px;padding:14px 18px;margin:16px 0;color:#92400e;}</style>';
 
 function _parentEmail(student,unit,fileUrl,approvalUrl,notes){
+  var keyUrl = unit.HomeworkURL ? unit.HomeworkURL + '?key=show' : '';
   return '<!DOCTYPE html><html><head>'+_ES+'</head><body><div class="w">'+
     '<div class="h"><div class="lbl">IB Physics Portal</div><h1>'+student.StudentName+' submitted homework</h1></div>'+
     '<div class="b"><p>Dear '+student.ParentName+',</p>'+
     '<p>'+student.StudentName+' has submitted homework for:</p>'+
     '<div class="badge">📖 '+unit.SectionNum+' '+unit.SectionName+' — '+unit.UnitName+'</div>'+
     (fileUrl?'<p><a href="'+fileUrl+'" class="btn bb">View '+student.StudentName+'\'s Homework →</a></p>':'')+
-    '<p>The answer key is attached. Please review the work, then click a button:</p>'+
+    (keyUrl?'<p><a href="'+keyUrl+'" class="btn bb">🔑 View Answer Key →</a></p>':'')+
+    '<p>Please review '+student.StudentName+'\'s work against the answer key, then click a button:</p>'+
     (notes?'<div class="fb"><strong>Note from '+student.StudentName+':</strong><br>'+notes+'</div>':'')+
     '<p><a href="'+approvalUrl+'" class="btn bg">✅ Approve &amp; Unlock Next Chapter</a>'+
     '<a href="'+approvalUrl+'" class="btn br">❌ Request Corrections</a></p>'+

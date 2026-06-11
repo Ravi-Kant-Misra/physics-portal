@@ -55,10 +55,7 @@
     .tf-key-item{background:white;border-radius:6px;padding:10px 14px;margin-bottom:8px;font-size:0.92rem;display:flex;gap:12px;}
     .tf-key-item .tans{font-family:'Space Mono',monospace;font-weight:700;min-width:36px;color:#15803d;}
     .tf-key-item .tans.false{color:#dc2626;}
-  
-    /* portal: hide answer key */
-    #toggle-key-btn, .key-btn-wrap, #answer-key { display: none !important; }
-</style>
+  </style>
 </head>
 <body>
 
@@ -237,5 +234,23 @@
   </div>
 
 </main>
+
+<script>
+(function(){
+  if(new URLSearchParams(window.location.search).get('key')==='show'){
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    if(k) k.style.display='block';
+    if(b) b.style.display='none';
+  } else {
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    var w=document.querySelector('.key-btn-wrap');
+    if(k) k.style.display='none';
+    if(b) b.style.display='none';
+    if(w) w.style.display='none';
+  }
+})();
+</script>
 </body>
 </html>

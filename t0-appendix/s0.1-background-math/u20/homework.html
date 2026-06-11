@@ -136,10 +136,7 @@
     .rr-mark{width:36px;height:36px;border-radius:10px;background:#ede9fe;color:#5b21b6;font-weight:900;font-size:0.82rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
     .rr-body{font-size:0.87rem;color:#374151;}
     .rr-body strong{display:block;color:#1e293b;}
-  
-    /* portal: hide answer key */
-    #toggle-key-btn, .key-btn-wrap, #answer-key { display: none !important; }
-</style>
+  </style>
 </head>
 <body>
 
@@ -585,6 +582,24 @@
     const el=document.getElementById(id);
     el.classList.toggle('visible');
   }
+</script>
+
+<script>
+(function(){
+  if(new URLSearchParams(window.location.search).get('key')==='show'){
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    if(k) k.style.display='block';
+    if(b) b.style.display='none';
+  } else {
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    var w=document.querySelector('.key-btn-wrap');
+    if(k) k.style.display='none';
+    if(b) b.style.display='none';
+    if(w) w.style.display='none';
+  }
+})();
 </script>
 </body>
 </html>

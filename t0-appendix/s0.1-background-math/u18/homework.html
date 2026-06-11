@@ -57,10 +57,7 @@
     .tag-hard{background:#fef3c7;color:#92400e;}
     .tag-ext{background:#dbeafe;color:#1d4ed8;}
     .short-answer-line{border-bottom:2px solid #d1d5db;min-height:28px;width:100%;display:block;margin-top:6px;}
-  
-    /* portal: hide answer key */
-    #toggle-key-btn, .key-btn-wrap, #answer-key { display: none !important; }
-</style>
+  </style>
 </head>
 <body>
 
@@ -361,6 +358,24 @@ function toggleKey(){
     el.style.display='block';btn.textContent='Hide Answer Key';
   } else {el.style.display='none';btn.textContent='Show Answer Key';}
 }
+</script>
+
+<script>
+(function(){
+  if(new URLSearchParams(window.location.search).get('key')==='show'){
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    if(k) k.style.display='block';
+    if(b) b.style.display='none';
+  } else {
+    var k=document.getElementById('answer-key');
+    var b=document.getElementById('toggle-key-btn');
+    var w=document.querySelector('.key-btn-wrap');
+    if(k) k.style.display='none';
+    if(b) b.style.display='none';
+    if(w) w.style.display='none';
+  }
+})();
 </script>
 </body>
 </html>
