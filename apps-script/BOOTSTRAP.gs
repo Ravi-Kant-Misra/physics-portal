@@ -1071,21 +1071,36 @@ function upgradeHomeworkFormToFileUpload() {
   var cfg    = _cfg();
   var formId = cfg.HOMEWORK_FORM_ID;
   var form   = FormApp.openById(formId);
-  var items  = form.getItems();
 
-  // Find and delete the old paragraph text question
-  items.forEach(function(item) {
-    if (item.getTitle().indexOf('Paste a link') >= 0 ||
-        item.getTitle().indexOf('homework (Google Drive') >= 0) {
+  // Collect items to delete first — never delete while iterating
+  var toDelete = form.getItems().filter(function(item) {
+    return item.getTitle().indexOf('Paste a link') >= 0 ||
+           item.getTitle().indexOf('homework (Google Drive') >= 0 ||
+           item.getTitle().indexOf('Upload your completed homework') >= 0;
+  });
+
+  toDelete.forEach(function(item) {
+    try {
       form.deleteItem(item);
-      Logger.log('Deleted old text field: ' + item.getTitle());
+      Logger.log('Deleted: ' + item.getTitle());
+    } catch(err) {
+      Logger.log('Could not delete (already gone?): ' + item.getTitle());
     }
   });
 
-  // Add file upload question at position 2 (after name and unit)
+  // Add file upload question
   var uploadItem = form.addFileUploadItem();
   uploadItem.setTitle('Upload your completed homework (photo or PDF)').setRequired(true);
   uploadItem.setAllowedFileTypes([FormApp.FileType.IMAGE, FormApp.FileType.PDF]);
+
+  // Move to position 2 (after Your name and Unit completed)
+  try { form.moveItem(uploadItem.getIndex(), 2); } catch(err) { Logger.log('Move skipped: '+err); }
+
+  Logger.log('✅ Form upgraded to file upload.');
+  Logger.log('Form URL: ' + form.getPublishedUrl());
+  Logger.log('Items now:');
+  form.getItems().forEach(function(i){ Logger.log('  ' + i.getIndex() + ': ' + i.getTitle()); });
+}
 
   // Move it to position 2 (0-indexed)
   form.moveItem(uploadItem.getIndex(), 2);
