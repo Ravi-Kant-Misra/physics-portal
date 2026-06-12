@@ -64,14 +64,39 @@ function adminRemove(sid) {
   var ss   = SpreadsheetApp.openById(_cfg().SHEET_ID);
   var sh   = ss.getSheetByName('Roster');
   var data = sh.getDataRange().getValues();
+  var name = sid;
+  var rowToDelete = -1;
+
   for (var i = 1; i < data.length; i++) {
-    if (String(data[i][0]) === String(sid)) {
-      sh.getRange(i+1, 7).setValue(false);
-      SpreadsheetApp.flush();
-      return {ok: true, msg: data[i][1] + ' has been deactivated. Progress history preserved.'};
+    if (String(data[i][0]).trim() === String(sid).trim()) {
+      name = data[i][1];
+      rowToDelete = i + 1; // 1-indexed sheet row
+      break;
     }
   }
-  return {ok: false, msg: 'Student ID ' + sid + ' not found.'};
+
+  if (rowToDelete === -1) return {ok: false, msg: 'Student ID ' + sid + ' not found.'};
+
+  // Delete the roster row entirely
+  sh.deleteRow(rowToDelete);
+
+  // Also delete all progress rows for this student
+  var progSh   = ss.getSheetByName('Progress');
+  var progData = progSh.getDataRange().getValues();
+  // Collect row indices to delete (in reverse so deletion doesn't shift indices)
+  var toDelete = [];
+  for (var j = 1; j < progData.length; j++) {
+    if (String(progData[j][1]).trim() === String(sid).trim()) {
+      toDelete.push(j + 1);
+    }
+  }
+  for (var k = toDelete.length - 1; k >= 0; k--) {
+    progSh.deleteRow(toDelete[k]);
+  }
+
+  SpreadsheetApp.flush();
+  return {ok: true, msg: name + ' removed. Roster row and ' + toDelete.length + ' progress rows deleted. ID is now free to reuse.'};
+}  return {ok: false, msg: 'Student ID ' + sid + ' not found.'};
 }
 
 function getAdminHtml() {
