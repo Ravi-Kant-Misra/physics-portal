@@ -70,32 +70,31 @@ function adminRemove(sid) {
   for (var i = 1; i < data.length; i++) {
     if (String(data[i][0]).trim() === String(sid).trim()) {
       name = data[i][1];
-      rowToDelete = i + 1; // 1-indexed sheet row
+      rowToDelete = i + 1;
       break;
     }
   }
 
   if (rowToDelete === -1) return {ok: false, msg: 'Student ID ' + sid + ' not found.'};
 
-  // Delete the roster row entirely
+  // Delete roster row
   sh.deleteRow(rowToDelete);
 
-  // Also delete all progress rows for this student
+  // Delete progress rows in one batch rewrite (much faster than row-by-row)
   var progSh   = ss.getSheetByName('Progress');
   var progData = progSh.getDataRange().getValues();
-  // Collect row indices to delete (in reverse so deletion doesn't shift indices)
-  var toDelete = [];
-  for (var j = 1; j < progData.length; j++) {
-    if (String(progData[j][1]).trim() === String(sid).trim()) {
-      toDelete.push(j + 1);
-    }
-  }
-  for (var k = toDelete.length - 1; k >= 0; k--) {
-    progSh.deleteRow(toDelete[k]);
+  var kept = progData.filter(function(r, i) {
+    return i === 0 || String(r[1]).trim() !== String(sid).trim();
+  });
+  var removed = progData.length - kept.length;
+
+  progSh.clearContents();
+  if (kept.length > 0) {
+    progSh.getRange(1, 1, kept.length, kept[0].length).setValues(kept);
   }
 
   SpreadsheetApp.flush();
-  return {ok: true, msg: name + ' removed. Roster row and ' + toDelete.length + ' progress rows deleted. ID is now free to reuse.'};
+  return {ok: true, msg: name + ' removed. ' + removed + ' progress rows deleted. ID is free to reuse.'};
 }
 
 function getAdminHtml() {
@@ -287,20 +286,17 @@ function _buildDashboard() {
     '<script>' +
     'function showOverlay(icon,msg){var o=document.getElementById("overlay");document.getElementById("ov_icon").textContent=icon;document.getElementById("ov_msg").innerHTML=msg;o.style.display="flex";}' +
     'function hideOverlay(){document.getElementById("overlay").style.display="none";}' +
-    'function doRefresh(){' +
-      'showOverlay("⏳","Refreshing dashboard...");' +
-      'google.script.run.withSuccessHandler(function(html){document.open();document.write(html);document.close();}).withFailureHandler(fail).getAdminHtml();' +
+    'function reloadPage(){' +
+      'google.script.run.withSuccessHandler(function(html){document.open();document.write(html);document.close();}).withFailureHandler(function(){hideOverlay();alert("Reload failed. Please close and reopen the admin portal.");}).getAdminHtml();' +
     '}' +
+    'function doRefresh(){showOverlay("⏳","Refreshing...");reloadPage();}' +
     'function done(r){' +
       'hideOverlay();' +
       'if(r&&r.ok===false){alert("Error: "+r.msg);}' +
       'else{' +
         'alert(r&&r.msg?r.msg:"Done.");' +
-        'google.script.run.withSuccessHandler(function(html){' +
-          'document.open();document.write(html);document.close();' +
-        '}).withFailureHandler(function(e){' +
-          'alert("Dashboard refresh failed: "+e+". Please close and reopen the admin portal.");' +
-        '}).getAdminHtml();' +
+        'showOverlay("⏳","Reloading dashboard...");' +
+        'reloadPage();' +
       '}' +
     '}' +
     'function fail(e){hideOverlay();alert("Error: "+(e&&e.message?e.message:e));}' +
