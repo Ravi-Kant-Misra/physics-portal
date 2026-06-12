@@ -580,7 +580,10 @@ function onParentApproval(e) {
     try {
       GmailApp.sendEmail(student.StudentEmail, subj, _stripHtml(body), { htmlBody:body, cc:student.ParentEmail, name:PORTAL_NAME });
       _logEmail(ss,'approval',studentId,unitId,student.StudentEmail,subj,'sent');
-    } catch(err) { _logEmail(ss,'approval',studentId,unitId,student.StudentEmail,subj,'error:'+err); }
+    } catch(err) {
+      _logEmail(ss,'approval',studentId,unitId,student.StudentEmail,subj,'error:'+err);
+      _alertAdmin('Approval email failed for '+student.StudentName+': '+err);
+    }
   } else {
     var resubUrl = _prefilledUrl(cfg.HOMEWORK_FORM_ID, { 'Your name':student.StudentName, 'Unit completed':unitId+' — '+unit.UnitName });
     var subj2 = '📝 Corrections needed — '+unit.UnitName;
@@ -588,7 +591,10 @@ function onParentApproval(e) {
     try {
       GmailApp.sendEmail(student.StudentEmail, subj2, _stripHtml(body2), { htmlBody:body2, cc:student.ParentEmail, name:PORTAL_NAME });
       _logEmail(ss,'corrections',studentId,unitId,student.StudentEmail,subj2,'sent');
-    } catch(err) { _logEmail(ss,'corrections',studentId,unitId,student.StudentEmail,subj2,'error:'+err); }
+    } catch(err) {
+      _logEmail(ss,'corrections',studentId,unitId,student.StudentEmail,subj2,'error:'+err);
+      _alertAdmin('Corrections email failed for '+student.StudentName+': '+err);
+    }
   }
 }
 
@@ -778,6 +784,11 @@ function _sendWelcomeEmail(ss, rowData) {
     Logger.log('Welcome emails sent to ' + email + ' and ' + parentEmail);
   } catch(err) {
     Logger.log('Welcome email failed: ' + err);
+    // Alert admin so failure is not silent
+    try {
+      GmailApp.sendEmail(ADMIN_EMAIL, '[Physics Foundations] ⚠️ Welcome email failed for '+name,
+        'Failed to send welcome email to '+email+' / '+parentEmail+'\n\nError: '+err, {name:PORTAL_NAME});
+    } catch(e2) { Logger.log('Could not alert admin either: '+e2); }
   }
 }
 
@@ -792,6 +803,7 @@ function onOpen() {
     .addItem('View progress summary',            'adminRefreshSummary')
     .addItem('Re-send welcome email',            'adminResendWelcome')
     .addSeparator()
+    .addItem('📧 Test email delivery',           'testEmailDelivery')
     .addItem('Seed progress (new students)',      'seedProgress')
     .addToUi();
 }
@@ -826,7 +838,6 @@ function adminUnlockNext() {
   GmailApp.sendEmail(student.StudentEmail, '🔓 New unit unlocked — ' + nextLocked.UnitName, _stripHtml(body), {
     htmlBody: body, cc: student.ParentEmail, name: PORTAL_NAME
   });
-  _logEmail(ss, 'admin_unlock', sid, nextLocked.UnitID, student.StudentEmail, 'Admin unlocked: '+nextLocked.UnitName, 'sent');
 
   ui.alert('✅ Unlocked: ' + nextLocked.UnitName + ' for ' + student.StudentName + '. Email sent.');
 }
@@ -854,7 +865,6 @@ function adminUnlockSpecific() {
   GmailApp.sendEmail(student.StudentEmail, '🔓 Unit unlocked — ' + unit.UnitName, _stripHtml(body), {
     htmlBody: body, cc: student.ParentEmail, name: PORTAL_NAME
   });
-  _logEmail(ss, 'admin_unlock', sid, unitId, student.StudentEmail, 'Admin unlocked: '+unit.UnitName, 'sent');
 
   ui.alert('✅ Unlocked: ' + unit.UnitName + ' for ' + student.StudentName + '. Email sent.');
 }
@@ -957,6 +967,34 @@ function _unlockEmailHtml(student, unit, audience) {
 }
 
 // ── Seed progress (also callable from Admin menu) ─────────────────────────────
+// ── Test email delivery ────────────────────────────────────────────────────────
+// Run this function once to verify Gmail works from this script.
+// Check misra.ravikant@gmail.com inbox for the test email.
+function testEmailDelivery() {
+  try {
+    GmailApp.sendEmail(
+      ADMIN_EMAIL,
+      '✅ [Physics Foundations] Email test — it works!',
+      'This is a test email from your Physics Foundations Apps Script.\n\nIf you receive this, all email functionality is working correctly.',
+      {
+        htmlBody: '<div style="font-family:sans-serif;padding:32px;max-width:480px;margin:0 auto;background:#f0f4f8;border-radius:12px;">'+
+          '<h2 style="color:#1d4ed8;">✅ Email Test Successful</h2>'+
+          '<p>This email was sent from your <strong>Physics Foundations Apps Script</strong>.</p>'+
+          '<p>All email functionality is working correctly.</p>'+
+          '<p style="color:#64748b;font-size:.85rem;">Script running as: '+Session.getEffectiveUser().getEmail()+'</p>'+
+          '</div>',
+        name: PORTAL_NAME
+      }
+    );
+    Logger.log('✅ Test email sent successfully to ' + ADMIN_EMAIL);
+    Logger.log('Script running as: ' + Session.getEffectiveUser().getEmail());
+    SpreadsheetApp.getUi().alert('✅ Test email sent to ' + ADMIN_EMAIL + '.\n\nCheck your inbox.');
+  } catch(err) {
+    Logger.log('❌ Email test FAILED: ' + err);
+    SpreadsheetApp.getUi().alert('❌ Email test FAILED:\n\n' + err + '\n\nThis explains why no emails are going out.');
+  }
+}
+
 function seedProgress() {
   var ss       = SpreadsheetApp.openById(_cfg().SHEET_ID);
   var rosterSh = ss.getSheetByName('Roster');
