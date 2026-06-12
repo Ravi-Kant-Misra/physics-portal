@@ -43,10 +43,31 @@ function _adminDashboard() {
   var emailLog = _getEmailLog(ss);
   var now      = new Date();
 
+  // ── Read ALL progress once — cache in a map keyed by studentID ───────────────
+  var allProgData = ss.getSheetByName('Progress').getDataRange().getValues();
+  var allProgHdr  = allProgData[0];
+  var allProgMap  = {}; // { studentID: { unitID: progressObj } }
+  allProgData.slice(1).forEach(function(row) {
+    var p = _rObj(allProgHdr, row);
+    if (!allProgMap[p.StudentID]) allProgMap[p.StudentID] = {};
+    allProgMap[p.StudentID][p.UnitID] = p;
+  });
+
+  // ── Read ALL units into a map once ────────────────────────────────────────────
+  var unitMap = {};
+  units.forEach(function(u){ unitMap[u.UnitID] = u; });
+
+  // Helper: get student's progress array from cache
+  function getProgList(sid) {
+    var m = allProgMap[sid] || {};
+    return Object.keys(m).map(function(uid){ return m[uid]; });
+  }
+  function getProgMap(sid) { return allProgMap[sid] || {}; }
+
   // ── Stats ─────────────────────────────────────────────────────────────────────
   var totalComplete = 0, totalPending = 0, totalCorrections = 0, hwCount = 0;
   students.forEach(function(s) {
-    _progress(ss, s.StudentID).forEach(function(p) {
+    getProgList(s.StudentID).forEach(function(p) {
       if (p.Status==='complete')        totalComplete++;
       if (p.Status==='awaiting_review') totalPending++;
       if (p.Status==='corrections')     totalCorrections++;
@@ -56,7 +77,7 @@ function _adminDashboard() {
 
   // ── Student roster ────────────────────────────────────────────────────────────
   var rosterRows = students.map(function(s) {
-    var prog      = _progress(ss, s.StudentID);
+    var prog      = getProgList(s.StudentID);
     var done      = prog.filter(function(p){ return p.Status==='complete'; }).length;
     var available = prog.filter(function(p){ return p.Status==='available'; }).length;
     var lastSub   = prog.reduce(function(latest, p) {
@@ -70,7 +91,6 @@ function _adminDashboard() {
       daysSince <= 7  ? '<span style="color:#1d4ed8;font-weight:700;">'+daysSince+'d ago</span>' :
       daysSince <= 14 ? '<span style="color:#854d0e;font-weight:700;">'+daysSince+'d ago</span>' :
                         '<span style="color:#dc2626;font-weight:700;">'+daysSince+'d ago ⚠️</span>';
-
     return '<tr>'+
       '<td><strong>'+s.StudentName+'</strong></td>'+
       '<td style="font-size:.8rem;color:#64748b;">'+s.StudentID+'</td>'+
@@ -86,53 +106,35 @@ function _adminDashboard() {
   // ── Needs attention ───────────────────────────────────────────────────────────
   var attentionRows = '';
   students.forEach(function(s) {
-    var prog = _progress(ss, s.StudentID);
-
-    // Corrections pending for more than 7 days
+    var prog = getProgList(s.StudentID);
     prog.filter(function(p){ return p.Status==='corrections'; }).forEach(function(p) {
-      var u = _unit(ss, p.UnitID);
+      var u = unitMap[p.UnitID];
       var days = p.ParentReviewedAt ? Math.floor((now - new Date(p.ParentReviewedAt)) / 86400000) : '?';
-      attentionRows += '<tr style="background:#fff7ed;">'+
-        '<td>⚠️ <strong>'+s.StudentName+'</strong></td>'+
-        '<td>Corrections not resubmitted</td>'+
-        '<td>'+(u?u.UnitName:p.UnitID)+'</td>'+
+      attentionRows += '<tr style="background:#fff7ed;"><td>⚠️ <strong>'+s.StudentName+'</strong></td>'+
+        '<td>Corrections not resubmitted</td><td>'+(u?u.UnitName:p.UnitID)+'</td>'+
         '<td>'+days+' days since corrections requested</td>'+
-        '<td><a href="mailto:'+s.StudentEmail+'" class="btn-sm btn-green">📧 Nudge</a></td>'+
-        '</tr>';
+        '<td><a href="mailto:'+s.StudentEmail+'" class="btn-sm btn-green">📧 Nudge</a></td></tr>';
     });
-
-    // Awaiting review for more than 3 days
     prog.filter(function(p){ return p.Status==='awaiting_review'; }).forEach(function(p) {
       if (!p.HomeworkSubmittedAt) return;
       var days = Math.floor((now - new Date(p.HomeworkSubmittedAt)) / 86400000);
       if (days < 3) return;
-      var u = _unit(ss, p.UnitID);
-      attentionRows += '<tr style="background:#fef9c3;">'+
-        '<td>🕐 <strong>'+s.StudentName+'</strong></td>'+
-        '<td>Parent review overdue</td>'+
-        '<td>'+(u?u.UnitName:p.UnitID)+'</td>'+
+      var u = unitMap[p.UnitID];
+      attentionRows += '<tr style="background:#fef9c3;"><td>🕐 <strong>'+s.StudentName+'</strong></td>'+
+        '<td>Parent review overdue</td><td>'+(u?u.UnitName:p.UnitID)+'</td>'+
         '<td>'+days+' days since submitted</td>'+
-        '<td><a href="mailto:'+s.ParentEmail+'" class="btn-sm" style="background:#1d4ed8;color:white;">📧 Remind Parent</a></td>'+
-        '</tr>';
+        '<td><a href="mailto:'+s.ParentEmail+'" class="btn-sm" style="background:#1d4ed8;color:white;">📧 Remind Parent</a></td></tr>';
     });
-
-    // No activity in 14+ days
     var lastAny = prog.reduce(function(latest, p) {
-      var dates = [p.HomeworkSubmittedAt, p.UnlockedAt, p.LessonOpened].filter(Boolean);
-      dates.forEach(function(d){ var dt=new Date(d); if(!latest||dt>latest) latest=dt; });
-      return latest;
+      [p.HomeworkSubmittedAt,p.UnlockedAt,p.LessonOpened].filter(Boolean).forEach(function(d){
+        var dt=new Date(d); if(!latest||dt>latest) latest=dt;
+      }); return latest;
     }, null);
-    if (lastAny) {
-      var inactiveDays = Math.floor((now - lastAny) / 86400000);
-      if (inactiveDays >= 14) {
-        attentionRows += '<tr style="background:#fee2e2;">'+
-          '<td>💤 <strong>'+s.StudentName+'</strong></td>'+
-          '<td>No activity</td>'+
-          '<td>—</td>'+
-          '<td>'+inactiveDays+' days inactive</td>'+
-          '<td><a href="mailto:'+s.StudentEmail+'" class="btn-sm btn-green">📧 Check In</a></td>'+
-          '</tr>';
-      }
+    if (lastAny && Math.floor((now-lastAny)/86400000) >= 14) {
+      var days = Math.floor((now-lastAny)/86400000);
+      attentionRows += '<tr style="background:#fee2e2;"><td>💤 <strong>'+s.StudentName+'</strong></td>'+
+        '<td>No activity</td><td>—</td><td>'+days+' days inactive</td>'+
+        '<td><a href="mailto:'+s.StudentEmail+'" class="btn-sm btn-green">📧 Check In</a></td></tr>';
     }
   });
   if (!attentionRows) attentionRows = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:16px;">✅ No issues requiring attention</td></tr>';
@@ -140,76 +142,49 @@ function _adminDashboard() {
   // ── Pending reviews ───────────────────────────────────────────────────────────
   var pendingRows = '';
   students.forEach(function(student) {
-    var progress = _progress(ss, student.StudentID);
-    progress.filter(function(p){ return p.Status === 'awaiting_review'; }).forEach(function(p) {
-      var u = _unit(ss, p.UnitID);
-      pendingRows += '<tr>'+
-        '<td>'+student.StudentName+'</td>'+
-        '<td>'+p.UnitID+'</td>'+
-        '<td>'+(u?u.UnitName:'')+'</td>'+
-        '<td>'+_formatDate(p.HomeworkSubmittedAt)+'</td>'+
-        '<td>'+(p.HomeworkDriveURL ? '<a href="'+p.HomeworkDriveURL+'" target="_blank">View</a>' : '—')+'</td>'+
-        '<td><a href="?action=unlock&sid='+student.StudentID+'&uid='+p.UnitID+'" class="btn-sm btn-green" onclick="return confirm(\'Mark complete and unlock next unit for '+student.StudentName+'?\')">✅ Approve & Unlock Next</a></td>'+
-        '</tr>';
+    getProgList(student.StudentID).filter(function(p){ return p.Status==='awaiting_review'; }).forEach(function(p) {
+      var u = unitMap[p.UnitID];
+      pendingRows += '<tr><td>'+student.StudentName+'</td><td>'+p.UnitID+'</td>'+
+        '<td>'+(u?u.UnitName:'')+'</td><td>'+_formatDate(p.HomeworkSubmittedAt)+'</td>'+
+        '<td>'+(p.HomeworkDriveURL?'<a href="'+p.HomeworkDriveURL+'" target="_blank">View</a>':'—')+'</td>'+
+        '<td><a href="?action=unlock&sid='+student.StudentID+'&uid='+p.UnitID+'" class="btn-sm btn-green" onclick="return confirm(\'Mark complete and unlock next unit for '+student.StudentName+'?\')">✅ Approve &amp; Unlock Next</a></td></tr>';
     });
   });
   if (!pendingRows) pendingRows = '<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:20px;">No pending submissions</td></tr>';
 
-  // ── Homework completion summary ───────────────────────────────────────────────
+  // ── Homework submissions ──────────────────────────────────────────────────────
   var hwRows = '';
   students.forEach(function(student) {
-    var progress = _progress(ss, student.StudentID);
-    progress.filter(function(p){ return p.HomeworkSubmittedAt && p.HomeworkSubmittedAt !== ''; }).forEach(function(p) {
-      var u = _unit(ss, p.UnitID);
-      var statusBadge = {
-        complete:        '<span class="hw-badge hw-done">✅ Complete</span>',
-        awaiting_review: '<span class="hw-badge hw-pending">🟡 Awaiting Review</span>',
-        corrections:     '<span class="hw-badge hw-corr">❌ Corrections</span>',
-        available:       '<span class="hw-badge hw-sub">📤 Submitted</span>',
-      }[p.Status] || '<span class="hw-badge">'+p.Status+'</span>';
-
-      var parentDecision = p.ParentDecision
-        ? (p.ParentDecision === 'approved' ? '✅ Approved' : '❌ Corrections Requested')
-        : '⏳ Pending';
-
-      hwRows += '<tr>'+
-        '<td><strong>'+student.StudentName+'</strong></td>'+
+    getProgList(student.StudentID).filter(function(p){ return p.HomeworkSubmittedAt && p.HomeworkSubmittedAt!==''; }).forEach(function(p) {
+      var u = unitMap[p.UnitID];
+      var statusBadge = {complete:'<span class="hw-badge hw-done">✅ Complete</span>',awaiting_review:'<span class="hw-badge hw-pending">🟡 Awaiting Review</span>',corrections:'<span class="hw-badge hw-corr">❌ Corrections</span>',available:'<span class="hw-badge hw-sub">📤 Submitted</span>'}[p.Status]||'<span class="hw-badge">'+p.Status+'</span>';
+      var parentDecision = p.ParentDecision?(p.ParentDecision==='approved'?'✅ Approved':'❌ Corrections Requested'):'⏳ Pending';
+      hwRows += '<tr><td><strong>'+student.StudentName+'</strong></td>'+
         '<td style="font-family:monospace;font-size:.8rem;">'+p.UnitID+'</td>'+
-        '<td>'+(u ? u.UnitName : '')+'</td>'+
-        '<td>'+_formatDate(p.HomeworkSubmittedAt)+'</td>'+
-        '<td>'+statusBadge+'</td>'+
-        '<td>'+parentDecision+'</td>'+
-        '<td>'+(p.ParentComments ? '<span title="'+p.ParentComments+'" style="cursor:help;color:#64748b;">💬 '+p.ParentComments.substring(0,40)+(p.ParentComments.length>40?'…':'')+'</span>' : '—')+'</td>'+
-        '<td>'+(p.HomeworkDriveURL ? '<a href="'+p.HomeworkDriveURL+'" target="_blank" class="btn-sm" style="background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;">View</a>' : '—')+'</td>'+
-        '</tr>';
+        '<td>'+(u?u.UnitName:'')+'</td><td>'+_formatDate(p.HomeworkSubmittedAt)+'</td>'+
+        '<td>'+statusBadge+'</td><td>'+parentDecision+'</td>'+
+        '<td>'+(p.ParentComments?'<span title="'+p.ParentComments+'" style="cursor:help;color:#64748b;">💬 '+p.ParentComments.substring(0,40)+(p.ParentComments.length>40?'…':'')+'</span>':'—')+'</td>'+
+        '<td>'+(p.HomeworkDriveURL?'<a href="'+p.HomeworkDriveURL+'" target="_blank" class="btn-sm" style="background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;">View</a>':'—')+'</td></tr>';
     });
   });
   if (!hwRows) hwRows = '<tr><td colspan="8" style="text-align:center;color:#94a3b8;padding:20px;">No homework submitted yet</td></tr>';
 
   // ── Progress grid ─────────────────────────────────────────────────────────────
-  var statusIcon = { complete:'✅', available:'📖', in_progress:'✏️', awaiting_review:'🟡', corrections:'❌', locked:'🔒' };
-  var statusBg   = { complete:'#dcfce7', available:'#dbeafe', in_progress:'#dbeafe', awaiting_review:'#fef9c3', corrections:'#fee2e2', locked:'#f1f5f9' };
+  var statusIcon = {complete:'✅',available:'📖',in_progress:'✏️',awaiting_review:'🟡',corrections:'❌',locked:'🔒'};
+  var statusBg   = {complete:'#dcfce7',available:'#dbeafe',in_progress:'#dbeafe',awaiting_review:'#fef9c3',corrections:'#fee2e2',locked:'#f1f5f9'};
 
-  var gridHeaders = '<th class="sticky-col">Student</th>' +
+  var gridHeaders = '<th class="sticky-col">Student</th>'+
     units.map(function(u){ return '<th class="unit-th" title="'+u.UnitName+'">'+u.UnitID+'</th>'; }).join('');
 
   var gridRows = students.map(function(student) {
-    var progress = _progress(ss, student.StudentID);
-    var progMap  = {};
-    progress.forEach(function(p){ progMap[p.UnitID] = p; });
-
+    var progMap = getProgMap(student.StudentID);
     var cells = units.map(function(u) {
-      var p      = progMap[u.UnitID] || { Status:'locked' };
-      var status = p.Status || 'locked';
-      var icon   = statusIcon[status] || '🔒';
-      var bg     = statusBg[status]   || '#f1f5f9';
-      var canUnlock = (status === 'locked' || status === 'corrections');
-      var unlockBtn = canUnlock
-        ? '<a href="?action=unlock&sid='+student.StudentID+'&uid='+u.UnitID+'" class="unlock-btn" onclick="return confirm(\'Unlock '+u.UnitName+' for '+student.StudentName+'?\')">unlock</a>'
-        : '';
-      return '<td style="background:'+bg+';text-align:center;" title="'+student.StudentName+' — '+u.UnitName+': '+status+'">'+icon+'<br>'+unlockBtn+'</td>';
+      var p = progMap[u.UnitID] || {Status:'locked'};
+      var status = p.Status||'locked';
+      var canUnlock = (status==='locked'||status==='corrections');
+      var unlockBtn = canUnlock?'<a href="?action=unlock&sid='+student.StudentID+'&uid='+u.UnitID+'" class="unlock-btn" onclick="return confirm(\'Unlock '+u.UnitName+' for '+student.StudentName+'?\')">unlock</a>':'';
+      return '<td style="background:'+(statusBg[status]||'#f1f5f9')+';text-align:center;" title="'+student.StudentName+' — '+u.UnitName+': '+status+'">'+(statusIcon[status]||'🔒')+'<br>'+unlockBtn+'</td>';
     }).join('');
-
     return '<tr><td class="sticky-col"><strong>'+student.StudentName+'</strong></td>'+cells+'</tr>';
   }).join('');
 
@@ -393,20 +368,23 @@ function _adminActionAddStudent(e) {
 
   sh.appendRow([p.sid, p.name, p.email, p.parentEmail, p.parentName, new Date(), true]);
 
+  // Seed progress — first 3 unlocked
   var units   = ss.getSheetByName('Units').getDataRange().getValues().slice(1);
   var progSh  = ss.getSheetByName('Progress');
   var newRows = units.map(function(u, idx) {
     return [p.sid+'_'+u[0], p.sid, u[0], idx<3?'available':'locked','','','','','','','',''];
   });
   if (newRows.length > 0) progSh.getRange(progSh.getLastRow()+1, 1, newRows.length, 12).setValues(newRows);
+  SpreadsheetApp.flush(); // write to sheet immediately
 
+  // Send welcome emails (async-friendly — fires after page returns)
   _sendWelcomeEmail(ss, [p.sid, p.name, p.email, p.parentEmail, p.parentName, new Date(), true]);
 
   var first3 = units.slice(0,3).map(function(u){ return u[7]; }).join(', ');
 
   return HtmlService.createHtmlOutput(
     '<html><head>'+
-    '<meta http-equiv="refresh" content="4;url=?">'+
+    '<meta http-equiv="refresh" content="2;url=?">'+
     '<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">'+
     '<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:Nunito,sans-serif;background:#0f172a;color:white;display:flex;align-items:center;justify-content:center;min-height:100vh;}'+
     '.box{text-align:center;padding:48px 32px;max-width:480px;}'+
