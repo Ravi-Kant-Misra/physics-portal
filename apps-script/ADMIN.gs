@@ -105,7 +105,7 @@ function _adminDashboard(baseUrl) {
       '<td>'+
         '<a href="mailto:'+s.StudentEmail+'" class="btn-sm" style="background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;">Email</a> '+
         '<a href="mailto:'+s.ParentEmail+'" class="btn-sm" style="background:#f0fdf4;color:#15803d;border:1px solid #86efac;">Parent</a> '+
-        '<a href="'+baseUrl+'?action=deactivateStudent&sid='+s.StudentID+'" class="btn-sm" style="background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;" onclick="return confirm(\'Remove '+s.StudentName+' from the portal? Their progress will be kept but they will no longer appear in the dashboard.\')">✕ Remove</a>'+
+        '<a href="'+baseUrl+'?action=deactivateStudent&amp;sid='+s.StudentID+'" class="btn-sm" style="background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;" onclick="return confirm(\'Remove '+s.StudentName+' from the portal? Their progress will be kept but they will no longer appear in the dashboard.\')">✕ Remove</a>'+
       '</td>'+
       '</tr>';
   }).join('');
@@ -154,7 +154,7 @@ function _adminDashboard(baseUrl) {
       pendingRows += '<tr><td>'+student.StudentName+'</td><td>'+p.UnitID+'</td>'+
         '<td>'+(u?u.UnitName:'')+'</td><td>'+_formatDate(p.HomeworkSubmittedAt)+'</td>'+
         '<td>'+(p.HomeworkDriveURL?'<a href="'+p.HomeworkDriveURL+'" target="_blank">View</a>':'—')+'</td>'+
-        '<td><a href='+baseUrl+'?action=unlock&sid='+student.StudentID+'&uid='+p.UnitID+'" class="btn-sm btn-green" onclick="return confirm(\'Mark complete and unlock next unit for '+student.StudentName+'?\')">✅ Approve &amp; Unlock Next</a></td></tr>';
+        '<td><a href="'+baseUrl+'?action=unlock&amp;sid='+student.StudentID+'&amp;uid='+p.UnitID+'" class="btn-sm btn-green" onclick="return confirm(\'Mark complete and unlock next unit for '+student.StudentName+'?\')">✅ Approve &amp; Unlock Next</a></td></tr>';
     });
   });
   if (!pendingRows) pendingRows = '<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:20px;">No pending submissions</td></tr>';
@@ -189,7 +189,7 @@ function _adminDashboard(baseUrl) {
       var p = progMap[u.UnitID] || {Status:'locked'};
       var status = p.Status||'locked';
       var canUnlock = (status==='locked'||status==='corrections');
-      var unlockBtn = canUnlock?'<a href='+baseUrl+'?action=unlock&sid='+student.StudentID+'&uid='+u.UnitID+'" class="unlock-btn" onclick="return confirm(\'Unlock '+u.UnitName+' for '+student.StudentName+'?\')">unlock</a>':'';
+      var unlockBtn = canUnlock?'<a href="'+baseUrl+'?action=unlock&amp;sid='+student.StudentID+'&amp;uid='+u.UnitID+'" class="unlock-btn" onclick="return confirm(\'Unlock '+u.UnitName+' for '+student.StudentName+'?\')">unlock</a>':'';
       return '<td style="background:'+(statusBg[status]||'#f1f5f9')+';text-align:center;" title="'+student.StudentName+' — '+u.UnitName+': '+status+'">'+(statusIcon[status]||'🔒')+'<br>'+unlockBtn+'</td>';
     }).join('');
     return '<tr><td class="sticky-col"><strong>'+student.StudentName+'</strong></td>'+cells+'</tr>';
@@ -206,7 +206,7 @@ function _adminDashboard(baseUrl) {
   var html = '<!DOCTYPE html><html lang="en"><head>'+
     '<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+
     '<title>Admin — Physics Foundations</title>'+
-    '<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Space+Mono&display=swap" rel="stylesheet">'+
+    '<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&amp;family=Space+Mono&amp;display=swap" rel="stylesheet">'+
     _adminStyles()+
     '</head><body>'+
 
@@ -385,7 +385,7 @@ function _adminActionAddStudent(e, baseUrl) {
   return HtmlService.createHtmlOutput(
     '<html><head>'+
     '<meta http-equiv="refresh" content="3;url='+baseUrl+'">'+
-    '<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">'+
+    '<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&amp;display=swap" rel="stylesheet">'+
     '<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:Nunito,sans-serif;background:#0f172a;color:white;display:flex;align-items:center;justify-content:center;min-height:100vh;}'+
     '.box{text-align:center;padding:48px 32px;max-width:480px;}'+
     'h2{font-size:1.6rem;font-weight:900;margin-bottom:12px;}'+
