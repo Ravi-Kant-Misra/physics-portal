@@ -208,14 +208,20 @@ function _adminActionUnlock(e) {
     _setProg(ss, sid, nextUnit.UnitID, { Status:'available', UnlockedAt:new Date() });
   }
 
-  // Email student
-  var body = _unlockEmailHtml(student, nextUnit || unit);
-  var subj = '🔓 New unit unlocked — '+(nextUnit ? nextUnit.UnitName : unit.UnitName);
+  // Email student AND parent separately with richer content
+  var studentBody = _unlockEmailHtml(student, nextUnit || unit, 'student');
+  var parentBody  = _unlockEmailHtml(student, nextUnit || unit, 'parent');
+  var subj        = '🔓 New unit unlocked — '+(nextUnit ? nextUnit.UnitName : unit.UnitName);
+  var parentSubj  = '🔓 [Physics Foundations] '+student.StudentName+'\'s next unit is unlocked';
   try {
-    GmailApp.sendEmail(student.StudentEmail, subj, _stripHtml(body), {
-      htmlBody:body, cc:student.ParentEmail, name:PORTAL_NAME
+    GmailApp.sendEmail(student.StudentEmail, subj, _stripHtml(studentBody), {
+      htmlBody:studentBody, name:PORTAL_NAME
+    });
+    GmailApp.sendEmail(student.ParentEmail, parentSubj, _stripHtml(parentBody), {
+      htmlBody:parentBody, name:PORTAL_NAME
     });
     _logEmail(ss,'admin_unlock',sid,uid,student.StudentEmail,subj,'sent');
+    _logEmail(ss,'admin_unlock',sid,uid,student.ParentEmail,parentSubj,'sent');
   } catch(err) {
     _logEmail(ss,'admin_unlock',sid,uid,student.StudentEmail,subj,'error:'+err);
   }
@@ -257,9 +263,31 @@ function _adminActionAddStudent(e) {
   // Welcome emails
   _sendWelcomeEmail(ss, [p.sid, p.name, p.email, p.parentEmail, p.parentName, new Date(), true]);
 
+  // Get first 3 unlocked units for confirmation display
+  var first3 = units.slice(0,3).map(function(u){ return u[7]; }).join(', ');
+
+  // Return confirmation page with progress summary before redirecting
   return HtmlService.createHtmlOutput(
-    '<html><head><meta http-equiv="refresh" content="2;url=?"><style>body{font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#0f172a;color:white;text-align:center;}</style></head>'+
-    '<body><div><h2>✅ '+p.name+' enrolled!</h2><p>Welcome emails sent. First 3 units unlocked. Redirecting...</p></div></body></html>'
+    '<html><head>'+
+    '<meta http-equiv="refresh" content="4;url=?">'+
+    '<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">'+
+    '<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:Nunito,sans-serif;background:#0f172a;color:white;display:flex;align-items:center;justify-content:center;min-height:100vh;}'+
+    '.box{text-align:center;padding:48px 32px;max-width:480px;}'+
+    'h2{font-size:1.6rem;font-weight:900;margin-bottom:12px;}'+
+    'p{color:rgba(255,255,255,.7);line-height:1.8;margin-bottom:12px;font-size:.95rem;}'+
+    '.badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:12px 20px;margin:16px 0;font-size:.88rem;}'+
+    '.badge strong{color:#4ade80;display:block;margin-bottom:6px;}'+
+    '.progress-bar{height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:24px;overflow:hidden;}'+
+    '.progress-fill{height:100%;background:#1d4ed8;animation:fill 4s linear forwards;}'+
+    '@keyframes fill{from{width:0}to{width:100%}}</style>'+
+    '</head><body><div class="box">'+
+    '<div style="font-size:3rem;margin-bottom:16px;">✅</div>'+
+    '<h2>'+p.name+' enrolled!</h2>'+
+    '<div class="badge"><strong>📖 First 3 units unlocked</strong>'+first3+'</div>'+
+    '<div class="badge"><strong>📧 Welcome emails sent to</strong>'+p.email+'<br>'+p.parentEmail+'</div>'+
+    '<p style="margin-top:16px;font-size:.82rem;color:rgba(255,255,255,.4);">Returning to dashboard in 4 seconds...</p>'+
+    '<div class="progress-bar"><div class="progress-fill"></div></div>'+
+    '</div></body></html>'
   );
 }
 

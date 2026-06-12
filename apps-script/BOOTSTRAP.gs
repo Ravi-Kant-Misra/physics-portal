@@ -923,16 +923,36 @@ function adminResendWelcome() {
 }
 
 // ── Unlock email template ─────────────────────────────────────────────────────
-function _unlockEmailHtml(student, unit) {
+function _unlockEmailHtml(student, unit, audience) {
+  var isParent = (audience === 'parent');
+  var portalUrl = 'https://misra-ravi.github.io/physics-foundation/portal';
+
+  if (isParent) {
+    return '<!DOCTYPE html><html><head>'+_ES+'</head><body><div class="w">'+
+      '<div class="h"><div class="lbl">Physics Foundations by Ravi</div><h1>New Unit Unlocked for '+student.StudentName+' 🔓</h1></div>'+
+      '<div class="b">'+
+      '<p>Dear '+student.ParentName+',</p>'+
+      '<p>Your child\'s teacher has unlocked a new unit for <strong>'+student.StudentName+'</strong>:</p>'+
+      '<div class="badge">🔓 '+unit.SectionNum+' '+unit.SectionName+' — '+unit.UnitName+'</div>'+
+      '<p><strong>You are welcome to review this unit in advance</strong> before the class session:</p>'+
+      (unit.LessonURL ? '<p><a href="'+unit.LessonURL+'" class="btn bb">Preview Lesson →</a></p>' : '')+
+      '<div class="badge">📋 What '+student.StudentName+' needs to bring</div>'+
+      '<p>— Binder with printed homework sheets<br>— A pen<br>— Notebook</p>'+
+      '<p class="note">'+student.StudentName+' will complete this unit in the upcoming class session. Once homework is submitted you will receive the answer key for review.</p>'+
+      '</div></div></body></html>';
+  }
+
   return '<!DOCTYPE html><html><head>'+_ES+'</head><body><div class="w">'+
     '<div class="h"><div class="lbl">Physics Foundations by Ravi</div><h1>New Unit Unlocked 🔓</h1></div>'+
     '<div class="b"><p>Hi '+student.StudentName+',</p>'+
     '<p>Your teacher has unlocked your next unit:</p>'+
     '<div class="badge">🔓 '+unit.SectionNum+' '+unit.SectionName+' — '+unit.UnitName+'</div>'+
-    (unit.LessonURL ? '<p><a href="'+unit.LessonURL+'" class="btn bb">Start Lesson →</a></p>' : '')+
+    (unit.LessonURL ? '<p><a href="'+unit.LessonURL+'" class="btn bb">Preview Lesson →</a></p>' : '')+
+    '<p>You are welcome to <strong>read the lesson in advance</strong> before your class session.</p>'+
     '<div class="badge">📋 Remember to bring</div>'+
-    '<p>— Your binder with printed sheets<br>— A pen<br>— Your notebook</p>'+
-    '<p class="note">Sign in at your portal to see your updated dashboard.</p>'+
+    '<p>— Your binder with printed homework sheets<br>— A pen<br>— Your notebook</p>'+
+    '<p><a href="'+portalUrl+'" class="btn bb">Open Your Portal →</a></p>'+
+    '<p class="note">Your dashboard has been updated. Sign in to see your progress.</p>'+
     '</div></div></body></html>';
 }
 
