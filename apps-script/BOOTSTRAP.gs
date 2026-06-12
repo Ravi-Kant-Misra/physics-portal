@@ -473,7 +473,7 @@ function _rObj(h,r){ var o={}; h.forEach(function(k,i){o[k]=r[i];}); return o; }
 function _students(ss){ var d=ss.getSheetByName('Roster').getDataRange().getValues(); return d.slice(1).map(function(r){return _rObj(d[0],r);}).filter(function(s){return s.Active===true||String(s.Active).toUpperCase()==='TRUE';}); }
 function _studentByName(ss,n){ return _students(ss).find(function(s){return s.StudentName===n;})||null; }
 function _studentById(ss,id)  { return _students(ss).find(function(s){return s.StudentID===id;})||null; }
-function _studentByEmail(ss,e){ return _students(ss).find(function(s){return s.StudentEmail===e;})||null; }
+function _studentByEmail(ss,e){ return _students(ss).find(function(s){return String(s.StudentEmail).toLowerCase().trim()===String(e).toLowerCase().trim();})||null; }
 
 function _units(ss){ var d=ss.getSheetByName('Units').getDataRange().getValues(); return d.slice(1).map(function(r){return _rObj(d[0],r);}); }
 function _unit(ss,id){ return _units(ss).find(function(u){return u.UnitID===id;})||null; }
