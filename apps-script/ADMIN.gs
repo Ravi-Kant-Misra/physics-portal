@@ -105,7 +105,7 @@ function _adminDashboard(baseUrl) {
       '<td>'+
         '<a href="mailto:'+s.StudentEmail+'" class="btn-sm" style="background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;">Email</a> '+
         '<a href="mailto:'+s.ParentEmail+'" class="btn-sm" style="background:#f0fdf4;color:#15803d;border:1px solid #86efac;">Parent</a> '+
-        '<a href="'+baseUrl+'?action=deactivateStudent&amp;sid='+s.StudentID+'" class="btn-sm" style="background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;" onclick="return confirm(\'Remove '+s.StudentName+' from the portal? Their progress will be kept but they will no longer appear in the dashboard.\')">✕ Remove</a>'+
+        '<button class="btn-sm" style="background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;cursor:pointer;" onclick="if(confirm(\'Remove '+s.StudentName+' from the portal? Their progress will be kept but they will no longer appear in the dashboard.\')) window.top.location.href=\''+baseUrl+'?action=deactivateStudent&sid='+s.StudentID+'\'">✕ Remove</button>'+
       '</td>'+
       '</tr>';
   }).join('');
@@ -154,7 +154,7 @@ function _adminDashboard(baseUrl) {
       pendingRows += '<tr><td>'+student.StudentName+'</td><td>'+p.UnitID+'</td>'+
         '<td>'+(u?u.UnitName:'')+'</td><td>'+_formatDate(p.HomeworkSubmittedAt)+'</td>'+
         '<td>'+(p.HomeworkDriveURL?'<a href="'+p.HomeworkDriveURL+'" target="_blank">View</a>':'—')+'</td>'+
-        '<td><a href="'+baseUrl+'?action=unlock&amp;sid='+student.StudentID+'&amp;uid='+p.UnitID+'" class="btn-sm btn-green" onclick="return confirm(\'Mark complete and unlock next unit for '+student.StudentName+'?\')">✅ Approve &amp; Unlock Next</a></td></tr>';
+        '<td><button class="btn-sm btn-green" style="cursor:pointer;" onclick="if(confirm(\'Mark complete and unlock next unit for '+student.StudentName+'?\')) window.top.location.href=\''+baseUrl+'?action=unlock&sid='+student.StudentID+'&uid='+p.UnitID+'\'">✅ Approve & Unlock Next</button></td></tr>';
     });
   });
   if (!pendingRows) pendingRows = '<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:20px;">No pending submissions</td></tr>';
@@ -189,7 +189,7 @@ function _adminDashboard(baseUrl) {
       var p = progMap[u.UnitID] || {Status:'locked'};
       var status = p.Status||'locked';
       var canUnlock = (status==='locked'||status==='corrections');
-      var unlockBtn = canUnlock?'<a href="'+baseUrl+'?action=unlock&amp;sid='+student.StudentID+'&amp;uid='+u.UnitID+'" class="unlock-btn" onclick="return confirm(\'Unlock '+u.UnitName+' for '+student.StudentName+'?\')">unlock</a>':'';
+      var unlockBtn = canUnlock?'<button class="unlock-btn" style="cursor:pointer;background:none;border:none;padding:0;" onclick="if(confirm(\'Unlock '+u.UnitName+' for '+student.StudentName+'?\')) window.top.location.href=\''+baseUrl+'?action=unlock&sid='+student.StudentID+'&uid='+u.UnitID+'\'">unlock</button>':'';
       return '<td style="background:'+(statusBg[status]||'#f1f5f9')+';text-align:center;" title="'+student.StudentName+' — '+u.UnitName+': '+status+'">'+(statusIcon[status]||'🔒')+'<br>'+unlockBtn+'</td>';
     }).join('');
     return '<tr><td class="sticky-col"><strong>'+student.StudentName+'</strong></td>'+cells+'</tr>';
@@ -243,7 +243,7 @@ function _adminDashboard(baseUrl) {
     // Add student
     '<section>'+
     '<h2>Add New Student</h2>'+
-    '<form action="'+baseUrl+'?action=addStudent" method="get" class="add-form">'+
+    '<form onsubmit="var f=this;var url=\''+baseUrl+'?action=addStudent\';var params=new URLSearchParams(new FormData(f));window.top.location.href=url+\'&\'+params.toString();return false;" class="add-form">'+
     '<input type="hidden" name="action" value="addStudent">'+
     '<div class="form-grid">'+
     '<input name="sid"         placeholder="Student ID (e.g. s004)"   required>'+
