@@ -424,16 +424,20 @@ function onRosterEdit(e) {
   });
   if (alreadySeeded) return;
 
-  // Seed progress rows for this new student
+  // Seed progress rows for this new student — first 3 units unlocked
   var units = ss.getSheetByName('Units').getDataRange().getValues().slice(1);
   var newRows = units.map(function(u, idx) {
-    return [sid+'_'+u[0], sid, u[0], idx===0?'available':'locked', '','','','','','','',''];
+    var status = (idx < 3) ? 'available' : 'locked';
+    return [sid+'_'+u[0], sid, u[0], status, '','','','','','','',''];
   });
   if (newRows.length > 0) {
     progSh.getRange(progSh.getLastRow()+1, 1, newRows.length, 12).setValues(newRows);
   }
 
-  Logger.log('Auto-enrolled: ' + name + ' (' + sid + ') — ' + units.length + ' progress rows created.');
+  // Send welcome email to student
+  _sendWelcomeEmail(ss, rowData);
+
+  Logger.log('Auto-enrolled: ' + name + ' (' + sid + ') — ' + units.length + ' progress rows created, first 3 unlocked.');
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -564,10 +568,9 @@ function onParentApproval(e) {
   _setProg(ss, studentId, unitId, { Status:approved?'complete':'corrections', ParentReviewedAt:new Date(), ParentDecision:approved?'approved':'corrections', ParentComments:comments });
 
   if (approved) {
-    var nextUnit = _nextUnit(ss, unitId);
-    if (nextUnit) _setProg(ss, studentId, nextUnit.UnitID, { Status:'available', UnlockedAt:new Date() });
-    var subj = '✅ Approved! Your next chapter is ready — '+(nextUnit?nextUnit.UnitName:'All done!');
-    var body = _approvalEmail(student, unit, nextUnit);
+    // Parent approved — record decision only. Admin unlocks next unit manually.
+    var subj = '✅ Homework Approved — '+unit.UnitName;
+    var body = _approvalEmail(student, unit, null);
     try {
       GmailApp.sendEmail(student.StudentEmail, subj, _stripHtml(body), { htmlBody:body, cc:student.ParentEmail, name:PORTAL_NAME });
       _logEmail(ss,'approval',studentId,unitId,student.StudentEmail,subj,'sent');
@@ -704,6 +707,246 @@ function _correctionsEmail(student,unit,comments,parentName,resubUrl){
     '<p>'+(parentName||'Your parent')+' has some feedback:</p>'+
     '<div class="fb">'+(comments||'Please review and redo your homework.')+'</div>'+
     '<p><a href="'+resubUrl+'" class="btn bb">📤 Resubmit Homework →</a></p>'+
-    '<p class="note">Your next chapter unlocks once your parent approves your corrected work.</p>'+
+    '<p class="note">Your next chapter will unlock once your teacher reviews your progress.</p>'+
     '</div></div></body></html>';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// WELCOME EMAIL
+// ═══════════════════════════════════════════════════════════════════════════════
+function _sendWelcomeEmail(ss, rowData) {
+  var sid        = rowData[0];
+  var name       = rowData[1];
+  var email      = rowData[2];
+  var parentEmail= rowData[3];
+  var parentName = rowData[4];
+
+  var portalUrl  = 'https://misra-ravi.github.io/physics-foundation/portal';
+  var siteUrl    = 'https://misra-ravi.github.io/physics-foundation/';
+
+  var studentBody = '<!DOCTYPE html><html><head>'+_ES+'</head><body><div class="w">'+
+    '<div class="h"><div class="lbl">Physics Foundations by Ravi</div><h1>Welcome, '+name+'! 🎉</h1></div>'+
+    '<div class="b">'+
+    '<p>You have been enrolled in <strong>Physics Foundations by Ravi</strong>.</p>'+
+    '<p>Your first 3 units are already unlocked and waiting for you.</p>'+
+    '<div class="badge">📖 Your Learning Journey</div>'+
+    '<p><strong>For each unit you will:</strong></p>'+
+    '<p>1. Read the <strong>Lesson</strong> — understand the concept<br>'+
+    '2. Complete <strong>Classwork</strong> — practice in class<br>'+
+    '3. Print and complete the <strong>Homework sheet</strong> — work independently<br>'+
+    '4. <strong>Submit a photo</strong> of your completed homework via the portal<br>'+
+    '5. Your parent reviews your work — next unit unlocks when approved</p>'+
+    '<div class="badge">📋 What to Bring Every Session</div>'+
+    '<p>— A pen<br>— A notebook<br>— A binder to keep your printed sheets<br>— Your device to access the portal</p>'+
+    '<p><a href="'+portalUrl+'" class="btn bb">Enter Your Portal →</a></p>'+
+    '<p class="note">Sign in with this email address: <strong>'+email+'</strong></p>'+
+    '</div></div></body></html>';
+
+  var parentBody = '<!DOCTYPE html><html><head>'+_ES+'</head><body><div class="w">'+
+    '<div class="h"><div class="lbl">Physics Foundations by Ravi</div><h1>'+name+' has been enrolled</h1></div>'+
+    '<div class="b">'+
+    '<p>Dear '+parentName+',</p>'+
+    '<p><strong>'+name+'</strong> has been enrolled in Physics Foundations by Ravi.</p>'+
+    '<div class="badge">📋 How the Portal Works</div>'+
+    '<p>For each unit, '+name+' will complete a lesson, classwork in class, and homework independently. '+
+    'When homework is submitted, <strong>you will receive an email with the answer key</strong> and buttons to approve or request corrections.</p>'+
+    '<p>The next unit unlocks only after your teacher has reviewed progress — keeping learning structured and accountable.</p>'+
+    '<div class="badge">🖨️ Printed Materials</div>'+
+    '<p>'+name+' will need to <strong>print homework sheets</strong> for each unit. Please ensure they have:<br>'+
+    '— A binder to organise printed sheets<br>— A notebook for working<br>— A pen</p>'+
+    '<p><a href="'+siteUrl+'" class="btn bb">Visit the Class Site →</a></p>'+
+    '<p class="note">Your child\'s portal is at: <strong>'+portalUrl+'</strong></p>'+
+    '</div></div></body></html>';
+
+  try {
+    GmailApp.sendEmail(email, 'Welcome to Physics Foundations by Ravi 🎉', _stripHtml(studentBody), {
+      htmlBody: studentBody, name: PORTAL_NAME, replyTo: ADMIN_EMAIL
+    });
+    GmailApp.sendEmail(parentEmail, '[Physics Foundations] '+name+' is now enrolled', _stripHtml(parentBody), {
+      htmlBody: parentBody, name: PORTAL_NAME, replyTo: ADMIN_EMAIL
+    });
+    Logger.log('Welcome emails sent to ' + email + ' and ' + parentEmail);
+  } catch(err) {
+    Logger.log('Welcome email failed: ' + err);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ADMIN MENU — appears in Google Sheets under Extensions
+// ═══════════════════════════════════════════════════════════════════════════════
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu('⚛️ Physics Portal Admin')
+    .addItem('Unlock next unit for a student',  'adminUnlockNext')
+    .addItem('Unlock specific unit for student', 'adminUnlockSpecific')
+    .addItem('View progress summary',            'adminRefreshSummary')
+    .addItem('Re-send welcome email',            'adminResendWelcome')
+    .addSeparator()
+    .addItem('Seed progress (new students)',      'seedProgress')
+    .addToUi();
+}
+
+// ── Unlock next locked unit for a student ─────────────────────────────────────
+function adminUnlockNext() {
+  var ui = SpreadsheetApp.getUi();
+  var r1 = ui.prompt('Unlock Next Unit', 'Enter Student ID (e.g. s001):', ui.ButtonSet.OK_CANCEL);
+  if (r1.getSelectedButton() !== ui.Button.OK) return;
+  var sid = r1.getResponseText().trim();
+
+  var ss      = SpreadsheetApp.openById(_cfg().SHEET_ID);
+  var student = _studentById(ss, sid);
+  if (!student) { ui.alert('Student "' + sid + '" not found in Roster.'); return; }
+
+  var progress = _progress(ss, sid);
+  var units    = _units(ss);
+
+  // Find the first locked unit after the last available/complete one
+  var nextLocked = null;
+  for (var i = 0; i < units.length; i++) {
+    var p = progress.find(function(x){ return x.UnitID === units[i].UnitID; });
+    if (p && p.Status === 'locked') { nextLocked = units[i]; break; }
+  }
+
+  if (!nextLocked) { ui.alert('No locked units found for ' + student.StudentName + '.'); return; }
+
+  _setProg(ss, sid, nextLocked.UnitID, { Status:'available', UnlockedAt: new Date() });
+
+  // Email student
+  var body = _unlockEmailHtml(student, nextLocked);
+  GmailApp.sendEmail(student.StudentEmail, '🔓 New unit unlocked — ' + nextLocked.UnitName, _stripHtml(body), {
+    htmlBody: body, cc: student.ParentEmail, name: PORTAL_NAME
+  });
+  _logEmail(ss, 'admin_unlock', sid, nextLocked.UnitID, student.StudentEmail, 'Admin unlocked: '+nextLocked.UnitName, 'sent');
+
+  ui.alert('✅ Unlocked: ' + nextLocked.UnitName + ' for ' + student.StudentName + '. Email sent.');
+}
+
+// ── Unlock a specific unit for a student ──────────────────────────────────────
+function adminUnlockSpecific() {
+  var ui = SpreadsheetApp.getUi();
+  var r1 = ui.prompt('Unlock Specific Unit', 'Enter Student ID (e.g. s001):', ui.ButtonSet.OK_CANCEL);
+  if (r1.getSelectedButton() !== ui.Button.OK) return;
+  var sid = r1.getResponseText().trim();
+
+  var r2 = ui.prompt('Unlock Specific Unit', 'Enter Unit ID (e.g. 1.1.03):', ui.ButtonSet.OK_CANCEL);
+  if (r2.getSelectedButton() !== ui.Button.OK) return;
+  var unitId = r2.getResponseText().trim();
+
+  var ss      = SpreadsheetApp.openById(_cfg().SHEET_ID);
+  var student = _studentById(ss, sid);
+  var unit    = _unit(ss, unitId);
+  if (!student) { ui.alert('Student "' + sid + '" not found.'); return; }
+  if (!unit)    { ui.alert('Unit "' + unitId + '" not found.'); return; }
+
+  _setProg(ss, sid, unitId, { Status:'available', UnlockedAt: new Date() });
+
+  var body = _unlockEmailHtml(student, unit);
+  GmailApp.sendEmail(student.StudentEmail, '🔓 Unit unlocked — ' + unit.UnitName, _stripHtml(body), {
+    htmlBody: body, cc: student.ParentEmail, name: PORTAL_NAME
+  });
+  _logEmail(ss, 'admin_unlock', sid, unitId, student.StudentEmail, 'Admin unlocked: '+unit.UnitName, 'sent');
+
+  ui.alert('✅ Unlocked: ' + unit.UnitName + ' for ' + student.StudentName + '. Email sent.');
+}
+
+// ── Refresh the Admin Summary sheet ───────────────────────────────────────────
+function adminRefreshSummary() {
+  var ss       = SpreadsheetApp.openById(_cfg().SHEET_ID);
+  var students = _students(ss);
+  var units    = _units(ss);
+
+  var sh = ss.getSheetByName('Admin Summary') || ss.insertSheet('Admin Summary');
+  sh.clearContents();
+  sh.clearFormats();
+
+  // Header row
+  var headers = ['Student'].concat(units.map(function(u){ return u.UnitID; }));
+  sh.getRange(1, 1, 1, headers.length).setValues([headers]).setFontWeight('bold').setBackground('#0f172a').setFontColor('white');
+  sh.setFrozenRows(1);
+  sh.setFrozenColumns(1);
+
+  // One row per student
+  var statusSymbols = { complete:'✅', available:'📖', in_progress:'✏️', awaiting_review:'🟡', corrections:'❌', locked:'🔒' };
+  var statusColors  = { complete:'#dcfce7', available:'#eff6ff', in_progress:'#eff6ff', awaiting_review:'#fef9c3', corrections:'#fee2e2', locked:'#f8faff' };
+
+  students.forEach(function(student, si) {
+    var progress = _progress(ss, student.StudentID);
+    var progMap  = {};
+    progress.forEach(function(p){ progMap[p.UnitID] = p; });
+
+    var row = [student.StudentName].concat(units.map(function(u){
+      var p = progMap[u.UnitID];
+      return p ? (statusSymbols[p.Status] || '?') : '🔒';
+    }));
+    var rowNum = si + 2;
+    sh.getRange(rowNum, 1, 1, row.length).setValues([row]);
+
+    // Colour each cell by status
+    units.forEach(function(u, ui) {
+      var p = progMap[u.UnitID];
+      var status = p ? p.Status : 'locked';
+      sh.getRange(rowNum, ui+2).setBackground(statusColors[status] || '#f8faff');
+    });
+  });
+
+  // Auto-resize student name column
+  sh.autoResizeColumn(1);
+
+  SpreadsheetApp.getUi().alert('✅ Admin Summary refreshed. See the "Admin Summary" tab.');
+}
+
+// ── Resend welcome email ───────────────────────────────────────────────────────
+function adminResendWelcome() {
+  var ui = SpreadsheetApp.getUi();
+  var r  = ui.prompt('Resend Welcome Email', 'Enter Student ID (e.g. s001):', ui.ButtonSet.OK_CANCEL);
+  if (r.getSelectedButton() !== ui.Button.OK) return;
+  var sid = r.getResponseText().trim();
+
+  var ss      = SpreadsheetApp.openById(_cfg().SHEET_ID);
+  var sh      = ss.getSheetByName('Roster');
+  var data    = sh.getDataRange().getValues();
+  var row     = data.find(function(r){ return r[0] === sid; });
+  if (!row) { ui.alert('Student "' + sid + '" not found.'); return; }
+
+  _sendWelcomeEmail(ss, row);
+  ui.alert('✅ Welcome email resent to ' + row[1] + '.');
+}
+
+// ── Unlock email template ─────────────────────────────────────────────────────
+function _unlockEmailHtml(student, unit) {
+  return '<!DOCTYPE html><html><head>'+_ES+'</head><body><div class="w">'+
+    '<div class="h"><div class="lbl">Physics Foundations by Ravi</div><h1>New Unit Unlocked 🔓</h1></div>'+
+    '<div class="b"><p>Hi '+student.StudentName+',</p>'+
+    '<p>Your teacher has unlocked your next unit:</p>'+
+    '<div class="badge">🔓 '+unit.SectionNum+' '+unit.SectionName+' — '+unit.UnitName+'</div>'+
+    (unit.LessonURL ? '<p><a href="'+unit.LessonURL+'" class="btn bb">Start Lesson →</a></p>' : '')+
+    '<div class="badge">📋 Remember to bring</div>'+
+    '<p>— Your binder with printed sheets<br>— A pen<br>— Your notebook</p>'+
+    '<p class="note">Sign in at your portal to see your updated dashboard.</p>'+
+    '</div></div></body></html>';
+}
+
+// ── Seed progress (also callable from Admin menu) ─────────────────────────────
+function seedProgress() {
+  var ss       = SpreadsheetApp.openById(_cfg().SHEET_ID);
+  var rosterSh = ss.getSheetByName('Roster');
+  var unitsSh  = ss.getSheetByName('Units');
+  var progSh   = ss.getSheetByName('Progress');
+
+  var students = rosterSh.getDataRange().getValues().slice(1).filter(function(r){ return r[6]; });
+  var units    = unitsSh.getDataRange().getValues().slice(1);
+
+  if (progSh.getLastRow() > 1) progSh.deleteRows(2, progSh.getLastRow()-1);
+
+  var rows = [];
+  students.forEach(function(s) {
+    var sid = s[0];
+    units.forEach(function(u, idx) {
+      var status = (idx < 3) ? 'available' : 'locked';
+      rows.push([sid+'_'+u[0], sid, u[0], status, '','','','','','','','']);
+    });
+  });
+
+  if (rows.length > 0) progSh.getRange(2, 1, rows.length, 12).setValues(rows);
+  Logger.log('Seeded ' + rows.length + ' rows. First 3 units unlocked per student.');
 }
