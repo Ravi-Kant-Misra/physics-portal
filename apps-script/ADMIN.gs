@@ -92,12 +92,48 @@ function _adminDashboard() {
   });
   if (!pendingRows) pendingRows = '<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:20px;">No pending submissions</td></tr>';
 
-  // ── Email log ─────────────────────────────────────────────────────────────────
-  var logRows = emailLog.slice(0, 20).map(function(r) {
+  // ── Homework completion summary ───────────────────────────────────────────────
+  var hwRows = '';
+  var hwCount = 0;
+  students.forEach(function(student) {
+    var progress = _progress(ss, student.StudentID);
+    var submitted = progress.filter(function(p) {
+      return p.HomeworkSubmittedAt && p.HomeworkSubmittedAt !== '';
+    });
+    submitted.forEach(function(p) {
+      var u = _unit(ss, p.UnitID);
+      var statusBadge = {
+        complete:        '<span class="hw-badge hw-done">✅ Complete</span>',
+        awaiting_review: '<span class="hw-badge hw-pending">🟡 Awaiting Review</span>',
+        corrections:     '<span class="hw-badge hw-corr">❌ Corrections</span>',
+        available:       '<span class="hw-badge hw-sub">📤 Submitted</span>',
+      }[p.Status] || '<span class="hw-badge">'+p.Status+'</span>';
+
+      var parentDecision = p.ParentDecision
+        ? (p.ParentDecision === 'approved' ? '✅ Approved' : '❌ Corrections Requested')
+        : '⏳ Pending';
+
+      hwRows += '<tr>'+
+        '<td><strong>'+student.StudentName+'</strong></td>'+
+        '<td style="font-family:monospace;font-size:.8rem;">'+p.UnitID+'</td>'+
+        '<td>'+(u ? u.UnitName : '')+'</td>'+
+        '<td>'+_formatDate(p.HomeworkSubmittedAt)+'</td>'+
+        '<td>'+statusBadge+'</td>'+
+        '<td>'+parentDecision+'</td>'+
+        '<td>'+(p.ParentComments ? '<span title="'+p.ParentComments+'" style="cursor:help;color:#64748b;">💬 '+p.ParentComments.substring(0,40)+(p.ParentComments.length>40?'…':'')+'</span>' : '—')+'</td>'+
+        '<td>'+(p.HomeworkDriveURL ? '<a href="'+p.HomeworkDriveURL+'" target="_blank" class="btn-sm" style="background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;">View</a>' : '—')+'</td>'+
+        '</tr>';
+      hwCount++;
+    });
+  });
+  if (!hwRows) hwRows = '<tr><td colspan="8" style="text-align:center;color:#94a3b8;padding:20px;">No homework submitted yet</td></tr>';
     return '<tr><td>'+_formatDate(r[0])+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td><td class="'+(r[6]==='sent'?'sent':'error')+'">'+r[6]+'</td></tr>';
   }).join('');
 
-  // ── Student count stats ───────────────────────────────────────────────────────
+  // ── Email log ─────────────────────────────────────────────────────────────────
+  var logRows = emailLog.slice(0,20).map(function(r){
+    return '<tr><td>'+_formatDate(r[0])+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td><td class="'+(r[6]==='sent'?'sent':'error')+'">'+r[6]+'</td></tr>';
+  }).join('');
   var totalComplete = 0, totalPending = 0, totalCorrections = 0;
   students.forEach(function(s) {
     _progress(ss, s.StudentID).forEach(function(p) {
@@ -126,6 +162,7 @@ function _adminDashboard() {
     '<div class="stats-bar">'+
     '<div class="stat"><div class="num">'+students.length+'</div><div class="lbl">Students</div></div>'+
     '<div class="stat"><div class="num">'+totalComplete+'</div><div class="lbl">Units Complete</div></div>'+
+    '<div class="stat"><div class="num">'+hwCount+'</div><div class="lbl">HW Submitted</div></div>'+
     '<div class="stat"><div class="num">'+totalPending+'</div><div class="lbl">Awaiting Review</div></div>'+
     '<div class="stat"><div class="num">'+totalCorrections+'</div><div class="lbl">Needs Corrections</div></div>'+
     '</div>'+
@@ -163,6 +200,15 @@ function _adminDashboard() {
     '<thead><tr>'+gridHeaders+'</tr></thead>'+
     '<tbody>'+gridRows+'</tbody>'+
     '</table></div>'+
+    '</section>'+
+
+    // Homework completion
+    '<section>'+
+    '<h2>Homework Submissions ('+hwCount+' total)</h2>'+
+    '<table><thead><tr>'+
+    '<th>Student</th><th>Unit ID</th><th>Unit Name</th><th>Submitted</th>'+
+    '<th>Status</th><th>Parent Decision</th><th>Comments</th><th>Homework</th>'+
+    '</tr></thead><tbody>'+hwRows+'</tbody></table>'+
     '</section>'+
 
     // Email log
@@ -336,6 +382,11 @@ function _adminStyles() {
     '.btn-green{background:#22c55e;color:white;}'+
     '.unlock-btn{display:block;font-size:.65rem;color:#1d4ed8;text-decoration:none;font-weight:800;margin-top:2px;}'+
     '.unlock-btn:hover{text-decoration:underline;}'+
+    '.hw-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:800;}'+
+    '.hw-done{background:#dcfce7;color:#15803d;}'+
+    '.hw-pending{background:#fef9c3;color:#854d0e;}'+
+    '.hw-corr{background:#fee2e2;color:#dc2626;}'+
+    '.hw-sub{background:#dbeafe;color:#1d4ed8;}'+
     '.grid-scroll{overflow-x:auto;max-height:500px;overflow-y:auto;}'+
     '.grid-table{border-collapse:collapse;font-size:.78rem;}'+
     '.grid-table th,.grid-table td{border:1px solid #e2e8f0;padding:4px 6px;text-align:center;white-space:nowrap;}'+
