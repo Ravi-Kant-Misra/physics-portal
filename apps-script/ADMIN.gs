@@ -25,8 +25,8 @@ function adminAddStudent(p) {
     return {ok: false, msg: 'All 5 fields are required.'};
   var ss = SpreadsheetApp.openById(_cfg().SHEET_ID);
   var sh = ss.getSheetByName('Roster');
-  var ids = sh.getDataRange().getValues().map(function(r){ return String(r[0]); });
-  if (ids.indexOf(p.sid) >= 0)
+  var ids = sh.getDataRange().getValues().map(function(r){ return String(r[0]).toLowerCase().trim(); });
+  if (ids.indexOf(p.sid.toLowerCase().trim()) >= 0)
     return {ok: false, msg: 'Student ID ' + p.sid + ' already exists. Choose a different ID.'};
   sh.appendRow([p.sid, p.name, p.email, p.parentEmail, p.parentName, new Date(), true]);
   var units  = ss.getSheetByName('Units').getDataRange().getValues().slice(1);
