@@ -529,32 +529,41 @@ function onHomeworkSubmit(e) {
   // ── Handle uploaded file ──────────────────────────────────────────────────────
   var uploadedBlob = null;
   var savedFileUrl = '';
-  var uploadTitle  = 'Upload your completed homework (photo or PDF)';
 
-  try {
-    var uploadedUrls = row[uploadTitle] || [];
-    if (uploadedUrls.length > 0) {
-      // Google Forms stores file upload as Drive file URL
-      var fileId = uploadedUrls[0].match(/[-\w]{25,}/);
-      if (fileId) {
-        var uploadedFile = DriveApp.getFileById(fileId[0]);
-        // Copy to Student Submissions folder so we own it
-        var destFolder = _getOrCreateStudentFolder(student.StudentName);
-        var datestamp  = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
-        var savedFile  = uploadedFile.makeCopy(
-          student.StudentName + ' — ' + unit.UnitName + ' — ' + datestamp,
-          destFolder
+  // File upload fields return a Drive URL — extract file ID and copy to our folder
+  var uploadTitle = 'Upload your completed homework (photo or PDF)';
+  var uploadedUrls = row[uploadTitle] || [];
+
+  // Also check old text field in case form not yet upgraded
+  var manualUrl = _first(row['Paste a link to your homework (Google Drive share link or photo link)']) || '';
+
+  if (uploadedUrls.length > 0 && uploadedUrls[0]) {
+    try {
+      // Extract Drive file ID from the URL
+      var rawUrl = uploadedUrls[0];
+      var match  = rawUrl.match(/[-\w]{25,}/);
+      if (match) {
+        var uploadedFile = DriveApp.getFileById(match[0]);
+        var destFolder   = _getOrCreateStudentFolder(student.StudentName);
+        var datestamp    = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+        var ext          = uploadedFile.getMimeType().indexOf('pdf') >= 0 ? '.pdf' : '.jpg';
+        var savedFile    = uploadedFile.makeCopy(
+          student.StudentName + ' — ' + unit.UnitName + ' — ' + datestamp, destFolder
         );
-        savedFileUrl  = savedFile.getUrl();
-        uploadedBlob  = savedFile.getBlob().setName(
-          student.StudentName.replace(/\s/g,'_') + '_' + unitId + '_homework' +
-          (savedFile.getMimeType().indexOf('pdf') >= 0 ? '.pdf' : '.jpg')
+        savedFileUrl = savedFile.getUrl();
+        uploadedBlob = savedFile.getBlob().setName(
+          student.StudentName.replace(/\s/g,'_') + '_' + unitId + '_homework' + ext
         );
+        Logger.log('File saved: ' + savedFileUrl);
       }
+    } catch(err) {
+      Logger.log('File upload error: ' + err);
+      _alertAdmin('Homework file upload failed for '+student.StudentName+'/'+unitId+': '+err);
     }
-  } catch(err) {
-    Logger.log('File upload handling error: ' + err);
-    _alertAdmin('Homework file upload failed for '+student.StudentName+' / '+unitId+': '+err);
+  } else if (manualUrl) {
+    // Fallback: student pasted a Drive link manually
+    savedFileUrl = manualUrl;
+    Logger.log('Using manual URL: ' + manualUrl);
   }
 
   var token = Utilities.getUuid();
@@ -1067,44 +1076,11 @@ function testEmailDelivery() {
 
 // ── Update existing homework form to use file upload ──────────────────────────
 // Run this ONCE to convert the live form from text link to file upload.
-function upgradeHomeworkFormToFileUpload() {
-  var cfg    = _cfg();
-  var formId = cfg.HOMEWORK_FORM_ID;
-  var form   = FormApp.openById(formId);
-
-  // File upload requires sign-in to be enabled on the form
-  form.setRequireLogin(true);
-  form.setCollectEmail(true);
-
-  // Collect items to delete first — never delete while iterating
-  var toDelete = form.getItems().filter(function(item) {
-    return item.getTitle().indexOf('Paste a link') >= 0 ||
-           item.getTitle().indexOf('homework (Google Drive') >= 0 ||
-           item.getTitle().indexOf('Upload your completed homework') >= 0;
-  });
-
-  toDelete.forEach(function(item) {
-    try {
-      form.deleteItem(item);
-      Logger.log('Deleted: ' + item.getTitle());
-    } catch(err) {
-      Logger.log('Could not delete: ' + item.getTitle());
-    }
-  });
-
-  // Add file upload question
-  var uploadItem = form.addFileUploadItem();
-  uploadItem.setTitle('Upload your completed homework (photo or PDF)').setRequired(true);
-  uploadItem.setAllowedFileTypes([FormApp.FileType.IMAGE, FormApp.FileType.PDF]);
-
-  // Move to position 2 (after Your name and Unit completed)
-  try { form.moveItem(uploadItem.getIndex(), 2); } catch(err) { Logger.log('Move skipped: '+err); }
-
-  Logger.log('✅ Form upgraded to file upload. Sign-in required: ' + form.requiresLogin());
-  Logger.log('Form URL: ' + form.getPublishedUrl());
-  Logger.log('Items now:');
-  form.getItems().forEach(function(i){ Logger.log('  ' + i.getIndex() + ': ' + i.getTitle()); });
-}
+// ── Note: file upload field must be added manually in forms.google.com ────────
+// Apps Script addFileUploadItem() does not work on personal Gmail accounts.
+// In the form: add a "File upload" question titled exactly:
+//   "Upload your completed homework (photo or PDF)"
+// Allow file types: Images + PDF. Required: on. Position: 3rd question.
 
 function seedProgress() {
   var ss       = SpreadsheetApp.openById(_cfg().SHEET_ID);
