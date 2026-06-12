@@ -778,13 +778,15 @@ function _sendWelcomeEmail(ss, rowData) {
     GmailApp.sendEmail(email, 'Welcome to Physics Foundations by Ravi 🎉', _stripHtml(studentBody), {
       htmlBody: studentBody, name: PORTAL_NAME, replyTo: ADMIN_EMAIL
     });
+    _logEmail(ss, 'welcome_student', rowData[0], '', email, 'Welcome to Physics Foundations by Ravi 🎉', 'sent');
     GmailApp.sendEmail(parentEmail, '[Physics Foundations] '+name+' is now enrolled', _stripHtml(parentBody), {
       htmlBody: parentBody, name: PORTAL_NAME, replyTo: ADMIN_EMAIL
     });
+    _logEmail(ss, 'welcome_parent', rowData[0], '', parentEmail, '[Physics Foundations] '+name+' is now enrolled', 'sent');
     Logger.log('Welcome emails sent to ' + email + ' and ' + parentEmail);
   } catch(err) {
+    _logEmail(ss, 'welcome', rowData[0], '', email, 'Welcome email', 'error:'+err);
     Logger.log('Welcome email failed: ' + err);
-    // Alert admin so failure is not silent
     try {
       GmailApp.sendEmail(ADMIN_EMAIL, '[Physics Foundations] ⚠️ Welcome email failed for '+name,
         'Failed to send welcome email to '+email+' / '+parentEmail+'\n\nError: '+err, {name:PORTAL_NAME});
@@ -833,11 +835,18 @@ function adminUnlockNext() {
 
   _setProg(ss, sid, nextLocked.UnitID, { Status:'available', UnlockedAt: new Date() });
 
-  // Email student
+  // Email student (cc parent)
   var body = _unlockEmailHtml(student, nextLocked);
-  GmailApp.sendEmail(student.StudentEmail, '🔓 New unit unlocked — ' + nextLocked.UnitName, _stripHtml(body), {
-    htmlBody: body, cc: student.ParentEmail, name: PORTAL_NAME
-  });
+  var unlockSubj = '🔓 New unit unlocked — ' + nextLocked.UnitName;
+  try {
+    GmailApp.sendEmail(student.StudentEmail, unlockSubj, _stripHtml(body), {
+      htmlBody: body, cc: student.ParentEmail, name: PORTAL_NAME
+    });
+    _logEmail(ss, 'admin_unlock', sid, nextLocked.UnitID, student.StudentEmail, unlockSubj, 'sent');
+  } catch(err) {
+    _logEmail(ss, 'admin_unlock', sid, nextLocked.UnitID, student.StudentEmail, unlockSubj, 'error:'+err);
+    _alertAdmin('Unlock email failed for '+student.StudentName+': '+err);
+  }
 
   ui.alert('✅ Unlocked: ' + nextLocked.UnitName + ' for ' + student.StudentName + '. Email sent.');
 }
@@ -862,9 +871,16 @@ function adminUnlockSpecific() {
   _setProg(ss, sid, unitId, { Status:'available', UnlockedAt: new Date() });
 
   var body = _unlockEmailHtml(student, unit);
-  GmailApp.sendEmail(student.StudentEmail, '🔓 Unit unlocked — ' + unit.UnitName, _stripHtml(body), {
-    htmlBody: body, cc: student.ParentEmail, name: PORTAL_NAME
-  });
+  var specSubj = '🔓 Unit unlocked — ' + unit.UnitName;
+  try {
+    GmailApp.sendEmail(student.StudentEmail, specSubj, _stripHtml(body), {
+      htmlBody: body, cc: student.ParentEmail, name: PORTAL_NAME
+    });
+    _logEmail(ss, 'admin_unlock', sid, unitId, student.StudentEmail, specSubj, 'sent');
+  } catch(err) {
+    _logEmail(ss, 'admin_unlock', sid, unitId, student.StudentEmail, specSubj, 'error:'+err);
+    _alertAdmin('Unlock email failed for '+student.StudentName+': '+err);
+  }
 
   ui.alert('✅ Unlocked: ' + unit.UnitName + ' for ' + student.StudentName + '. Email sent.');
 }
@@ -986,9 +1002,11 @@ function testEmailDelivery() {
         name: PORTAL_NAME
       }
     );
+    var ss = SpreadsheetApp.openById(_cfg().SHEET_ID);
+    _logEmail(ss, 'test_email', 'admin', '', ADMIN_EMAIL, '✅ Email test — it works!', 'sent');
     Logger.log('✅ Test email sent successfully to ' + ADMIN_EMAIL);
     Logger.log('Script running as: ' + Session.getEffectiveUser().getEmail());
-    SpreadsheetApp.getUi().alert('✅ Test email sent to ' + ADMIN_EMAIL + '.\n\nCheck your inbox.');
+    SpreadsheetApp.getUi().alert('✅ Test email sent to ' + ADMIN_EMAIL + '.\n\nCheck your inbox. Also check the EmailLog tab in the Portal Tracker sheet.');
   } catch(err) {
     Logger.log('❌ Email test FAILED: ' + err);
     SpreadsheetApp.getUi().alert('❌ Email test FAILED:\n\n' + err + '\n\nThis explains why no emails are going out.');
