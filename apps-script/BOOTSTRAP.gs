@@ -1102,13 +1102,6 @@ function upgradeHomeworkFormToFileUpload() {
   form.getItems().forEach(function(i){ Logger.log('  ' + i.getIndex() + ': ' + i.getTitle()); });
 }
 
-  // Move it to position 2 (0-indexed)
-  form.moveItem(uploadItem.getIndex(), 2);
-
-  Logger.log('✅ Homework form upgraded to file upload.');
-  Logger.log('Form URL: ' + form.getPublishedUrl());
-}
-
 function seedProgress() {
   var ss       = SpreadsheetApp.openById(_cfg().SHEET_ID);
   var rosterSh = ss.getSheetByName('Roster');
