@@ -28,9 +28,12 @@ function doGet(e) {
 
   var action = e && e.parameter && e.parameter.action ? e.parameter.action : 'dashboard';
 
-  if (action === 'unlock')          return _adminActionUnlock(e);
-  if (action === 'addStudent')      return _adminActionAddStudent(e);
-  if (action === 'deactivateStudent') return _adminActionDeactivate(e);
+  // Store the base URL for redirects (current deployment URL without params)
+  var baseUrl = ScriptApp.getService().getUrl();
+
+  if (action === 'unlock')            return _adminActionUnlock(e, baseUrl);
+  if (action === 'addStudent')        return _adminActionAddStudent(e, baseUrl);
+  if (action === 'deactivateStudent') return _adminActionDeactivate(e, baseUrl);
 
   return _adminDashboard();
 }
@@ -303,7 +306,7 @@ function _adminDashboard() {
 }
 
 // ─── ACTION: UNLOCK UNIT ──────────────────────────────────────────────────────
-function _adminActionUnlock(e) {
+function _adminActionUnlock(e, baseUrl) {
   var sid     = e.parameter.sid;
   var uid     = e.parameter.uid;
   var cfg     = _cfg();
@@ -312,10 +315,9 @@ function _adminActionUnlock(e) {
   var unit    = _unit(ss, uid);
 
   if (!student || !unit) {
-    return HtmlService.createHtmlOutput('<p>Error: student or unit not found. <a href="?">Back</a></p>');
+    return HtmlService.createHtmlOutput('<p>Error: student or unit not found. <a href="'+baseUrl+'">Back</a></p>');
   }
 
-  // Mark current unit complete if awaiting review
   var prog = _prog(ss, sid, uid);
   if (prog && prog.Status === 'awaiting_review') {
     _setProg(ss, sid, uid, { Status:'complete', ParentReviewedAt:new Date(), ParentDecision:'approved' });
@@ -323,24 +325,18 @@ function _adminActionUnlock(e) {
     _setProg(ss, sid, uid, { Status:'available', UnlockedAt:new Date() });
   }
 
-  // Find and unlock next unit
   var nextUnit = _nextUnit(ss, uid);
   if (nextUnit) {
     _setProg(ss, sid, nextUnit.UnitID, { Status:'available', UnlockedAt:new Date() });
   }
 
-  // Email student and parent separately
   var studentBody = _unlockEmailHtml(student, nextUnit || unit, 'student');
   var parentBody  = _unlockEmailHtml(student, nextUnit || unit, 'parent');
   var subj        = '🔓 New unit unlocked — '+(nextUnit ? nextUnit.UnitName : unit.UnitName);
   var parentSubj  = '🔓 [Physics Foundations] '+student.StudentName+'\'s next unit is unlocked';
   try {
-    GmailApp.sendEmail(student.StudentEmail, subj, _stripHtml(studentBody), {
-      htmlBody:studentBody, name:PORTAL_NAME
-    });
-    GmailApp.sendEmail(student.ParentEmail, parentSubj, _stripHtml(parentBody), {
-      htmlBody:parentBody, name:PORTAL_NAME
-    });
+    GmailApp.sendEmail(student.StudentEmail, subj, _stripHtml(studentBody), { htmlBody:studentBody, name:PORTAL_NAME });
+    GmailApp.sendEmail(student.ParentEmail, parentSubj, _stripHtml(parentBody), { htmlBody:parentBody, name:PORTAL_NAME });
     _logEmail(ss,'admin_unlock',sid,uid,student.StudentEmail,subj,'sent');
     _logEmail(ss,'admin_unlock',sid,uid,student.ParentEmail,parentSubj,'sent');
   } catch(err) {
@@ -348,14 +344,14 @@ function _adminActionUnlock(e) {
   }
 
   return HtmlService.createHtmlOutput(
-    '<html><head><meta http-equiv="refresh" content="2;url=?">'+
+    '<html><head><meta http-equiv="refresh" content="2;url='+baseUrl+'">'+
     '<style>body{font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#0f172a;color:white;text-align:center;}</style></head>'+
-    '<body><div><h2>✅ Done</h2><p>Unlocked <strong>'+(nextUnit?nextUnit.UnitName:unit.UnitName)+'</strong> for <strong>'+student.StudentName+'</strong>.</p><p>Emails sent to student and parent. Redirecting...</p></div></body></html>'
+    '<body><div><h2>✅ Done</h2><p>Unlocked <strong>'+(nextUnit?nextUnit.UnitName:unit.UnitName)+'</strong> for <strong>'+student.StudentName+'</strong>.</p><p>Emails sent. Redirecting...</p></div></body></html>'
   );
 }
 
 // ─── ACTION: ADD STUDENT ──────────────────────────────────────────────────────
-function _adminActionAddStudent(e) {
+function _adminActionAddStudent(e, baseUrl) {
   var p   = e.parameter;
   var cfg = _cfg();
   var ss  = SpreadsheetApp.openById(cfg.SHEET_ID);
@@ -364,7 +360,7 @@ function _adminActionAddStudent(e) {
   var existing = sh.getDataRange().getValues().map(function(r){ return r[0]; });
   if (existing.indexOf(p.sid) >= 0) {
     return HtmlService.createHtmlOutput(
-      '<html><head><meta http-equiv="refresh" content="3;url=?"></head>'+
+      '<html><head><meta http-equiv="refresh" content="3;url='+baseUrl+'"></head>'+
       '<body style="font-family:sans-serif;text-align:center;padding:60px;background:#0f172a;color:white;">'+
       '<h2>⚠️ Student ID '+p.sid+' already exists.</h2><p>Redirecting back...</p></body></html>'
     );
@@ -388,7 +384,7 @@ function _adminActionAddStudent(e) {
 
   return HtmlService.createHtmlOutput(
     '<html><head>'+
-    '<meta http-equiv="refresh" content="2;url=?">'+
+    '<meta http-equiv="refresh" content="3;url='+baseUrl+'">'+
     '<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">'+
     '<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:Nunito,sans-serif;background:#0f172a;color:white;display:flex;align-items:center;justify-content:center;min-height:100vh;}'+
     '.box{text-align:center;padding:48px 32px;max-width:480px;}'+
@@ -410,7 +406,7 @@ function _adminActionAddStudent(e) {
 }
 
 // ─── ACTION: DEACTIVATE STUDENT ───────────────────────────────────────────────
-function _adminActionDeactivate(e) {
+function _adminActionDeactivate(e, baseUrl) {
   var sid = e.parameter.sid;
   var cfg = _cfg();
   var ss  = SpreadsheetApp.openById(cfg.SHEET_ID);
@@ -430,14 +426,14 @@ function _adminActionDeactivate(e) {
 
   if (!found) {
     return HtmlService.createHtmlOutput(
-      '<html><head><meta http-equiv="refresh" content="2;url=?"></head>'+
+      '<html><head><meta http-equiv="refresh" content="2;url='+baseUrl+'"></head>'+
       '<body style="font-family:sans-serif;text-align:center;padding:60px;background:#0f172a;color:white;">'+
       '<h2>⚠️ Student '+sid+' not found.</h2></body></html>'
     );
   }
 
   return HtmlService.createHtmlOutput(
-    '<html><head><meta http-equiv="refresh" content="2;url=?">'+
+    '<html><head><meta http-equiv="refresh" content="2;url='+baseUrl+'">'+
     '<style>body{font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#0f172a;color:white;text-align:center;}</style></head>'+
     '<body><div><h2>✅ '+name+' removed</h2>'+
     '<p>Student set to inactive. Their progress history is preserved.<br>Redirecting...</p></div></body></html>'
