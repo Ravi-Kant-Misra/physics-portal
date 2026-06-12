@@ -1,20 +1,13 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 // PHYSICS FOUNDATION — ADMIN DASHBOARD
-// Execute as: Me (misra.ravikant@gmail.com) | Access: Anyone with Google Account
-// Actions use google.script.run — no URL navigation, no Drive redirect issues
+// ─────────────────────────────────────────────────────────────────────────────
+// The doGet router in BOOTSTRAP.gs handles both deployments:
+// - Admin deployment (Execute as: Me) → shows admin dashboard
+// - Student deployment (Execute as: User) → shows student dashboard
+// No doGet needed in this file.
 // ═══════════════════════════════════════════════════════════════════════════════
 
 var ADMIN_EMAIL_ADDR = 'misra.ravikant@gmail.com';
-
-function doGet(e) {
-  var caller = Session.getActiveUser().getEmail();
-  if (caller !== ADMIN_EMAIL_ADDR) {
-    return HtmlService.createHtmlOutput(
-      '<html><body style="font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#0f172a;color:white"><div style="text-align:center"><h2>Access Denied</h2></div></body></html>'
-    ).setTitle('Access Denied');
-  }
-  return _buildDashboard();
-}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // SERVER FUNCTIONS — called via google.script.run from the client

@@ -657,6 +657,21 @@ function onParentApproval(e) {
 // WEB APP — ROUTER (student dashboard only — admin has its own deployment)
 // ═══════════════════════════════════════════════════════════════════════════════
 function doGet(e) {
+  // Route based on how this deployment was set up:
+  // - Admin deployment: Execute as Me → effective user = misra.ravikant@gmail.com
+  // - Student deployment: Execute as User → effective user = the student
+  var effective = Session.getEffectiveUser().getEmail();
+  if (effective === ADMIN_EMAIL) {
+    // This is the admin deployment — show admin dashboard
+    var caller = Session.getActiveUser().getEmail();
+    if (caller !== ADMIN_EMAIL) {
+      return HtmlService.createHtmlOutput(
+        '<html><body style="font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#0f172a;color:white"><div style="text-align:center"><h2>Access Denied</h2><p>Admin only.</p></div></body></html>'
+      ).setTitle('Access Denied');
+    }
+    return _buildDashboard();
+  }
+  // Student deployment
   return doGetStudent(e);
 }
 
