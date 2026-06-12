@@ -266,7 +266,7 @@ function _buildDashboard() {
     '<script>' +
     'function showOverlay(icon,msg){var o=document.getElementById("overlay");document.getElementById("ov_icon").textContent=icon;document.getElementById("ov_msg").innerHTML=msg;o.style.display="flex";}' +
     'function hideOverlay(){document.getElementById("overlay").style.display="none";}' +
-    'function done(r){hideOverlay();if(r&&r.ok===false){alert("Error: "+r.msg);}else{var msg=r&&r.msg?r.msg:"Done.";showOverlay("✅",msg+"<br><br><small style=\'color:#64748b\'>Reloading in 2 seconds...</small>");setTimeout(function(){location.reload();},2000);};}' +
+    'function done(r){hideOverlay();if(r&&r.ok===false){alert("Error: "+r.msg);}else{alert(r&&r.msg?r.msg:"Done.");location.reload();};}' +
     'function fail(e){hideOverlay();alert("Error: "+(e&&e.message?e.message:e));}' +
     'function doAdd(){' +
       'var sid=document.getElementById("a_sid").value.trim();' +
