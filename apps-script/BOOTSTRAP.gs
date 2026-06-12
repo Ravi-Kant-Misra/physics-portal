@@ -587,9 +587,13 @@ function onParentApproval(e) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// WEB APP — STUDENT DASHBOARD
+// WEB APP — ROUTER (student dashboard only — admin has its own deployment)
 // ═══════════════════════════════════════════════════════════════════════════════
-function doGet() {
+function doGet(e) {
+  return doGetStudent(e);
+}
+
+function doGetStudent(e) {
   var email   = Session.getActiveUser().getEmail();
   var cfg     = _cfg();
   var ss      = SpreadsheetApp.openById(cfg.SHEET_ID);

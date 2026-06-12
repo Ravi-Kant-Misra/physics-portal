@@ -17,7 +17,7 @@
 
 var ADMIN_EMAIL_ADDR = 'misra.ravikant@gmail.com';
 
-function doGetAdmin(e) {
+function doGet(e) {
   // Block anyone who is not the admin
   var caller = Session.getActiveUser().getEmail();
   if (caller !== ADMIN_EMAIL_ADDR) {
