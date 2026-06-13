@@ -268,9 +268,7 @@ function _seedProgress(ss) {
   var students = rData.slice(1).filter(function(r){ return r[6]===true||String(r[6]).toUpperCase()==='TRUE'; }); // Active=true
   var units    = uData.slice(1);
 
-  if(progressSh.getLastRow() > 1){
-    progressSh.deleteRows(2, progressSh.getLastRow()-1);
-  }
+  var _lr1 = progressSh.getLastRow(); if(_lr1 > 1){ progressSh.deleteRows(2, _lr1 - 1); }
 
   var rows = [];
   students.forEach(function(s){
@@ -1197,7 +1195,7 @@ function seedProgress() {
   var students = rosterSh.getDataRange().getValues().slice(1).filter(function(r){ return r[6]===true||String(r[6]).toUpperCase()==='TRUE'; });
   var units    = unitsSh.getDataRange().getValues().slice(1);
 
-  if (progSh.getLastRow() > 1) progSh.deleteRows(2, progSh.getLastRow()-1);
+  var _lr2 = progSh.getLastRow(); if (_lr2 > 1) progSh.deleteRows(2, _lr2 - 1);
 
   var rows = [];
   students.forEach(function(s) {
